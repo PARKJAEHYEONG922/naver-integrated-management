@@ -289,7 +289,7 @@ class NaverCafeControlWidget(QWidget):
         """)
         
         # 검색 버튼 - toolbox 공용 컴포넌트 사용
-        self.search_button = ModernPrimaryButton("검색")
+        self.search_button = ModernPrimaryButton("🔍 검색")
         self.search_button.setFixedHeight(45)
         
         search_input_layout.addWidget(self.search_input, 1)
