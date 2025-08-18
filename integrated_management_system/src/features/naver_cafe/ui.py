@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import ModernStyle, ModernHelpButton
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
 from .control_widget import NaverCafeControlWidget
 from .results_widget import NaverCafeResultsWidget
@@ -69,25 +69,9 @@ class NaverCafeWidget(QWidget):
         """)
         header_layout.addWidget(title_label)
         
-        # 사용법 버튼
-        self.help_button = QPushButton("❓ 사용법")
+        # 사용법 버튼 - 공용 컴포넌트 사용
+        self.help_button = ModernHelpButton("❓ 사용법")
         self.help_button.clicked.connect(self.show_help_dialog)
-        self.help_button.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['bg_secondary']};
-                color: {ModernStyle.COLORS['text_secondary']};
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 6px;
-                padding: 6px 12px;
-                font-size: 12px;
-                font-weight: 500;
-                margin-left: 10px;
-            }}
-            QPushButton:hover {{
-                background-color: {ModernStyle.COLORS['bg_card']};
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-        """)
         
         header_layout.addWidget(self.help_button)
         header_layout.addStretch()

@@ -19,11 +19,10 @@ OCP: 새 기능은 파일 추가/확장으로, 기존 수정 최소
 ISP: 긴 함수는 작은 인터페이스/함수로 분리 
 DIP: 의존성은 생성자/인자 주입, 전역 싱글톤 지양 리팩토링 허용 범위 미사용 import/변수 제거, 네이밍·주석 개선(동작 불변) 크리티컬 파일 변경 전: 이유를 요약해 승인 먼저 받기
 
-분리 원칙(개선됨):
-service.py = 오케스트레이션 + 성능 정책 상수(동시성·딜레이·타임아웃) 정의/주입
-adapters.py = 벤더 호출 + 입력/Raw 정규화(텍스트 파싱/클리닝 포함) + 파일 I/O(엑셀/CSV)
-models.py = 데이터 구조/스키마 + 비즈니스 도메인 로직 (I/O 로직 없음)
-worker.py = (옵션) service가 넘겨준 성능값을 소비만 (스레드풀, sleep 등)
+분리 원칙(간단):
+service.py = 흐름/오케스트레이션
+adapters.py = 벤더 호출·변환·파일 I/O
+models.py = 데이터 구조/스키마
 (복잡해지면 그때 engine_local.py로 계산만 분리)
 허용 리팩토링: 미사용 import/변수 제거, 네이밍·주석·도크스트링 개선(동작 불변).
 PR 규칙: 작은 PR, 관련 파일만. 절대 임포트 사용(예: from src.features.xxx.service import ...), import * 금지.
@@ -75,10 +74,13 @@ integrated_management_system/
 │  ├─ toolbox/                         # 공용 유틸/공용 UI(벤더·비즈 지식 없음)
 │  │  ├─ __init__.py
 │  │  ├─ validators.py                 # 형식 검증(URL/키/경로/날짜 등, 네트워크 X)
+│  │  ├─ text_utils.py                 # 통합 텍스트 처리 유틸리티
 │  │  └─ ui_kit/
 │  │     ├─ __init__.py
+│  │     ├─ modern_style.py            # CSS 스타일 시스템
 │  │     ├─ components.py              # 공용 위젯(Button/Input/Table/Toast)
-│  │     └─ dialogs.py                 # 범용 다이얼로그(Form/Confirm/Progress/FileSave)
+│  │     ├─ modern_dialog.py           # 범용 다이얼로그(Form/Confirm/Progress/FileSave)
+│  │     └─ sortable_items.py          # 정렬 가능한 테이블/트리 아이템
 │  │
 │  ├─ features/                        # 비즈니스 기능(모듈별 동일 3파일 + 옵션)
 │  │  ├─ keyword_analysis/
@@ -87,7 +89,6 @@ integrated_management_system/
 │  │  │  ├─ adapters.py                # 벤더 호출·정규화·엑셀/CSV 저장
 │  │  │  ├─ models.py                  # DTO/엔티티/DDL 헬퍼
 │  │  │  ├─ ui.py                      # (옵션) 화면
-│  │  │  ├─ settings.py                # (옵션) 기본값/상수
 │  │  │  └─ worker.py                  # (옵션) 장시간 작업
 │  │  ├─ rank_tracking/                # ⟵ 동일 구조
 │  │  ├─ naver_cafe/                   # ⟵ 동일 구조
@@ -148,14 +149,13 @@ UI 변경 금지(승인 전)
 
 6) 새 기능 추가 체크리스트 (모듈 템플릿)
 src/features/<new_module>/ 생성
-필수 파일: service.py, adapters.py, models.py (옵션: ui.py, worker.py)
-- service.py: 오케스트레이션 + 성능 정책 상수 정의 (MAX_WORKERS, DELAY 등)
-- adapters.py: 벤더 API 호출 + 데이터 정규화 + 엑셀/CSV 저장
-- models.py: 데이터 구조 + 비즈니스 도메인 로직 (is_valid, calculate 등)
-- worker.py: (옵션) 멀티스레딩 처리 (service의 성능값 소비)
+파일 생성: service.py, adapters.py, models.py (필요시 ui.py, worker.py)
+service.py에 오케스트레이션 작성 (adapters 경유, DB/엑셀 트리거 포함)
+adapters.py에 벤더 호출/정규화/엑셀 저장 작성
+models.py에 DTO/DDL/레포 헬퍼 작성 → service.py에서 호출
 실행 확인 → 작은 PR
 
-7) 커졌을 때의 “점진 확장” (트리거 & 액션)
+7) 커졌을 때의 "점진 확장" (트리거 & 액션)
 service.py가 400줄↑ / 계산 규칙 복잡 → engine_local.py 추가, 계산만 옮기기(.pyd 대상)
 코드 보호/중앙 통제 필요 → 그때 engine_remote.py+engine.py(스위치)와 server/(FastAPI) 도입
 배포 자동화/업데이트 필요 → scripts/, updater/ 내용 채우기
@@ -169,13 +169,14 @@ EXE 빌드: scripts/build_windows.bat (PyInstaller) — 나중에 작성
 9) 빠른 위치 안내
 
 네이버 API 통합 접근 → vendors/naver/client_factory.py
-벤더 호출/정규화/엑셀 저장 → features/<module>/adapters.py
-데이터 구조/비즈니스 로직 → features/<module>/models.py
-오케스트레이션/성능 정책 → features/<module>/service.py
-멀티스레딩 처리 → features/<module>/worker.py
+정규화/엑셀 저장 → features/<module>/adapters.py
+DB DDL/INSERT 헬퍼 → features/<module>/models.py
+흐름/검증/저장/로그 → features/<module>/service.py
 형식검증 → toolbox/validators.py
 라이브 점검 → desktop/api_checker.py
-공용 버튼/다이얼로그 → toolbox/ui_kit/{components.py, dialogs.py}
+공용 버튼/다이얼로그 → toolbox/ui_kit/{components.py, modern_dialog.py}
+텍스트 처리 → toolbox/text_utils.py
+테이블 정렬 → toolbox/ui_kit/sortable_items.py
 
 10) 변경 전 체크리스트
 
@@ -196,11 +197,11 @@ UI 변경이 없는가(승인 전 금지)?
 네이버 검색광고 월검색량/예상실적? → vendors/naver/searchad/keyword_client.py 
 네이버 응답 표준화? → vendors/naver/normalizers.py + vendors/naver/models.py
 네이버 API 통합 접근? → vendors/naver/client_factory.py 
-키/권한 라이브 점검? → desktop/api_checker.py 
-URL/키 포맷·경로·날짜 검증? → toolbox/validators.py 
-오케스트레이션/성능 정책(MAX_WORKERS)? → features/<module>/service.py 
-벤더 호출/정규화/엑셀 저장? → features/<module>/adapters.py 
-데이터 구조/비즈니스 로직? → features/<module>/models.py
-멀티스레딩/백그라운드 처리? → features/<module>/worker.py
+키/권한 라이브 점검? → desktop/api_checker.py URL/
+키 포맷·경로·날짜 검증? → toolbox/validators.py 
+모듈별 알고리즘(핵심 로직)? → features/<module>/service.py (.pyd 배포) 
+엑셀/포맷 가공? → features/<module>/adapters.py 
 DB 연결/트랜잭션/헬퍼? → foundation/db.py 
 공용 버튼/다이얼로그? → toolbox/ui_kit/{components,modern_dialog}.py
+텍스트 처리? → toolbox/text_utils.py
+테이블 정렬? → toolbox/ui_kit/sortable_items.py

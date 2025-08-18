@@ -1,6 +1,6 @@
 """
 네이버 카페 DB 추출기 데이터 모델
-CLAUDE.md 구조에 맞게 설계된 모델 클래스들
+CLAUDE.md 구조 준수: DTO/엔티티/상수/DDL 헬퍼만 담당
 """
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional, Set
@@ -143,16 +143,16 @@ class ExtractionResult:
         self.total_articles = len(self.articles)
 
 
-# 전역 데이터베이스 (영구 저장소 기반)
+# 메모리 기반 데이터 저장소 (CLAUDE.md: models는 DTO/엔티티만, I/O는 service에서)
 class CafeExtractionDatabase:
-    """카페 추출 데이터베이스 (영구 저장소 기반)"""
+    """카페 추출 메모리 데이터베이스 - CLAUDE.md: DDL 헬퍼만 담당"""
     
     def __init__(self):
         self.extracted_users: List[ExtractedUser] = []  # 메모리 캐시 (세션 중에만 유지)
         self.current_task: Optional[ExtractionTask] = None
         
     def add_user(self, user: ExtractedUser):
-        """사용자 추가 (중복 제거)"""
+        """사용자 추가 (중복 제거) - 단순 메모리 연산만"""
         # 기존 사용자 확인
         for existing in self.extracted_users:
             if existing.user_id == user.user_id:
@@ -164,23 +164,36 @@ class CafeExtractionDatabase:
         self.extracted_users.append(user)
     
     def get_all_users(self) -> List[ExtractedUser]:
-        """모든 사용자 반환"""
+        """모든 사용자 반환 - 단순 메모리 연산만"""
         return self.extracted_users.copy()
     
     def get_unique_user_count(self) -> int:
-        """고유 사용자 수 반환"""
+        """고유 사용자 수 반환 - 단순 메모리 연산만"""
         return len(set(user.user_id for user in self.extracted_users))
     
     def clear_users(self):
-        """사용자 데이터 초기화"""
+        """사용자 데이터 초기화 - 단순 메모리 연산만"""
         self.extracted_users.clear()
     
-    def add_extraction_task(self, task: ExtractionTask):
-        """추출 작업 기록 추가 - 영구 저장소에 저장"""
-        from src.foundation.db import get_db
-        
-        # ExtractionTask를 딕셔너리로 변환
-        task_data = {
+    def get_users_by_task_id(self, task_id: str) -> List[ExtractedUser]:
+        """특정 작업 ID의 사용자들 반환 - 현재는 모든 사용자 반환"""
+        # 임시로 모든 사용자 반환 (추후 개선 필요)
+        return self.extracted_users.copy()
+    
+    def clear_all(self):
+        """모든 데이터 초기화 - 메모리만"""
+        self.extracted_users.clear()
+        self.current_task = None
+
+
+# DDL 헬퍼 클래스들 (CLAUDE.md: models에서 허용되는 DB 헬퍼)
+class CafeExtractionRepository:
+    """카페 추출 저장소 헬퍼 - CLAUDE.md: DDL/간단 레포 헬퍼만"""
+    
+    @staticmethod
+    def task_to_dict(task: ExtractionTask) -> Dict:
+        """ExtractionTask를 딕셔너리로 변환 - DTO 변환만"""
+        return {
             'task_id': task.task_id,
             'cafe_name': task.cafe_info.name,
             'cafe_url': task.cafe_info.url,
@@ -195,76 +208,37 @@ class CafeExtractionDatabase:
             'completed_at': task.completed_at.isoformat() if task.completed_at else None,
             'error_message': task.error_message
         }
-        
-        # Foundation DB에 저장
-        get_db().add_cafe_extraction_task(task_data)
     
-    def get_extraction_history(self) -> List[ExtractionTask]:
-        """추출 기록 반환 - 영구 저장소에서 조회"""
-        from src.foundation.db import get_db
+    @staticmethod
+    def dict_to_task(task_dict: Dict) -> ExtractionTask:
+        """딕셔너리를 ExtractionTask로 변환 - DTO 변환만"""
+        cafe_info = CafeInfo(
+            name=task_dict['cafe_name'],
+            url=task_dict['cafe_url'],
+            member_count="", 
+            cafe_id=""
+        )
         
-        tasks = []
-        task_dicts = get_db().get_cafe_extraction_tasks()
+        board_info = BoardInfo(
+            name=task_dict['board_name'],
+            url=task_dict['board_url'],
+            board_id="",
+            article_count=0
+        )
         
-        for task_dict in task_dicts:
-            # 딕셔너리를 ExtractionTask로 변환
-            try:
-                cafe_info = CafeInfo(
-                    name=task_dict['cafe_name'],
-                    url=task_dict['cafe_url'],
-                    member_count="", 
-                    cafe_id=""
-                )
-                
-                board_info = BoardInfo(
-                    name=task_dict['board_name'],
-                    url=task_dict['board_url'],
-                    board_id="",
-                    article_count=0
-                )
-                
-                task = ExtractionTask(
-                    cafe_info=cafe_info,
-                    board_info=board_info,
-                    start_page=task_dict['start_page'],
-                    end_page=task_dict['end_page'],
-                    task_id=task_dict['task_id'],
-                    status=ExtractionStatus(task_dict['status']),
-                    current_page=task_dict['current_page'],
-                    total_extracted=task_dict['total_extracted'],
-                    created_at=datetime.fromisoformat(task_dict['created_at']) if task_dict['created_at'] else datetime.now(),
-                    completed_at=datetime.fromisoformat(task_dict['completed_at']) if task_dict['completed_at'] else None,
-                    error_message=task_dict['error_message']
-                )
-                
-                tasks.append(task)
-                
-            except Exception as e:
-                from src.foundation.logging import get_logger
-                logger = get_logger("features.naver_cafe.models")
-                logger.error(f"추출 기록 변환 실패: {e}")
-                continue
-        
-        return tasks
-    
-    def delete_extraction_task(self, task_id: str):
-        """특정 추출 작업 기록 삭제 - 영구 저장소에서 삭제"""
-        from src.foundation.db import get_db
-        
-        # Foundation DB에서 삭제 (cascade로 관련 결과도 함께 삭제됨)
-        get_db().delete_cafe_extraction_task(task_id)
-    
-    def get_users_by_task_id(self, task_id: str) -> List[ExtractedUser]:
-        """특정 작업 ID의 사용자들 반환"""
-        # 현재 메모리 기반 구조에서는 모든 사용자를 반환
-        # 실제로는 task_id와 user의 연관관계를 저장해야 함
-        # 임시로 모든 사용자 반환 (추후 개선 필요)
-        return self.extracted_users.copy()
-    
-    def clear_all(self):
-        """모든 데이터 초기화 (메모리 캐시만, 영구 저장소는 유지)"""
-        self.extracted_users.clear()
-        self.current_task = None
+        return ExtractionTask(
+            cafe_info=cafe_info,
+            board_info=board_info,
+            start_page=task_dict['start_page'],
+            end_page=task_dict['end_page'],
+            task_id=task_dict['task_id'],
+            status=ExtractionStatus(task_dict['status']),
+            current_page=task_dict['current_page'],
+            total_extracted=task_dict['total_extracted'],
+            created_at=datetime.fromisoformat(task_dict['created_at']) if task_dict['created_at'] else datetime.now(),
+            completed_at=datetime.fromisoformat(task_dict['completed_at']) if task_dict['completed_at'] else None,
+            error_message=task_dict['error_message']
+        )
     
 
 

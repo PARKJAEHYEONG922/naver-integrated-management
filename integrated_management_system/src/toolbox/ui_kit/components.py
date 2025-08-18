@@ -25,31 +25,8 @@ class ModernPrimaryButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """키워드 분석기의 기본 버튼 스타일"""
-        self.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['primary']};
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: #1d4ed8;
-                color: white;
-            }}
-            QPushButton:pressed {{
-                background-color: #1e40af;
-                color: white;
-            }}
-            QPushButton:disabled {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
-            }}
-        """)
+        """공용 스타일 사용 - ModernStyle.get_button_style() 활용"""
+        self.setStyleSheet(ModernStyle.get_button_style('primary'))
 
 
 class ModernSuccessButton(QPushButton):
@@ -60,31 +37,8 @@ class ModernSuccessButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """키워드 분석기의 성공 버튼 스타일"""
-        self.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['success']};
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: #059669;
-                color: white;
-            }}
-            QPushButton:pressed {{
-                background-color: #047857;
-                color: white;
-            }}
-            QPushButton:disabled {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
-            }}
-        """)
+        """공용 스타일 사용 - ModernStyle.get_button_style() 활용"""
+        self.setStyleSheet(ModernStyle.get_button_style('secondary'))
 
 
 class ModernDangerButton(QPushButton):
@@ -95,31 +49,8 @@ class ModernDangerButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """키워드 분석기의 클리어 버튼 스타일"""
-        self.setStyleSheet(f"""
-            QPushButton {{
-                background-color: #ef4444;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: #dc2626;
-                color: white;
-            }}
-            QPushButton:pressed {{
-                background-color: #b91c1c;
-                color: white;
-            }}
-            QPushButton:disabled {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
-            }}
-        """)
+        """공용 스타일 사용 - ModernStyle.get_button_style() 활용"""
+        self.setStyleSheet(ModernStyle.get_button_style('danger'))
 
 
 class ModernCancelButton(QPushButton):
@@ -169,28 +100,8 @@ class ModernHelpButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """키워드 분석기의 도움말 버튼 스타일"""
-        self.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_primary']};
-                border: 1px solid {ModernStyle.COLORS['border']};
-                padding: 6px 12px;
-                border-radius: 6px;
-                font-size: 12px;
-                font-weight: 500;
-                min-width: 70px;
-            }}
-            QPushButton:hover {{
-                background-color: {ModernStyle.COLORS['bg_secondary']};
-                border-color: {ModernStyle.COLORS['primary']};
-            }}
-            QPushButton:pressed {{
-                background-color: {ModernStyle.COLORS['primary']};
-                color: white;
-                border-color: {ModernStyle.COLORS['primary']};
-            }}
-        """)
+        """공용 스타일 사용 - ModernStyle.get_button_style() 활용"""
+        self.setStyleSheet(ModernStyle.get_button_style('outline'))
 
 
 class ModernButton(QPushButton):
@@ -202,49 +113,21 @@ class ModernButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """스타일 설정"""
-        colors = {
-            "primary": ModernStyle.COLORS['primary'],
-            "success": ModernStyle.COLORS['success'],
-            "warning": ModernStyle.COLORS['warning'],
-            "danger": ModernStyle.COLORS['danger'],
-            "info": ModernStyle.COLORS['info']
+        """공용 스타일 사용 - ModernStyle.get_button_style() 활용"""
+        # style_type을 ModernStyle의 지원 타입으로 매핑
+        style_mapping = {
+            "primary": "primary",
+            "success": "secondary",  # success는 secondary로 매핑
+            "warning": "danger",     # warning은 danger로 매핑 (임시)
+            "danger": "danger",
+            "info": "primary",       # info는 primary로 매핑
+            "secondary": "outline"   # secondary는 outline으로 매핑
         }
         
-        bg_color = colors.get(self.style_type, ModernStyle.COLORS['primary'])
-        
-        self.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {bg_color};
-                color: white;
-                border: none;
-                border-radius: 8px;
-                padding: 8px 16px;
-                font-family: 'Segoe UI', sans-serif;
-                font-size: 14px;
-                font-weight: bold;
-            }}
-            QPushButton:hover {{
-                background-color: {self._darken_color(bg_color)};
-            }}
-            QPushButton:pressed {{
-                background-color: {self._darken_color(bg_color, 0.2)};
-            }}
-            QPushButton:disabled {{
-                background-color: {ModernStyle.COLORS['bg_muted']};
-                color: #FFFFFF;
-            }}
-        """)
-        
-        self.setMinimumHeight(ModernStyle.BUTTON_HEIGHT)
-        self.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_NORMAL))
+        mapped_style = style_mapping.get(self.style_type, "primary")
+        self.setStyleSheet(ModernStyle.get_button_style(mapped_style))
     
-    def _darken_color(self, color: str, factor: float = 0.1) -> str:
-        """색상 어둡게 만들기"""
-        # 간단한 색상 조정 (실제로는 더 정교한 방법 사용 가능)
-        if color.startswith('#'):
-            return color  # 일단 원색 반환
-        return color
+    # _darken_color 메서드 제거됨 - 공용 스타일 사용으로 불필요
 
 
 class ModernLineEdit(QLineEdit):
@@ -256,24 +139,8 @@ class ModernLineEdit(QLineEdit):
         self._setup_style()
     
     def _setup_style(self):
-        """스타일 설정"""
-        self.setStyleSheet(f"""
-            QLineEdit {{
-                border: 2px solid {ModernStyle.BORDER_COLOR};
-                border-radius: {ModernStyle.BUTTON_BORDER_RADIUS}px;
-                padding: 6px 12px;
-                font-family: {ModernStyle.DEFAULT_FONT};
-                font-size: {ModernStyle.FONT_SIZE_NORMAL}px;
-                background-color: white;
-            }}
-            QLineEdit:focus {{
-                border-color: {ModernStyle.PRIMARY_COLOR};
-                outline: none;
-            }}
-        """)
-        
-        self.setMinimumHeight(ModernStyle.INPUT_HEIGHT)
-        self.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_NORMAL))
+        """공용 스타일 사용 - ModernStyle.get_input_style() 활용"""
+        self.setStyleSheet(ModernStyle.get_input_style())
 
 
 class ModernTextEdit(QTextEdit):
@@ -304,43 +171,33 @@ class ModernTextEdit(QTextEdit):
         self.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_NORMAL))
 
 
-class ModernCard(QFrame):
-    """모던 스타일 카드"""
+class ModernCard(QGroupBox):
+    """모던 스타일 카드 - 원본과 동일한 QGroupBox 기반"""
     
     def __init__(self, title: str = "", parent=None):
-        super().__init__(parent)
-        self.title = title
-        self._setup_ui()
+        super().__init__(title, parent)
         self._setup_style()
     
-    def _setup_ui(self):
-        """UI 설정"""
-        self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(16, 16, 16, 16)
-        self.layout.setSpacing(12)
-        
-        if self.title:
-            self.title_label = QLabel(self.title)
-            self.title_label.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_HEADER, QFont.Bold))
-            self.layout.addWidget(self.title_label)
-    
     def _setup_style(self):
-        """스타일 설정"""
+        """스타일 설정 - 원본과 동일"""
         self.setStyleSheet(f"""
-            QFrame {{
+            QGroupBox {{
+                font-size: 13px;
+                font-weight: 600;
+                border: 2px solid {ModernStyle.COLORS['border']};
+                border-radius: 12px;
+                margin: 10px 0;
+                padding-top: 15px;
                 background-color: {ModernStyle.COLORS['bg_card']};
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+            }}
+            QGroupBox::title {{
+                subcontrol-origin: margin;
+                left: 15px;
+                padding: 0 10px;
+                color: {ModernStyle.COLORS['text_primary']};
+                background-color: {ModernStyle.COLORS['bg_card']};
             }}
         """)
-    
-    def add_widget(self, widget: QWidget):
-        """위젯 추가"""
-        self.layout.addWidget(widget)
-    
-    def add_layout(self, layout):
-        """레이아웃 추가"""
-        self.layout.addLayout(layout)
 
 
 class ModernProgressBar(QProgressBar):

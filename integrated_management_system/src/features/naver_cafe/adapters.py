@@ -1,20 +1,19 @@
 """
 네이버 카페 DB 추출기 어댑터
-vendors의 데이터를 카페 추출용 데이터로 변환
+CLAUDE.md 구조 준수: vendors 호출, 정규화, 파일 I/O 담당
 """
 from typing import List, Dict, Optional, Any
 from datetime import datetime
 import re
 import time
+import csv
 
-# aiohttp는 worker.py에서만 사용
-
+# 벤더/파일 I/O만 담당, 비즈니스 로직은 service에서
 from src.foundation.logging import get_logger
 from .models import CafeInfo, BoardInfo, ExtractedUser, ArticleInfo
-from .config import (
-    CAFE_EXTRACTION_CONFIG, NAVER_CAFE_PATTERNS, 
-    ERROR_MESSAGES, SUCCESS_MESSAGES, BROWSER_CONFIG
-)
+# 실제 사용되는 설정을 adapters에 직접 정의 (CLAUDE.md: 간소화)
+RATE_LIMIT_REQUESTS_PER_MINUTE = 30
+META_CSV_DOMAINS = ["@naver.com", "@gmail.com", "@daum.net"]
 
 logger = get_logger("features.naver_cafe.adapters")
 
@@ -24,7 +23,7 @@ class NaverCafeDataAdapter:
     
     def __init__(self):
         self.rate_limiter = RateLimiter(
-            requests_per_minute=CAFE_EXTRACTION_CONFIG["rate_limiting"]["requests_per_minute"]
+            requests_per_minute=RATE_LIMIT_REQUESTS_PER_MINUTE
         )
     
     
@@ -327,16 +326,17 @@ class NaverCafeDataAdapter:
     
     
     def export_users_to_excel(self, file_path: str, users: List[ExtractedUser]) -> bool:
-        """사용자 목록을 엑셀로 내보내기"""
+        """사용자 목록을 엑셀로 내보내기 - CLAUDE.md: 파일 I/O는 adapters 담당"""
         try:
             import openpyxl
             from openpyxl.styles import Font, PatternFill, Alignment
             
+            # 1. 엑셀 워크북 생성
             wb = openpyxl.Workbook()
             ws = wb.active
             ws.title = "추출된 사용자"
             
-            # 헤더
+            # 2. 헤더 작성 (형식화)
             headers = ["번호", "사용자 ID", "닉네임", "추출 시간"]
             for col, header in enumerate(headers, 1):
                 cell = ws.cell(row=1, column=col, value=header)
@@ -344,14 +344,16 @@ class NaverCafeDataAdapter:
                 cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
                 cell.alignment = Alignment(horizontal="center")
             
-            # 데이터
+            # 3. 데이터 정규화 및 작성
             for row, user in enumerate(users, 2):
                 ws.cell(row=row, column=1, value=row-1)  # 번호
-                ws.cell(row=row, column=2, value=user.user_id)  # 사용자 ID
-                ws.cell(row=row, column=3, value=user.nickname)  # 닉네임
-                ws.cell(row=row, column=4, value=user.last_seen.strftime("%Y-%m-%d %H:%M:%S"))  # 추출 시간
+                ws.cell(row=row, column=2, value=user.user_id or "")  # 사용자 ID
+                ws.cell(row=row, column=3, value=user.nickname or "")  # 닉네임
+                # 날짜 정규화
+                date_str = user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""
+                ws.cell(row=row, column=4, value=date_str)  # 추출 시간
             
-            # 컬럼 너비 자동 조정
+            # 4. 컬럼 너비 자동 조정
             for column in ws.columns:
                 max_length = 0
                 column_letter = column[0].column_letter
@@ -364,36 +366,41 @@ class NaverCafeDataAdapter:
                 adjusted_width = min(max_length + 2, 50)
                 ws.column_dimensions[column_letter].width = adjusted_width
             
+            # 5. 파일 저장 (실제 I/O)
             wb.save(file_path)
-            logger.info(f"엑셀 내보내기 완료: {file_path}")
+            logger.debug(f"엑셀 파일 저장 완료: {file_path} ({len(users)}개 레코드)")
             return True
             
         except Exception as e:
-            logger.error(f"엑셀 내보내기 실패: {e}")
+            logger.error(f"엑셀 파일 저장 실패: {e}")
             return False
     
     def export_users_to_meta_csv(self, file_path: str, users: List[ExtractedUser]) -> bool:
-        """사용자 목록을 Meta CSV로 내보내기"""
+        """사용자 목록을 Meta CSV로 내보내기 - CLAUDE.md: 파일 I/O는 adapters 담당"""
         try:
-            domains = CAFE_EXTRACTION_CONFIG["export_settings"]["meta_csv_domains"]
+            # 1. 도메인 목록 사용
+            domains = META_CSV_DOMAINS
             
+            # 2. CSV 파일 생성 및 데이터 정규화
             with open(file_path, 'w', newline='', encoding='utf-8-sig') as csvfile:
                 writer = csv.writer(csvfile)
                 
-                # 헤더
+                # 3. 헤더 작성
                 writer.writerow(["email"])
                 
-                # 데이터 (사용자 ID를 이메일 형식으로 변환)
+                # 4. 데이터 정규화 및 작성 (사용자 ID를 이메일 형식으로 변환)
                 for i, user in enumerate(users):
                     domain = domains[i % len(domains)]
-                    email = f"{user.user_id}{domain}"
+                    # 사용자 ID 정규화 (특수문자 제거 등)
+                    clean_user_id = user.user_id.replace(" ", "").replace("@", "") if user.user_id else f"user{i}"
+                    email = f"{clean_user_id}{domain}"
                     writer.writerow([email])
             
-            logger.info(f"Meta CSV 내보내기 완료: {file_path}")
+            logger.debug(f"Meta CSV 파일 저장 완료: {file_path} ({len(users)}개 레코드)")
             return True
             
         except Exception as e:
-            logger.error(f"Meta CSV 내보내기 실패: {e}")
+            logger.error(f"Meta CSV 파일 저장 실패: {e}")
             return False
     
     def get_board_total_pages(self, board_info: BoardInfo) -> int:

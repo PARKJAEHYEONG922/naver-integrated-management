@@ -14,10 +14,11 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
-from .control_widget import ModernButton
 from .models import ExtractedUser, ExtractionTask, CafeInfo, BoardInfo, ExtractionStatus
+from .service import NaverCafeExtractionService
 
 logger = get_logger("features.naver_cafe.results_widget")
 
@@ -27,6 +28,8 @@ class NaverCafeResultsWidget(QWidget):
     
     def __init__(self, parent=None):
         super().__init__(parent)
+        # service 초기화 (CLAUDE.md: UI는 service 경유)
+        self.service = NaverCafeExtractionService()
         self.setup_ui()
         # 초기 데이터 로드
         self.load_initial_data()
@@ -159,7 +162,7 @@ class NaverCafeResultsWidget(QWidget):
             }}
         """)
         
-        # 버튼들 (원본과 동일하게 복사, 저장만) - 크기 조정
+        # 버튼들
         self.copy_button = ModernButton("📋 복사", "secondary")
         self.copy_button.setMinimumSize(130, int(36 * 0.8))  # 너비 130, 높이는 0.8배 (130x29)
         
@@ -644,9 +647,8 @@ class NaverCafeResultsWidget(QWidget):
                 row_data.append(item.text() if item else "")
             users_data.append(row_data)
         
-        # excel_export 모듈 사용
-        from .excel_export import cafe_excel_exporter
-        cafe_excel_exporter.export_to_excel(users_data, self)
+        # service 경유로 엑셀 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
+        self.service.export_to_excel_with_dialog(users_data, self)
             
     def export_to_meta_csv(self):
         """Meta CSV로 내보내기 - excel_export 모듈 사용"""
@@ -663,9 +665,8 @@ class NaverCafeResultsWidget(QWidget):
                 row_data.append(item.text() if item else "")
             users_data.append(row_data)
         
-        # excel_export 모듈 사용
-        from .excel_export import cafe_excel_exporter
-        cafe_excel_exporter.export_to_meta_csv(users_data, self)
+        # service 경유로 Meta CSV 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
+        self.service.export_to_meta_csv_with_dialog(users_data, self)
     
     def _show_copy_completion_dialog(self, title: str, message: str):
         """모던한 복사 완료 다이얼로그"""
@@ -1076,39 +1077,14 @@ class NaverCafeResultsWidget(QWidget):
         
         # 선택된 형식으로 내보내기
         if result == "excel":
-            from .excel_export import cafe_excel_exporter
-            success = cafe_excel_exporter.export_to_excel(selected_data, self)
+            success = self.service.export_to_excel_with_dialog(selected_data, self)
             if success:
                 log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 Excel 다운로드 완료 (총 {len(selected_data)}명)", "success")
         elif result == "meta_csv":
-            from .excel_export import cafe_excel_exporter
-            success = cafe_excel_exporter.export_to_meta_csv(selected_data, self)
+            success = self.service.export_to_meta_csv_with_dialog(selected_data, self)
             if success:
                 log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 Meta CSV 다운로드 완료 (총 {len(selected_data)}명)", "success")
         
-    def clear_all_data(self):
-        """모든 데이터 클리어"""
-        if self.users_table.rowCount() == 0:
-            QMessageBox.information(self, "정보", "클리어할 데이터가 없습니다.")
-            return
-        
-        # 확인 대화상자
-        reply = QMessageBox.question(
-            self,
-            "확인",
-            "모든 추출 데이터를 삭제하시겠습니까?\\n\\n이 작업은 되돌릴 수 없습니다.",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No
-        )
-        
-        if reply == QMessageBox.Yes:
-            # 메모리 데이터 클리어 (영구 저장소는 유지)
-            
-            # 모든 테이블 클리어
-            self.on_all_data_cleared()
-            
-            QMessageBox.information(self, "완료", "모든 데이터가 삭제되었습니다.")
-            log_manager.add_log("카페 추출 데이터 전체 클리어", "info")
             
     def on_user_extracted(self, user: ExtractedUser):
         """사용자 추출 시 실시간 테이블 업데이트"""
@@ -1136,15 +1112,6 @@ class NaverCafeResultsWidget(QWidget):
         self.users_table.setRowCount(0)
         self.update_users_count()
         log_manager.add_log("새로운 추출 시작 - 사용자 테이블 클리어", "info")
-    
-    def on_all_data_cleared(self):
-        """모든 데이터 클리어 시 모든 테이블 클리어"""
-        self.users_table.setRowCount(0)
-        self.history_table.setRowCount(0)
-        self.update_users_count()
-        self.history_count_label.setText("총 기록: 0개")
-        # 버튼 텍스트 초기화
-        self.update_selection_buttons()
     
     
     def delete_selected_history(self):
@@ -1235,9 +1202,8 @@ class NaverCafeResultsWidget(QWidget):
             self._show_warning_dialog("데이터 없음", "선택된 기록에 내보낼 사용자 데이터가 없습니다.")
             return
         
-        # excel_export 모듈 사용하여 엑셀로 내보내기
-        from .excel_export import cafe_excel_exporter
-        success = cafe_excel_exporter.export_to_excel(selected_data, self)
+        # service 경유로 엑셀로 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
+        success = self.service.export_to_excel_with_dialog(selected_data, self)
         
         if success:
             log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 엑셀 내보내기 완료 (총 {len(selected_data)}명)", "success")

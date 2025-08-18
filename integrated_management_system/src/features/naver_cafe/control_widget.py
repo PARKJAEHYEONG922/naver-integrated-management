@@ -15,6 +15,7 @@ from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, ModernSuccessButton, ModernCancelButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from .models import (
@@ -22,7 +23,8 @@ from .models import (
     ExtractionStatus, cafe_extraction_db
 )
 from .worker import NaverCafeUnifiedWorker
-from .config import CAFE_EXTRACTION_CONFIG, ERROR_MESSAGES, SUCCESS_MESSAGES
+from .service import NaverCafeExtractionService
+# config.py 삭제됨 - 필요한 메시지는 직접 사용
 
 logger = get_logger("features.naver_cafe.control_widget")
 
@@ -30,132 +32,7 @@ logger = get_logger("features.naver_cafe.control_widget")
 
 
 
-class ModernCard(QGroupBox):
-    """모던 스타일 카드 위젯"""
-    
-    def __init__(self, title="", parent=None):
-        super().__init__(title, parent)
-        self.setStyleSheet(f"""
-            QGroupBox {{
-                font-size: 14px;
-                font-weight: 600;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 12px;
-                margin: 8px 0;
-                padding-top: 8px;
-                background-color: {ModernStyle.COLORS['bg_card']};
-            }}
-            QGroupBox::title {{
-                subcontrol-origin: margin;
-                left: 15px;
-                padding: 0 8px;
-                color: {ModernStyle.COLORS['text_primary']};
-                background-color: {ModernStyle.COLORS['bg_card']};
-            }}
-        """)
-
-
-class ModernButton(QPushButton):
-    """모던 스타일 버튼"""
-    
-    def __init__(self, text, style="primary", parent=None):
-        super().__init__(text, parent)
-        self.style_type = style
-        self.setup_style()
-    
-    def setup_style(self):
-        if self.style_type == "primary":
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['primary']};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 600;
-                    font-size: 13px;
-                    font-family: 'Segoe UI', sans-serif;
-                }}
-                QPushButton:hover {{
-                    background-color: {ModernStyle.COLORS['primary_hover']};
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: {ModernStyle.COLORS['text_muted']};
-                }}
-            """)
-        elif self.style_type == "danger":
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['danger']};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 600;
-                    font-size: 13px;
-                }}
-                QPushButton:hover {{
-                    background-color: #dc2626;
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: white;
-                }}
-            """)
-        elif self.style_type == "success":
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['success']};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 600;
-                    font-size: 13px;
-                    font-family: 'Segoe UI', sans-serif;
-                }}
-                QPushButton:hover {{
-                    background-color: #059669;
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: white;
-                }}
-            """)
-        else:  # secondary or default
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['bg_secondary']};
-                    color: {ModernStyle.COLORS['text_primary']};
-                    border: 2px solid {ModernStyle.COLORS['border']};
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 500;
-                    font-size: 13px;
-                }}
-                QPushButton:hover {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    border-color: {ModernStyle.COLORS['primary']};
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                    background-color: {ModernStyle.COLORS['bg_card']};
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: {ModernStyle.COLORS['text_muted']};
-                }}
-            """)
+# 중복된 UI 컴포넌트 제거 - toolbox.ui_kit.components 사용
 
 
 class NaverCafeControlWidget(QWidget):
@@ -176,16 +53,13 @@ class NaverCafeControlWidget(QWidget):
         self.extraction_in_progress = False
         self.is_manually_stopped = False
         
-        # 검색 재시도 관련
-        self.search_retry_count = 0
-        self.max_search_retries = CAFE_EXTRACTION_CONFIG["max_retry_count"]
-        self.current_search_keyword = ""
-        self.search_timer = QTimer()
-        self.search_timer.timeout.connect(self.retry_search)
-        self.search_timer.setSingleShot(True)
+        # 검색 재시도 관련 변수들 제거 (실제 사용되지 않는 비즈니스 로직)
         
         # 통합 워커 (하나만 사용)
         self.unified_worker = None
+        
+        # 서비스 인스턴스 (CLAUDE.md: UI는 service 경유)
+        self.service = NaverCafeExtractionService()
         
         self.setup_ui()
         self.setup_connections()
@@ -228,7 +102,7 @@ class NaverCafeControlWidget(QWidget):
     def create_progress_card(self) -> ModernCard:
         """진행상황 카드"""
         card = ModernCard("📊 진행상황")
-        layout = QVBoxLayout(card)
+        layout = QVBoxLayout()
         layout.setSpacing(10)
         
         # 진행 단계들
@@ -300,6 +174,7 @@ class NaverCafeControlWidget(QWidget):
         """)
         layout.addWidget(self.status_label)
         
+        card.setLayout(layout)
         return card
     
     def update_step_display(self, label, step, status):
@@ -389,7 +264,7 @@ class NaverCafeControlWidget(QWidget):
     def create_search_card(self) -> ModernCard:
         """카페 검색 카드"""
         card = ModernCard("🔍 카페 검색")
-        layout = QVBoxLayout(card)
+        layout = QVBoxLayout()
         layout.setSpacing(8)
         
         # 검색어 입력과 검색 버튼을 가로로 배치
@@ -413,8 +288,8 @@ class NaverCafeControlWidget(QWidget):
             }}
         """)
         
-        # 검색 버튼
-        self.search_button = ModernButton("검색", "primary")
+        # 검색 버튼 - toolbox 공용 컴포넌트 사용
+        self.search_button = ModernPrimaryButton("검색")
         self.search_button.setFixedHeight(45)
         
         search_input_layout.addWidget(self.search_input, 1)
@@ -422,12 +297,13 @@ class NaverCafeControlWidget(QWidget):
         
         layout.addLayout(search_input_layout)
         
+        card.setLayout(layout)
         return card
         
     def create_cafe_card(self) -> ModernCard:
         """카페 선택 카드"""
         card = ModernCard("📍 카페 선택")
-        layout = QVBoxLayout(card)
+        layout = QVBoxLayout()
         layout.setSpacing(8)
         
         # 카페 선택 드롭다운
@@ -469,6 +345,7 @@ class NaverCafeControlWidget(QWidget):
         self.board_loading_widget = self.create_loading_widget()
         layout.addWidget(self.board_loading_widget)
         
+        card.setLayout(layout)
         return card
     
     def create_loading_widget(self) -> QWidget:
@@ -533,7 +410,7 @@ class NaverCafeControlWidget(QWidget):
     def create_board_card(self) -> ModernCard:
         """게시판 선택 카드"""
         card = ModernCard("📋 게시판 선택")
-        layout = QVBoxLayout(card)
+        layout = QVBoxLayout()
         layout.setSpacing(8)
         
         # 게시판 드롭다운
@@ -561,23 +438,24 @@ class NaverCafeControlWidget(QWidget):
         layout.addWidget(self.board_combo)
         layout.addWidget(self.selected_board_label)
         
+        card.setLayout(layout)
         return card
         
     def create_settings_card(self) -> ModernCard:
         """추출 설정 카드"""
         card = ModernCard("⚙️ 추출 설정")
-        layout = QFormLayout(card)
+        layout = QFormLayout()
         
         # 페이지 범위 설정 - 원본과 완전히 동일
         self.start_page_spin = QSpinBox()
         self.start_page_spin.setMinimum(1)
         self.start_page_spin.setMaximum(9999)
-        self.start_page_spin.setValue(CAFE_EXTRACTION_CONFIG["default_page_range"]["start"])
+        self.start_page_spin.setValue(1)  # config 제거로 하드코딩
         
         self.end_page_spin = QSpinBox()
         self.end_page_spin.setMinimum(1)
         self.end_page_spin.setMaximum(9999)
-        self.end_page_spin.setValue(CAFE_EXTRACTION_CONFIG["default_page_range"]["end"])
+        self.end_page_spin.setValue(10)  # config 제거로 하드코딩
         
         for spin in [self.start_page_spin, self.end_page_spin]:
             spin.setStyleSheet(f"""
@@ -617,6 +495,7 @@ class NaverCafeControlWidget(QWidget):
         layout.addRow("시작 페이지:", self.start_page_spin)
         layout.addRow("종료 페이지:", self.end_page_spin)
         
+        card.setLayout(layout)
         return card
         
     def create_control_buttons(self) -> QWidget:
@@ -625,13 +504,13 @@ class NaverCafeControlWidget(QWidget):
         button_layout = QVBoxLayout(button_container)
         button_layout.setSpacing(12)
         
-        # 추출 시작 버튼
-        self.extract_button = ModernButton("🚀 추출 시작", "success")
+        # 추출 시작 버튼 - toolbox 공용 컴포넌트 사용
+        self.extract_button = ModernSuccessButton("🚀 추출 시작")
         self.extract_button.setFixedHeight(45)
         self.extract_button.setEnabled(False)  # 처음엔 비활성화
         
-        # 정지 버튼
-        self.stop_button = ModernButton("⏹ 정지", "danger")
+        # 정지 버튼 - toolbox 공용 컴포넌트 사용 (활성화 시에만 빨간색)
+        self.stop_button = ModernCancelButton("⏹ 정지")
         self.stop_button.setFixedHeight(45)
         self.stop_button.setEnabled(False)  # 처음엔 비활성화
         
@@ -661,8 +540,7 @@ class NaverCafeControlWidget(QWidget):
             self.unified_worker.stop()
             self.unified_worker.wait()
         
-        self.current_search_keyword = search_text
-        self.search_retry_count = 0
+        # 검색 재시도 관련 변수들 제거됨
         self.search_button.setEnabled(False)
         
         # 카페 검색 시작 단계 업데이트
@@ -1009,60 +887,15 @@ class NaverCafeControlWidget(QWidget):
         
         log_manager.add_log(f"카페 추출 완료: {user_count}명", "info")
         
-        # 추출 기록 저장 (원본과 동일)
-        self._save_extraction_record(result)
+        # 추출 기록 저장 (CLAUDE.md: service 경유)
+        self.service.save_extraction_result(result, self.unified_worker)
         
         # 상위 위젯에 결과 전달
         self.extraction_completed.emit(result)
         
         # 다이얼로그 제거 - UI에 완료 메시지만 표시
     
-    def _save_extraction_record(self, result):
-        """추출 기록 저장 - foundation DB 직접 사용 (순위추적과 동일한 방식)"""
-        try:
-            from src.foundation.db import get_db
-            
-            # 통합 워커에서 추출된 result는 ExtractionResult 객체
-            if not result or not hasattr(result, 'task_id'):
-                log_manager.add_log("추출 기록 저장 실패: 결과 객체가 없습니다", "warning")
-                return
-            
-            # 통합 워커에서 카페/게시판 정보 가져오기
-            if not self.unified_worker or not hasattr(self.unified_worker, 'selected_cafe') or not hasattr(self.unified_worker, 'selected_board'):
-                log_manager.add_log("추출 기록 저장 실패: 워커에서 카페/게시판 정보가 없습니다", "warning")
-                return
-                
-            selected_cafe = self.unified_worker.selected_cafe
-            selected_board = self.unified_worker.selected_board
-            
-            if not selected_cafe or not selected_board:
-                log_manager.add_log("추출 기록 저장 실패: 카페/게시판이 설정되지 않았습니다", "warning")
-                return
-            
-            # Foundation DB에 직접 저장 (순위추적과 동일한 방식)
-            db = get_db()
-            task_data = {
-                'task_id': result.task_id,
-                'cafe_name': selected_cafe.name,
-                'cafe_url': selected_cafe.url,
-                'board_name': selected_board.name,
-                'board_url': selected_board.url,
-                'start_page': self.unified_worker.start_page,
-                'end_page': self.unified_worker.end_page,
-                'status': ExtractionStatus.COMPLETED.value,
-                'current_page': self.unified_worker.end_page,
-                'total_extracted': result.total_users,
-                'created_at': datetime.now().isoformat(),
-                'completed_at': datetime.now().isoformat(),
-                'error_message': None
-            }
-            
-            db.add_cafe_extraction_task(task_data)
-            
-            log_manager.add_log(f"추출 기록 저장 완료: {selected_cafe.name} > {selected_board.name}", "info")
-            
-        except Exception as e:
-            log_manager.add_log(f"추출 기록 저장 실패: {e}", "error")
+# 비즈니스 로직 제거 - service.py로 이동됨
     
     def on_extraction_error(self, error_msg):
         """추출 오류 처리"""
@@ -1090,23 +923,23 @@ class NaverCafeControlWidget(QWidget):
         dialog.exec()
     
     def on_user_extracted(self, user):
-        """개별 사용자 추출 시 실시간 업데이트"""
-        # 데이터베이스에 추가
-        cafe_extraction_db.add_user(user)
+        """개별 사용자 추출 시 실시간 업데이트 (CLAUDE.md: service 경유)"""
+        # 서비스 경유로 데이터베이스에 추가
+        self.service.add_extracted_user(user)
         
         # 상위 위젯에 전달
         self.user_extracted.emit(user)
     
     def clear_data(self):
-        """데이터 초기화"""
+        """데이터 초기화 (CLAUDE.md: service 경유)"""
         # 진행 중인 워커가 있으면 중단
         if self.unified_worker and self.unified_worker.isRunning():
             self.unified_worker.stop()
             self.unified_worker.wait()
             self.extraction_in_progress = False
         
-        # 데이터 클리어
-        cafe_extraction_db.clear_all()
+        # 서비스 경유로 데이터 클리어
+        self.service.clear_all_data()
         
         # UI 초기화
         self.reset_progress_steps()

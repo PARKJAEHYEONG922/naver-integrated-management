@@ -13,8 +13,7 @@ from .models import (
     CafeInfo, BoardInfo, ExtractedUser, ExtractionTask, ExtractionProgress, 
     ExtractionStatus, ExtractionResult
 )
-from .service import NaverCafeExtractionService
-from .config import CAFE_EXTRACTION_CONFIG
+from .service import NaverCafeExtractionService  
 from src.vendors.web_automation.playwright_helper import PlaywrightHelper, BrowserConfig
 
 logger = get_logger("features.naver_cafe.worker")
@@ -126,7 +125,7 @@ class NaverCafeUnifiedWorker(QThread):
         try:
             # Playwright 헬퍼 초기화
             config = BrowserConfig(
-                headless=CAFE_EXTRACTION_CONFIG["crawler_settings"]["headless"],
+                headless=True,
                 viewport_width=1920,
                 viewport_height=1080
             )
@@ -144,7 +143,7 @@ class NaverCafeUnifiedWorker(QThread):
         try:
             # Playwright 헬퍼 초기화
             config = BrowserConfig(
-                headless=CAFE_EXTRACTION_CONFIG["crawler_settings"]["headless"],
+                headless=True,
                 viewport_width=1920,
                 viewport_height=1080
             )
@@ -162,7 +161,7 @@ class NaverCafeUnifiedWorker(QThread):
         try:
             # Playwright 헬퍼 초기화
             config = BrowserConfig(
-                headless=CAFE_EXTRACTION_CONFIG["crawler_settings"]["headless"],
+                headless=True,
                 viewport_width=1920,
                 viewport_height=1080
             )
@@ -332,7 +331,7 @@ class NaverCafeUnifiedWorker(QThread):
                         api_calls += new_api_calls
                     
                     # Rate Limiting
-                    await asyncio.sleep(CAFE_EXTRACTION_CONFIG["rate_limiting"]["delay_between_requests"])
+                    await asyncio.sleep(2.0)  # 2초 대기 (기본값)
                     
                 except Exception as page_error:
                     logger.error(f"{page_num}페이지 처리 실패: {page_error}")
