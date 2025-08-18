@@ -337,56 +337,24 @@ class NaverCafeResultsWidget(QWidget):
         # 실제 추출 시에만 실시간으로 추가됨
             
     def refresh_history_table(self):
-        """기록 테이블 새로고침 - foundation DB 직접 사용 (순위추적과 동일한 방식)"""
+        """기록 테이블 새로고침 - service 경유 (CLAUDE.md 구조 준수)"""
         try:
-            from src.foundation.db import get_db
-            
             # 테이블 클리어
             self.history_table.setRowCount(0)
             
-            # Foundation DB에서 직접 기록 가져오기 (순위추적과 동일한 방식)
-            db = get_db()
-            task_dicts = db.get_cafe_extraction_tasks()
+            # service 경유로 기록 가져오기 (CLAUDE.md: UI는 service 경유만)
+            tasks = self.service.get_extraction_history()
             
-            # 딕셔너리를 ExtractionTask로 변환해서 기존 UI 로직 유지
-            for task_dict in task_dicts:
+            # ExtractionTask 객체를 테이블에 표시 (service에서 이미 변환됨)
+            for task in tasks:
                 try:
-                    cafe_info = CafeInfo(
-                        name=task_dict['cafe_name'],
-                        url=task_dict['cafe_url'],
-                        member_count="", 
-                        cafe_id=""
-                    )
-                    
-                    board_info = BoardInfo(
-                        name=task_dict['board_name'],
-                        url=task_dict['board_url'],
-                        board_id="",
-                        article_count=0
-                    )
-                    
-                    task = ExtractionTask(
-                        cafe_info=cafe_info,
-                        board_info=board_info,
-                        start_page=task_dict['start_page'],
-                        end_page=task_dict['end_page'],
-                        task_id=task_dict['task_id'],
-                        status=ExtractionStatus(task_dict['status']),
-                        current_page=task_dict['current_page'],
-                        total_extracted=task_dict['total_extracted'],
-                        created_at=datetime.fromisoformat(task_dict['created_at']) if task_dict['created_at'] else datetime.now(),
-                        completed_at=datetime.fromisoformat(task_dict['completed_at']) if task_dict['completed_at'] else None,
-                        error_message=task_dict['error_message']
-                    )
-                    
                     self.add_history_to_table(task)
-                    
                 except Exception as e:
-                    logger.error(f"추출 기록 변환 실패: {e}")
+                    logger.error(f"추출 기록 표시 실패: {e}")
                     continue
             
             # 기록 수 업데이트
-            self.history_count_label.setText(f"총 기록: {len(task_dicts)}개")
+            self.history_count_label.setText(f"총 기록: {len(tasks)}개")
             
         except Exception as e:
             logger.error(f"추출 기록 테이블 새로고침 실패: {e}")

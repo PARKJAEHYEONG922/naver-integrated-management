@@ -773,8 +773,8 @@ class NaverCafeControlWidget(QWidget):
             end_page=self.end_page_spin.value()
         )
         
-        # 새로운 추출 시작 - 기존 데이터 리셋
-        cafe_extraction_db.clear_users()  # 기존 사용자 데이터 모두 삭제
+        # 새로운 추출 시작 - 기존 데이터 리셋 (CLAUDE.md: service 경유)
+        self.service.clear_all_data()  # 기존 사용자 데이터 모두 삭제
         
         # UI 상태 변경
         self.extraction_in_progress = True
