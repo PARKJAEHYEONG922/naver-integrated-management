@@ -376,27 +376,46 @@ class NaverCafeDataAdapter:
             return False
     
     def export_users_to_meta_csv(self, file_path: str, users: List[ExtractedUser]) -> bool:
-        """사용자 목록을 Meta CSV로 내보내기 - CLAUDE.md: 파일 I/O는 adapters 담당"""
+        """사용자 목록을 Meta CSV로 내보내기 - 원본 통합관리프로그램과 동일한 방식 (3컬럼 헤더)"""
         try:
-            # 1. 도메인 목록 사용
-            domains = META_CSV_DOMAINS
+            # 1. 사용자 ID 수집 및 정규화
+            all_user_ids = []
+            for user in users:
+                # 사용자 ID 정규화 (영문, 숫자만 허용하고 특수문자 제거)
+                clean_user_id = ''.join(c for c in user.user_id if c.isalnum()) if user.user_id else f"user{users.index(user)}"
+                
+                # 빈 문자열이면 기본값 사용
+                if not clean_user_id:
+                    clean_user_id = f"user{users.index(user)}"
+                
+                if clean_user_id and clean_user_id not in all_user_ids:
+                    all_user_ids.append(clean_user_id)
             
-            # 2. CSV 파일 생성 및 데이터 정규화
+            # 중복 제거 및 정렬
+            all_user_ids = sorted(list(set(all_user_ids)))
+            
+            if not all_user_ids:
+                logger.warning("내보낼 사용자 ID가 없습니다")
+                return False
+            
+            # 2. 이메일 형태로 변환 (원본 방식)
+            email1 = [user_id + '@naver.com' for user_id in all_user_ids]
+            email2 = [user_id + '@gmail.com' for user_id in all_user_ids]
+            email3 = [user_id + '@daum.net' for user_id in all_user_ids]
+            
+            # 3. CSV 파일 생성 (원본과 동일한 3컬럼 방식)
             with open(file_path, 'w', newline='', encoding='utf-8-sig') as csvfile:
                 writer = csv.writer(csvfile)
                 
-                # 3. 헤더 작성
-                writer.writerow(["email"])
+                # 4. 헤더 작성 (email,email,email - 원본과 동일)
+                writer.writerow(['email', 'email', 'email'])
                 
-                # 4. 데이터 정규화 및 작성 (사용자 ID를 이메일 형식으로 변환)
-                for i, user in enumerate(users):
-                    domain = domains[i % len(domains)]
-                    # 사용자 ID 정규화 (특수문자 제거 등)
-                    clean_user_id = user.user_id.replace(" ", "").replace("@", "") if user.user_id else f"user{i}"
-                    email = f"{clean_user_id}{domain}"
-                    writer.writerow([email])
+                # 5. 데이터 행들 (각 행에 3개 이메일)
+                for i in range(len(all_user_ids)):
+                    writer.writerow([email1[i], email2[i], email3[i]])
             
-            logger.debug(f"Meta CSV 파일 저장 완료: {file_path} ({len(users)}개 레코드)")
+            total_emails = len(all_user_ids) * 3
+            logger.debug(f"Meta CSV 파일 저장 완료: {file_path} (사용자 {len(all_user_ids)}명 → 이메일 {total_emails}개, 3컬럼 방식)")
             return True
             
         except Exception as e:
