@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QFont, QColor
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import ModernStyle, SortableTreeWidgetItem
 from src.desktop.common_log import log_manager
 from src.toolbox.ui_kit import ModernTextInputDialog, ModernSaveCompletionDialog
 from src.foundation.logging import get_logger
@@ -27,40 +27,6 @@ logger = get_logger("features.rank_tracking.ranking_table_widget")
 
 
 
-class SortableTreeWidgetItem(QTreeWidgetItem):
-    """정렬 가능한 트리 위젯 아이템 (원본과 동일)"""
-    
-    def __init__(self, strings: list):
-        super().__init__(strings)
-    
-    def __lt__(self, other):
-        """정렬 시 Qt.UserRole 데이터를 사용하여 비교"""
-        column = self.treeWidget().sortColumn()
-        
-        # 내 데이터와 다른 아이템의 데이터 가져오기
-        my_data = self.data(column, Qt.UserRole)
-        other_data = other.data(column, Qt.UserRole)
-        
-        # UserRole 데이터가 있으면 그것으로 정렬
-        if my_data is not None and other_data is not None:
-            try:
-                # 숫자로 비교 (정렬용 데이터)
-                return float(my_data) < float(other_data)
-            except (ValueError, TypeError):
-                # 숫자가 아니면 문자열로 비교
-                return str(my_data) < str(other_data)
-        
-        # UserRole 데이터가 없으면 기본 텍스트로 정렬
-        my_text = self.text(column)
-        other_text = other.text(column)
-        
-        # 숫자 문자열 처리 (1,234 같은 형식)
-        try:
-            my_num = float(my_text.replace(',', '').replace('-', '0'))
-            other_num = float(other_text.replace(',', '').replace('-', '0'))
-            return my_num < other_num
-        except (ValueError, TypeError):
-            return my_text < other_text
 
 
 class RankingTableWidget(QWidget):

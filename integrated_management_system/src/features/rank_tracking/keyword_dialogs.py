@@ -11,6 +11,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.text_utils import parse_keywords_from_text, filter_unique_keywords
 from src.foundation.logging import get_logger
 
 logger = get_logger("features.rank_tracking.keyword_dialogs")
@@ -178,37 +179,21 @@ class AddKeywordsDialog(QDialog):
         if not text:
             return []
         
-        keywords = []
+        # 공용 텍스트 처리 함수 사용
+        keywords = parse_keywords_from_text(text)
         
-        # 쉼표로 구분된 경우와 줄 바꿈으로 구분된 경우 모두 처리
-        if ',' in text:
-            # 쉼표로 구분된 경우
-            for keyword in text.split(','):
-                keyword = keyword.strip()
-                if keyword:
-                    keywords.append(keyword)
-        else:
-            # 줄 바꿈으로 구분된 경우
-            for line in text.split('\n'):
-                keyword = line.strip()
-                if keyword:
-                    keywords.append(keyword)
-        
-        # 중복 제거하면서 순서 유지 + 영어 대문자 변환
-        unique_keywords = []
-        seen = set()
+        # 영어 대문자 변환 (기존 동작 유지)
+        processed_keywords = []
         for keyword in keywords:
-            # 영어는 대문자로 변환, 한글은 그대로 유지
             processed_keyword = ""
             for char in keyword:
                 if char.isalpha() and char.isascii():  # 영문자만 대문자 변환
                     processed_keyword += char.upper()
                 else:
                     processed_keyword += char
-            
-            normalized = processed_keyword.upper().replace(' ', '')
-            if normalized not in seen:
-                seen.add(normalized)
-                unique_keywords.append(processed_keyword)  # 처리된 키워드 저장
+            processed_keywords.append(processed_keyword)
+        
+        # 중복 제거 (공용 함수 사용)
+        unique_keywords = filter_unique_keywords(processed_keywords)
         
         return unique_keywords

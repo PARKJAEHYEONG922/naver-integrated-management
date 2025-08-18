@@ -15,6 +15,7 @@ from src.foundation.exceptions import (
     RankCheckError, APIAuthenticationError
 )
 from src.foundation.logging import get_logger
+from src.toolbox.text_utils import clean_keyword, filter_unique_keywords
 
 logger = get_logger("features.rank_tracking.service")
 
@@ -101,13 +102,15 @@ def generate_keywords_from_product_name(product_name: str) -> List[str]:
     for word in words:
         # 숫자+단위 패턴 제거
         if not re.match(unit_pattern, word):
-            # 특수문자 제거하고 한글/영문만 남기기
-            clean_word = re.sub(r'[^\w가-힣]', '', word)
+            # 공용 함수로 키워드 정리
+            clean_word = clean_keyword(word)
+            # 추가 정리: 특수문자 제거하고 한글/영문만 남기기
+            clean_word = re.sub(r'[^\w가-힣]', '', clean_word)
             if len(clean_word) > 1:  # 1글자는 제외
                 filtered_words.append(clean_word)
     
-    # 중복 제거
-    unique_words = list(dict.fromkeys(filtered_words))
+    # 공용 함수로 중복 제거
+    unique_words = filter_unique_keywords(filtered_words)
     
     keywords = []
     

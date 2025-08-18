@@ -65,6 +65,7 @@ class CommonDB:
                 )
             """)
             
+            
             # 순위 추적 - 프로젝트 테이블
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS projects (

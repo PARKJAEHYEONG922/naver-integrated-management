@@ -1,13 +1,12 @@
 """
-텍스트 파싱, 키워드 정리 등
-텍스트 처리 관련 모든 기능
+공용 텍스트 처리 유틸리티
+키워드 파싱, 정규화, 카테고리 처리 등 모든 모듈에서 사용하는 텍스트 관련 기능
 """
 import re
 from typing import List, Set, Tuple, Optional
 from src.foundation.logging import get_logger
 
-
-logger = get_logger("toolbox.text")
+logger = get_logger("toolbox.text_utils")
 
 
 class TextProcessor:
@@ -64,9 +63,6 @@ class TextProcessor:
         # 연속된 공백을 하나로 통일
         cleaned = re.sub(r'\s+', ' ', cleaned)
         
-        # 특수문자 제거 (선택적)
-        # cleaned = re.sub(r'[^\w\s가-힣]', '', cleaned)
-        
         return cleaned
     
     @staticmethod
@@ -83,7 +79,7 @@ class TextProcessor:
         if not keyword:
             return ""
         
-        # 공백 제거 + 대문자 변환
+        # 공백 제거 + 대문자 변환 (PowerLink 방식과 호환)
         normalized = keyword.strip().replace(' ', '').upper()
         return normalized
     
@@ -153,6 +149,57 @@ class TextProcessor:
         
         logger.info(f"중복 제거 완료: {len(keywords)} -> {len(unique_keywords)}개 (건너뛴: {len(skipped_keywords)}개)")
         return unique_keywords, skipped_keywords
+    
+    @staticmethod
+    def validate_keyword(keyword: str) -> bool:
+        """키워드 유효성 검사"""
+        if not keyword or not keyword.strip():
+            return False
+        
+        cleaned = TextProcessor.clean_keyword(keyword)
+        
+        # 최소/최대 길이 검사
+        if len(cleaned) < 1 or len(cleaned) > 100:
+            return False
+        
+        # 특수문자만으로 이루어진 키워드 제외
+        if not any(c.isalnum() for c in cleaned):
+            return False
+        
+        return True
+    
+    @staticmethod
+    def extract_keywords_from_mixed_text(text: str) -> List[str]:
+        """혼합된 텍스트에서 키워드 추출 (더 유연한 파싱)"""
+        if not text.strip():
+            return []
+        
+        # 다양한 구분자로 분리
+        separators = ['\n', ',', '，', ';', '|', '\t']
+        
+        # 모든 구분자를 개행문자로 통일
+        for sep in separators:
+            text = text.replace(sep, '\n')
+        
+        keywords = []
+        for line in text.split('\n'):
+            # 공백으로도 분리 시도 (단어 단위)
+            words = line.split()
+            for word in words:
+                word = word.strip()
+                if word and TextProcessor.validate_keyword(word):
+                    keywords.append(word)
+        
+        return keywords
+    
+    @staticmethod
+    def split_keywords_by_batch_size(keywords: List[str], batch_size: int = 100) -> List[List[str]]:
+        """키워드를 배치 크기별로 분할"""
+        batches = []
+        for i in range(0, len(keywords), batch_size):
+            batch = keywords[i:i + batch_size]
+            batches.append(batch)
+        return batches
 
 
 class CategoryProcessor:
@@ -231,43 +278,44 @@ class CategoryProcessor:
         return 0.0
 
 
-# 편의 함수들
-def parse_keywords(text: str) -> List[str]:
+# ================================
+# 편의 함수들 (하위 호환성)
+# ================================
+
+def parse_keywords_from_text(text: str) -> List[str]:
     """키워드 파싱 편의 함수"""
     return TextProcessor.parse_keywords_from_text(text)
 
 
-def clean_keywords(keywords: List[str]) -> List[str]:
+def clean_keyword(keyword: str) -> str:
     """키워드 정리 편의 함수"""
-    return [TextProcessor.clean_keyword(kw) for kw in keywords if kw.strip()]
+    return TextProcessor.clean_keyword(keyword)
 
 
-def filter_duplicates(keywords: List[str], existing: Set[str] = None) -> List[str]:
+def normalize_keyword(keyword: str) -> str:
+    """키워드 정규화 편의 함수"""
+    return TextProcessor.normalize_keyword(keyword)
+
+
+def filter_unique_keywords(keywords: List[str], existing_keywords: Set[str] = None) -> List[str]:
     """중복 제거 편의 함수"""
-    return TextProcessor.filter_unique_keywords(keywords, existing)
+    return TextProcessor.filter_unique_keywords(keywords, existing_keywords)
 
 
-def get_last_category(category_path: str) -> str:
-    """마지막 카테고리 추출 편의 함수"""
-    return CategoryProcessor.extract_last_category(category_path)
+def filter_unique_keywords_with_skipped(keywords: List[str], 
+                                      existing_keywords: Set[str] = None) -> Tuple[List[str], List[str]]:
+    """중복 제거 및 기존 키워드 필터링 (건너뛴 키워드 목록도 반환)"""
+    return TextProcessor.filter_unique_keywords_with_skipped(keywords, existing_keywords)
 
 
 def validate_keyword(keyword: str) -> bool:
-    """키워드 유효성 검사"""
-    if not keyword or not keyword.strip():
-        return False
-    
-    cleaned = TextProcessor.clean_keyword(keyword)
-    
-    # 최소/최대 길이 검사
-    if len(cleaned) < 1 or len(cleaned) > 100:
-        return False
-    
-    # 특수문자만으로 이루어진 키워드 제외
-    if not any(c.isalnum() for c in cleaned):
-        return False
-    
-    return True
+    """키워드 유효성 검사 편의 함수"""
+    return TextProcessor.validate_keyword(keyword)
+
+
+def clean_keywords(keywords: List[str]) -> List[str]:
+    """키워드 목록 정리 편의 함수"""
+    return [TextProcessor.clean_keyword(kw) for kw in keywords if kw.strip()]
 
 
 def filter_valid_keywords(keywords: List[str]) -> List[str]:
@@ -275,13 +323,31 @@ def filter_valid_keywords(keywords: List[str]) -> List[str]:
     return [keyword for keyword in keywords if validate_keyword(keyword)]
 
 
+def get_last_category(category_path: str) -> str:
+    """마지막 카테고리 추출 편의 함수"""
+    return CategoryProcessor.extract_last_category(category_path)
+
+
 def split_keywords_by_batch_size(keywords: List[str], batch_size: int = 100) -> List[List[str]]:
     """키워드를 배치 크기별로 분할"""
-    batches = []
-    for i in range(0, len(keywords), batch_size):
-        batch = keywords[i:i + batch_size]
-        batches.append(batch)
-    return batches
+    return TextProcessor.split_keywords_by_batch_size(keywords, batch_size)
+
+
+# ================================
+# 하위 호환성 함수들 (필요시에만 유지)
+# ================================
+
+def process_keywords(keywords: List[str], existing_keywords: set = None) -> List[str]:
+    """PowerLink 호환용 키워드 처리 함수"""
+    if existing_keywords is None:
+        existing_keywords = set()
+    
+    return filter_unique_keywords(keywords, existing_keywords)
+
+
+def filter_duplicates(keywords: List[str], existing: Set[str] = None) -> List[str]:
+    """중복 제거 편의 함수 (하위 호환성)"""
+    return filter_unique_keywords(keywords, existing)
 
 
 def format_keyword_for_display(keyword: str) -> str:
@@ -289,50 +355,4 @@ def format_keyword_for_display(keyword: str) -> str:
     if not keyword:
         return ""
     
-    # 원본 키워드를 가독성있게 표시
     return keyword.strip()
-
-
-def extract_keywords_from_mixed_text(text: str) -> List[str]:
-    """혼합된 텍스트에서 키워드 추출 (더 유연한 파싱)"""
-    if not text.strip():
-        return []
-    
-    # 다양한 구분자로 분리
-    separators = ['\n', ',', '，', ';', '|', '\t']
-    
-    # 모든 구분자를 개행문자로 통일
-    for sep in separators:
-        text = text.replace(sep, '\n')
-    
-    keywords = []
-    for line in text.split('\n'):
-        # 공백으로도 분리 시도 (단어 단위)
-        words = line.split()
-        for word in words:
-            word = word.strip()
-            if word and validate_keyword(word):
-                keywords.append(word)
-    
-    return keywords
-
-
-# 키워드분석기 호환용 별칭 함수들
-def filter_unique_keywords_with_skipped(keywords: List[str], existing_keywords: Set[str]) -> Tuple[List[str], List[str]]:
-    """중복 제거 및 기존 키워드 필터링 (건너뛴 키워드 목록도 반환) - 키워드분석기 호환용"""
-    return TextProcessor.filter_unique_keywords_with_skipped(keywords, existing_keywords)
-
-
-def parse_keywords_from_text(text: str) -> List[str]:
-    """텍스트에서 키워드 목록 파싱 - 키워드분석기 호환용"""
-    return TextProcessor.parse_keywords_from_text(text)
-
-
-def clean_keyword(keyword: str) -> str:
-    """단일 키워드 정제 - 키워드분석기 호환용 (정규화 방식)"""
-    if not keyword:
-        return ""
-    
-    # 키워드분석기에서 사용하던 방식: 공백 제거 + 대문자 변환
-    cleaned = keyword.strip().replace(' ', '').upper()
-    return cleaned

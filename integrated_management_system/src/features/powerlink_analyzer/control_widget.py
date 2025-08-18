@@ -17,7 +17,7 @@ from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from .models import AnalysisProgress, keyword_database
 from .worker import PowerLinkAnalysisWorker
-from .text_ops import parse_keywords_from_text, process_keywords
+from src.toolbox.text_utils import parse_keywords_from_text, process_keywords
 
 logger = get_logger("features.powerlink_analyzer.control_widget")
 

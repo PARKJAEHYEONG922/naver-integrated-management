@@ -1,14 +1,18 @@
 """
-벤더 정규화 → 기능형 데이터로 변환
-네이버 API 응답을 키워드 분석 전용 데이터로 가공
+벤더 정규화 → 기능형 데이터로 변환 + 엑셀 저장
+네이버 API 응답을 키워드 분석 전용 데이터로 가공하고 엑셀로 내보내기
 """
 from typing import List, Dict, Any, Optional
 from collections import Counter
+import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.utils.dataframe import dataframe_to_rows
 
-from src.vendors.naver.normalizers import normalize_shopping_response, normalize_searchad_response
-# get_last_category는 현재 사용되지 않음
+from src.vendors.naver.normalizers import normalize_shopping_response
 from src.foundation.logging import get_logger
-from .models import KeywordData
+from src.foundation.exceptions import FileError
+from .models import KeywordData, AnalysisResult
 
 logger = get_logger("features.keyword_analysis.adapters")
 
@@ -203,45 +207,6 @@ class KeywordAnalysisAdapter:
             return KeywordData(keyword=keyword)
 
 
-class BatchAnalysisAdapter:
-    """배치 분석 데이터 어댑터"""
-    
-    @staticmethod
-    def process_keyword_batch(keywords: List[str],
-                            searchad_responses: Dict[str, Dict[str, Any]],
-                            shopping_responses: Dict[str, Dict[str, Any]]) -> List[KeywordData]:
-        """
-        키워드 배치 처리
-        
-        Args:
-            keywords: 키워드 목록
-            searchad_responses: 키워드별 검색광고 API 응답
-            shopping_responses: 키워드별 쇼핑 API 응답
-        
-        Returns:
-            List[KeywordData]: 키워드 분석 결과 목록
-        """
-        results = []
-        
-        for keyword in keywords:
-            try:
-                searchad_data = searchad_responses.get(keyword)
-                shopping_data = shopping_responses.get(keyword)
-                
-                keyword_data = KeywordAnalysisAdapter.build_keyword_data(
-                    keyword, searchad_data, shopping_data
-                )
-                
-                results.append(keyword_data)
-                
-            except Exception as e:
-                logger.error(f"키워드 배치 처리 실패 - {keyword}: {e}")
-                # 오류 발생 시 기본 데이터 추가
-                results.append(KeywordData(keyword=keyword))
-        
-        logger.info(f"배치 처리 완료: {len(results)}개 키워드")
-        return results
-
 
 # 편의 함수들
 def adapt_keyword_data(keyword: str,
@@ -251,8 +216,190 @@ def adapt_keyword_data(keyword: str,
     return KeywordAnalysisAdapter.build_keyword_data(keyword, searchad_data, shopping_data)
 
 
-def adapt_keyword_batch(keywords: List[str],
-                       searchad_responses: Dict[str, Dict[str, Any]],
-                       shopping_responses: Dict[str, Dict[str, Any]]) -> List[KeywordData]:
-    """키워드 배치 어댑터 편의 함수"""
-    return BatchAnalysisAdapter.process_keyword_batch(keywords, searchad_responses, shopping_responses)
+
+
+class KeywordExcelAdapter:
+    """키워드 분석 엑셀 내보내기 어댑터"""
+    
+    def __init__(self):
+        self.default_font = Font(name='맑은 고딕', size=10)
+        self.header_font = Font(name='맑은 고딕', size=11, bold=True)
+        self.header_fill = PatternFill(start_color='E6E6FA', end_color='E6E6FA', fill_type='solid')
+        self.center_alignment = Alignment(horizontal='center', vertical='center')
+    
+    def export_analysis_result(self, result: AnalysisResult, file_path: str) -> bool:
+        """
+        키워드 분석 결과를 엑셀로 내보내기
+        
+        Args:
+            result: 키워드 분석 결과
+            file_path: 저장할 파일 경로
+        
+        Returns:
+            bool: 성공 여부
+        """
+        try:
+            if not result.keywords:
+                logger.warning("내보낼 키워드 데이터가 없습니다")
+                return False
+            
+            # KeywordData를 딕셔너리로 변환
+            data = []
+            for kw in result.keywords:
+                data.append({
+                    'keyword': kw.keyword,
+                    'category': kw.category,
+                    'search_volume': kw.search_volume,
+                    'total_products': kw.total_products,
+                    'competition_strength': kw.competition_strength
+                })
+            
+            return self.export_keywords(data, file_path)
+            
+        except Exception as e:
+            logger.error(f"분석 결과 엑셀 내보내기 실패: {e}")
+            raise FileError(f"엑셀 내보내기 실패: {e}")
+    
+    def export_keywords(self, 
+                       data: List[Dict[str, Any]], 
+                       file_path: str,
+                       sheet_name: str = "키워드 분석") -> bool:
+        """
+        키워드 데이터를 Excel로 내보내기
+        
+        Args:
+            data: 키워드 데이터 리스트
+            file_path: 저장할 파일 경로
+            sheet_name: 시트 이름
+        
+        Returns:
+            bool: 성공 여부
+        """
+        try:
+            if not data:
+                logger.warning("내보낼 데이터가 없습니다")
+                return False
+            
+            # DataFrame 생성
+            df = pd.DataFrame(data)
+            
+            # 컬럼명 한글화
+            column_mapping = {
+                'keyword': '키워드',
+                'category': '카테고리',
+                'search_volume': '월간 검색량',
+                'total_products': '상품 수',
+                'competition_strength': '경쟁 강도'
+            }
+            
+            df = df.rename(columns=column_mapping)
+            
+            # Excel 파일 생성
+            wb = Workbook()
+            ws = wb.active
+            ws.title = sheet_name
+            
+            # 데이터 추가
+            for r in dataframe_to_rows(df, index=False, header=True):
+                ws.append(r)
+            
+            # 스타일 적용
+            self._apply_keyword_styles(ws, len(df.columns))
+            
+            # 파일 저장
+            wb.save(file_path)
+            logger.info(f"키워드 분석 엑셀 파일 저장 완료: {file_path}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"키워드 엑셀 내보내기 실패: {e}")
+            raise FileError(f"엑셀 파일 생성 실패: {e}")
+    
+    def _apply_keyword_styles(self, worksheet, column_count: int):
+        """키워드 분석용 워크시트 스타일 적용"""
+        try:
+            # 헤더 스타일
+            for col in range(1, column_count + 1):
+                cell = worksheet.cell(row=1, column=col)
+                cell.font = self.header_font
+                cell.fill = self.header_fill
+                cell.alignment = self.center_alignment
+            
+            # 데이터 스타일
+            for row in worksheet.iter_rows(min_row=2):
+                for cell in row:
+                    cell.font = self.default_font
+                    if cell.column == 1:  # 키워드 - 좌측 정렬
+                        cell.alignment = Alignment(horizontal='left', vertical='center')
+                    elif cell.column == 2:  # 카테고리 - 줄바꿈 허용
+                        cell.alignment = Alignment(horizontal='left', vertical='top', wrap_text=True)
+                    elif cell.column == 3:  # 월간 검색량 - 천단위 콤마
+                        cell.alignment = Alignment(horizontal='right', vertical='center')
+                        if cell.value and isinstance(cell.value, (int, float)):
+                            cell.number_format = '#,##0'
+                    elif cell.column == 4:  # 상품 수 - 천단위 콤마
+                        cell.alignment = Alignment(horizontal='right', vertical='center')
+                        if cell.value and isinstance(cell.value, (int, float)):
+                            cell.number_format = '#,##0'
+                    elif cell.column == 5:  # 경쟁 강도 - 소수점 2자리
+                        cell.alignment = Alignment(horizontal='right', vertical='center')
+                        if cell.value and isinstance(cell.value, (int, float)):
+                            cell.number_format = '0.00'
+                    else:
+                        cell.alignment = self.center_alignment
+            
+            # 컬럼 너비 설정
+            column_widths = {
+                1: 20,   # 키워드
+                2: 50,   # 카테고리 (줄바꿈을 위해 넓게)
+                3: 15,   # 월간 검색량
+                4: 15,   # 상품 수
+                5: 12    # 경쟁 강도
+            }
+            
+            for col_num, width in column_widths.items():
+                if col_num <= column_count:
+                    column_letter = worksheet.cell(row=1, column=col_num).column_letter
+                    worksheet.column_dimensions[column_letter].width = width
+            
+            # 행 높이 설정 (카테고리 줄바꿈을 위해)
+            for row_num in range(2, worksheet.max_row + 1):
+                category_cell = worksheet.cell(row=row_num, column=2)
+                if category_cell.value and '\n' in str(category_cell.value):
+                    worksheet.row_dimensions[row_num].height = 30
+                
+        except Exception as e:
+            logger.warning(f"키워드 분석 스타일 적용 중 오류: {e}")
+
+
+# 편의 함수들
+def export_keywords_to_excel(keywords: List[KeywordData], file_path: str) -> bool:
+    """키워드 리스트를 엑셀로 내보내기"""
+    try:
+        data = []
+        for kw in keywords:
+            data.append({
+                'keyword': kw.keyword,
+                'category': kw.category,
+                'search_volume': kw.search_volume,
+                'total_products': kw.total_products,
+                'competition_strength': kw.competition_strength
+            })
+        
+        adapter = KeywordExcelAdapter()
+        return adapter.export_keywords(data, file_path)
+        
+    except Exception as e:
+        logger.error(f"키워드 엑셀 내보내기 실패: {e}")
+        return False
+
+
+def export_analysis_result_to_excel(result: AnalysisResult, file_path: str) -> bool:
+    """분석 결과를 엑셀로 내보내기"""
+    try:
+        adapter = KeywordExcelAdapter()
+        return adapter.export_analysis_result(result, file_path)
+        
+    except Exception as e:
+        logger.error(f"분석 결과 엑셀 내보내기 실패: {e}")
+        return False

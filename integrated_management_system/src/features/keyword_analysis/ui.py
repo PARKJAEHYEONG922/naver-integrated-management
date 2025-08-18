@@ -7,56 +7,29 @@ import json
 from pathlib import Path
 from datetime import datetime
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTextEdit, QLabel,
+    QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QLabel,
     QTreeWidget, QTreeWidgetItem, QProgressBar, QMessageBox, QFileDialog,
     QFrame, QScrollArea, QSizePolicy, QSplitter, QAbstractItemView
 )
 from PySide6.QtCore import Qt, QTimer, Signal, QMetaObject, Q_ARG, Slot
 from PySide6.QtGui import QFont
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import (
+    ModernStyle, SortableTreeWidgetItem,
+    ModernPrimaryButton, ModernSuccessButton, ModernDangerButton, 
+    ModernCancelButton, ModernHelpButton
+)
 from src.desktop.common_log import log_manager
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDialog, ModernSaveCompletionDialog
 from .worker import BackgroundWorker
 from .service import analysis_manager
-from .models import KeywordData, AnalysisConfig, AnalysisProgress
-from .text_ops import parse_keywords_from_text, filter_duplicates, clean_keywords, filter_unique_keywords_with_skipped
+from .models import KeywordData, AnalysisPolicy, AnalysisProgress
+from src.toolbox.text_utils import parse_keywords_from_text, filter_unique_keywords, clean_keywords, filter_unique_keywords_with_skipped
 from src.foundation.logging import get_logger
 
 logger = get_logger("features.keyword_analysis.ui")
 
 
-class SortableTreeWidgetItem(QTreeWidgetItem):
-    """숫자 정렬을 지원하는 커스텀 QTreeWidgetItem"""
-    
-    def __lt__(self, other):
-        column = self.treeWidget().sortColumn()
-        
-        # 숫자 컬럼들 (월검색량: 2, 전체상품수: 3, 경쟁강도: 4)
-        if column in [2, 3, 4]:
-            # 저장된 숫자 데이터로 비교
-            my_data = self.data(column, Qt.UserRole)
-            other_data = other.data(column, Qt.UserRole)
-            
-            # None 값 처리
-            if my_data is None:
-                my_data = 0 if column in [2, 3] else float('inf')
-            if other_data is None:
-                other_data = 0 if column in [2, 3] else float('inf')
-                
-            # 무한대 처리 (경쟁강도)
-            if column == 4:
-                if my_data == float('inf') and other_data == float('inf'):
-                    return False
-                if my_data == float('inf'):
-                    return False  # 무한대는 가장 큰 값
-                if other_data == float('inf'):
-                    return True
-            
-            return float(my_data) < float(other_data)
-        else:
-            # 문자열 컬럼은 문자열로 직접 비교
-            return self.text(column) < other.text(column)
 
 
 
@@ -114,24 +87,8 @@ class KeywordAnalysisWidget(QWidget):
         header_layout.addWidget(title_label)
         
         # 사용법 다이얼로그 버튼
-        self.help_button = QPushButton("❓ 사용법")
+        self.help_button = ModernHelpButton("❓ 사용법")
         self.help_button.clicked.connect(self.show_help_dialog)
-        self.help_button.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['bg_secondary']};
-                color: {ModernStyle.COLORS['text_secondary']};
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 6px;
-                padding: 6px 12px;
-                font-size: 12px;
-                font-weight: 500;
-                margin-left: 10px;
-            }}
-            QPushButton:hover {{
-                background-color: {ModernStyle.COLORS['bg_card']};
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-        """)
         
         header_layout.addWidget(self.help_button)
         header_layout.addStretch()  # 오른쪽 여백
@@ -211,17 +168,15 @@ class KeywordAnalysisWidget(QWidget):
         button_container.setSpacing(5)
         
         # 검색 시작 버튼
-        self.search_button = QPushButton("🔍 검색")
+        self.search_button = ModernPrimaryButton("🔍 검색")
         self.search_button.clicked.connect(self.start_search)
-        self.search_button.setStyleSheet(self.get_button_style(ModernStyle.COLORS['primary']))
         self.search_button.setMinimumWidth(80)
         button_container.addWidget(self.search_button)
         
         # 정지 버튼
-        self.cancel_button = QPushButton("⏹ 정지")
+        self.cancel_button = ModernCancelButton("⏹ 정지")
         self.cancel_button.clicked.connect(self.cancel_search)
         self.cancel_button.setEnabled(False)
-        self.cancel_button.setStyleSheet(self.get_cancel_button_style())
         self.cancel_button.setMinimumWidth(80)
         button_container.addWidget(self.cancel_button)
         
@@ -323,115 +278,24 @@ class KeywordAnalysisWidget(QWidget):
         button_layout = QHBoxLayout()
         
         # 클리어 버튼
-        self.clear_button = QPushButton("🗑 전체 클리어")
+        self.clear_button = ModernDangerButton("🗑 전체 클리어")
         self.clear_button.clicked.connect(self.clear_results)
         self.clear_button.setEnabled(False)  # 초기에는 비활성화
-        self.clear_button.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['warning']};
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-            }}
-            QPushButton:hover {{
-                background-color: #d97706;
-            }}
-            QPushButton:pressed {{
-                background-color: #b45309;
-            }}
-            QPushButton:disabled {{
-                background-color: #D1D5DB;
-                color: white;
-            }}
-        """)
         button_layout.addWidget(self.clear_button)
         
         button_layout.addStretch()
         
         # Excel 저장 버튼들
-        self.save_all_button = QPushButton("📊 모두 저장")
+        self.save_all_button = ModernSuccessButton("📊 모두 저장")
         self.save_all_button.clicked.connect(self.save_all_results)
-        self.save_all_button.setStyleSheet(self.get_button_style(ModernStyle.COLORS['success']))
         button_layout.addWidget(self.save_all_button)
         
-        self.save_selected_button = QPushButton("📋 선택 저장")
+        self.save_selected_button = ModernSuccessButton("📋 선택 저장")
         self.save_selected_button.clicked.connect(self.save_selected_results)
-        self.save_selected_button.setStyleSheet(self.get_button_style(ModernStyle.COLORS['success']))
         button_layout.addWidget(self.save_selected_button)
         
         layout.addLayout(button_layout)
     
-    def get_button_style(self, color: str) -> str:
-        """버튼 스타일 생성"""
-        # 호버 색상 계산 - 더 명확한 대비를 위해 개선
-        if color == ModernStyle.COLORS['primary']:  # 파란색 버튼 (검색)
-            hover_color = '#1d4ed8'  # 더 진한 파란색
-            pressed_color = '#1e40af'
-        elif color == ModernStyle.COLORS['success']:  # #10b981 (녹색 버튼)
-            hover_color = '#059669'
-            pressed_color = '#047857'
-        else:
-            hover_color = f"{color}dd"
-            pressed_color = f"{color}aa"
-        
-        return f"""
-            QPushButton {{
-                background-color: {color};
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
-            }}
-            QPushButton:hover {{
-                background-color: {hover_color};
-                color: white;
-            }}
-            QPushButton:pressed {{
-                background-color: {pressed_color};
-                color: white;
-            }}
-            QPushButton:disabled {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
-            }}
-        """
-    
-    def get_cancel_button_style(self) -> str:
-        """정지 버튼 전용 스타일 - 활성화 시 빨간색"""
-        return f"""
-            QPushButton {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
-            }}
-            QPushButton:enabled {{
-                background-color: #ef4444;
-                color: white;
-            }}
-            QPushButton:enabled:hover {{
-                background-color: #dc2626;
-                color: white;
-            }}
-            QPushButton:enabled:pressed {{
-                background-color: #b91c1c;
-                color: white;
-            }}
-            QPushButton:disabled {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
-            }}
-        """
     
     def setup_service_connections(self):
         """서비스 시그널 연결 (기존 방식 - 호환성 유지)"""
@@ -541,34 +405,26 @@ class KeywordAnalysisWidget(QWidget):
         )
         
         if file_path:
-            # Excel 내보내기 로직
-            from .excel_export import excel_exporter
-            
-            # KeywordData를 딕셔너리 형태로 변환
-            excel_data = []
-            for keyword_data in self.search_results:
-                excel_data.append({
-                    'keyword': keyword_data.keyword,
-                    'category': keyword_data.category,
-                    'search_volume': keyword_data.search_volume,
-                    'total_products': keyword_data.total_products,
-                    'competition_strength': keyword_data.competition_strength
-                })
-            
+            # Excel 내보내기 로직 (service 경유 - CLAUDE.md 구조 준수)
             try:
-                excel_exporter.export_keywords(excel_data, file_path)
-                self.add_log(f"📊 전체 결과 저장 완료: {len(self.search_results)}개 키워드", "success")
-                
-                # 저장 완료 다이얼로그 사용
-                try:
-                    ModernSaveCompletionDialog.show_save_completion(
-                        self, 
-                        "저장 완료", 
-                        f"키워드 검색 결과가 성공적으로 저장되었습니다.\n\n총 {len(self.search_results)}개 키워드가 Excel 파일로 저장되었습니다.", 
-                        file_path
-                    )
-                except:
-                    QMessageBox.information(self, "저장 완료", f"Excel 파일로 저장되었습니다.\n파일 경로: {file_path}")
+                # service를 통해 adapters 호출
+                success = self.service.export_keywords_to_excel(self.search_results, file_path)
+                if success:
+                    self.add_log(f"📊 전체 결과 저장 완료: {len(self.search_results)}개 키워드", "success")
+                    
+                    # 저장 완료 다이얼로그 사용
+                    try:
+                        ModernSaveCompletionDialog.show_save_completion(
+                            self, 
+                            "저장 완료", 
+                            f"키워드 검색 결과가 성공적으로 저장되었습니다.\n\n총 {len(self.search_results)}개 키워드가 Excel 파일로 저장되었습니다.", 
+                            file_path
+                        )
+                    except:
+                        QMessageBox.information(self, "저장 완료", f"Excel 파일로 저장되었습니다.\n파일 경로: {file_path}")
+                else:
+                    self.add_log("❌ 파일 저장에 실패했습니다.", "error")
+                    QMessageBox.warning(self, "저장 실패", "Excel 파일 저장에 실패했습니다.")
             except Exception as e:
                 logger.error(f"Excel 내보내기 실패: {e}")
                 self.add_log("❌ 파일 저장에 실패했습니다.", "error")
@@ -611,34 +467,26 @@ class KeywordAnalysisWidget(QWidget):
         )
         
         if file_path:
-            # Excel 내보내기 로직
-            from .excel_export import excel_exporter
-            
-            # KeywordData를 딕셔너리 형태로 변환
-            excel_data = []
-            for keyword_data in selected_data:
-                excel_data.append({
-                    'keyword': keyword_data.keyword,
-                    'category': keyword_data.category,
-                    'search_volume': keyword_data.search_volume,
-                    'total_products': keyword_data.total_products,
-                    'competition_strength': keyword_data.competition_strength
-                })
-            
+            # Excel 내보내기 로직 (service 경유 - CLAUDE.md 구조 준수)
             try:
-                excel_exporter.export_keywords(excel_data, file_path)
-                self.add_log(f"📋 선택된 결과 저장 완료: {len(selected_data)}개 키워드", "success")
-                
-                # 저장 완료 다이얼로그 사용
-                try:
-                    ModernSaveCompletionDialog.show_save_completion(
-                        self, 
-                        "저장 완료", 
-                        f"선택된 키워드 검색 결과가 성공적으로 저장되었습니다.\n\n총 {len(selected_data)}개 키워드가 Excel 파일로 저장되었습니다.", 
-                        file_path
-                    )
-                except:
-                    QMessageBox.information(self, "저장 완료", f"Excel 파일로 저장되었습니다.\n파일 경로: {file_path}")
+                # service를 통해 adapters 호출
+                success = self.service.export_keywords_to_excel(selected_data, file_path)
+                if success:
+                    self.add_log(f"📋 선택된 결과 저장 완료: {len(selected_data)}개 키워드", "success")
+                    
+                    # 저장 완료 다이얼로그 사용
+                    try:
+                        ModernSaveCompletionDialog.show_save_completion(
+                            self, 
+                            "저장 완료", 
+                            f"선택된 키워드 검색 결과가 성공적으로 저장되었습니다.\n\n총 {len(selected_data)}개 키워드가 Excel 파일로 저장되었습니다.", 
+                            file_path
+                        )
+                    except:
+                        QMessageBox.information(self, "저장 완료", f"Excel 파일로 저장되었습니다.\n파일 경로: {file_path}")
+                else:
+                    self.add_log("❌ 파일 저장에 실패했습니다.", "error")
+                    QMessageBox.warning(self, "저장 실패", "Excel 파일 저장에 실패했습니다.")
             except Exception as e:
                 logger.error(f"Excel 내보내기 실패: {e}")
                 self.add_log("❌ 파일 저장에 실패했습니다.", "error")

@@ -9,7 +9,12 @@
       "Bash(git remote remove:*)",
       "Bash(git remote add:*)",
       "Bash(git checkout:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "Bash(python:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

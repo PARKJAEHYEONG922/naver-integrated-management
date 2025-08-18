@@ -17,6 +17,182 @@ from .modern_style import ModernStyle
 logger = get_logger("toolbox.ui_kit")
 
 
+class ModernPrimaryButton(QPushButton):
+    """기본 액션 버튼 (파란색) - 키워드 분석기 스타일 기반"""
+    
+    def __init__(self, text: str, parent=None):
+        super().__init__(text, parent)
+        self._setup_style()
+    
+    def _setup_style(self):
+        """키워드 분석기의 기본 버튼 스타일"""
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {ModernStyle.COLORS['primary']};
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                min-width: 80px;
+            }}
+            QPushButton:hover {{
+                background-color: #1d4ed8;
+                color: white;
+            }}
+            QPushButton:pressed {{
+                background-color: #1e40af;
+                color: white;
+            }}
+            QPushButton:disabled {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                color: {ModernStyle.COLORS['text_secondary']};
+            }}
+        """)
+
+
+class ModernSuccessButton(QPushButton):
+    """성공/저장 버튼 (녹색) - 키워드 분석기 스타일 기반"""
+    
+    def __init__(self, text: str, parent=None):
+        super().__init__(text, parent)
+        self._setup_style()
+    
+    def _setup_style(self):
+        """키워드 분석기의 성공 버튼 스타일"""
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {ModernStyle.COLORS['success']};
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                min-width: 80px;
+            }}
+            QPushButton:hover {{
+                background-color: #059669;
+                color: white;
+            }}
+            QPushButton:pressed {{
+                background-color: #047857;
+                color: white;
+            }}
+            QPushButton:disabled {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                color: {ModernStyle.COLORS['text_secondary']};
+            }}
+        """)
+
+
+class ModernDangerButton(QPushButton):
+    """위험/삭제 버튼 (빨간색) - 키워드 분석기 스타일 기반"""
+    
+    def __init__(self, text: str, parent=None):
+        super().__init__(text, parent)
+        self._setup_style()
+    
+    def _setup_style(self):
+        """키워드 분석기의 클리어 버튼 스타일"""
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: #ef4444;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                min-width: 80px;
+            }}
+            QPushButton:hover {{
+                background-color: #dc2626;
+                color: white;
+            }}
+            QPushButton:pressed {{
+                background-color: #b91c1c;
+                color: white;
+            }}
+            QPushButton:disabled {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                color: {ModernStyle.COLORS['text_secondary']};
+            }}
+        """)
+
+
+class ModernCancelButton(QPushButton):
+    """취소/정지 버튼 - 활성화 시에만 빨간색"""
+    
+    def __init__(self, text: str, parent=None):
+        super().__init__(text, parent)
+        self._setup_style()
+    
+    def _setup_style(self):
+        """키워드 분석기의 정지 버튼 스타일"""
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                color: {ModernStyle.COLORS['text_secondary']};
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                min-width: 80px;
+            }}
+            QPushButton:enabled {{
+                background-color: #ef4444;
+                color: white;
+            }}
+            QPushButton:enabled:hover {{
+                background-color: #dc2626;
+                color: white;
+            }}
+            QPushButton:enabled:pressed {{
+                background-color: #b91c1c;
+                color: white;
+            }}
+            QPushButton:disabled {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                color: {ModernStyle.COLORS['text_secondary']};
+            }}
+        """)
+
+
+class ModernHelpButton(QPushButton):
+    """도움말 버튼 (회색) - 키워드 분석기 스타일 기반"""
+    
+    def __init__(self, text: str = "❓ 사용법", parent=None):
+        super().__init__(text, parent)
+        self._setup_style()
+    
+    def _setup_style(self):
+        """키워드 분석기의 도움말 버튼 스타일"""
+        self.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                color: {ModernStyle.COLORS['text_primary']};
+                border: 1px solid {ModernStyle.COLORS['border']};
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 500;
+                min-width: 70px;
+            }}
+            QPushButton:hover {{
+                background-color: {ModernStyle.COLORS['bg_secondary']};
+                border-color: {ModernStyle.COLORS['primary']};
+            }}
+            QPushButton:pressed {{
+                background-color: {ModernStyle.COLORS['primary']};
+                color: white;
+                border-color: {ModernStyle.COLORS['primary']};
+            }}
+        """)
+
+
 class ModernButton(QPushButton):
     """모던 스타일 버튼"""
     

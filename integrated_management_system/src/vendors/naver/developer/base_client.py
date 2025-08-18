@@ -47,34 +47,24 @@ class NaverBaseClient(ABC):
     
     def _get_headers(self) -> Dict[str, str]:
         """API 호출용 헤더 생성"""
-        # 임시로 직접 파일 읽기
+        # SQLite DB에서 API 설정 로드
         try:
-            from pathlib import Path
-            import os
-            # 프로젝트 루트에서 config 폴더 찾기
-            current_dir = Path(__file__).resolve()
-            project_root = current_dir.parent
-            while project_root != project_root.parent:
-                config_path = project_root / "config" / "api_keys.json"
-                if config_path.exists():
-                    with open(config_path, 'r', encoding='utf-8') as f:
-                        config_data = json.load(f)
-                        shopping_config = config_data.get('naver_shopping', {})
-                    break
-                project_root = project_root.parent
-            else:
-                shopping_config = {}
-        except Exception:
-            shopping_config = {}
-        
-        api_config = shopping_config
-        
-        # 네이버 개발자 API는 모두 동일한 헤더 형식 사용
-        return {
-            'X-Naver-Client-Id': api_config.get('client_id', ''),
-            'X-Naver-Client-Secret': api_config.get('client_secret', ''),
-            'User-Agent': 'NaverAPIClient/1.0'
-        }
+            api_config = config_manager.load_api_config()
+            
+            # 네이버 개발자 API는 모두 동일한 헤더 형식 사용
+            return {
+                'X-Naver-Client-Id': api_config.shopping_client_id,
+                'X-Naver-Client-Secret': api_config.shopping_client_secret,
+                'User-Agent': 'NaverAPIClient/1.0'
+            }
+            
+        except Exception as e:
+            self.logger.error(f"API 설정 로드 실패: {e}")
+            return {
+                'X-Naver-Client-Id': '',
+                'X-Naver-Client-Secret': '',
+                'User-Agent': 'NaverAPIClient/1.0'
+            }
     
     def _check_config(self) -> bool:
         """API 설정 확인"""

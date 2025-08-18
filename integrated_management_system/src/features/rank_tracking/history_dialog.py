@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QBrush, QColor
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import ModernStyle, SortableTableWidgetItem
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from .service import rank_tracking_service
@@ -19,30 +19,6 @@ from .service import rank_tracking_service
 logger = get_logger("features.rank_tracking.history_dialog")
 
 
-class SortableTableWidgetItem(QTableWidgetItem):
-    """정렬 가능한 테이블 위젯 아이템"""
-    
-    def __init__(self, text: str, sort_value=None):
-        super().__init__(text)
-        if sort_value is not None:
-            self.setData(Qt.UserRole, sort_value)
-    
-    def __lt__(self, other):
-        """정렬 시 UserRole 데이터를 사용하여 비교"""
-        my_data = self.data(Qt.UserRole)
-        other_data = other.data(Qt.UserRole)
-        
-        # UserRole 데이터가 있으면 그것으로 정렬
-        if my_data is not None and other_data is not None:
-            try:
-                # 숫자로 비교
-                return float(my_data) < float(other_data)
-            except (ValueError, TypeError):
-                # 숫자가 아니면 문자열로 비교
-                return str(my_data) < str(other_data)
-        
-        # UserRole 데이터가 없으면 기본 텍스트로 정렬
-        return super().__lt__(other)
 
 
 class ProjectHistoryDialog(QDialog):

@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QFont
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import ModernStyle, SortableTableWidgetItem
 from src.desktop.common_log import log_manager
 from .control_widget import ModernButton
 from src.foundation.db import get_db
@@ -242,17 +242,6 @@ def safe_format_number(value, format_type="int", suffix=""):
         return str(value) + suffix, 0
 
 
-class NumericTableWidgetItem(QTableWidgetItem):
-    """숫자 정렬을 위한 커스텀 테이블 아이템"""
-    
-    def __init__(self, text, numeric_value=None):
-        super().__init__(text)
-        self.numeric_value = numeric_value if numeric_value is not None else 0
-        
-    def __lt__(self, other):
-        if hasattr(other, 'numeric_value'):
-            return self.numeric_value < other.numeric_value
-        return super().__lt__(other)
 
 
 
@@ -628,21 +617,21 @@ class PowerLinkResultsWidget(QWidget):
             
             # 월검색량 (Mobile)
             if result.mobile_search_volume >= 0:
-                self.mobile_table.setItem(row, 2, NumericTableWidgetItem(
+                self.mobile_table.setItem(row, 2, SortableTableWidgetItem(
                     f"{result.mobile_search_volume:,}", result.mobile_search_volume))
             else:
-                self.mobile_table.setItem(row, 2, NumericTableWidgetItem("-", 0))
+                self.mobile_table.setItem(row, 2, SortableTableWidgetItem("-", 0))
             
             # 모바일 데이터
-            self.mobile_table.setItem(row, 3, NumericTableWidgetItem(
+            self.mobile_table.setItem(row, 3, SortableTableWidgetItem(
                 f"{result.mobile_clicks:.1f}", result.mobile_clicks))
-            self.mobile_table.setItem(row, 4, NumericTableWidgetItem(
+            self.mobile_table.setItem(row, 4, SortableTableWidgetItem(
                 f"{result.mobile_ctr:.2f}%", result.mobile_ctr))
-            self.mobile_table.setItem(row, 5, NumericTableWidgetItem(
+            self.mobile_table.setItem(row, 5, SortableTableWidgetItem(
                 f"{result.mobile_first_page_positions}위까지", result.mobile_first_page_positions))
-            self.mobile_table.setItem(row, 6, NumericTableWidgetItem(
+            self.mobile_table.setItem(row, 6, SortableTableWidgetItem(
                 f"{result.mobile_first_position_bid:,}원", result.mobile_first_position_bid))
-            self.mobile_table.setItem(row, 7, NumericTableWidgetItem(
+            self.mobile_table.setItem(row, 7, SortableTableWidgetItem(
                 f"{result.mobile_min_exposure_bid:,}원", result.mobile_min_exposure_bid))
             
             # 추천순위 ("위" 접미사 포함)
@@ -650,7 +639,7 @@ class PowerLinkResultsWidget(QWidget):
                 rank_text = f"{result.mobile_recommendation_rank}위"
             else:
                 rank_text = "-"
-            self.mobile_table.setItem(row, 8, NumericTableWidgetItem(
+            self.mobile_table.setItem(row, 8, SortableTableWidgetItem(
                 rank_text, result.mobile_recommendation_rank))
             
             # 상세 버튼 (원본과 동일한 초록색 스타일)
@@ -719,21 +708,21 @@ class PowerLinkResultsWidget(QWidget):
             
             # PC 월검색량
             if result.pc_search_volume >= 0:
-                self.pc_table.setItem(row, 2, NumericTableWidgetItem(
+                self.pc_table.setItem(row, 2, SortableTableWidgetItem(
                     f"{result.pc_search_volume:,}", result.pc_search_volume))
             else:
-                self.pc_table.setItem(row, 2, NumericTableWidgetItem("-", 0))
+                self.pc_table.setItem(row, 2, SortableTableWidgetItem("-", 0))
             
             # PC 데이터
-            self.pc_table.setItem(row, 3, NumericTableWidgetItem(
+            self.pc_table.setItem(row, 3, SortableTableWidgetItem(
                 f"{result.pc_clicks:.1f}", result.pc_clicks))
-            self.pc_table.setItem(row, 4, NumericTableWidgetItem(
+            self.pc_table.setItem(row, 4, SortableTableWidgetItem(
                 f"{result.pc_ctr:.2f}%", result.pc_ctr))
-            self.pc_table.setItem(row, 5, NumericTableWidgetItem(
+            self.pc_table.setItem(row, 5, SortableTableWidgetItem(
                 f"{result.pc_first_page_positions}위까지", result.pc_first_page_positions))
-            self.pc_table.setItem(row, 6, NumericTableWidgetItem(
+            self.pc_table.setItem(row, 6, SortableTableWidgetItem(
                 f"{result.pc_first_position_bid:,}원", result.pc_first_position_bid))
-            self.pc_table.setItem(row, 7, NumericTableWidgetItem(
+            self.pc_table.setItem(row, 7, SortableTableWidgetItem(
                 f"{result.pc_min_exposure_bid:,}원", result.pc_min_exposure_bid))
             
             # 추천순위 ("위" 접미사 포함)
@@ -741,7 +730,7 @@ class PowerLinkResultsWidget(QWidget):
                 rank_text = f"{result.pc_recommendation_rank}위"
             else:
                 rank_text = "-"
-            self.pc_table.setItem(row, 8, NumericTableWidgetItem(
+            self.pc_table.setItem(row, 8, SortableTableWidgetItem(
                 rank_text, result.pc_recommendation_rank))
             
             # 상세 버튼 (원본과 동일한 초록색 스타일)
@@ -843,9 +832,9 @@ class PowerLinkResultsWidget(QWidget):
         # 2. 월검색량 (Mobile)
         if hasattr(result, 'mobile_search_volume') and result.mobile_search_volume is not None and result.mobile_search_volume >= 0:
             volume_text, volume_value = safe_format_number(result.mobile_search_volume, "int")
-            search_volume_item = NumericTableWidgetItem(volume_text, volume_value)
+            search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
         else:
-            search_volume_item = NumericTableWidgetItem("-", 0)
+            search_volume_item = SortableTableWidgetItem("-", 0)
         table.setItem(row, 2, search_volume_item)
         
         # 디바이스별 데이터 설정
@@ -853,97 +842,97 @@ class PowerLinkResultsWidget(QWidget):
             # 3. 클릭수
             if hasattr(result, 'mobile_clicks') and result.mobile_clicks is not None:
                 clicks_text, clicks_value = safe_format_number(result.mobile_clicks, "float1")
-                clicks_item = NumericTableWidgetItem(clicks_text, clicks_value)
+                clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
             else:
-                clicks_item = NumericTableWidgetItem("-", 0)
+                clicks_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 3, clicks_item)
             
             # 4. 클릭률
             if hasattr(result, 'mobile_ctr') and result.mobile_ctr is not None:
                 ctr_text, ctr_value = safe_format_number(result.mobile_ctr, "float2", "%")
-                ctr_item = NumericTableWidgetItem(ctr_text, ctr_value)
+                ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
             else:
-                ctr_item = NumericTableWidgetItem("-", 0)
+                ctr_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 4, ctr_item)
             
             # 5. 1p노출위치
             if hasattr(result, 'mobile_first_page_positions') and result.mobile_first_page_positions is not None:
                 position_text, position_value = safe_format_number(result.mobile_first_page_positions, "int", "위까지")
-                position_item = NumericTableWidgetItem(position_text, position_value)
+                position_item = SortableTableWidgetItem(position_text, position_value)
             else:
-                position_item = NumericTableWidgetItem("-", 0)
+                position_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 5, position_item)
             
             # 6. 1등광고비 (올바른 데이터 할당)
             if hasattr(result, 'mobile_first_position_bid') and result.mobile_first_position_bid is not None:
                 first_bid_text, first_bid_value = safe_format_number(result.mobile_first_position_bid, "int", "원")
-                first_bid_item = NumericTableWidgetItem(first_bid_text, first_bid_value)
+                first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
             else:
-                first_bid_item = NumericTableWidgetItem("-", 0)
+                first_bid_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 6, first_bid_item)
             
             # 7. 최소노출가격 (올바른 데이터 할당)
             if hasattr(result, 'mobile_min_exposure_bid') and result.mobile_min_exposure_bid is not None:
                 min_bid_text, min_bid_value = safe_format_number(result.mobile_min_exposure_bid, "int", "원")
-                min_bid_item = NumericTableWidgetItem(min_bid_text, min_bid_value)
+                min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
             else:
-                min_bid_item = NumericTableWidgetItem("-", 0)
+                min_bid_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 7, min_bid_item)
             
             # 8. 추천순위 (올바른 데이터 할당, "위" 접미사 포함)
             mobile_rank = getattr(result, 'mobile_recommendation_rank', 0) if hasattr(result, 'mobile_recommendation_rank') else 0
             if mobile_rank > 0:
-                rank_item = NumericTableWidgetItem(f"{mobile_rank}위", mobile_rank)
+                rank_item = SortableTableWidgetItem(f"{mobile_rank}위", mobile_rank)
             else:
-                rank_item = NumericTableWidgetItem("-", 0)  # 초기값 "-"
+                rank_item = SortableTableWidgetItem("-", 0)  # 초기값 "-"
             table.setItem(row, 8, rank_item)
         else:  # PC
             # 3. 클릭수
             if hasattr(result, 'pc_clicks') and result.pc_clicks is not None:
                 clicks_text, clicks_value = safe_format_number(result.pc_clicks, "float1")
-                clicks_item = NumericTableWidgetItem(clicks_text, clicks_value)
+                clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
             else:
-                clicks_item = NumericTableWidgetItem("-", 0)
+                clicks_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 3, clicks_item)
             
             # 4. 클릭률
             if hasattr(result, 'pc_ctr') and result.pc_ctr is not None:
                 ctr_text, ctr_value = safe_format_number(result.pc_ctr, "float2", "%")
-                ctr_item = NumericTableWidgetItem(ctr_text, ctr_value)
+                ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
             else:
-                ctr_item = NumericTableWidgetItem("-", 0)
+                ctr_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 4, ctr_item)
             
             # 5. 1p노출위치
             if hasattr(result, 'pc_first_page_positions') and result.pc_first_page_positions is not None:
                 position_text, position_value = safe_format_number(result.pc_first_page_positions, "int", "위까지")
-                position_item = NumericTableWidgetItem(position_text, position_value)
+                position_item = SortableTableWidgetItem(position_text, position_value)
             else:
-                position_item = NumericTableWidgetItem("-", 0)
+                position_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 5, position_item)
             
             # 6. 1등광고비 (올바른 데이터 할당)
             if hasattr(result, 'pc_first_position_bid') and result.pc_first_position_bid is not None:
                 first_bid_text, first_bid_value = safe_format_number(result.pc_first_position_bid, "int", "원")
-                first_bid_item = NumericTableWidgetItem(first_bid_text, first_bid_value)
+                first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
             else:
-                first_bid_item = NumericTableWidgetItem("-", 0)
+                first_bid_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 6, first_bid_item)
             
             # 7. 최소노출가격 (올바른 데이터 할당)
             if hasattr(result, 'pc_min_exposure_bid') and result.pc_min_exposure_bid is not None:
                 min_bid_text, min_bid_value = safe_format_number(result.pc_min_exposure_bid, "int", "원")
-                min_bid_item = NumericTableWidgetItem(min_bid_text, min_bid_value)
+                min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
             else:
-                min_bid_item = NumericTableWidgetItem("-", 0)
+                min_bid_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 7, min_bid_item)
             
             # 8. 추천순위 (올바른 데이터 할당, "위" 접미사 포함)
             pc_rank = getattr(result, 'pc_recommendation_rank', 0) if hasattr(result, 'pc_recommendation_rank') else 0
             if pc_rank > 0:
-                rank_item = NumericTableWidgetItem(f"{pc_rank}위", pc_rank)
+                rank_item = SortableTableWidgetItem(f"{pc_rank}위", pc_rank)
             else:
-                rank_item = NumericTableWidgetItem("-", 0)  # 초기값 "-"
+                rank_item = SortableTableWidgetItem("-", 0)  # 초기값 "-"
             table.setItem(row, 8, rank_item)
         
         # 9. 상세보기 버튼 (셀 전체를 채우는 초록색 버튼)
@@ -2090,15 +2079,15 @@ class PowerLinkResultsWidget(QWidget):
             if device_type == 'mobile':
                 if hasattr(result, 'mobile_search_volume') and result.mobile_search_volume is not None and result.mobile_search_volume >= 0:
                     volume_text, volume_value = safe_format_number(result.mobile_search_volume, "int")
-                    search_volume_item = NumericTableWidgetItem(volume_text, volume_value)
+                    search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
                 else:
-                    search_volume_item = NumericTableWidgetItem("-", 0)
+                    search_volume_item = SortableTableWidgetItem("-", 0)
             else:  # PC
                 if hasattr(result, 'pc_search_volume') and result.pc_search_volume is not None and result.pc_search_volume >= 0:
                     volume_text, volume_value = safe_format_number(result.pc_search_volume, "int")
-                    search_volume_item = NumericTableWidgetItem(volume_text, volume_value)
+                    search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
                 else:
-                    search_volume_item = NumericTableWidgetItem("-", 0)
+                    search_volume_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 2, search_volume_item)
             
             # 디바이스별 데이터 업데이트
@@ -2106,98 +2095,98 @@ class PowerLinkResultsWidget(QWidget):
                 # 3. 클릭수
                 if hasattr(result, 'mobile_clicks') and result.mobile_clicks is not None and result.mobile_clicks >= 0:
                     clicks_text, clicks_value = safe_format_number(result.mobile_clicks, "float1")
-                    clicks_item = NumericTableWidgetItem(clicks_text, clicks_value)
+                    clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
                 else:
-                    clicks_item = NumericTableWidgetItem("-", 0)
+                    clicks_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 3, clicks_item)
                 
                 # 4. 클릭률
                 if hasattr(result, 'mobile_ctr') and result.mobile_ctr is not None and result.mobile_ctr >= 0:
                     ctr_text, ctr_value = safe_format_number(result.mobile_ctr, "float2", "%")
-                    ctr_item = NumericTableWidgetItem(ctr_text, ctr_value)
+                    ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
                 else:
-                    ctr_item = NumericTableWidgetItem("-", 0)
+                    ctr_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 4, ctr_item)
                 
                 # 5. 1p노출위치
                 if hasattr(result, 'mobile_first_page_positions') and result.mobile_first_page_positions is not None:
                     position_text, position_value = safe_format_number(result.mobile_first_page_positions, "int", "위까지")
-                    position_item = NumericTableWidgetItem(position_text, position_value)
+                    position_item = SortableTableWidgetItem(position_text, position_value)
                 else:
-                    position_item = NumericTableWidgetItem("-", 0)
+                    position_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 5, position_item)
                 
                 # 6. 1등광고비
                 if hasattr(result, 'mobile_first_position_bid') and result.mobile_first_position_bid is not None:
                     first_bid_text, first_bid_value = safe_format_number(result.mobile_first_position_bid, "int", "원")
-                    first_bid_item = NumericTableWidgetItem(first_bid_text, first_bid_value)
+                    first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
                 else:
-                    first_bid_item = NumericTableWidgetItem("-", 0)
+                    first_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 6, first_bid_item)
                 
                 # 7. 최소노출가격
                 if hasattr(result, 'mobile_min_exposure_bid') and result.mobile_min_exposure_bid is not None:
                     min_bid_text, min_bid_value = safe_format_number(result.mobile_min_exposure_bid, "int", "원")
-                    min_bid_item = NumericTableWidgetItem(min_bid_text, min_bid_value)
+                    min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
                 else:
-                    min_bid_item = NumericTableWidgetItem("-", 0)
+                    min_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 7, min_bid_item)
                 
                 # 8. 추천순위
                 mobile_rank = getattr(result, 'mobile_recommendation_rank', 0) if hasattr(result, 'mobile_recommendation_rank') else 0
                 if mobile_rank > 0:
-                    rank_item = NumericTableWidgetItem(str(mobile_rank), mobile_rank)
+                    rank_item = SortableTableWidgetItem(str(mobile_rank), mobile_rank)
                 else:
-                    rank_item = NumericTableWidgetItem("-", 0)
+                    rank_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 8, rank_item)
                 
             else:  # PC
                 # 3. 클릭수
                 if hasattr(result, 'pc_clicks') and result.pc_clicks is not None and result.pc_clicks >= 0:
                     clicks_text, clicks_value = safe_format_number(result.pc_clicks, "float1")
-                    clicks_item = NumericTableWidgetItem(clicks_text, clicks_value)
+                    clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
                 else:
-                    clicks_item = NumericTableWidgetItem("-", 0)
+                    clicks_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 3, clicks_item)
                 
                 # 4. 클릭률
                 if hasattr(result, 'pc_ctr') and result.pc_ctr is not None and result.pc_ctr >= 0:
                     ctr_text, ctr_value = safe_format_number(result.pc_ctr, "float2", "%")
-                    ctr_item = NumericTableWidgetItem(ctr_text, ctr_value)
+                    ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
                 else:
-                    ctr_item = NumericTableWidgetItem("-", 0)
+                    ctr_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 4, ctr_item)
                 
                 # 5. 1p노출위치
                 if hasattr(result, 'pc_first_page_positions') and result.pc_first_page_positions is not None:
                     position_text, position_value = safe_format_number(result.pc_first_page_positions, "int", "위까지")
-                    position_item = NumericTableWidgetItem(position_text, position_value)
+                    position_item = SortableTableWidgetItem(position_text, position_value)
                 else:
-                    position_item = NumericTableWidgetItem("-", 0)
+                    position_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 5, position_item)
                 
                 # 6. 1등광고비
                 if hasattr(result, 'pc_first_position_bid') and result.pc_first_position_bid is not None:
                     first_bid_text, first_bid_value = safe_format_number(result.pc_first_position_bid, "int", "원")
-                    first_bid_item = NumericTableWidgetItem(first_bid_text, first_bid_value)
+                    first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
                 else:
-                    first_bid_item = NumericTableWidgetItem("-", 0)
+                    first_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 6, first_bid_item)
                 
                 # 7. 최소노출가격
                 if hasattr(result, 'pc_min_exposure_bid') and result.pc_min_exposure_bid is not None:
                     min_bid_text, min_bid_value = safe_format_number(result.pc_min_exposure_bid, "int", "원")
-                    min_bid_item = NumericTableWidgetItem(min_bid_text, min_bid_value)
+                    min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
                 else:
-                    min_bid_item = NumericTableWidgetItem("-", 0)
+                    min_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 7, min_bid_item)
                 
                 # 8. 추천순위
                 pc_rank = getattr(result, 'pc_recommendation_rank', 0) if hasattr(result, 'pc_recommendation_rank') else 0
                 if pc_rank > 0:
-                    rank_item = NumericTableWidgetItem(str(pc_rank), pc_rank)
+                    rank_item = SortableTableWidgetItem(str(pc_rank), pc_rank)
                 else:
-                    rank_item = NumericTableWidgetItem("-", 0)
+                    rank_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 8, rank_item)
             
             # 상세 버튼은 이미 설정되어 있으므로 건드리지 않음
@@ -2311,15 +2300,15 @@ class PowerLinkResultsWidget(QWidget):
             if device_type == 'mobile':
                 if hasattr(result, 'mobile_search_volume') and result.mobile_search_volume is not None and result.mobile_search_volume >= 0:
                     volume_text, volume_value = safe_format_number(result.mobile_search_volume, "int")
-                    search_volume_item = NumericTableWidgetItem(volume_text, volume_value)
+                    search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
                 else:
-                    search_volume_item = NumericTableWidgetItem("-", 0)
+                    search_volume_item = SortableTableWidgetItem("-", 0)
             else:  # PC
                 if hasattr(result, 'pc_search_volume') and result.pc_search_volume is not None and result.pc_search_volume >= 0:
                     volume_text, volume_value = safe_format_number(result.pc_search_volume, "int")
-                    search_volume_item = NumericTableWidgetItem(volume_text, volume_value)
+                    search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
                 else:
-                    search_volume_item = NumericTableWidgetItem("-", 0)
+                    search_volume_item = SortableTableWidgetItem("-", 0)
             table.setItem(row, 2, search_volume_item)
             
             # 디바이스별 데이터 설정
@@ -2327,98 +2316,98 @@ class PowerLinkResultsWidget(QWidget):
                 # 3. 클릭수
                 if hasattr(result, 'mobile_clicks') and result.mobile_clicks is not None and result.mobile_clicks >= 0:
                     clicks_text, clicks_value = safe_format_number(result.mobile_clicks, "float1")
-                    clicks_item = NumericTableWidgetItem(clicks_text, clicks_value)
+                    clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
                 else:
-                    clicks_item = NumericTableWidgetItem("-", 0)
+                    clicks_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 3, clicks_item)
                 
                 # 4. 클릭률
                 if hasattr(result, 'mobile_ctr') and result.mobile_ctr is not None and result.mobile_ctr >= 0:
                     ctr_text, ctr_value = safe_format_number(result.mobile_ctr, "float2", "%")
-                    ctr_item = NumericTableWidgetItem(ctr_text, ctr_value)
+                    ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
                 else:
-                    ctr_item = NumericTableWidgetItem("-", 0)
+                    ctr_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 4, ctr_item)
                 
                 # 5. 1p노출위치
                 if hasattr(result, 'mobile_first_page_positions') and result.mobile_first_page_positions is not None and result.mobile_first_page_positions > 0:
                     position_text, position_value = safe_format_number(result.mobile_first_page_positions, "int", "위까지")
-                    position_item = NumericTableWidgetItem(position_text, position_value)
+                    position_item = SortableTableWidgetItem(position_text, position_value)
                 else:
-                    position_item = NumericTableWidgetItem("-", 0)
+                    position_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 5, position_item)
                 
                 # 6. 1등광고비
                 if hasattr(result, 'mobile_first_position_bid') and result.mobile_first_position_bid is not None and result.mobile_first_position_bid > 0:
                     first_bid_text, first_bid_value = safe_format_number(result.mobile_first_position_bid, "int", "원")
-                    first_bid_item = NumericTableWidgetItem(first_bid_text, first_bid_value)
+                    first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
                 else:
-                    first_bid_item = NumericTableWidgetItem("-", 0)
+                    first_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 6, first_bid_item)
                 
                 # 7. 최소노출가격
                 if hasattr(result, 'mobile_min_exposure_bid') and result.mobile_min_exposure_bid is not None and result.mobile_min_exposure_bid > 0:
                     min_bid_text, min_bid_value = safe_format_number(result.mobile_min_exposure_bid, "int", "원")
-                    min_bid_item = NumericTableWidgetItem(min_bid_text, min_bid_value)
+                    min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
                 else:
-                    min_bid_item = NumericTableWidgetItem("-", 0)
+                    min_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 7, min_bid_item)
                 
                 # 8. 추천순위
                 mobile_rank = getattr(result, 'mobile_recommendation_rank', 0) if hasattr(result, 'mobile_recommendation_rank') else 0
                 if mobile_rank > 0:
-                    rank_item = NumericTableWidgetItem(str(mobile_rank), mobile_rank)
+                    rank_item = SortableTableWidgetItem(str(mobile_rank), mobile_rank)
                 else:
-                    rank_item = NumericTableWidgetItem("-", 0)
+                    rank_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 8, rank_item)
                 
             else:  # PC
                 # 3. 클릭수
                 if hasattr(result, 'pc_clicks') and result.pc_clicks is not None and result.pc_clicks >= 0:
                     clicks_text, clicks_value = safe_format_number(result.pc_clicks, "float1")
-                    clicks_item = NumericTableWidgetItem(clicks_text, clicks_value)
+                    clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
                 else:
-                    clicks_item = NumericTableWidgetItem("-", 0)
+                    clicks_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 3, clicks_item)
                 
                 # 4. 클릭률
                 if hasattr(result, 'pc_ctr') and result.pc_ctr is not None and result.pc_ctr >= 0:
                     ctr_text, ctr_value = safe_format_number(result.pc_ctr, "float2", "%")
-                    ctr_item = NumericTableWidgetItem(ctr_text, ctr_value)
+                    ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
                 else:
-                    ctr_item = NumericTableWidgetItem("-", 0)
+                    ctr_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 4, ctr_item)
                 
                 # 5. 1p노출위치
                 if hasattr(result, 'pc_first_page_positions') and result.pc_first_page_positions is not None and result.pc_first_page_positions > 0:
                     position_text, position_value = safe_format_number(result.pc_first_page_positions, "int", "위까지")
-                    position_item = NumericTableWidgetItem(position_text, position_value)
+                    position_item = SortableTableWidgetItem(position_text, position_value)
                 else:
-                    position_item = NumericTableWidgetItem("-", 0)
+                    position_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 5, position_item)
                 
                 # 6. 1등광고비
                 if hasattr(result, 'pc_first_position_bid') and result.pc_first_position_bid is not None and result.pc_first_position_bid > 0:
                     first_bid_text, first_bid_value = safe_format_number(result.pc_first_position_bid, "int", "원")
-                    first_bid_item = NumericTableWidgetItem(first_bid_text, first_bid_value)
+                    first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
                 else:
-                    first_bid_item = NumericTableWidgetItem("-", 0)
+                    first_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 6, first_bid_item)
                 
                 # 7. 최소노출가격
                 if hasattr(result, 'pc_min_exposure_bid') and result.pc_min_exposure_bid is not None and result.pc_min_exposure_bid > 0:
                     min_bid_text, min_bid_value = safe_format_number(result.pc_min_exposure_bid, "int", "원")
-                    min_bid_item = NumericTableWidgetItem(min_bid_text, min_bid_value)
+                    min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
                 else:
-                    min_bid_item = NumericTableWidgetItem("-", 0)
+                    min_bid_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 7, min_bid_item)
                 
                 # 8. 추천순위
                 pc_rank = getattr(result, 'pc_recommendation_rank', 0) if hasattr(result, 'pc_recommendation_rank') else 0
                 if pc_rank > 0:
-                    rank_item = NumericTableWidgetItem(str(pc_rank), pc_rank)
+                    rank_item = SortableTableWidgetItem(str(pc_rank), pc_rank)
                 else:
-                    rank_item = NumericTableWidgetItem("-", 0)
+                    rank_item = SortableTableWidgetItem("-", 0)
                 table.setItem(row, 8, rank_item)
             
             # 9. 상세보기 버튼 (셀 전체를 채우는 초록색 버튼)

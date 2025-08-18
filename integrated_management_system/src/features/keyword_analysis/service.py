@@ -1,7 +1,7 @@
 """
-키워드 분석 비즈니스 로직 (유스케이스/서비스)
-키워드 검색량, 경쟁강도, 카테고리 분석 핵심 로직
-트랜잭션 패턴으로 데이터 일관성 보장
+키워드 분석 오케스트레이션 로직 (CLAUDE.md 구조)
+흐름 제어: 검증 → adapters 벤더 호출 → 가공 → 엑셀 저장
+I/O 없음, adapters 경유만 허용
 """
 from typing import List, Optional, Dict, Any, Callable
 from datetime import datetime
@@ -10,17 +10,21 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from PySide6.QtCore import QObject, Signal
 
 from src.vendors.naver import naver_shopping_client, naver_searchad_client
-from src.vendors.naver.normalizers import normalize_shopping_response, normalize_searchad_response
-from .text_ops import filter_duplicates, clean_keywords, clean_keyword
+from src.vendors.naver.normalizers import normalize_shopping_response
+from src.toolbox.text_utils import filter_unique_keywords, clean_keywords
 from src.foundation.config import config_manager
 from src.foundation.exceptions import KeywordAnalysisError
 from src.foundation.logging import get_logger
-# from src.foundation.db import get_session  # 제거됨 - 키워드 분석은 DB 사용하지 않음
 
-from .models import KeywordData, AnalysisConfig, AnalysisResult
-from .adapters import adapt_keyword_data
-# repository.py 제거됨 - 메모리 기반으로 단순화
+from .models import KeywordData, AnalysisPolicy, AnalysisScope, AnalysisResult
+from .adapters import adapt_keyword_data, export_analysis_result_to_excel
+from .adapters import export_keywords_to_excel as _export_keywords_to_excel
 
+# Performance policy constants (API call optimized values)
+MAX_WORKERS = 5
+DELAY_BETWEEN_REQUESTS = 0.5  # seconds
+REQUEST_TIMEOUT = 30
+RETRY_COUNT = 3
 
 logger = get_logger("features.keyword_analysis.service")
 
@@ -34,81 +38,19 @@ class KeywordAnalysisService(QObject):
     processing_finished = Signal(list)          # 전체 작업 완료 (결과 리스트)
     error_occurred = Signal(str)                # 오류 발생
     
-    def __init__(self, config: Optional[AnalysisConfig] = None):
+    def __init__(self, policy: Optional[AnalysisPolicy] = None):
         """
         키워드 분석 서비스 초기화
         
         Args:
-            config: 분석 설정
+            policy: 분석 정책
         """
         super().__init__()
-        self.config = config or AnalysisConfig()
+        self.policy = policy or AnalysisPolicy()
         self.is_running = False
         self.current_session_id: Optional[str] = None
-        self.max_workers = 5  # 병렬 처리 스레드 수
     
     
-    def analyze_keywords(self, keywords: List[str], session_name: Optional[str] = None, progress_callback: Optional[Callable] = None) -> AnalysisResult:
-        """
-        키워드 분석 실행 (트랜잭션 패턴)
-        
-        Args:
-            keywords: 분석할 키워드 목록
-            session_name: 분석 세션 이름
-        
-        Returns:
-            AnalysisResult: 분석 결과
-        """
-        if self.is_running:
-            raise KeywordAnalysisError("이미 분석이 실행 중입니다")
-        
-        session_name = session_name or f"키워드분석_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
-        # DB 사용 안함 (메모리 기반)
-        # with get_session() as db_session:
-        try:
-            self.is_running = True
-            start_time = datetime.now()
-            
-            logger.info(f"키워드 분석 시작: {len(keywords)}개 키워드")
-            
-            # 키워드 전처리
-            processed_keywords = self._preprocess_keywords(keywords)
-            
-            if not processed_keywords:
-                raise KeywordAnalysisError("분석할 유효한 키워드가 없습니다")
-            
-            # 분석 세션 생성 (메모리 방식)
-            # session_repo = AnalysisSessionRepository(db_session)
-            # analysis_session = session_repo.create_session(...)
-            self.current_session_id = f"session_{int(time.time())}"
-            
-            # 키워드 분석 실행 (메모리 방식)
-            analyzed_keywords = self._analyze_keyword_batch(
-                processed_keywords, progress_callback
-            )
-            
-            # 세션 완료 처리 (메모리 방식)
-            # session_repo.complete_session(analysis_session.id)
-            
-            # 결과 생성
-            end_time = datetime.now()
-            result = AnalysisResult(
-                keywords=analyzed_keywords,
-                config=self.config,
-                start_time=start_time,
-                end_time=end_time
-            )
-            
-            logger.info(f"키워드 분석 완료: {len(analyzed_keywords)}개 완료, 소요시간: {result.duration:.2f}초")
-            return result
-            
-        except Exception as e:
-            logger.error(f"키워드 분석 실패: {e}")
-            raise KeywordAnalysisError(f"키워드 분석 실패: {e}")
-        finally:
-            self.is_running = False
-            self.current_session_id = None
     
     def analyze_single_keyword(self, keyword: str) -> KeywordData:
         """
@@ -147,6 +89,84 @@ class KeywordAnalysisService(QObject):
         if self.is_running:
             self.is_running = False
             logger.info("키워드 분석 중단 요청")
+    
+    def export_result_to_excel(self, result: AnalysisResult, file_path: str) -> bool:
+        """
+        분석 결과를 엑셀로 내보내기 (adapters 경유)
+        
+        Args:
+            result: 분석 결과
+            file_path: 저장할 파일 경로
+        
+        Returns:
+            bool: 성공 여부
+        """
+        try:
+            logger.info(f"분석 결과 엑셀 내보내기 시작: {file_path}")
+            success = export_analysis_result_to_excel(result, file_path)
+            
+            if success:
+                logger.info(f"분석 결과 엑셀 내보내기 완료: {len(result.keywords)}개 키워드")
+            else:
+                logger.warning("분석 결과 엑셀 내보내기 실패")
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"분석 결과 엑셀 내보내기 오류: {e}")
+            return False
+    
+    def export_keywords_to_excel(self, keywords: List[KeywordData], file_path: str) -> bool:
+        """
+        키워드 리스트를 엑셀로 내보내기 (adapters 경유)
+        
+        Args:
+            keywords: 키워드 데이터 리스트
+            file_path: 저장할 파일 경로
+        
+        Returns:
+            bool: 성공 여부
+        """
+        try:
+            logger.info(f"키워드 리스트 엑셀 내보내기 시작: {file_path}")
+            success = _export_keywords_to_excel(keywords, file_path)
+            
+            if success:
+                logger.info(f"키워드 리스트 엑셀 내보내기 완료: {len(keywords)}개 키워드")
+            else:
+                logger.warning("키워드 리스트 엑셀 내보내기 실패")
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"키워드 리스트 엑셀 내보내기 오류: {e}")
+            return False
+    
+    def get_performance_policy(self) -> dict:
+        """현재 성능 정책 반환"""
+        return {
+            "max_workers": MAX_WORKERS,
+            "delay_between_requests": DELAY_BETWEEN_REQUESTS,
+            "request_timeout": REQUEST_TIMEOUT,
+            "retry_count": RETRY_COUNT
+        }
+    
+    def get_analysis_policy(self) -> AnalysisPolicy:
+        """현재 분석 정책 반환"""
+        return self.policy
+    
+    def set_analysis_policy(self, policy: AnalysisPolicy):
+        """분석 정책 설정"""
+        self.policy = policy
+        logger.info(f"분석 정책 변경: scope={policy.scope.value}, min_volume={policy.min_search_volume}")
+    
+    def create_custom_policy(self, scope: AnalysisScope, min_volume: int = 100, max_competition: float = 1.0) -> AnalysisPolicy:
+        """커스텀 분석 정책 생성"""
+        return AnalysisPolicy(
+            scope=scope,
+            min_search_volume=min_volume,
+            max_competition_threshold=max_competition
+        )
     
     def analyze_keywords_parallel(self, keywords: List[str], session_name: Optional[str] = None, progress_callback: Optional[Callable] = None) -> AnalysisResult:
         """
@@ -195,7 +215,7 @@ class KeywordAnalysisService(QObject):
             end_time = datetime.now()
             result = AnalysisResult(
                 keywords=analyzed_keywords,
-                config=self.config,
+                policy=self.policy,
                 start_time=start_time,
                 end_time=end_time
             )
@@ -219,7 +239,7 @@ class KeywordAnalysisService(QObject):
             cleaned = clean_keywords(keywords)
             
             # 중복 제거
-            unique_keywords = filter_duplicates(cleaned)
+            unique_keywords = filter_unique_keywords(cleaned)
             
             logger.info(f"키워드 전처리: {len(keywords)} -> {len(unique_keywords)}개")
             return unique_keywords
@@ -237,47 +257,6 @@ class KeywordAnalysisService(QObject):
         cleaned = keyword.strip().replace(' ', '').upper()
         return cleaned
     
-# DB 관련 메서드들 제거됨 - 메모리 기반으로 단순화
-    
-    def _analyze_keyword_batch(self, keywords: List[str], progress_callback: Optional[Callable] = None) -> List[KeywordData]:
-        """키워드 배치 분석 (기존 호환성용)"""
-        results = []
-        total_keywords = len(keywords)
-        completed_count = 0
-        failed_count = 0
-        
-        # 진행률 업데이트
-        if progress_callback:
-            progress_callback(0, total_keywords, "키워드 분석 시작")
-        
-        # 순차 처리 (스레드 제거)
-        for keyword in keywords:
-            if not self.is_running:
-                logger.info("분석 중단됨")
-                break
-            
-            try:
-                keyword_data = self._analyze_single_keyword_safe(keyword)
-                if keyword_data:
-                    results.append(keyword_data)
-                    completed_count += 1
-                else:
-                    failed_count += 1
-                
-                # 진행률 업데이트
-                if progress_callback:
-                    progress_callback(completed_count + failed_count, total_keywords, f"키워드 분석 중: {keyword}")
-                
-                # 요청 간 지연
-                time.sleep(self.config.delay_between_requests)
-                
-            except Exception as e:
-                logger.error(f"키워드 분석 실패 - {keyword}: {e}")
-                failed_count += 1
-                if progress_callback:
-                    progress_callback(completed_count + failed_count, total_keywords, f"키워드 분석 실패: {keyword}")
-        
-        return results
     
     def _analyze_single_keyword_safe(self, keyword: str) -> Optional[KeywordData]:
         """안전한 단일 키워드 분석 (예외 처리 포함)"""
@@ -300,8 +279,8 @@ class KeywordAnalysisService(QObject):
             return None
     
     def _fetch_searchad_data(self, keyword: str) -> Optional[Dict[str, Any]]:
-        """검색광고 API 데이터 수집"""
-        if not self.config.include_competition:
+        """검색광고 API 데이터 수집 (성능 정책 적용)"""
+        if not self.policy.should_analyze_competition():
             return None
         
         try:
@@ -322,8 +301,8 @@ class KeywordAnalysisService(QObject):
             return None
     
     def _fetch_shopping_data(self, keyword: str) -> Optional[Dict[str, Any]]:
-        """쇼핑 API 데이터 수집"""
-        if not self.config.include_category:
+        """쇼핑 API 데이터 수집 (성능 정책 적용)"""
+        if not self.policy.should_analyze_category():
             return None
         
         try:
@@ -360,7 +339,7 @@ class KeywordAnalysisService(QObject):
         # 진행률 업데이트
         self.progress_updated.emit(0, total_keywords, "병렬 분석 시작")
         
-        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             # 각 키워드 처리를 스레드풀에 제출
             future_to_keyword = {
                 executor.submit(self._analyze_single_keyword_safe, keyword): keyword
@@ -420,17 +399,17 @@ class KeywordAnalysisManager:
         """키워드 분석 관리자 초기화"""
         self.current_service: Optional[KeywordAnalysisService] = None
     
-    def create_service(self, config: Optional[AnalysisConfig] = None) -> KeywordAnalysisService:
+    def create_service(self, policy: Optional[AnalysisPolicy] = None) -> KeywordAnalysisService:
         """
         새로운 분석 서비스 생성
         
         Args:
-            config: 분석 설정
+            policy: 분석 정책
         
         Returns:
             KeywordAnalysisService: 키워드 분석 서비스
         """
-        self.current_service = KeywordAnalysisService(config)
+        self.current_service = KeywordAnalysisService(policy)
         return self.current_service
     
     def get_current_service(self) -> Optional[KeywordAnalysisService]:
