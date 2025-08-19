@@ -4,12 +4,11 @@
 """
 from typing import List, Dict, Optional
 from datetime import datetime
-import os
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QTabWidget, QTableWidget, QTableWidgetItem, 
-    QFileDialog, QHeaderView, QDialog, QCheckBox,
+    QHeaderView, QDialog, QCheckBox,
     QScrollArea, QFrame
 )
 from PySide6.QtCore import Qt, Signal, QTimer
@@ -19,7 +18,6 @@ from src.toolbox.ui_kit import ModernStyle, SortableTableWidgetItem, ModernTable
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton, ModernSuccessButton, ModernButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
-from src.foundation.db import get_db
 from .models import KeywordAnalysisResult
 from .service import keyword_database
 from .service import powerlink_service
@@ -136,55 +134,23 @@ class PowerLinkSaveDialog(QDialog):
         self.export_button.clicked.connect(self.export_to_excel)
         
     def export_to_excel(self):
-        """엑셀 내보내기 실행 (service 위임)"""
+        """엑셀 내보내기 실행 (UI 로직만)"""
         try:
-            from datetime import datetime
-            from PySide6.QtWidgets import QFileDialog
+            # 현재 분석 결과 가져오기
+            keywords_data = keyword_database.keywords
             
-            # 파일명 생성 (service에서 세션 정보 조회)
-            time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
-            default_filename = f"파워링크광고비분석_{time_str}.xlsx"
-            
-            file_path, _ = QFileDialog.getSaveFileName(
-                self, 
-                "엑셀 파일 저장",
-                default_filename,
-                "Excel files (*.xlsx)"
+            # service에 위임 (오케스트레이션 + adapters 파일 I/O)
+            success = powerlink_service.export_current_analysis_with_dialog(
+                keywords_data=keywords_data,
+                session_name=getattr(self, 'session_name', ''),
+                parent_widget=self
             )
             
-            if file_path:
-                # service를 통해 엑셀 파일 생성
-                keywords_data = keyword_database.keywords
-                
-                success = powerlink_service.save_to_excel(keywords_data, file_path, self.session_name)
-                
-                if not success:
-                    raise Exception("엑셀 파일 생성 실패")
-                
-                # 저장 완료 다이얼로그 (공용 방식 사용)
-                from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
-                from pathlib import Path
-                filename = Path(file_path).name
-                ModernSaveCompletionDialog.show_save_completion(
-                    self,
-                    "엑셀 내보내기 완료",
-                    f"파워링크 분석 데이터가 성공적으로 Excel 파일로 저장되었습니다.\n\n파일명: {filename}\n키워드 수: {len(keywords_data)}개",
-                    file_path
-                )
-                self.accept()
-                
+            if success:
+                self.accept()  # 다이얼로그 종료
+        
         except Exception as e:
-            # 오류 메시지
-            from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-            error_dialog = ModernConfirmDialog(
-                self,
-                "내보내기 실패",
-                f"엑셀 파일 생성 중 오류가 발생했습니다.\n\n오류: {str(e)}",
-                confirm_text="확인",
-                cancel_text=None,
-                icon="❌"
-            )
-            error_dialog.exec()
+            log_manager.add_log(f"PowerLink 엑셀 내보내기 UI 처리 실패: {e}", "error")
             
 
 
@@ -832,8 +798,8 @@ class PowerLinkResultsWidget(QWidget):
     def refresh_history_list(self):
         """히스토리 목록 새로고침"""
         try:
-            db = get_db()
-            sessions = db.list_powerlink_sessions()
+            # Service를 통한 히스토리 조회 (UI → Service 위임)
+            sessions = powerlink_service.get_analysis_history_sessions()
             
             if not hasattr(self, 'history_table') or self.history_table is None:
                 logger.error("history_table이 초기화되지 않음")
@@ -894,9 +860,7 @@ class PowerLinkResultsWidget(QWidget):
             )
             
             if dialog.exec() == ModernConfirmDialog.Accepted:
-                # 선택된 세션들의 session_id 추출 후 DB에서 삭제
-                from src.foundation.db import get_db
-                db = get_db()
+                # 선택된 세션들의 session_id 추출
                 session_ids_to_delete = []
                 
                 for row, session_name in selected_sessions:
@@ -907,17 +871,14 @@ class PowerLinkResultsWidget(QWidget):
                         if session_id:
                             session_ids_to_delete.append(session_id)
                 
-                # DB에서 실제 삭제 수행
+                # Service를 통한 세션 삭제 (UI → Service 위임)
                 if session_ids_to_delete:
-                    for session_id in session_ids_to_delete:
-                        db.delete_powerlink_session(session_id)
-                    
-                    log_manager.add_log(f"PowerLink 히스토리 {len(session_ids_to_delete)}개 DB에서 삭제 완료", "success")
+                    success = powerlink_service.delete_analysis_history_sessions(session_ids_to_delete)
+                    if success:
+                        # 히스토리 새로고침
+                        self.refresh_history_list()
                 else:
                     log_manager.add_log("PowerLink 히스토리 삭제 실패: session_id를 찾을 수 없음", "warning")
-                
-                # 히스토리 새로고침
-                self.refresh_history_list()
                 
         except Exception as e:
             log_manager.add_log(f"PowerLink 히스토리 삭제 실패: {e}", "error")
@@ -978,7 +939,7 @@ class PowerLinkResultsWidget(QWidget):
             log_manager.add_log(f"PowerLink 히스토리 보기 실패: {e}", "error")
     
     def export_selected_history(self):
-        """선택된 히스토리 엑셀 내보내기"""
+        """선택된 히스토리 엑셀 내보내기 (UI 로직만)"""
         try:
             # 선택된 세션 정보 가져오기 (ModernTableWidget API 사용)
             selected_sessions = []
@@ -997,114 +958,16 @@ class PowerLinkResultsWidget(QWidget):
             if not selected_sessions:
                 return
             
-            from datetime import datetime
-            import os
-            
-            # 선택된 세션이 1개인 경우: 일반 엑셀내보내기처럼 파일 다이얼로그
-            if len(selected_sessions) == 1:
-                session = selected_sessions[0]
-                
-                # service를 통해 데이터 사전 검증은 export_history_sessions에서 처리됨
-                
-                # 파일 저장 다이얼로그 (원본 세션 시간으로 기본 파일명 설정)
-                session_time = datetime.fromisoformat(session['created_at'])
-                time_str = session_time.strftime('%Y%m%d_%H%M%S')
-                default_filename = f"파워링크광고비분석_{time_str}.xlsx"
-                
-                from PySide6.QtWidgets import QFileDialog
-                file_path, _ = QFileDialog.getSaveFileName(
-                    self,
-                    "엑셀 파일 저장",
-                    default_filename,
-                    "Excel files (*.xlsx);;All files (*.*)"
-                )
-                
-                if file_path:
-                    try:
-                        # 엑셀 파일 생성 - service 위임
-                        success, _ = powerlink_service.export_history_sessions([session['id']], single_file_path=file_path)
-                        if not success:
-                            raise Exception("엑셀 파일 생성 실패")
-                        
-                        # 저장 완료 다이얼로그
-                        from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
-                        success_dialog = ModernSaveCompletionDialog(
-                            parent=self,
-                            title="저장 완료",
-                            message="엑셀 파일이 성공적으로 저장되었습니다.",
-                            file_path=file_path
-                        )
-                        
-                        # 선택저장 버튼 근처에 위치 설정
-                        if hasattr(self, 'export_selected_history_button'):
-                            success_dialog.position_near_widget(self.export_selected_history_button)
-                            
-                        success_dialog.exec()
-                        
-                        log_manager.add_log(f"PowerLink 히스토리 단일 파일 저장 완료: {session['name']}", "success")
-                        
-                    except Exception as e:
-                        log_manager.add_log(f"엑셀 파일 저장 실패: {e}", "error")
-                        from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-                        dialog = ModernConfirmDialog(
-                            self,
-                            "저장 실패",
-                            f"엑셀 파일 저장 중 오류가 발생했습니다.\n\n{str(e)}",
-                            confirm_text="확인",
-                            cancel_text=None,
-                            icon="❌"
-                        )
-                        dialog.exec()
-            
-            # 선택된 세션이 다중인 경우: 폴더 선택 + 자동 파일명 생성
-            else:
-                # 폴더 선택 다이얼로그
-                from PySide6.QtWidgets import QFileDialog
-                folder_path = QFileDialog.getExistingDirectory(
-                    self,
-                    "엑셀 파일 저장 폴더 선택",
-                    ""
-                )
-                
-                if not folder_path:
-                    return
-                
-                # service를 통해 다중 세션 엑셀 내보내기
-                session_ids = [session['id'] for session in selected_sessions]
-                success, saved_files = powerlink_service.export_history_sessions(session_ids, output_folder=folder_path)
-                
-                if saved_files:
-                    # 저장 완료 다이얼로그 (폴더 열기 옵션 포함)
-                    from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
-                    success_dialog = ModernSaveCompletionDialog(
-                        parent=self,
-                        title="선택저장 완료",
-                        message=f"{len(saved_files)}개의 엑셀 파일이 성공적으로 저장되었습니다.",
-                        file_path=saved_files[0]  # 첫 번째 파일 경로로 폴더 열기
-                    )
-                    
-                    # 선택저장 버튼 근처에 위치 설정
-                    if hasattr(self, 'export_selected_history_button'):
-                        success_dialog.position_near_widget(self.export_selected_history_button)
-                        
-                    success_dialog.exec()
-                    
-                    log_manager.add_log(f"PowerLink 히스토리 {len(saved_files)}개 파일 저장 완료", "success")
-                else:
-                    # 실패 메시지
-                    from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-                    dialog = ModernConfirmDialog(
-                        self,
-                        "저장 실패",
-                        "선택된 기록을 저장하는 중 오류가 발생했습니다.",
-                        confirm_text="확인",
-                        cancel_text=None,
-                        icon="❌"
-                    )
-                    dialog.exec()
+            # service에 위임 (오케스트레이션 + adapters 파일 I/O)
+            reference_widget = getattr(self, 'export_selected_history_button', None)
+            powerlink_service.export_selected_history_with_dialog(
+                sessions_data=selected_sessions,
+                parent_widget=self,
+                reference_widget=reference_widget
+            )
             
         except Exception as e:
-            log_manager.add_log(f"PowerLink 히스토리 내보내기 실패: {e}", "error")
+            log_manager.add_log(f"PowerLink 히스토리 내보내기 UI 처리 실패: {e}", "error")
     
     def update_button_states(self):
         """버튼 상태 업데이트"""
@@ -1721,9 +1584,9 @@ class PowerLinkResultsWidget(QWidget):
             dialog.exec()
         except Exception as e:
             logger.error(f"입찰가 상세 다이얼로그 표시 실패: {e}")
-            # 기본 메시지박스로 대체
-            from PySide6.QtWidgets import QMessageBox
-            QMessageBox.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
+            # ModernDialog로 교체
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            ModernInfoDialog.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
 
 
 class BidDetailsDialog(QDialog):
@@ -1993,9 +1856,9 @@ class BidDetailsDialog(QDialog):
             
         except Exception as e:
             print(f"상세 다이얼로그 표시 오류: {e}")
-            # 기본 메시지박스로 대체
-            from PySide6.QtWidgets import QMessageBox
-            QMessageBox.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
+            # ModernDialog로 교체
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            ModernInfoDialog.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
     
     def view_selected_history(self):
         """선택된 히스토리 항목 보기 (1개만 선택된 경우)"""

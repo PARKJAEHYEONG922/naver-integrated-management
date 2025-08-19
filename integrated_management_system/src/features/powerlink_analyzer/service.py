@@ -6,13 +6,12 @@ from typing import List, Dict, Optional, Tuple
 from datetime import datetime
 
 from src.foundation.logging import get_logger
-from src.foundation.db import get_db
 from src.desktop.common_log import log_manager
 from src.toolbox.validators import validate_url
 from src.toolbox.text_utils import parse_keywords_from_text, process_keywords
 
 from .adapters import PowerLinkDataAdapter, powerlink_excel_exporter
-from .models import KeywordAnalysisResult, AnalysisProgress
+from .models import KeywordAnalysisResult, AnalysisProgress, PowerLinkRepository
 
 logger = get_logger("features.powerlink_analyzer.service")
 
@@ -168,6 +167,7 @@ class PowerLinkAnalysisService:
     
     def __init__(self):
         self.adapter = PowerLinkDataAdapter()
+        self.repository = PowerLinkRepository()
         
     def validate_keywords(self, keywords_text: str) -> Tuple[bool, List[str], str]:
         """
@@ -474,11 +474,8 @@ class PowerLinkAnalysisService:
                 return False, 0, "", False
             
             # 중복 확인
-            from src.foundation.db import get_db
-            db = get_db()
-            is_duplicate = db.check_powerlink_session_duplicate_24h(keywords_data)
+            is_duplicate = self.repository.check_duplicate_session_24h(keywords_data)
             
-            from datetime import datetime
             session_name = f"PowerLink분석_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             
             if is_duplicate:
@@ -487,7 +484,7 @@ class PowerLinkAnalysisService:
                 return True, 0, session_name, True
             else:
                 # 중복이 아니면 DB에 저장
-                session_id = db.save_powerlink_analysis_session(keywords_data)
+                session_id = self.repository.save_analysis_session(keywords_data)
                 
                 log_manager.add_log(f"PowerLink 분석 세션 저장 완료: {session_name} ({len(keywords_data)}개 키워드)", "success")
                 logger.info(f"분석 세션 DB 저장 완료: {session_name}")
@@ -514,22 +511,19 @@ class PowerLinkAnalysisService:
             if not session_ids:
                 return False, []
             
-            from src.foundation.db import get_db
-            from datetime import datetime
             import os
             
-            db = get_db()
             saved_files = []
             
             for session_id in session_ids:
                 try:
                     # 세션 정보 가져오기
-                    session = db.get_powerlink_session(session_id)
+                    session = self.repository.get_session(session_id)
                     if not session:
                         continue
                     
                     # 키워드 데이터 가져오기
-                    keywords_data = db.get_powerlink_session_keywords(session_id)
+                    keywords_data = self.repository.get_session_keywords(session_id)
                     if not keywords_data:
                         continue
                     
@@ -582,12 +576,9 @@ class PowerLinkAnalysisService:
             변환된 키워드 분석 결과 딕셔너리 또는 None
         """
         try:
-            from src.foundation.db import get_db
-            from datetime import datetime
             from .models import BidPosition
             
-            db = get_db()
-            session_keywords_data = db.get_powerlink_session_keywords(session_id)
+            session_keywords_data = self.repository.get_session_keywords(session_id)
             
             if not session_keywords_data:
                 log_manager.add_log("키워드 데이터가 없습니다.", "warning")
@@ -670,11 +661,8 @@ class PowerLinkAnalysisService:
             if not session_ids:
                 return False, []
                 
-            from src.foundation.db import get_db
-            from datetime import datetime
             import os
             
-            db = get_db()
             saved_files = []
             
             # 단일 세션 처리
@@ -682,13 +670,13 @@ class PowerLinkAnalysisService:
                 session_id = session_ids[0]
                 
                 # 세션 정보 가져오기
-                session = db.get_powerlink_session(session_id)
+                session = self.repository.get_session(session_id)
                 if not session:
                     log_manager.add_log("세션 정보를 찾을 수 없습니다.", "warning")
                     return False, []
                 
                 # 키워드 데이터 가져오기
-                keywords_data = db.get_powerlink_session_keywords(session_id)
+                keywords_data = self.repository.get_session_keywords(session_id)
                 if not keywords_data:
                     log_manager.add_log("키워드 데이터가 없습니다.", "warning")
                     return False, []
@@ -707,12 +695,12 @@ class PowerLinkAnalysisService:
                 for session_id in session_ids:
                     try:
                         # 세션 정보 가져오기
-                        session = db.get_powerlink_session(session_id)
+                        session = self.repository.get_session(session_id)
                         if not session:
                             continue
                         
                         # 키워드 데이터 가져오기
-                        keywords_data = db.get_powerlink_session_keywords(session_id)
+                        keywords_data = self.repository.get_session_keywords(session_id)
                         if not keywords_data:
                             continue
                         
@@ -745,6 +733,149 @@ class PowerLinkAnalysisService:
             logger.error(error_msg)
             log_manager.add_log(error_msg, "error")
             return False, []
+    
+    def export_selected_history_with_dialog(self, sessions_data: list, parent_widget=None, reference_widget=None) -> bool:
+        """
+        선택된 히스토리 세션들을 엑셀로 내보내기 (오케스트레이션)
+        
+        Args:
+            sessions_data: [{'id': int, 'name': str, 'created_at': str}, ...]
+            parent_widget: 부모 위젯 (다이얼로그용)
+            reference_widget: 참조 위젯 (성공 다이얼로그 위치용)
+            
+        Returns:
+            성공 여부
+        """
+        try:
+            if not sessions_data:
+                log_manager.add_log("선택된 히스토리가 없습니다.", "warning")
+                return False
+            
+            # adapters를 통한 파일 I/O 처리
+            from .adapters import history_export_adapter
+            
+            # 단일 세션 vs 다중 세션 처리
+            if len(sessions_data) == 1:
+                # 단일 세션: 파일 다이얼로그
+                session = sessions_data[0]
+                success, result = history_export_adapter.export_single_session_with_dialog(session, parent_widget)
+                
+                if success:
+                    # 성공 다이얼로그 표시
+                    history_export_adapter.show_export_success_dialog(
+                        file_path=result,
+                        file_count=1,
+                        parent_widget=parent_widget,
+                        reference_widget=reference_widget
+                    )
+                    log_manager.add_log(f"PowerLink 히스토리 단일 파일 저장 완료: {session['name']}", "success")
+                    return True
+                else:
+                    # 실패 다이얼로그 표시 (사용자 취소 제외)
+                    if result != "사용자가 취소했습니다.":
+                        history_export_adapter.show_export_error_dialog(result, parent_widget)
+                        log_manager.add_log(f"엑셀 파일 저장 실패: {result}", "error")
+                    return False
+            
+            else:
+                # 다중 세션: 폴더 선택
+                success, saved_files = history_export_adapter.export_multiple_sessions_with_dialog(sessions_data, parent_widget)
+                
+                if success and saved_files:
+                    # 성공 다이얼로그 표시
+                    history_export_adapter.show_export_success_dialog(
+                        file_path=saved_files[0],  # 첫 번째 파일 경로로 폴더 열기
+                        file_count=len(saved_files),
+                        parent_widget=parent_widget,
+                        reference_widget=reference_widget
+                    )
+                    log_manager.add_log(f"PowerLink 히스토리 {len(saved_files)}개 파일 저장 완료", "success")
+                    return True
+                else:
+                    # 실패 다이얼로그 표시
+                    if success:  # 폴더는 선택했지만 저장 실패
+                        history_export_adapter.show_export_error_dialog("선택된 기록을 저장하는 중 오류가 발생했습니다.", parent_widget)
+                    # 폴더 선택 취소는 별도 메시지 없음
+                    return False
+                    
+        except Exception as e:
+            error_msg = f"PowerLink 히스토리 내보내기 실패: {str(e)}"
+            logger.error(error_msg)
+            log_manager.add_log(error_msg, "error")
+            
+            # 예외 발생 시 에러 다이얼로그 표시
+            from .adapters import history_export_adapter
+            history_export_adapter.show_export_error_dialog(str(e), parent_widget)
+            
+            return False
+    
+    def get_analysis_history_sessions(self) -> list:
+        """분석 히스토리 세션 목록 조회 (UI 위임용)"""
+        try:
+            sessions = self.repository.list_sessions()
+            return sessions
+        except Exception as e:
+            logger.error(f"히스토리 세션 목록 조회 실패: {e}")
+            return []
+    
+    def delete_analysis_history_sessions(self, session_ids: list) -> bool:
+        """분석 히스토리 세션 삭제 (UI 위임용)"""
+        try:
+            success = self.repository.delete_sessions(session_ids)
+            
+            if success:
+                log_manager.add_log(f"PowerLink 히스토리 {len(session_ids)}개 세션 삭제 완료", "success")
+                logger.info(f"히스토리 세션 삭제 완료: {session_ids}")
+            else:
+                log_manager.add_log("히스토리 세션 삭제 실패", "error")
+                
+            return success
+        except Exception as e:
+            logger.error(f"히스토리 세션 삭제 실패: {e}")
+            log_manager.add_log(f"히스토리 세션 삭제 실패: {e}", "error")
+            return False
+    
+    def export_current_analysis_with_dialog(self, keywords_data: dict, session_name: str = "", parent_widget=None) -> bool:
+        """
+        현재 분석 결과를 엑셀로 내보내기 (오케스트레이션)
+        
+        Args:
+            keywords_data: 키워드 분석 결과 딕셔너리
+            session_name: 세션명
+            parent_widget: 부모 위젯 (다이얼로그용)
+            
+        Returns:
+            성공 여부
+        """
+        try:
+            if not keywords_data:
+                log_manager.add_log("내보낼 분석 결과가 없습니다.", "warning")
+                return False
+            
+            # adapters를 통한 파일 I/O 처리
+            from .adapters import current_analysis_export_adapter
+            
+            success = current_analysis_export_adapter.export_current_analysis_with_dialog(
+                keywords_data=keywords_data,
+                session_name=session_name,
+                parent_widget=parent_widget
+            )
+            
+            if success:
+                log_manager.add_log("PowerLink 분석 결과 엑셀 저장 완료", "success")
+            
+            return success
+            
+        except Exception as e:
+            error_msg = f"PowerLink 분석 결과 내보내기 실패: {str(e)}"
+            logger.error(error_msg)
+            log_manager.add_log(error_msg, "error")
+            
+            # 예외 발생 시 에러 다이얼로그 표시
+            from .adapters import current_analysis_export_adapter
+            current_analysis_export_adapter.show_current_export_error_dialog(str(e), parent_widget)
+            
+            return False
 
 
 # 전역 서비스 인스턴스

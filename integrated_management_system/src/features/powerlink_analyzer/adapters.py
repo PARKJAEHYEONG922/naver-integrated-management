@@ -728,7 +728,228 @@ class PowerLinkExcelExporter:
         )
 
 
+class HistoryExportAdapter:
+    """히스토리 내보내기 전용 어댑터 (파일 I/O 담당)"""
+    
+    def __init__(self):
+        pass
+    
+    def export_single_session_with_dialog(self, session_data: dict, parent_widget=None) -> tuple[bool, str]:
+        """
+        단일 세션 엑셀 내보내기 (파일 다이얼로그 포함)
+        
+        Args:
+            session_data: {'id': int, 'name': str, 'created_at': str}
+            parent_widget: 부모 위젯 (다이얼로그 표시용)
+            
+        Returns:
+            (성공 여부, 저장된 파일 경로 또는 에러 메시지)
+        """
+        try:
+            from datetime import datetime
+            from PySide6.QtWidgets import QFileDialog
+            
+            # 기본 파일명 생성 (세션 시간 기반)
+            session_time = datetime.fromisoformat(session_data['created_at'])
+            time_str = session_time.strftime('%Y%m%d_%H%M%S')
+            default_filename = f"파워링크광고비분석_{time_str}.xlsx"
+            
+            # 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                parent_widget,
+                "엑셀 파일 저장",
+                default_filename,
+                "Excel files (*.xlsx);;All files (*.*)"
+            )
+            
+            if not file_path:
+                return False, "사용자가 취소했습니다."
+            
+            # service의 export_history_sessions 호출로 실제 저장
+            from .service import powerlink_service
+            success, _ = powerlink_service.export_history_sessions([session_data['id']], single_file_path=file_path)
+            
+            if success:
+                return True, file_path
+            else:
+                return False, "엑셀 파일 생성 실패"
+                
+        except Exception as e:
+            logger.error(f"단일 세션 내보내기 실패: {e}")
+            return False, str(e)
+    
+    def export_multiple_sessions_with_dialog(self, sessions_data: list, parent_widget=None) -> tuple[bool, list]:
+        """
+        다중 세션 엑셀 내보내기 (폴더 선택 다이얼로그 포함)
+        
+        Args:
+            sessions_data: [{'id': int, 'name': str, 'created_at': str}, ...]
+            parent_widget: 부모 위젯 (다이얼로그 표시용)
+            
+        Returns:
+            (성공 여부, 저장된 파일 경로 리스트)
+        """
+        try:
+            from PySide6.QtWidgets import QFileDialog
+            
+            # 폴더 선택 다이얼로그
+            folder_path = QFileDialog.getExistingDirectory(
+                parent_widget,
+                "엑셀 파일 저장 폴더 선택",
+                ""
+            )
+            
+            if not folder_path:
+                return False, []
+            
+            # service의 export_history_sessions 호출로 실제 저장
+            from .service import powerlink_service
+            session_ids = [session['id'] for session in sessions_data]
+            success, saved_files = powerlink_service.export_history_sessions(session_ids, output_folder=folder_path)
+            
+            return success, saved_files
+            
+        except Exception as e:
+            logger.error(f"다중 세션 내보내기 실패: {e}")
+            return False, []
+    
+    def show_export_success_dialog(self, file_path: str, file_count: int = 1, parent_widget=None, reference_widget=None):
+        """엑셀 내보내기 성공 다이얼로그 표시"""
+        try:
+            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
+            
+            if file_count == 1:
+                title = "저장 완료"
+                message = "엑셀 파일이 성공적으로 저장되었습니다."
+            else:
+                title = "선택저장 완료"
+                message = f"{file_count}개의 엑셀 파일이 성공적으로 저장되었습니다."
+            
+            success_dialog = ModernSaveCompletionDialog(
+                parent=parent_widget,
+                title=title,
+                message=message,
+                file_path=file_path
+            )
+            
+            # 참조 위젯 근처에 위치 설정
+            if reference_widget and hasattr(success_dialog, 'position_near_widget'):
+                success_dialog.position_near_widget(reference_widget)
+                
+            success_dialog.exec()
+            
+        except Exception as e:
+            logger.error(f"성공 다이얼로그 표시 실패: {e}")
+    
+    def show_export_error_dialog(self, error_message: str, parent_widget=None):
+        """엑셀 내보내기 실패 다이얼로그 표시"""
+        try:
+            from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+            
+            dialog = ModernConfirmDialog(
+                parent_widget,
+                "저장 실패",
+                f"엑셀 파일 저장 중 오류가 발생했습니다.\n\n{error_message}",
+                confirm_text="확인",
+                cancel_text=None,
+                icon="❌"
+            )
+            dialog.exec()
+            
+        except Exception as e:
+            logger.error(f"에러 다이얼로그 표시 실패: {e}")
+
+
+class CurrentAnalysisExportAdapter:
+    """현재 분석 결과 내보내기 전용 어댑터 (파일 I/O 담당)"""
+    
+    def __init__(self):
+        pass
+    
+    def export_current_analysis_with_dialog(self, keywords_data: dict, session_name: str = "", parent_widget=None) -> bool:
+        """
+        현재 분석 결과를 엑셀로 내보내기 (파일 다이얼로그 포함)
+        
+        Args:
+            keywords_data: 키워드 분석 결과 딕셔너리
+            session_name: 세션명
+            parent_widget: 부모 위젯 (다이얼로그 표시용)
+            
+        Returns:
+            성공 여부
+        """
+        try:
+            from datetime import datetime
+            from PySide6.QtWidgets import QFileDialog
+            
+            # 기본 파일명 생성
+            time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+            default_filename = f"파워링크광고비분석_{time_str}.xlsx"
+            
+            # 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                parent_widget,
+                "엑셀 파일 저장",
+                default_filename,
+                "Excel files (*.xlsx)"
+            )
+            
+            if not file_path:
+                return False  # 사용자가 취소
+            
+            # 엑셀 파일 생성
+            powerlink_excel_exporter.export_to_excel(keywords_data, file_path, session_name)
+            
+            # 성공 다이얼로그 표시
+            self.show_current_export_success_dialog(file_path, parent_widget)
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"현재 분석 결과 내보내기 실패: {e}")
+            self.show_current_export_error_dialog(str(e), parent_widget)
+            return False
+    
+    def show_current_export_success_dialog(self, file_path: str, parent_widget=None):
+        """현재 분석 결과 엑셀 내보내기 성공 다이얼로그 표시"""
+        try:
+            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
+            from pathlib import Path
+            
+            filename = Path(file_path).name
+            ModernSaveCompletionDialog.show_save_completion(
+                parent=parent_widget,
+                title="저장 완료",
+                message="엑셀 파일이 성공적으로 저장되었습니다.",
+                filename=filename,
+                file_path=file_path
+            )
+            
+        except Exception as e:
+            logger.error(f"성공 다이얼로그 표시 실패: {e}")
+    
+    def show_current_export_error_dialog(self, error_message: str, parent_widget=None):
+        """현재 분석 결과 엑셀 내보내기 실패 다이얼로그 표시"""
+        try:
+            from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+            
+            dialog = ModernConfirmDialog(
+                parent_widget,
+                "저장 실패",
+                f"엑셀 파일 저장 중 오류가 발생했습니다.\n\n{error_message}",
+                confirm_text="확인",
+                cancel_text=None,
+                icon="❌"
+            )
+            dialog.exec()
+            
+        except Exception as e:
+            logger.error(f"에러 다이얼로그 표시 실패: {e}")
+
+
 # 전역 익스포터 인스턴스
 powerlink_excel_exporter = PowerLinkExcelExporter()
+history_export_adapter = HistoryExportAdapter()
+current_analysis_export_adapter = CurrentAnalysisExportAdapter()
 
 

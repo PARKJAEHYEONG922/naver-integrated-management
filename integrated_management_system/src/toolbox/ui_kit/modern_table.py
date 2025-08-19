@@ -259,13 +259,14 @@ class ModernTableWidget(QTableWidget):
         if self.has_checkboxes:
             self.itemChanged.connect(self.on_item_changed)
     
-    def add_row_with_data(self, data: List[Any], checkable: bool = True) -> int:
+    def add_row_with_data(self, data: List[Any], checkable: bool = True, rank_columns: List[int] = None) -> int:
         """
         데이터로 행 추가
         
         Args:
             data: 컬럼별 데이터 리스트 [키워드, 검색량, 클릭수, ...]
             checkable: 체크박스 활성화 여부
+            rank_columns: 순위 데이터 컬럼 인덱스 리스트 (0부터 시작, 체크박스 제외)
             
         Returns:
             추가된 행 번호
@@ -289,11 +290,21 @@ class ModernTableWidget(QTableWidget):
             data_start_col = 0
         
         # 데이터 컬럼들
+        rank_columns = rank_columns or []
+        
         for col, value in enumerate(data):
             if col + data_start_col >= self.columnCount():
                 break
                 
-            if isinstance(value, (int, float)):
+            str_value = str(value)
+            
+            # 순위 컬럼인지 확인
+            if col in rank_columns:
+                # 순위 데이터 특수 처리
+                item = SortableTableWidgetItem(str_value)
+                from .sortable_items import set_rank_sort_data
+                set_rank_sort_data(item, 0, str_value)  # UserRole에 순위 정렬 데이터 설정
+            elif isinstance(value, (int, float)):
                 # 숫자 데이터는 정렬 가능한 아이템 사용
                 if isinstance(value, float):
                     display_text = f"{value:.2f}"
@@ -301,12 +312,84 @@ class ModernTableWidget(QTableWidget):
                     display_text = f"{value:,}"
                 item = SortableTableWidgetItem(display_text, value)
             else:
-                # 문자열 데이터
-                item = QTableWidgetItem(str(value))
+                # 문자열 데이터도 숫자/날짜 가능성 체크하여 정렬 가능한 아이템 사용
+                try:
+                    # 1. 날짜/시간 패턴 체크 먼저
+                    datetime_value = self._extract_datetime_value(str_value)
+                    if datetime_value is not None:
+                        item = SortableTableWidgetItem(str_value, datetime_value)
+                    else:
+                        # 2. 단위가 붙은 숫자 추출 (1000원, 2위 등)
+                        import re
+                        number_match = re.search(r'[\d,]+\.?\d*', str_value)
+                        if number_match:
+                            number_str = number_match.group()
+                            numeric_value = float(number_str.replace(',', ''))
+                            item = SortableTableWidgetItem(str_value, numeric_value)
+                        else:
+                            # 숫자가 없으면 일반 아이템
+                            item = SortableTableWidgetItem(str_value)
+                except (ValueError, TypeError):
+                    # 순수 문자열인 경우만 일반 아이템 사용
+                    item = SortableTableWidgetItem(str_value)
             
             self.setItem(row, col + data_start_col, item)
         
         return row
+    
+    def _extract_datetime_value(self, text: str) -> float:
+        """날짜/시간 문자열을 타임스탬프로 변환"""
+        if not text:
+            return None
+            
+        import re
+        from datetime import datetime
+        
+        # 실제 사용되는 날짜/시간 패턴 (카페DB 추출에서 확인됨)
+        patterns = [
+            r'^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$',             # 2025-08-17 21:20 (실제 사용)
+            r'^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$',       # 2025-08-17 21:20:30
+            r'^\d{4}-\d{2}-\d{2}$',                            # 2025-08-17
+            r'^\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{2}$',       # 2025-8-17 2:20 (0 패딩 없는 경우)
+            r'^\d{4}/\d{2}/\d{2}\s+\d{2}:\d{2}$',             # 2025/08/17 21:20
+            r'^\d{4}/\d{2}/\d{2}$',                            # 2025/08/17
+        ]
+        
+        formats = [
+            '%Y-%m-%d %H:%M',      # 가장 많이 사용되는 형식 (카페DB에서 확인)
+            '%Y-%m-%d %H:%M:%S',
+            '%Y-%m-%d',
+            '%Y-%m-%d %H:%M',      # 0 패딩 없는 경우용
+            '%Y/%m/%d %H:%M',
+            '%Y/%m/%d',
+        ]
+        
+        for i, pattern in enumerate(patterns):
+            match = re.match(pattern, str(text).strip())
+            if match:
+                try:
+                    dt = datetime.strptime(match.group(), formats[i])
+                    # 타임스탬프로 변환 (1970년 1월 1일부터의 초)
+                    return dt.timestamp()
+                except ValueError:
+                    continue
+        
+        # 백업: 더 간단한 날짜 패턴 시도
+        simple_patterns = [
+            (r'(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{2})', '%Y-%m-%d %H:%M'),
+            (r'(\d{4})-(\d{1,2})-(\d{1,2})', '%Y-%m-%d'),
+        ]
+        
+        for pattern, fmt in simple_patterns:
+            match = re.search(pattern, str(text))
+            if match:
+                try:
+                    dt = datetime.strptime(match.group(), fmt)
+                    return dt.timestamp()
+                except ValueError:
+                    continue
+        
+        return None
     
     def get_checked_rows(self) -> List[int]:
         """체크된 행 번호 리스트 반환"""

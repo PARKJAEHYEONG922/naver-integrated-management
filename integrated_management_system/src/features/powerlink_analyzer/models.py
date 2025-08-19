@@ -87,5 +87,41 @@ class AnalysisProgress:
             return self.status
 
 
-# KeywordDatabase 클래스 및 전역 인스턴스 제거됨
-# → service.py로 이동 (CLAUDE.md 준수)
+# Repository 패턴 (CLAUDE.md Service → DB 분리)
+class PowerLinkRepository:
+    """PowerLink 분석 데이터 저장소 (Repository 패턴)"""
+    
+    def __init__(self):
+        self._db = None
+    
+    @property
+    def db(self):
+        """DB 인스턴스 지연 로드"""
+        if self._db is None:
+            from src.foundation.db import get_db
+            self._db = get_db()
+        return self._db
+    
+    def list_sessions(self) -> list:
+        """히스토리 세션 목록 조회"""
+        return self.db.list_powerlink_sessions()
+    
+    def get_session(self, session_id: int) -> Optional[Dict]:
+        """세션 정보 조회"""
+        return self.db.get_powerlink_session(session_id)
+    
+    def get_session_keywords(self, session_id: int) -> Optional[Dict]:
+        """세션 키워드 데이터 조회"""
+        return self.db.get_powerlink_session_keywords(session_id)
+    
+    def delete_sessions(self, session_ids: list) -> bool:
+        """세션 삭제"""
+        return self.db.delete_powerlink_sessions(session_ids)
+    
+    def save_analysis_session(self, keywords_data: dict) -> int:
+        """분석 세션 저장"""
+        return self.db.save_powerlink_analysis_session(keywords_data)
+    
+    def check_duplicate_session_24h(self, keywords_data: dict) -> bool:
+        """24시간 내 중복 세션 체크"""
+        return self.db.check_powerlink_session_duplicate_24h(keywords_data)
