@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
-from src.toolbox.ui_kit import ModernStyle, ModernConfirmDialog, ModernTextInputDialog
+from src.toolbox.ui_kit import ModernStyle, ModernConfirmDialog, ModernTextInputDialog, ModernInfoDialog
 from src.desktop.common_log import log_manager
 from .dialogs import NewProjectDialog
 from src.foundation.logging import get_logger
@@ -166,7 +166,7 @@ class ProjectListWidget(QWidget):
         except ValueError as e:
             log_manager.add_log("❌ URL에서 상품 ID를 추출할 수 없습니다.", "error")
             from src.toolbox.ui_kit import ModernInfoDialog
-            ModernInfoDialog.information(self, "오류", str(e))
+            ModernInfoDialog.error(self, "오류", str(e))
             return
         
         log_manager.add_log(f"🔍 상품 ID 추출 완료: {product_id}", "success")
@@ -221,7 +221,7 @@ class ProjectListWidget(QWidget):
             log_manager.add_log(f"   • 상품명: {product_name}", "info")
             
             from src.toolbox.ui_kit import ModernInfoDialog
-            ModernInfoDialog.information(
+            ModernInfoDialog.warning(
                 self, 
                 "상품 정보 조회 실패", 
                 f"네이버 쇼핑 API에서 상품 정보를 찾을 수 없습니다.\n\n"
@@ -268,7 +268,7 @@ class ProjectListWidget(QWidget):
         except Exception as e:
             log_manager.add_log(f"❌ 프로젝트 저장 오류: {str(e)}", "error")
             from src.toolbox.ui_kit import ModernInfoDialog
-            ModernInfoDialog.information(self, "오류", f"프로젝트 저장 중 오류가 발생했습니다.\n{str(e)}")
+            ModernInfoDialog.error(self, "오류", f"프로젝트 저장 중 오류가 발생했습니다.\n{str(e)}")
             return
         
         # 6. UI 새로고침 및 자동 선택

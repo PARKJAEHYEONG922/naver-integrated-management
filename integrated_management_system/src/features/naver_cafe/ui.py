@@ -3,10 +3,8 @@
 컨트롤 위젯과 결과 위젯을 조합하는 컨테이너 역할
 """
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel
 )
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle, ModernHelpButton
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog

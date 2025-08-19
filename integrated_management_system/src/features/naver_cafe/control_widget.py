@@ -2,25 +2,22 @@
 네이버 카페 DB 추출기 컨트롤 위젯 (좌측 패널)
 진행상황, 카페검색, 게시판검색, 추출설정, 추출시작버튼, 정지버튼을 포함
 """
-from typing import List, Dict, Optional
-from datetime import datetime
-
+from typing import List
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
-    QLabel, QLineEdit, QPushButton, QComboBox, QSpinBox, QProgressBar,
-    QFrame, QGroupBox, QMessageBox
+    QLabel, QLineEdit, QComboBox, QSpinBox
 )
 from PySide6.QtCore import Qt, Signal, QTimer
-from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+from src.toolbox.ui_kit import ModernInfoDialog
 from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, ModernSuccessButton, ModernCancelButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from .models import (
     CafeInfo, BoardInfo, ExtractionTask, ExtractionProgress, 
-    ExtractionStatus, cafe_extraction_db
+    cafe_extraction_db
 )
 from .worker import NaverCafeUnifiedWorker
 from .service import NaverCafeExtractionService
@@ -532,7 +529,7 @@ class NaverCafeControlWidget(QWidget):
         """카페 검색 시작"""
         search_text = self.search_input.text().strip()
         if not search_text:
-            QMessageBox.warning(self, "경고", "검색할 카페명 또는 URL을 입력해주세요.")
+            ModernInfoDialog.warning(self, "검색어 입력 필요", "검색할 카페명 또는 URL을 입력해주세요.")
             return
         
         # 이미 워커가 실행 중인 경우 중단
@@ -728,25 +725,25 @@ class NaverCafeControlWidget(QWidget):
         
         # 카페 선택 확인 (인덱스 0은 안내 메시지)
         if cafe_index <= 0:
-            QMessageBox.warning(self, "카페 선택 필요", "카페를 먼저 선택해주세요.")
+            ModernInfoDialog.warning(self, "카페 선택 필요", "카페를 먼저 선택해주세요.")
             self.cafe_combo.setFocus()
             return
             
         # 게시판 선택 확인 (인덱스 0은 안내 메시지)
         if board_index <= 0:
-            QMessageBox.warning(self, "게시판 선택 필요", "게시판을 선택해주세요.")
+            ModernInfoDialog.warning(self, "게시판 선택 필요", "게시판을 선택해주세요.")
             self.board_combo.setFocus()
             return
         
         # 페이지 설정 검증
         if self.start_page_spin.value() > self.end_page_spin.value():
-            QMessageBox.warning(self, "페이지 설정 오류", "시작 페이지가 종료 페이지보다 클 수 없습니다.")
+            ModernInfoDialog.warning(self, "페이지 설정 오류", "시작 페이지가 종료 페이지보다 클 수 없습니다.")
             self.start_page_spin.setFocus()
             return
         
         # 현재 카페/게시판 목록 확인
         if not self.current_cafes or not self.current_boards:
-            QMessageBox.warning(self, "데이터 오류", "카페와 게시판 정보를 다시 로딩해주세요.")
+            ModernInfoDialog.warning(self, "데이터 오류", "카페와 게시판 정보를 다시 로딩해주세요.")
             return
         
         # 실제 인덱스 계산 (안내 메시지 때문에 -1)
@@ -755,11 +752,11 @@ class NaverCafeControlWidget(QWidget):
         
         # 인덱스 범위 검증
         if actual_cafe_index >= len(self.current_cafes):
-            QMessageBox.warning(self, "카페 선택 오류", "선택된 카페 정보를 찾을 수 없습니다.")
+            ModernInfoDialog.warning(self, "카페 선택 오류", "선택된 카페 정보를 찾을 수 없습니다.")
             return
             
         if actual_board_index >= len(self.current_boards):
-            QMessageBox.warning(self, "게시판 선택 오류", "선택된 게시판 정보를 찾을 수 없습니다.")
+            ModernInfoDialog.warning(self, "게시판 선택 오류", "선택된 게시판 정보를 찾을 수 없습니다.")
             return
         
         # 작업 생성
@@ -962,7 +959,7 @@ class NaverCafeControlWidget(QWidget):
         
         if not cafes:
             self.update_progress_step(0, "error", "검색 결과 없음")
-            QMessageBox.information(self, "검색 결과", "검색된 카페가 없습니다.")
+            ModernInfoDialog.warning(self, "검색 결과", "검색된 카페가 없습니다.")
             return
         
         # 검색 완료 단계 업데이트 (원본과 동일)
@@ -1013,7 +1010,7 @@ class NaverCafeControlWidget(QWidget):
         self.search_button.setEnabled(True)
         self.update_progress_step(0, "error", "검색 실패")
         
-        QMessageBox.warning(self, "검색 오류", f"카페 검색 중 오류가 발생했습니다.\n\n{error_msg}")
+        ModernInfoDialog.error(self, "검색 오류", f"카페 검색 중 오류가 발생했습니다.\n\n{error_msg}")
         log_manager.add_log(f"카페 검색 오류: {error_msg}", "error")
     
     def on_boards_loaded(self, boards: List[BoardInfo]):
@@ -1023,7 +1020,7 @@ class NaverCafeControlWidget(QWidget):
         
         if not boards:
             self.update_progress_step(2, "error", "게시판 로딩 실패")
-            QMessageBox.information(self, "게시판 로딩", "게시판 목록을 불러올 수 없습니다.")
+            ModernInfoDialog.warning(self, "게시판 로딩", "게시판 목록을 불러올 수 없습니다.")
             return
         
         # 게시판 로딩 완료 단계 업데이트 (원본과 동일)
@@ -1056,7 +1053,7 @@ class NaverCafeControlWidget(QWidget):
         
         self.update_progress_step(2, "error", "게시판 로딩 실패")
         
-        QMessageBox.warning(self, "게시판 로딩 오류", f"게시판 목록을 불러오는 중 오류가 발생했습니다.\n\n{error_msg}")
+        ModernInfoDialog.error(self, "게시판 로딩 오류", f"게시판 목록을 불러오는 중 오류가 발생했습니다.\n\n{error_msg}")
         log_manager.add_log(f"게시판 로딩 오류: {error_msg}", "error")
     
     def closeEvent(self, event):

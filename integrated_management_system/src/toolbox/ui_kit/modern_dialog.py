@@ -258,131 +258,139 @@ class ModernInfoDialog(QDialog):
         self.center_on_parent()
     
     def setup_ui(self):
-        """UI 구성"""
-        self.setWindowFlags(Qt.Dialog | Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        """UI 구성 - 개선된 커스텀 디자인"""
+        self.setWindowFlags(Qt.Dialog | Qt.WindowCloseButtonHint)
+        self.setWindowTitle(self.title)
+        self.setModal(True)
+        
+        # 아이콘별 색상 정의
+        if self.icon == "✅":
+            icon_color = "#10b981"  # 성공
+            bg_color = "#f0fdf4"
+            border_color = "#bbf7d0"
+        elif self.icon == "❌":
+            icon_color = "#ef4444"  # 에러
+            bg_color = "#fef2f2"
+            border_color = "#fecaca"
+        elif self.icon == "⚠️":
+            icon_color = "#f59e0b"  # 경고
+            bg_color = "#fffbeb"
+            border_color = "#fed7aa"
+        else:
+            icon_color = "#3b82f6"  # 기본 정보
+            bg_color = "#f8fafc"
+            border_color = "#e2e8f0"
         
         # 메인 레이아웃
-        main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(0, 0, 0, 0)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(16)
+        layout.setContentsMargins(24, 20, 24, 20)
         
-        # 메인 프레임 (그림자 효과를 위한 컨테이너)
-        main_frame = QFrame()
-        main_frame.setStyleSheet(f"""
-            QFrame {{
-                background-color: {ModernStyle.COLORS['bg_card']};
-                border-radius: 12px;
-                border: 1px solid {ModernStyle.COLORS['border']};
-            }}
-        """)
-        
-        frame_layout = QVBoxLayout()
-        frame_layout.setContentsMargins(24, 20, 24, 20)
-        frame_layout.setSpacing(16)
-        
-        # 헤더
+        # 헤더 (아이콘 + 제목)
         header_layout = QHBoxLayout()
         header_layout.setSpacing(12)
         
-        # 아이콘 (타입별 색상과 배경)
+        # 아이콘
         icon_label = QLabel(self.icon)
-        icon_color = "#ff9800" if self.icon == "⚠️" else "#2196F3" if self.icon == "ℹ️" else "#4CAF50"
         icon_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 24px;
+                font-size: 20px;
                 color: {icon_color};
-                background-color: {icon_color}15;
-                border-radius: 16px;
-                padding: 8px;
-                min-width: 32px;
-                max-width: 32px;
-                min-height: 32px;
-                max-height: 32px;
-                qproperty-alignment: AlignCenter;
+                min-width: 24px;
+                max-width: 24px;
             }}
         """)
         header_layout.addWidget(icon_label)
-        
-        # 제목과 메시지를 세로로 배치
-        content_layout = QVBoxLayout()
-        content_layout.setSpacing(8)
         
         # 제목
         title_label = QLabel(self.title)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 18px;
-                font-weight: 700;
-                color: {ModernStyle.COLORS['text_primary']};
+                font-size: 16px;
+                font-weight: 600;
+                color: {icon_color};
                 margin: 0;
-                padding: 0;
             }}
         """)
-        content_layout.addWidget(title_label)
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+        layout.addLayout(header_layout)
         
         # 메시지
         message_label = QLabel(self.message)
+        message_label.setWordWrap(True)
         message_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 14px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                line-height: 1.5;
+                font-size: 13px;
+                color: #4a5568;
+                line-height: 1.6;
+                padding: 14px 16px;
+                background-color: {bg_color};
+                border-radius: 6px;
+                border: 1px solid {border_color};
                 margin: 0;
-                padding: 0;
             }}
         """)
-        message_label.setWordWrap(True)
-        content_layout.addWidget(message_label)
+        message_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        layout.addWidget(message_label)
         
-        header_layout.addLayout(content_layout)
-        header_layout.addStretch()
-        
-        frame_layout.addLayout(header_layout)
-        
-        # 확인 버튼
+        # 버튼
         button_layout = QHBoxLayout()
+        button_layout.setContentsMargins(0, 8, 0, 0)
         button_layout.addStretch()
         
         self.ok_button = QPushButton("확인")
         self.ok_button.clicked.connect(self.accept)
-        button_color = "#ff9800" if self.icon == "⚠️" else ModernStyle.COLORS['primary']
         self.ok_button.setStyleSheet(f"""
             QPushButton {{
-                background-color: {button_color};
+                background-color: {icon_color};
                 color: white;
                 border: none;
-                padding: 10px 24px;
-                border-radius: 8px;
+                padding: 8px 20px;
+                border-radius: 6px;
                 font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
+                font-weight: 500;
+                min-width: 70px;
             }}
             QPushButton:hover {{
-                background-color: {button_color}dd;
+                background-color: {icon_color}dd;
             }}
             QPushButton:pressed {{
-                background-color: {button_color}bb;
+                background-color: {icon_color}bb;
             }}
         """)
         self.ok_button.setDefault(True)
         button_layout.addWidget(self.ok_button)
         
-        frame_layout.addLayout(button_layout)
-        main_frame.setLayout(frame_layout)
-        main_layout.addWidget(main_frame)
-        self.setLayout(main_layout)
+        layout.addLayout(button_layout)
         
-        # 크기를 내용에 맞게 자동 조정
+        # 크기를 내용에 맞게 동적 조정
         self.adjustSize()
-        self.setMinimumSize(320, 140)
-        self.setMaximumSize(500, 300)
         
-        # 필요한 크기 계산
-        frame_hint = main_frame.sizeHint()
-        required_width = max(320, min(500, frame_hint.width() + 20))
-        required_height = max(140, min(300, frame_hint.height() + 20))
+        # 최소/최대 크기 설정
+        min_width = 350
+        max_width = 500
+        min_height = 150
+        max_height = 400
         
-        self.resize(required_width, required_height)
+        # 메시지 길이에 따른 크기 조정
+        message_lines = self.message.count('\n') + 1
+        message_length = len(self.message)
+        
+        # 너비 계산
+        if message_length > 80:
+            width = min(max_width, min_width + (message_length - 80) * 1.5)
+        else:
+            width = min_width
+            
+        # 높이 계산
+        base_height = 180
+        if message_lines > 2:
+            height = min(max_height, base_height + (message_lines - 2) * 20)
+        else:
+            height = base_height
+            
+        self.resize(int(width), int(height))
     
     def center_on_parent(self):
         """화면 중앙에 안전하게 위치"""
@@ -407,14 +415,6 @@ class ModernInfoDialog(QDialog):
         self.move(center_x, center_y)
     
     @classmethod
-    def information(cls, parent, title, message):
-        """정보 다이얼로그 표시"""
-        dialog = cls(parent, title, message, "ℹ️")
-        dialog.center_on_parent()
-        dialog.exec()
-        return True
-    
-    @classmethod
     def success(cls, parent, title, message):
         """성공 다이얼로그 표시"""
         dialog = cls(parent, title, message, "✅")
@@ -432,6 +432,14 @@ class ModernInfoDialog(QDialog):
         else:
             dialog.center_on_parent()
         
+        dialog.exec()
+        return True
+    
+    @classmethod
+    def error(cls, parent, title, message):
+        """에러 다이얼로그 표시"""
+        dialog = cls(parent, title, message, "❌")
+        dialog.center_on_parent()
         dialog.exec()
         return True
     

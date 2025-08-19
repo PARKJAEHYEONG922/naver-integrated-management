@@ -2,17 +2,13 @@
 키워드 분석 기능 UI
 원본 통합관리프로그램의 키워드 검색기 UI 완전 복원
 """
-import os
-import json
-from pathlib import Path
 from datetime import datetime
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QLabel,
-    QTreeWidget, QTreeWidgetItem, QProgressBar, QMessageBox, QFileDialog,
-    QFrame, QScrollArea, QSizePolicy, QSplitter, QAbstractItemView
+    QTreeWidget, QProgressBar, QMessageBox, QFileDialog,
+    QFrame, QSizePolicy, QAbstractItemView
 )
-from PySide6.QtCore import Qt, QTimer, Signal, QMetaObject, Q_ARG, Slot
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, QMetaObject, Q_ARG, Slot
 
 from src.toolbox.ui_kit import (
     ModernStyle, SortableTreeWidgetItem,
@@ -389,7 +385,7 @@ class KeywordAnalysisWidget(QWidget):
         """모든 결과 저장"""
         if not self.search_results:
             try:
-                ModernInfoDialog.information(self, "저장 불가", "저장할 검색 결과가 없습니다.")
+                ModernInfoDialog.warning(self, "저장 불가", "저장할 검색 결과가 없습니다.")
             except:
                 QMessageBox.information(self, "저장 불가", "저장할 검색 결과가 없습니다.")
             return
@@ -435,7 +431,7 @@ class KeywordAnalysisWidget(QWidget):
         selected_items = self.results_tree.selectedItems()
         if not selected_items:
             try:
-                ModernInfoDialog.information(self, "항목 선택 필요", "저장할 검색 결과를 먼저 선택해주세요.")
+                ModernInfoDialog.warning(self, "항목 선택 필요", "저장할 검색 결과를 먼저 선택해주세요.")
             except:
                 QMessageBox.information(self, "항목 선택 필요", "저장할 검색 결과를 먼저 선택해주세요.")
             return
@@ -451,7 +447,7 @@ class KeywordAnalysisWidget(QWidget):
         
         if not selected_data:
             try:
-                ModernInfoDialog.information(self, "데이터 오류", "선택된 항목에 해당하는 데이터를 찾을 수 없습니다.")
+                ModernInfoDialog.error(self, "데이터 오류", "선택된 항목에 해당하는 데이터를 찾을 수 없습니다.")
             except:
                 QMessageBox.information(self, "데이터 오류", "선택된 항목에 해당하는 데이터를 찾을 수 없습니다.")
             return
@@ -541,7 +537,7 @@ class KeywordAnalysisWidget(QWidget):
         if not text:
             self.add_log("❌ 키워드를 입력해주세요.", "error")
             try:
-                ModernInfoDialog.information(self, "키워드 입력 필요", "검색할 키워드를 입력해주세요.")
+                ModernInfoDialog.warning(self, "키워드 입력 필요", "검색할 키워드를 입력해주세요.")
             except:
                 QMessageBox.information(self, "키워드 입력 필요", "검색할 키워드를 입력해주세요.")
             return
@@ -549,7 +545,7 @@ class KeywordAnalysisWidget(QWidget):
         if not self.service:
             self.add_log("❌ API 설정이 필요합니다.", "error")
             try:
-                ModernInfoDialog.information(self, "API 설정 필요", "API 설정을 먼저 완료해주세요.")
+                ModernInfoDialog.warning(self, "API 설정 필요", "API 설정을 먼저 완료해주세요.")
             except:
                 QMessageBox.information(self, "API 설정 필요", "API 설정을 먼저 완료해주세요.")
             return
@@ -559,7 +555,7 @@ class KeywordAnalysisWidget(QWidget):
         if not keywords:
             self.add_log("❌ 유효한 키워드가 없습니다.", "error")
             try:
-                ModernInfoDialog.information(self, "키워드 오류", "입력한 텍스트에서 유효한 키워드를 찾을 수 없습니다.")
+                ModernInfoDialog.warning(self, "키워드 오류", "입력한 텍스트에서 유효한 키워드를 찾을 수 없습니다.")
             except:
                 QMessageBox.information(self, "키워드 오류", "입력한 텍스트에서 유효한 키워드를 찾을 수 없습니다.")
             return
@@ -649,7 +645,7 @@ class KeywordAnalysisWidget(QWidget):
         self.on_search_finished()
         self.add_log(f"❌ 키워드 분석 오류: {error_msg}", "error")
         try:
-            ModernInfoDialog.information(self, "분석 오류", f"키워드 분석 중 오류가 발생했습니다:\n{error_msg}")
+            ModernInfoDialog.error(self, "분석 오류", f"키워드 분석 중 오류가 발생했습니다:\n{error_msg}")
         except:
             QMessageBox.critical(self, "분석 오류", f"키워드 분석 중 오류가 발생했습니다:\n{error_msg}")
     
@@ -700,7 +696,7 @@ class KeywordAnalysisWidget(QWidget):
         """오류 메시지 표시 (로깅 추가)"""
         self.add_log(f"❌ 오류: {message}", "error")
         try:
-            ModernInfoDialog.information(self, "오류 발생", f"다음 오류가 발생했습니다:\n\n{message}")
+            ModernInfoDialog.error(self, "오류 발생", f"다음 오류가 발생했습니다:\n\n{message}")
         except:
             QMessageBox.critical(self, "오류 발생", f"다음 오류가 발생했습니다:\n\n{message}")
     

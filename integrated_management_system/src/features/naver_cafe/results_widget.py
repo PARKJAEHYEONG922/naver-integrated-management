@@ -2,22 +2,20 @@
 네이버 카페 DB 추출기 결과 위젯 (우측 패널)
 추출된 사용자, 추출 기록 탭으로 구성된 테이블 위젯
 """
-from typing import List, Dict, Optional
 from datetime import datetime
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QTabWidget, QTableWidget, QTableWidgetItem, 
-    QHeaderView, QFileDialog, QApplication, QCheckBox, QDialog
+    QHeaderView, QApplication, QCheckBox, QDialog
 )
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt
 
 from src.toolbox.ui_kit import ModernStyle
-from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernButton
+from src.toolbox.ui_kit.components import ModernButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
-from .models import ExtractedUser, ExtractionTask, CafeInfo, BoardInfo, ExtractionStatus
+from .models import ExtractedUser, ExtractionTask
 from .service import NaverCafeExtractionService
 
 logger = get_logger("features.naver_cafe.results_widget")
@@ -456,7 +454,7 @@ class NaverCafeResultsWidget(QWidget):
             
             log_manager.add_log(f"{self.users_table.rowCount()}개 사용자 데이터 엑셀 호환 형식으로 클립보드 복사 완료", "success")
             
-            # 모던한 복사 완료 다이얼로그
+            # 공용 복사 완료 다이얼로그
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
             ModernInfoDialog.success(
                 self,
@@ -467,9 +465,9 @@ class NaverCafeResultsWidget(QWidget):
             )
             
         except Exception as e:
-            # 모던한 에러 다이얼로그
+            # 공용 에러 다이얼로그
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-            ModernInfoDialog.warning(self, "복사 오류", f"클립보드 복사 중 오류가 발생했습니다: {str(e)}")
+            ModernInfoDialog.error(self, "복사 오류", f"클립보드 복사 중 오류가 발생했습니다: {str(e)}")
             logger.error(f"클립보드 복사 오류: {e}")
         
     def show_save_dialog(self):
@@ -636,258 +634,6 @@ class NaverCafeResultsWidget(QWidget):
         # service 경유로 Meta CSV 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
         self.service.export_to_meta_csv_with_dialog(users_data, self)
     
-    def _show_copy_completion_dialog(self, title: str, message: str):
-        """모던한 복사 완료 다이얼로그"""
-        # 커스텀 다이얼로그 생성
-        dialog = QDialog(self)
-        dialog.setWindowTitle(title)
-        dialog.setFixedSize(500, 280)
-        dialog.setModal(True)
-        
-        # 레이아웃
-        layout = QVBoxLayout(dialog)
-        layout.setSpacing(20)
-        layout.setContentsMargins(30, 30, 30, 30)
-        
-        # 아이콘과 제목
-        header_layout = QHBoxLayout()
-        
-        # 성공 아이콘
-        icon_label = QLabel("📋")
-        icon_label.setStyleSheet("""
-            QLabel {
-                font-size: 24px;
-                color: #10b981;
-                padding: 0 10px 0 0;
-            }
-        """)
-        
-        # 제목
-        title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #10b981;")
-        
-        header_layout.addWidget(icon_label)
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        layout.addLayout(header_layout)
-        
-        # 메시지
-        message_label = QLabel(message)
-        message_label.setWordWrap(True)
-        message_label.setStyleSheet("""
-            QLabel {
-                font-size: 14px;
-                color: #4a5568;
-                line-height: 1.5;
-                padding: 10px;
-                background-color: #f7fafc;
-                border-radius: 8px;
-                border: 1px solid #e2e8f0;
-            }
-        """)
-        layout.addWidget(message_label)
-        
-        # 버튼
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-        
-        ok_button = QPushButton("확인")
-        ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #10b981;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #059669;
-            }
-            QPushButton:pressed {
-                background-color: #047857;
-            }
-        """)
-        
-        button_layout.addWidget(ok_button)
-        layout.addLayout(button_layout)
-        
-        # 버튼 연결
-        ok_button.clicked.connect(dialog.accept)
-        
-        # 다이얼로그 실행
-        dialog.exec()
-    
-    def _show_error_dialog(self, title: str, message: str):
-        """모던한 에러 다이얼로그"""
-        # 커스텀 다이얼로그 생성
-        dialog = QDialog(self)
-        dialog.setWindowTitle(title)
-        dialog.setFixedSize(500, 280)
-        dialog.setModal(True)
-        
-        # 레이아웃
-        layout = QVBoxLayout(dialog)
-        layout.setSpacing(20)
-        layout.setContentsMargins(30, 30, 30, 30)
-        
-        # 아이콘과 제목
-        header_layout = QHBoxLayout()
-        
-        # 에러 아이콘
-        icon_label = QLabel("❌")
-        icon_label.setStyleSheet("""
-            QLabel {
-                font-size: 24px;
-                color: #ef4444;
-                padding: 0 10px 0 0;
-            }
-        """)
-        
-        # 제목
-        title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #ef4444;")
-        
-        header_layout.addWidget(icon_label)
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        layout.addLayout(header_layout)
-        
-        # 메시지
-        message_label = QLabel(message)
-        message_label.setWordWrap(True)
-        message_label.setStyleSheet("""
-            QLabel {
-                font-size: 14px;
-                color: #4a5568;
-                line-height: 1.5;
-                padding: 10px;
-                background-color: #fef2f2;
-                border-radius: 8px;
-                border: 1px solid #fecaca;
-            }
-        """)
-        layout.addWidget(message_label)
-        
-        # 버튼
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-        
-        ok_button = QPushButton("확인")
-        ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #ef4444;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #dc2626;
-            }
-            QPushButton:pressed {
-                background-color: #b91c1c;
-            }
-        """)
-        
-        button_layout.addWidget(ok_button)
-        layout.addLayout(button_layout)
-        
-        # 버튼 연결
-        ok_button.clicked.connect(dialog.accept)
-        
-        # 다이얼로그 실행
-        dialog.exec()
-    
-    def _show_warning_dialog(self, title: str, message: str):
-        """모던한 경고 다이얼로그"""
-        # 커스텀 다이얼로그 생성
-        dialog = QDialog(self)
-        dialog.setWindowTitle(title)
-        dialog.setFixedSize(500, 280)
-        dialog.setModal(True)
-        
-        # 레이아웃
-        layout = QVBoxLayout(dialog)
-        layout.setSpacing(20)
-        layout.setContentsMargins(30, 30, 30, 30)
-        
-        # 아이콘과 제목
-        header_layout = QHBoxLayout()
-        
-        # 경고 아이콘
-        icon_label = QLabel("⚠️")
-        icon_label.setStyleSheet("""
-            QLabel {
-                font-size: 24px;
-                color: #f59e0b;
-                padding: 0 10px 0 0;
-            }
-        """)
-        
-        # 제목
-        title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #f59e0b;")
-        
-        header_layout.addWidget(icon_label)
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        layout.addLayout(header_layout)
-        
-        # 메시지
-        message_label = QLabel(message)
-        message_label.setWordWrap(True)
-        message_label.setStyleSheet("""
-            QLabel {
-                font-size: 14px;
-                color: #4a5568;
-                line-height: 1.5;
-                padding: 10px;
-                background-color: #fffbeb;
-                border-radius: 8px;
-                border: 1px solid #fed7aa;
-            }
-        """)
-        layout.addWidget(message_label)
-        
-        # 버튼
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-        
-        ok_button = QPushButton("확인")
-        ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #f59e0b;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #d97706;
-            }
-            QPushButton:pressed {
-                background-color: #b45309;
-            }
-        """)
-        
-        button_layout.addWidget(ok_button)
-        layout.addLayout(button_layout)
-        
-        # 버튼 연결
-        ok_button.clicked.connect(dialog.accept)
-        
-        # 다이얼로그 실행
-        dialog.exec()
-            
     def download_selected_history(self):
         """선택된 기록 다운로드 - Excel/Meta CSV 선택 다이얼로그"""
         selected_tasks = []
@@ -1163,11 +909,13 @@ class NaverCafeResultsWidget(QWidget):
                         selected_data.append(user_data)
         
         if not selected_tasks:
-            self._show_warning_dialog("선택 없음", "내보낼 기록을 선택해주세요.")
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            ModernInfoDialog.warning(self, "선택 없음", "내보낼 기록을 선택해주세요.")
             return
         
         if not selected_data:
-            self._show_warning_dialog("데이터 없음", "선택된 기록에 내보낼 사용자 데이터가 없습니다.")
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            ModernInfoDialog.warning(self, "데이터 없음", "선택된 기록에 내보낼 사용자 데이터가 없습니다.")
             return
         
         # service 경유로 엑셀로 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
@@ -1175,124 +923,6 @@ class NaverCafeResultsWidget(QWidget):
         
         if success:
             log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 엑셀 내보내기 완료 (총 {len(selected_data)}명)", "success")
-    
-    def _show_delete_confirmation_dialog(self, title: str, message: str) -> bool:
-        """모던한 삭제 확인 다이얼로그"""
-        # 커스텀 다이얼로그 생성
-        dialog = QDialog(self)
-        dialog.setWindowTitle(title)
-        dialog.setFixedSize(500, 280)
-        dialog.setModal(True)
-        
-        # 레이아웃
-        layout = QVBoxLayout(dialog)
-        layout.setSpacing(20)
-        layout.setContentsMargins(30, 30, 30, 30)
-        
-        # 아이콘과 제목
-        header_layout = QHBoxLayout()
-        
-        # 삭제 아이콘
-        icon_label = QLabel("🗑️")
-        icon_label.setStyleSheet("""
-            QLabel {
-                font-size: 24px;
-                color: #ef4444;
-                padding: 0 10px 0 0;
-            }
-        """)
-        
-        # 제목
-        title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #ef4444;")
-        
-        header_layout.addWidget(icon_label)
-        header_layout.addWidget(title_label)
-        header_layout.addStretch()
-        layout.addLayout(header_layout)
-        
-        # 메시지
-        message_label = QLabel(message)
-        message_label.setWordWrap(True)
-        message_label.setStyleSheet("""
-            QLabel {
-                font-size: 14px;
-                color: #4a5568;
-                line-height: 1.5;
-                padding: 10px;
-                background-color: #fef2f2;
-                border-radius: 8px;
-                border: 1px solid #fecaca;
-            }
-        """)
-        layout.addWidget(message_label)
-        
-        # 버튼
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-        
-        cancel_button = QPushButton("취소")
-        cancel_button.setStyleSheet("""
-            QPushButton {
-                background-color: #718096;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #4a5568;
-            }
-        """)
-        
-        delete_button = QPushButton("삭제")
-        delete_button.setStyleSheet("""
-            QPushButton {
-                background-color: #ef4444;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #dc2626;
-            }
-            QPushButton:pressed {
-                background-color: #b91c1c;
-            }
-        """)
-        
-        button_layout.addWidget(cancel_button)
-        button_layout.addWidget(delete_button)
-        layout.addLayout(button_layout)
-        
-        # 결과 변수
-        result = False
-        
-        def on_delete():
-            nonlocal result
-            result = True
-            dialog.accept()
-        
-        def on_cancel():
-            nonlocal result
-            result = False
-            dialog.reject()
-        
-        # 버튼 연결
-        delete_button.clicked.connect(on_delete)
-        cancel_button.clicked.connect(on_cancel)
-        
-        # 다이얼로그 실행
-        dialog.exec()
-        
-        return result
     
     def setup_header_checkbox(self):
         """QTableWidget 헤더에 체크박스 추가 (기존 방식)"""

@@ -11,8 +11,7 @@ from src.foundation.logging import get_logger
 from src.toolbox.validators import validate_url
 from .models import (
     CafeInfo, BoardInfo, ExtractedUser, ExtractionTask, 
-    ExtractionProgress, ExtractionStatus, ExtractionResult,
-    cafe_extraction_db
+    ExtractionStatus, cafe_extraction_db
 )
 from .adapters import NaverCafeDataAdapter
 # config 설정들은 대부분 제거되어 필요하지 않음

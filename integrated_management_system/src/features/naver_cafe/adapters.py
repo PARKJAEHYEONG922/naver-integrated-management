@@ -2,15 +2,13 @@
 네이버 카페 DB 추출기 어댑터
 CLAUDE.md 구조 준수: vendors 호출, 정규화, 파일 I/O 담당
 """
-from typing import List, Dict, Optional, Any
-from datetime import datetime
-import re
+from typing import List, Optional
 import time
 import csv
 
 # 벤더/파일 I/O만 담당, 비즈니스 로직은 service에서
 from src.foundation.logging import get_logger
-from .models import CafeInfo, BoardInfo, ExtractedUser, ArticleInfo
+from .models import CafeInfo, BoardInfo, ExtractedUser
 # 실제 사용되는 설정을 adapters에 직접 정의 (CLAUDE.md: 간소화)
 RATE_LIMIT_REQUESTS_PER_MINUTE = 30
 META_CSV_DOMAINS = ["@naver.com", "@gmail.com", "@daum.net"]

@@ -1790,7 +1790,7 @@ class RankingTableWidget(QWidget):
         """키워드 추가 다이얼로그"""
         if not self.current_project_id:
             from src.toolbox.ui_kit import ModernInfoDialog
-            ModernInfoDialog.information(
+            ModernInfoDialog.warning(
                 self, 
                 "프로젝트 선택 필요", 
                 "📋 기존 프로젝트에 추가하려면: 왼쪽 목록에서 프로젝트를 클릭하세요\n\n" +

@@ -9,7 +9,6 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils.dataframe import dataframe_to_rows
 
-from src.vendors.naver.normalizers import normalize_shopping_response
 from src.foundation.logging import get_logger
 from src.foundation.exceptions import FileError
 from .models import KeywordData, AnalysisResult
