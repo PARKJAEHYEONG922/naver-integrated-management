@@ -1621,30 +1621,6 @@ class PowerLinkResultsWidget(QWidget):
         except Exception as e:
             logger.error(f"테이블 클리어 실패: {e}")
     
-    def update_delete_button_state(self):
-        """삭제 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
-        try:
-            # 모바일 테이블 선택 상태 확인
-            mobile_selected = self.mobile_table.get_selected_count()
-            self.mobile_delete_button.setEnabled(mobile_selected > 0)
-            
-            # PC 테이블 선택 상태 확인
-            pc_selected = self.pc_table.get_selected_count()
-            self.pc_delete_button.setEnabled(pc_selected > 0)
-            
-            # 버튼 텍스트 업데이트
-            if mobile_selected > 0:
-                self.mobile_delete_button.setText(f"🗑️ 선택 삭제 ({mobile_selected})")
-            else:
-                self.mobile_delete_button.setText("🗑️ 선택 삭제")
-                
-            if pc_selected > 0:
-                self.pc_delete_button.setText(f"🗑️ 선택 삭제 ({pc_selected})")
-            else:
-                self.pc_delete_button.setText("🗑️ 선택 삭제")
-                
-        except Exception as e:
-            logger.error(f"삭제 버튼 상태 업데이트 실패: {e}")
     
     def delete_selected_keywords(self, device_type: str):
         """선택된 키워드만 삭제 (실제 선택삭제)"""
@@ -2066,26 +2042,3 @@ class BidDetailsDialog(QDialog):
             logger.error(f"히스토리 보기 실패: {e}")
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
             ModernInfoDialog.warning(self, "오류", f"기록을 불러오는 중 오류가 발생했습니다: {str(e)}")
-    
-    def update_history_button_state(self):
-        """히스토리 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
-        selected_count = self.history_table.get_selected_count()
-        
-        # 삭제 및 내보내기 버튼: 1개 이상 선택시 활성화
-        has_selection = selected_count > 0
-        self.delete_history_button.setEnabled(has_selection)
-        self.export_selected_history_button.setEnabled(has_selection)
-        
-        # 보기 버튼: 정확히 1개만 선택시 활성화
-        self.view_history_button.setEnabled(selected_count == 1)
-        
-        # 버튼 텍스트 업데이트
-        if selected_count > 0:
-            self.delete_history_button.setText(f"🗑️ 선택 삭제 ({selected_count})")
-            self.export_selected_history_button.setText(f"💾 선택 저장 ({selected_count})")
-        else:
-            self.delete_history_button.setText("🗑️ 선택 삭제")
-            self.export_selected_history_button.setText("💾 선택 저장")
-        
-        # 보기 버튼은 항상 기본 텍스트
-        self.view_history_button.setText("👀 보기")

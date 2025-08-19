@@ -944,6 +944,12 @@ class CommonDB:
     
     def create_cafe_extraction_task(self, task_data: Dict[str, Any]) -> str:
         """카페 추출 작업 생성"""
+        import uuid
+        from datetime import datetime
+        
+        # task_id가 없으면 고유 ID 생성
+        task_id = task_data.get('task_id', str(uuid.uuid4()))
+        
         with self.get_connection() as conn:
             cursor = conn.cursor()
             
@@ -953,20 +959,20 @@ class CommonDB:
                     start_page, end_page, status, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                task_data['task_id'],
-                task_data['cafe_name'],
-                task_data['cafe_url'],
-                task_data['board_name'],
-                task_data['board_url'],
+                task_id,
+                task_data.get('cafe_name', ''),
+                task_data.get('cafe_url', ''),
+                task_data.get('board_name', ''),
+                task_data.get('board_url', ''),
                 task_data.get('start_page', 1),
                 task_data.get('end_page', 10),
                 task_data.get('status', 'pending'),
-                task_data['created_at']
+                task_data.get('created_at', datetime.now().isoformat())
             ))
             
             conn.commit()
-            logger.debug(f"카페 추출 작업 생성: {task_data['task_id']}")
-            return task_data['task_id']
+            logger.info(f"카페 추출 작업 생성: {task_id}")
+            return task_id
     
     def get_cafe_extraction_task(self, task_id: str) -> Optional[Dict[str, Any]]:
         """카페 추출 작업 조회"""
@@ -1368,39 +1374,6 @@ class CommonDB:
         """파워링크 세션 정보 조회 (UI 호환)"""
         return self.get_powerlink_session_info(session_id)
     
-    # ========== 카페 추출 관련 메서드 ==========
-    
-    def create_cafe_extraction_task(self, task_data: Dict[str, Any]) -> str:
-        """카페 추출 작업 생성"""
-        import uuid
-        from datetime import datetime
-        
-        # 고유 task_id 생성
-        task_id = str(uuid.uuid4())
-        
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                INSERT INTO cafe_extraction_tasks (
-                    task_id, cafe_name, cafe_url, board_name, board_url,
-                    start_page, end_page, status, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                task_id,
-                task_data.get('cafe_name', ''),
-                task_data.get('cafe_url', ''),
-                task_data.get('board_name', ''),
-                task_data.get('board_url', ''),
-                task_data.get('start_page', 1),
-                task_data.get('end_page', 10),
-                task_data.get('status', 'pending'),
-                datetime.now().isoformat()
-            ))
-            
-            conn.commit()
-            logger.info(f"카페 추출 작업 생성: {task_id}")
-            return task_id
     
     def list_cafe_extraction_tasks(self, limit: int = 50) -> List[Dict[str, Any]]:
         """카페 추출 작업 목록 조회"""
@@ -1779,22 +1752,6 @@ def init_db(db_path: Optional[Path] = None):
     logger.info("공용 DB 초기화 완료")
 
 
-# 전역 DB 인스턴스
-_db_instance: Optional[CommonDB] = None
-
-def get_db() -> CommonDB:
-    """공용 DB 인스턴스 반환 (싱글톤)"""
-    global _db_instance
-    if _db_instance is None:
-        _db_instance = CommonDB()
-    return _db_instance
-
-
-def init_db(db_path: Optional[Path] = None):
-    """DB 초기화 (애플리케이션 시작시 호출)"""
-    global _db_instance
-    _db_instance = CommonDB(db_path)
-    logger.info("공용 DB 초기화 완료")
 
 
 # 편의성을 위한 함수들
