@@ -164,13 +164,13 @@ class NaverCafeDataAdapter:
             cafe_main_url = f"https://cafe.naver.com/{cafe_id}"
             await page.goto(cafe_main_url, wait_until="networkidle", timeout=20000)
             
-            # 카페 이름 추출 (원본과 동일)
+            # 카페 이름 추출
             try:
                 cafe_name = await page.locator('h1.d-none').inner_text()
             except:
                 cafe_name = f"카페 {cafe_id}"
             
-            # 회원수 추출 (원본과 동일)
+            # 회원수 추출 
             try:
                 member_count = await page.locator('li.mem-cnt-info em').inner_text()
             except:
@@ -217,14 +217,14 @@ class NaverCafeDataAdapter:
                     page = await browser_context.new_page()
                     self._board_page = page
                 
-                # 카페 메인 페이지로 이동 (원본과 동일)
+                # 카페 메인 페이지로 이동 
                 logger.info(f"게시판 목록 로딩: {cafe_info.url}")
                 await page.goto(cafe_info.url, wait_until='networkidle', timeout=20000)
                 
-                # 게시판 목록 요소 대기 (원본과 동일)
+                # 게시판 목록 요소 대기 
                 await page.wait_for_selector('ul.cafe-menu-list', timeout=10000)
                 
-                # 게시판 목록 추출 (원본과 동일)
+                # 게시판 목록 추출 
                 board_elements = await page.query_selector_all('ul.cafe-menu-list li a')
                 
                 for element in board_elements:
@@ -234,7 +234,7 @@ class NaverCafeDataAdapter:
                             board_name = await element.inner_text()
                             board_id = self._extract_board_id_from_url(href)
                             
-                            # 상대 경로를 절대 경로로 변환 (원본과 동일)
+                            # 상대 경로를 절대 경로로 변환 
                             if href.startswith('/'):
                                 full_url = f"https://cafe.naver.com{href}"
                             else:
@@ -312,15 +312,6 @@ class NaverCafeDataAdapter:
                 article_count=0
             )
         ]
-    
-    
-    # extract_users_from_page 메서드 제거 - worker.py에서 직접 처리
-    
-    # extract_users_from_page_async 메서드 제거 - worker.py에서 직접 처리
-    
-    # _crawl_page_with_playwright 메서드 제거 - worker.py에서 직접 처리
-    
-    # _fetch_users_from_api 메서드 제거 - worker.py에서 직접 처리
     
     
     def export_users_to_excel(self, file_path: str, users: List[ExtractedUser]) -> bool:

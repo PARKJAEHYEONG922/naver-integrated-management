@@ -6,8 +6,8 @@ from datetime import datetime
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QPushButton, QTabWidget, QTableWidget, QTableWidgetItem, 
-    QHeaderView, QApplication, QCheckBox, QDialog
+    QLabel, QTabWidget, QTableWidget, QTableWidgetItem, 
+    QHeaderView, QApplication, QCheckBox
 )
 from PySide6.QtCore import Qt
 
@@ -198,7 +198,6 @@ class NaverCafeResultsWidget(QWidget):
             }}
         """)
         
-        # 버튼들 (ModernDialog와 동일한 폰트 스타일)
         self.download_selected_button = ModernButton("💾 선택 다운로드", "success")
         self.delete_selected_button = ModernButton("🗑️ 선택 삭제", "danger")
         
@@ -260,7 +259,7 @@ class NaverCafeResultsWidget(QWidget):
         history_header.resizeSection(0, 80)   # 선택 체크박스
         history_header.resizeSection(1, 130)  # 날짜 + 시간 (더 넓게)
         history_header.resizeSection(2, 200)  # 카페명
-        history_header.resizeSection(3, 144)  # 게시판명 (180 * 0.8 = 144)
+        history_header.resizeSection(3, 144)  # 게시판명 
         history_header.resizeSection(4, 100)  # 추출수
         history_header.resizeSection(5, 120)  # 페이지
         
@@ -287,10 +286,9 @@ class NaverCafeResultsWidget(QWidget):
         for row in range(self.history_table.rowCount()):
             checkbox_widget = self.history_table.cellWidget(row, 0)
             if checkbox_widget:
-                # 컨테이너 위젯에서 체크박스 찾기
                 checkbox = checkbox_widget.findChild(QCheckBox)
                 if checkbox and checkbox.isChecked():
-                    selected_count += 1
+                        selected_count += 1
         
         # 버튼 텍스트 업데이트
         if selected_count > 0:
@@ -454,7 +452,7 @@ class NaverCafeResultsWidget(QWidget):
             
             log_manager.add_log(f"{self.users_table.rowCount()}개 사용자 데이터 엑셀 호환 형식으로 클립보드 복사 완료", "success")
             
-            # 공용 복사 완료 다이얼로그
+            # 모던한 복사 완료 다이얼로그
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
             ModernInfoDialog.success(
                 self,
@@ -465,143 +463,17 @@ class NaverCafeResultsWidget(QWidget):
             )
             
         except Exception as e:
-            # 공용 에러 다이얼로그
+            # 모던한 에러 다이얼로그
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-            ModernInfoDialog.error(self, "복사 오류", f"클립보드 복사 중 오류가 발생했습니다: {str(e)}")
+            ModernInfoDialog.warning(self, "복사 오류", f"클립보드 복사 중 오류가 발생했습니다: {str(e)}")
             logger.error(f"클립보드 복사 오류: {e}")
         
     def show_save_dialog(self):
-        """저장 다이얼로그 표시 (원본과 동일)"""
+        """저장 다이얼로그 표시 - CLAUDE.md: UI는 service 경유"""
+        # 테이블 데이터 검증 먼저 수행
         if self.users_table.rowCount() == 0:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-            ModernInfoDialog.warning(self, "데이터 없음", "저장할 데이터가 없습니다.")
-            return
-        
-        # 원본과 동일한 커스텀 다이얼로그 생성
-        dialog = QDialog(self)
-        dialog.setWindowTitle("저장 방식 선택")
-        dialog.setFixedSize(600, 300)
-        dialog.setModal(True)
-        
-        # 레이아웃
-        layout = QVBoxLayout(dialog)
-        layout.setSpacing(20)
-        layout.setContentsMargins(30, 30, 30, 30)
-        
-        # 제목
-        title_label = QLabel("데이터 저장 방식을 선택해주세요")
-        title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #2d3748;")
-        layout.addWidget(title_label)
-        
-        # 설명
-        desc_label = QLabel("• Excel: 사용자ID, 닉네임 등 전체 정보\n• Meta CSV: 이메일 형태로 Meta 광고 활용 가능")
-        desc_label.setStyleSheet("font-size: 12px; color: #4a5568; line-height: 1.4;")
-        layout.addWidget(desc_label)
-        
-        # 버튼 레이아웃
-        button_layout = QHBoxLayout()
-        button_layout.setSpacing(20)
-        button_layout.setContentsMargins(20, 0, 20, 0)
-        
-        excel_button = QPushButton("📊 Excel 파일")
-        excel_button.setStyleSheet("""
-            QPushButton {
-                background-color: #3182ce;
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 100px;
-                min-height: 40px;
-            }
-            QPushButton:hover {
-                background-color: #2c5aa0;
-            }
-        """)
-        
-        meta_button = QPushButton("📧 Meta CSV")
-        meta_button.setStyleSheet("""
-            QPushButton {
-                background-color: #e53e3e;
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 100px;
-                min-height: 40px;
-            }
-            QPushButton:hover {
-                background-color: #c53030;
-            }
-        """)
-        
-        cancel_button = QPushButton("취소")
-        cancel_button.setStyleSheet("""
-            QPushButton {
-                background-color: #718096;
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 100px;
-                min-height: 40px;
-            }
-            QPushButton:hover {
-                background-color: #4a5568;
-            }
-        """)
-        
-        button_layout.addWidget(excel_button)
-        button_layout.addWidget(meta_button)
-        button_layout.addWidget(cancel_button)
-        layout.addLayout(button_layout)
-        
-        # 결과 변수
-        result = None
-        
-        def on_excel():
-            nonlocal result
-            result = "excel"
-            dialog.accept()
-        
-        def on_meta():
-            nonlocal result
-            result = "meta_csv"
-            dialog.accept()
-        
-        def on_cancel():
-            nonlocal result
-            result = None
-            dialog.reject()
-        
-        excel_button.clicked.connect(on_excel)
-        meta_button.clicked.connect(on_meta)
-        cancel_button.clicked.connect(on_cancel)
-        
-        # 다이얼로그 화면 중앙 위치 설정
-        screen = QApplication.primaryScreen()
-        screen_rect = screen.availableGeometry()
-        center_x = screen_rect.x() + screen_rect.width() // 2 - dialog.width() // 2
-        center_y = screen_rect.y() + screen_rect.height() // 2 - dialog.height() // 2
-        dialog.move(center_x, center_y)
-        
-        dialog.exec()
-        
-        if result == "excel":
-            self.export_to_excel()
-        elif result == "meta_csv":
-            self.export_to_meta_csv()
-        
-    def export_to_excel(self):
-        """엑셀로 내보내기 - excel_export 모듈 사용"""
-        if self.users_table.rowCount() == 0:
-            QMessageBox.information(self, "정보", "내보낼 데이터가 없습니다.")
+            ModernInfoDialog.warning(self, "데이터 없음", "내보낼 사용자 데이터가 없습니다.\n\n먼저 카페에서 사용자를 추출해주세요.")
             return
         
         # 테이블 데이터를 리스트로 변환
@@ -613,27 +485,16 @@ class NaverCafeResultsWidget(QWidget):
                 row_data.append(item.text() if item else "")
             users_data.append(row_data)
         
-        # service 경유로 엑셀 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
-        self.service.export_to_excel_with_dialog(users_data, self)
-            
-    def export_to_meta_csv(self):
-        """Meta CSV로 내보내기 - excel_export 모듈 사용"""
-        if self.users_table.rowCount() == 0:
-            QMessageBox.information(self, "정보", "내보낼 데이터가 없습니다.")
+        # 변환된 데이터가 실제로 있는지 재확인
+        if not users_data:
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            ModernInfoDialog.warning(self, "데이터 없음", "내보낼 사용자 데이터가 없습니다.")
             return
         
-        # 테이블 데이터를 리스트로 변환
-        users_data = []
-        for row in range(self.users_table.rowCount()):
-            row_data = []
-            for col in range(self.users_table.columnCount()):
-                item = self.users_table.item(row, col)
-                row_data.append(item.text() if item else "")
-            users_data.append(row_data)
-        
-        # service 경유로 Meta CSV 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
-        self.service.export_to_meta_csv_with_dialog(users_data, self)
+        # service 경유로 저장 방식 선택 및 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
+        self.service.show_save_format_dialog_and_export(users_data, self)
     
+            
     def download_selected_history(self):
         """선택된 기록 다운로드 - Excel/Meta CSV 선택 다이얼로그"""
         selected_tasks = []
@@ -645,23 +506,23 @@ class NaverCafeResultsWidget(QWidget):
             if checkbox_widget:
                 checkbox = checkbox_widget.findChild(QCheckBox)
                 if checkbox and checkbox.isChecked():
-                    date_item = self.history_table.item(row, 1)
-                    if date_item:
-                        # 숨김 데이터에서 task_id 가져오기
-                        task_id = date_item.data(Qt.UserRole)
-                        if task_id:
-                            selected_tasks.append(task_id)
-                            
-                            # 해당 기록의 사용자 데이터 가져오기 - Foundation DB에서 조회
-                            task_users = self._get_users_by_task_id(task_id)
-                            for user in task_users:
-                                user_data = [
-                                    str(len(selected_data) + 1),  # 번호
-                                    user.user_id,                # 사용자 ID
-                                    user.nickname,               # 닉네임
-                                    user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
-                                ]
-                                selected_data.append(user_data)
+                        date_item = self.history_table.item(row, 1)
+                        if date_item:
+                            # 숨김 데이터에서 task_id 가져오기
+                            task_id = date_item.data(Qt.UserRole)
+                            if task_id:
+                                selected_tasks.append(task_id)
+                                
+                                # 해당 기록의 사용자 데이터 가져오기 - service 경유 (CLAUDE.md: UI는 service 경유)
+                                task_users = self.service.get_users_by_task_id(task_id)
+                                for user in task_users:
+                                    user_data = [
+                                        str(len(selected_data) + 1),  # 번호
+                                        user.user_id,                # 사용자 ID
+                                        user.nickname,               # 닉네임
+                                        user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
+                                    ]
+                                    selected_data.append(user_data)
         
         if not selected_tasks:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
@@ -673,131 +534,11 @@ class NaverCafeResultsWidget(QWidget):
             ModernInfoDialog.warning(self, "데이터 없음", "선택된 기록에 다운로드할 사용자 데이터가 없습니다.")
             return
         
-        # 원본과 동일한 저장 방식 선택 다이얼로그
-        dialog = QDialog(self)
-        dialog.setWindowTitle("저장 방식 선택")
-        dialog.setFixedSize(600, 300)
-        dialog.setModal(True)
+        # service 경유로 저장 방식 선택 및 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
+        success = self.service.show_save_format_dialog_and_export(selected_data, self)
         
-        # 레이아웃
-        layout = QVBoxLayout(dialog)
-        layout.setSpacing(20)
-        layout.setContentsMargins(30, 30, 30, 30)
-        
-        # 제목
-        title_label = QLabel("선택된 기록의 저장 방식을 선택해주세요")
-        title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #2d3748;")
-        layout.addWidget(title_label)
-        
-        # 설명
-        desc_label = QLabel(f"• Excel: 사용자ID, 닉네임 등 전체 정보\\n• Meta CSV: 이메일 형태로 Meta 광고 활용 가능\\n• 선택된 기록: {len(selected_tasks)}개, 사용자: {len(selected_data)}명")
-        desc_label.setStyleSheet("font-size: 12px; color: #4a5568; line-height: 1.4;")
-        layout.addWidget(desc_label)
-        
-        # 버튼 레이아웃
-        button_layout = QHBoxLayout()
-        button_layout.setSpacing(20)
-        button_layout.setContentsMargins(20, 0, 20, 0)
-        
-        excel_button = QPushButton("📊 Excel 파일")
-        excel_button.setStyleSheet("""
-            QPushButton {
-                background-color: #3182ce;
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 100px;
-                min-height: 40px;
-            }
-            QPushButton:hover {
-                background-color: #2c5aa0;
-            }
-        """)
-        
-        meta_button = QPushButton("📧 Meta CSV")
-        meta_button.setStyleSheet("""
-            QPushButton {
-                background-color: #e53e3e;
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 100px;
-                min-height: 40px;
-            }
-            QPushButton:hover {
-                background-color: #c53030;
-            }
-        """)
-        
-        cancel_button = QPushButton("취소")
-        cancel_button.setStyleSheet("""
-            QPushButton {
-                background-color: #718096;
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                min-width: 100px;
-                min-height: 40px;
-            }
-            QPushButton:hover {
-                background-color: #4a5568;
-            }
-        """)
-        
-        button_layout.addWidget(excel_button)
-        button_layout.addWidget(meta_button)
-        button_layout.addWidget(cancel_button)
-        layout.addLayout(button_layout)
-        
-        # 결과 변수
-        result = None
-        
-        def on_excel():
-            nonlocal result
-            result = "excel"
-            dialog.accept()
-        
-        def on_meta():
-            nonlocal result
-            result = "meta_csv"
-            dialog.accept()
-        
-        def on_cancel():
-            nonlocal result
-            result = None
-            dialog.reject()
-        
-        excel_button.clicked.connect(on_excel)
-        meta_button.clicked.connect(on_meta)
-        cancel_button.clicked.connect(on_cancel)
-        
-        # 다이얼로그 화면 중앙 위치 설정
-        screen = QApplication.primaryScreen()
-        screen_rect = screen.availableGeometry()
-        center_x = screen_rect.x() + screen_rect.width() // 2 - dialog.width() // 2
-        center_y = screen_rect.y() + screen_rect.height() // 2 - dialog.height() // 2
-        dialog.move(center_x, center_y)
-        
-        dialog.exec()
-        
-        # 선택된 형식으로 내보내기
-        if result == "excel":
-            success = self.service.export_to_excel_with_dialog(selected_data, self)
-            if success:
-                log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 Excel 다운로드 완료 (총 {len(selected_data)}명)", "success")
-        elif result == "meta_csv":
-            success = self.service.export_to_meta_csv_with_dialog(selected_data, self)
-            if success:
-                log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 Meta CSV 다운로드 완료 (총 {len(selected_data)}명)", "success")
+        if success:
+            log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 다운로드 완료 (총 {len(selected_data)}명)", "success")
         
             
     def on_user_extracted(self, user: ExtractedUser):
@@ -839,25 +580,25 @@ class NaverCafeResultsWidget(QWidget):
             if checkbox_widget:
                 checkbox = checkbox_widget.findChild(QCheckBox)
                 if checkbox and checkbox.isChecked():
-                    date_item = self.history_table.item(row, 1)
-                    if date_item:
-                        # 숨김 데이터에서 task_id 가져오기
-                        task_id = date_item.data(Qt.UserRole)
-                        if task_id:
-                            selected_tasks.append(task_id)
-                            selected_rows.append(row)
+                        date_item = self.history_table.item(row, 1)
+                        if date_item:
+                            # 숨김 데이터에서 task_id 가져오기
+                            task_id = date_item.data(Qt.UserRole)
+                            if task_id:
+                                selected_tasks.append(task_id)
+                                selected_rows.append(row)
         
         if not selected_tasks:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
             ModernInfoDialog.warning(self, "선택 없음", "삭제할 기록을 선택해주세요.")
             return
         
-        # 확인 다이얼로그
+        # 확인 다이얼로그 - 순위추적과 동일한 스타일
         from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-        reply = ModernConfirmDialog.warning(
+        reply = ModernConfirmDialog.question(
             self,
-            "선택 삭제 확인",
-            f"선택된 {len(selected_tasks)}개의 추출 기록을 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.",
+            "추출 기록 삭제",
+            f"선택된 {len(selected_tasks)}개의 추출 기록을 삭제하시겠습니까?\n\n⚠️ 모든 추출 결과가 함께 삭제됩니다.\n\n이 작업은 되돌릴 수 없습니다.",
             "삭제",
             "취소"
         )
@@ -923,6 +664,7 @@ class NaverCafeResultsWidget(QWidget):
         
         if success:
             log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 엑셀 내보내기 완료 (총 {len(selected_data)}명)", "success")
+    
     
     def setup_header_checkbox(self):
         """QTableWidget 헤더에 체크박스 추가 (기존 방식)"""
@@ -1051,34 +793,4 @@ class NaverCafeResultsWidget(QWidget):
             logger.info("추출 완료 후 기록 테이블 새로고침 완료")
         except Exception as e:
             logger.error(f"추출 완료 후 기록 테이블 새로고침 실패: {e}")
-    
-    def _get_users_by_task_id(self, task_id: str):
-        """특정 작업 ID의 사용자들을 Foundation DB에서 조회"""
-        try:
-            from src.foundation.db import get_db
-            
-            db = get_db()
-            user_dicts = db.get_cafe_extraction_results(task_id)
-            
-            # Dict를 ExtractedUser 객체로 변환
-            users = []
-            for user_dict in user_dicts:
-                try:
-                    user = ExtractedUser(
-                        user_id=user_dict['user_id'],
-                        nickname=user_dict['nickname'],
-                        article_count=user_dict.get('article_count', 1),
-                        first_seen=datetime.fromisoformat(user_dict['extracted_at']) if user_dict.get('extracted_at') else datetime.now(),
-                        last_seen=datetime.fromisoformat(user_dict['extracted_at']) if user_dict.get('extracted_at') else datetime.now()
-                    )
-                    users.append(user)
-                except Exception as e:
-                    logger.error(f"사용자 데이터 변환 실패: {e}")
-                    continue
-            
-            return users
-            
-        except Exception as e:
-            logger.error(f"사용자 데이터 조회 실패: {e}")
-            return []
     

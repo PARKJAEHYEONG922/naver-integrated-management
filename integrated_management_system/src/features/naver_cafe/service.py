@@ -3,18 +3,17 @@
 비즈니스 로직과 오케스트레이션 담당
 CLAUDE.md 구조 준수: 오케스트레이션(흐름), adapters 경유, DB/엑셀 트리거
 """
-from typing import List, Dict, Optional, Callable
+from typing import List, Dict
 from datetime import datetime
 from pathlib import Path
 
 from src.foundation.logging import get_logger
 from src.toolbox.validators import validate_url
 from .models import (
-    CafeInfo, BoardInfo, ExtractedUser, ExtractionTask, 
-    ExtractionStatus, cafe_extraction_db
+    CafeInfo, BoardInfo, ExtractedUser, ExtractionTask, ExtractionStatus,
+    cafe_extraction_db
 )
 from .adapters import NaverCafeDataAdapter
-# config 설정들은 대부분 제거되어 필요하지 않음
 
 logger = get_logger("features.naver_cafe.service")
 
@@ -73,11 +72,6 @@ class NaverCafeExtractionService:
             logger.error(f"게시판 목록 조회 실패: {e}")
             return []
     
-    # start_extraction 메서드 제거 - worker.py에서 직접 처리
-    
-    # stop_extraction 메서드 제거 - worker.py에서 직접 처리
-    
-    # _perform_extraction 메서드 제거 - worker.py에서 직접 처리
     
     def get_extraction_history(self) -> List[ExtractionTask]:
         """추출 기록 조회 - DB 조회는 foundation/db 경유"""
@@ -107,6 +101,39 @@ class NaverCafeExtractionService:
     def get_extracted_users(self) -> List[ExtractedUser]:
         """추출된 사용자 목록 조회 - 메모리 기반"""
         return cafe_extraction_db.get_all_users()
+    
+    def get_users_by_task_id(self, task_id: str) -> List[ExtractedUser]:
+        """특정 작업 ID의 사용자 목록 조회 - Foundation DB 기반"""
+        try:
+            from src.foundation.db import get_db
+            
+            # Foundation DB에서 추출 결과 조회
+            db = get_db()
+            user_dicts = db.get_cafe_extraction_results(task_id)
+            
+            # Dict를 ExtractedUser 객체로 변환
+            users = []
+            for user_dict in user_dicts:
+                try:
+                    user = ExtractedUser(
+                        user_id=user_dict['user_id'],
+                        nickname=user_dict['nickname'],
+                        article_count=user_dict.get('article_count', 1),
+                        first_seen=datetime.fromisoformat(user_dict['first_seen']) if user_dict.get('first_seen') else datetime.now(),
+                        last_seen=datetime.fromisoformat(user_dict['last_seen']) if user_dict.get('last_seen') else datetime.now()
+                    )
+                    users.append(user)
+                except Exception as e:
+                    logger.warning(f"사용자 데이터 변환 실패: {e}")
+                    continue
+            
+            logger.debug(f"Task {task_id} 사용자 조회: {len(users)}명")
+            return users
+            
+        except Exception as e:
+            logger.error(f"Task {task_id} 사용자 조회 실패: {e}")
+            # 폴백: 메모리 기반 조회
+            return cafe_extraction_db.get_users_by_task_id(task_id)
     
     def save_extraction_task(self, task: ExtractionTask):
         """추출 작업 기록 저장 - DB 저장은 foundation/db 경유"""
@@ -388,6 +415,139 @@ class NaverCafeExtractionService:
             logger.error(f"Meta CSV 내보내기 (대화상자 포함) 실패: {e}")
             if parent_widget:
                 QMessageBox.critical(parent_widget, "오류", f"CSV 저장 중 오류가 발생했습니다.\n{str(e)}")
+            return False
+    
+    def show_save_format_dialog_and_export(self, users_data: List[List[str]], parent_widget=None) -> bool:
+        """저장 포맷 선택 다이얼로그를 표시하고 해당 포맷으로 내보내기 - 원본과 동일"""
+        try:
+            from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QApplication
+            
+            # 원본과 동일한 저장 방식 선택 다이얼로그
+            dialog = QDialog(parent_widget)
+            dialog.setWindowTitle("저장 방식 선택")
+            dialog.setFixedSize(600, 300)
+            dialog.setModal(True)
+            
+            # 레이아웃
+            layout = QVBoxLayout(dialog)
+            layout.setSpacing(20)
+            layout.setContentsMargins(30, 30, 30, 30)
+            
+            # 제목
+            title_label = QLabel("선택된 기록의 저장 방식을 선택해주세요")
+            title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #2d3748;")
+            layout.addWidget(title_label)
+            
+            # 설명
+            desc_label = QLabel(f"• Excel: 사용자ID, 닉네임 등 전체 정보\n• Meta CSV: 이메일 형태로 Meta 광고 활용 가능\n• 사용자: {len(users_data)}명")
+            desc_label.setStyleSheet("font-size: 12px; color: #4a5568; line-height: 1.4;")
+            layout.addWidget(desc_label)
+            
+            # 버튼 레이아웃
+            button_layout = QHBoxLayout()
+            button_layout.setSpacing(20)
+            button_layout.setContentsMargins(20, 0, 20, 0)
+            
+            excel_button = QPushButton("📊 Excel 파일")
+            excel_button.setStyleSheet("""
+                QPushButton {
+                    background-color: #3182ce;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    min-width: 100px;
+                    min-height: 40px;
+                }
+                QPushButton:hover {
+                    background-color: #2c5aa0;
+                }
+            """)
+            
+            meta_button = QPushButton("📧 Meta CSV")
+            meta_button.setStyleSheet("""
+                QPushButton {
+                    background-color: #e53e3e;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    min-width: 100px;
+                    min-height: 40px;
+                }
+                QPushButton:hover {
+                    background-color: #c53030;
+                }
+            """)
+            
+            cancel_button = QPushButton("취소")
+            cancel_button.setStyleSheet("""
+                QPushButton {
+                    background-color: #718096;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    min-width: 100px;
+                    min-height: 40px;
+                }
+                QPushButton:hover {
+                    background-color: #4a5568;
+                }
+            """)
+            
+            button_layout.addWidget(excel_button)
+            button_layout.addWidget(meta_button)
+            button_layout.addWidget(cancel_button)
+            layout.addLayout(button_layout)
+            
+            # 결과 변수
+            result = None
+            
+            def on_excel():
+                nonlocal result
+                result = "excel"
+                dialog.accept()
+            
+            def on_meta():
+                nonlocal result
+                result = "meta_csv"
+                dialog.accept()
+            
+            def on_cancel():
+                nonlocal result
+                result = None
+                dialog.reject()
+            
+            excel_button.clicked.connect(on_excel)
+            meta_button.clicked.connect(on_meta)
+            cancel_button.clicked.connect(on_cancel)
+            
+            # 다이얼로그 화면 중앙 위치 설정
+            screen = QApplication.primaryScreen()
+            screen_rect = screen.availableGeometry()
+            center_x = screen_rect.x() + screen_rect.width() // 2 - dialog.width() // 2
+            center_y = screen_rect.y() + screen_rect.height() // 2 - dialog.height() // 2
+            dialog.move(center_x, center_y)
+            
+            dialog.exec()
+            
+            # 선택된 형식으로 내보내기
+            if result == "excel":
+                return self.export_to_excel_with_dialog(users_data, parent_widget)
+            elif result == "meta_csv":
+                return self.export_to_meta_csv_with_dialog(users_data, parent_widget)
+            else:
+                return False
+                
+        except Exception as e:
+            logger.error(f"저장 포맷 선택 다이얼로그 오류: {e}")
             return False
     
     def _show_save_completion_dialog(self, parent_widget, title: str, message: str, file_path: str):

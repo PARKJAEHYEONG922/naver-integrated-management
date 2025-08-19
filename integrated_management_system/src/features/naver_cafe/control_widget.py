@@ -15,10 +15,7 @@ from src.toolbox.ui_kit import ModernInfoDialog
 from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, ModernSuccessButton, ModernCancelButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
-from .models import (
-    CafeInfo, BoardInfo, ExtractionTask, ExtractionProgress, 
-    ExtractionStatus, cafe_extraction_db
-)
+from .models import CafeInfo, BoardInfo, ExtractionProgress, ExtractionTask
 from .worker import NaverCafeUnifiedWorker
 from .service import NaverCafeExtractionService
 
