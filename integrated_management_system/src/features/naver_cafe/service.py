@@ -7,11 +7,24 @@ from typing import List, Dict
 from datetime import datetime
 from pathlib import Path
 
+# PySide6 imports
+from PySide6.QtWidgets import (
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, 
+    QApplication, QFileDialog, QMessageBox
+)
+
+# Foundation imports
 from src.foundation.logging import get_logger
+from src.foundation.db import get_db
+
+# Toolbox imports
 from src.toolbox.validators import validate_url
+from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
+
+# Local imports
 from .models import (
     CafeInfo, BoardInfo, ExtractedUser, ExtractionTask, ExtractionStatus,
-    cafe_extraction_db
+    CafeExtractionRepository, cafe_extraction_db
 )
 from .adapters import NaverCafeDataAdapter
 
@@ -76,9 +89,6 @@ class NaverCafeExtractionService:
     def get_extraction_history(self) -> List[ExtractionTask]:
         """추출 기록 조회 - DB 조회는 foundation/db 경유"""
         try:
-            from src.foundation.db import get_db
-            from .models import CafeExtractionRepository
-            
             # 1. foundation/db 경유로 데이터 조회
             task_dicts = get_db().get_cafe_extraction_tasks()
             
@@ -105,8 +115,6 @@ class NaverCafeExtractionService:
     def get_users_by_task_id(self, task_id: str) -> List[ExtractedUser]:
         """특정 작업 ID의 사용자 목록 조회 - Foundation DB 기반"""
         try:
-            from src.foundation.db import get_db
-            
             # Foundation DB에서 추출 결과 조회
             db = get_db()
             user_dicts = db.get_cafe_extraction_results(task_id)
@@ -138,9 +146,6 @@ class NaverCafeExtractionService:
     def save_extraction_task(self, task: ExtractionTask):
         """추출 작업 기록 저장 - DB 저장은 foundation/db 경유"""
         try:
-            from src.foundation.db import get_db
-            from .models import CafeExtractionRepository
-            
             # 1. models 헬퍼로 DTO 변환
             task_data = CafeExtractionRepository.task_to_dict(task)
             
@@ -155,8 +160,6 @@ class NaverCafeExtractionService:
     def delete_extraction_task(self, task_id: str):
         """특정 추출 작업 기록 삭제 - DB 삭제는 foundation/db 경유"""
         try:
-            from src.foundation.db import get_db
-            
             # foundation/db 경유로 삭제
             get_db().delete_cafe_extraction_task(task_id)
             
@@ -232,8 +235,6 @@ class NaverCafeExtractionService:
     def save_extraction_result(self, result, unified_worker=None):
         """추출 완료 시 결과 저장 - foundation/db 경유"""
         try:
-            from src.foundation.db import get_db
-            from .models import CafeExtractionRepository
             
             # 1. 입력 검증
             if not result or not hasattr(result, 'task_id'):
@@ -303,7 +304,6 @@ class NaverCafeExtractionService:
     def export_to_excel_with_dialog(self, users_data: List[List[str]], parent_widget=None) -> bool:
         """파일 대화상자를 포함한 엑셀 내보내기 - UI 오케스트레이션"""
         try:
-            from PySide6.QtWidgets import QFileDialog, QMessageBox
             
             # 1. 입력 검증
             if not users_data:
@@ -361,7 +361,6 @@ class NaverCafeExtractionService:
     def export_to_meta_csv_with_dialog(self, users_data: List[List[str]], parent_widget=None) -> bool:
         """파일 대화상자를 포함한 Meta CSV 내보내기 - UI 오케스트레이션"""
         try:
-            from PySide6.QtWidgets import QFileDialog, QMessageBox
             
             # 1. 입력 검증
             if not users_data:
@@ -420,7 +419,6 @@ class NaverCafeExtractionService:
     def show_save_format_dialog_and_export(self, users_data: List[List[str]], parent_widget=None) -> bool:
         """저장 포맷 선택 다이얼로그를 표시하고 해당 포맷으로 내보내기 - 원본과 동일"""
         try:
-            from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QApplication
             
             # 원본과 동일한 저장 방식 선택 다이얼로그
             dialog = QDialog(parent_widget)
@@ -553,7 +551,6 @@ class NaverCafeExtractionService:
     def _show_save_completion_dialog(self, parent_widget, title: str, message: str, file_path: str):
         """저장 완료 다이얼로그 표시 - toolbox 공용 컴포넌트 사용"""
         try:
-            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
             
             # toolbox 공용 다이얼로그 사용
             ModernSaveCompletionDialog.show_save_completion(
@@ -565,5 +562,4 @@ class NaverCafeExtractionService:
         except Exception as e:
             logger.warning(f"저장 완료 다이얼로그 표시 실패: {e}")
             # 폴백: 일반 메시지박스
-            from PySide6.QtWidgets import QMessageBox
             QMessageBox.information(parent_widget, title, message)

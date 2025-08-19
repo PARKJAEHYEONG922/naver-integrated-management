@@ -19,7 +19,7 @@ from src.desktop.common_log import log_manager
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDialog, ModernSaveCompletionDialog
 from .worker import BackgroundWorker
 from .service import analysis_manager
-from .models import KeywordData, AnalysisPolicy, AnalysisProgress
+from .models import KeywordData, AnalysisProgress
 from src.toolbox.text_utils import parse_keywords_from_text, filter_unique_keywords, clean_keywords, filter_unique_keywords_with_skipped
 from src.foundation.logging import get_logger
 

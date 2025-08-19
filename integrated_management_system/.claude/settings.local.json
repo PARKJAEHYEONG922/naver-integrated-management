@@ -14,7 +14,10 @@
       "Bash(find:*)",
       "Bash(rm:*)",
       "Bash(python:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(timeout:*)"
     ],
     "deny": []
   }
