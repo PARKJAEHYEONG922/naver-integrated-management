@@ -50,6 +50,9 @@ class PowerLinkAnalyzerWidget(QWidget):
         # 우측 패널 (결과 위젯)
         self.results_widget = PowerLinkResultsWidget()
         
+        # control_widget에 results_widget 참조 설정 (테이블 키워드 확인용)
+        self.control_widget.results_widget = self.results_widget
+        
         content_layout.addWidget(self.control_widget)
         content_layout.addWidget(self.results_widget, 1)
         
@@ -125,8 +128,8 @@ class PowerLinkAnalyzerWidget(QWidget):
         self.control_widget.analysis_error.connect(self.on_analysis_error)
         self.control_widget.keywords_data_cleared.connect(self.on_keywords_data_cleared)
         
-        # 키워드 즉시 추가 시그널 연결
-        self.control_widget.keyword_added_immediately.connect(self.results_widget.add_keyword_immediately)
+        # 키워드 즉시 추가 시그널 연결 (제거 - 분석 완료 후에만 표시)
+        # self.control_widget.keyword_added_immediately.connect(self.results_widget.add_keyword_immediately)
         
         # 모든 순위 계산 완료 시그널 연결
         self.control_widget.all_rankings_updated.connect(self.results_widget.update_all_tables)

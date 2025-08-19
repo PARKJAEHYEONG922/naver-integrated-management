@@ -152,16 +152,21 @@ class PowerLinkDataAdapter:
             adaptive_rate_limiter.wait()
             
             try:
+                # 키워드를 대문자로 변환하여 API 호출 (네이버 API 요구사항)
+                api_keyword = keyword.upper()
+                
                 # vendors의 keyword_client 사용 (필요할 때마다 가져오기)
                 keyword_client = get_keyword_tool_client()
-                response_data = keyword_client.get_keyword_ideas([keyword], show_detail=True)
+                response_data = keyword_client.get_keyword_ideas([api_keyword], show_detail=True)
                 
                 # 성공 시 Rate Limiter 업데이트
                 adaptive_rate_limiter.on_success()
                 
                 keyword_list = response_data.get('keywordList', [])
                 for item in keyword_list:
-                    if item.get('relKeyword') == keyword:
+                    # 대소문자 무관하게 비교
+                    rel_keyword = item.get('relKeyword', '').upper()
+                    if rel_keyword == api_keyword:
                         # PC & 모바일 검색량 처리
                         pc_search_volume = self._parse_search_volume(item.get('monthlyPcQcCnt'))
                         mobile_search_volume = self._parse_search_volume(item.get('monthlyMobileQcCnt'))
@@ -246,7 +251,9 @@ class PowerLinkDataAdapter:
                 # 베이스 클라이언트 인스턴스 생성 및 입찰가 조회
                 client = NaverKeywordToolClient()
                 positions_list = list(range(1, max_positions + 1))
-                response_data = client.get_bid_estimates(keyword, device, positions_list)
+                # 키워드를 대문자로 변환하여 API 호출 (네이버 API 요구사항)
+                api_keyword = keyword.upper()
+                response_data = client.get_bid_estimates(api_keyword, device, positions_list)
                 
                 # 성공 시 Rate Limiter 업데이트
                 adaptive_rate_limiter.on_success()
@@ -334,10 +341,14 @@ class PowerLinkDataAdapter:
             # 기존 브라우저 컨텍스트에서 새 페이지 생성
             page = browser_context.new_page()
             
+            # URL 인코딩을 위한 키워드 처리
+            from urllib.parse import quote
+            encoded_keyword = quote(keyword)
+            
             if device_type == 'pc':
-                search_url = f"https://search.naver.com/search.naver?query={keyword}"
+                search_url = f"https://search.naver.com/search.naver?query={encoded_keyword}"
             else:  # mobile
-                search_url = f"https://m.search.naver.com/search.naver?query={keyword}"
+                search_url = f"https://m.search.naver.com/search.naver?query={encoded_keyword}"
                 
             page.goto(search_url, wait_until='networkidle')
             page.wait_for_timeout(3000)  # 3초 대기

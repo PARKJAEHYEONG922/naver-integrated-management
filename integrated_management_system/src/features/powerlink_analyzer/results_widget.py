@@ -9,7 +9,7 @@ import os
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QTabWidget, QTableWidget, QTableWidgetItem, 
-    QFileDialog, QHeaderView, QDialog,
+    QFileDialog, QHeaderView, QDialog, QCheckBox,
     QScrollArea, QFrame
 )
 from PySide6.QtCore import Qt, Signal, QTimer
@@ -488,11 +488,11 @@ class PowerLinkResultsWidget(QWidget):
             row_data = [
                 keyword,  # 키워드
                 search_volume,  # 월검색량
-                f"{result.mobile_clicks:.1f}",  # 클릭수
-                f"{result.mobile_ctr:.2f}%",  # 클릭률
-                f"{result.mobile_first_page_positions}위까지",  # 1p노출위치
-                f"{result.mobile_first_position_bid:,}원",  # 1등광고비
-                f"{result.mobile_min_exposure_bid:,}원",  # 최소노출가격
+                f"{result.mobile_clicks:.1f}" if result.mobile_clicks >= 0 else "-",  # 클릭수
+                f"{result.mobile_ctr:.2f}%" if result.mobile_ctr >= 0 else "-",  # 클릭률
+                f"{result.mobile_first_page_positions}위까지" if result.mobile_first_page_positions >= 0 else "-",  # 1p노출위치
+                f"{result.mobile_first_position_bid:,}원" if result.mobile_first_position_bid >= 0 else "-",  # 1등광고비
+                f"{result.mobile_min_exposure_bid:,}원" if result.mobile_min_exposure_bid >= 0 else "-",  # 최소노출가격
                 rank_text,  # 추천순위
                 "상세"  # 상세 버튼
             ]
@@ -550,11 +550,11 @@ class PowerLinkResultsWidget(QWidget):
             row_data = [
                 keyword,  # 키워드
                 search_volume,  # 월검색량
-                f"{result.pc_clicks:.1f}",  # 클릭수
-                f"{result.pc_ctr:.2f}%",  # 클릭률
-                f"{result.pc_first_page_positions}위까지",  # 1p노출위치
-                f"{result.pc_first_position_bid:,}원",  # 1등광고비
-                f"{result.pc_min_exposure_bid:,}원",  # 최소노출가격
+                f"{result.pc_clicks:.1f}" if result.pc_clicks >= 0 else "-",  # 클릭수
+                f"{result.pc_ctr:.2f}%" if result.pc_ctr >= 0 else "-",  # 클릭률
+                f"{result.pc_first_page_positions}위까지" if result.pc_first_page_positions >= 0 else "-",  # 1p노출위치
+                f"{result.pc_first_position_bid:,}원" if result.pc_first_position_bid >= 0 else "-",  # 1등광고비
+                f"{result.pc_min_exposure_bid:,}원" if result.pc_min_exposure_bid >= 0 else "-",  # 최소노출가격
                 rank_text,  # 추천순위
                 "상세"  # 상세 버튼
             ]
@@ -587,8 +587,8 @@ class PowerLinkResultsWidget(QWidget):
     
     def update_keyword_data(self, keyword: str, result):
         """키워드 데이터 실시간 업데이트"""
-        if keyword in self.keywords_data:
-            # 기존 데이터 업데이트
+        try:
+            # 데이터 업데이트 (기존/신규 상관없이)
             self.keywords_data[keyword] = result
             
             # 테이블에서 해당 키워드 행 찾아서 업데이트
@@ -597,6 +597,11 @@ class PowerLinkResultsWidget(QWidget):
             
             # 저장 버튼 상태 업데이트
             self.update_save_button_state()
+            
+            logger.debug(f"실시간 키워드 데이터 업데이트 완료: {keyword}")
+            
+        except Exception as e:
+            logger.error(f"실시간 키워드 데이터 업데이트 실패: {keyword}: {e}")
     
     def update_keyword_row_in_table(self, table: QTableWidget, keyword: str, result, device_type: str):
         """특정 키워드의 테이블 행 업데이트"""
@@ -608,152 +613,105 @@ class PowerLinkResultsWidget(QWidget):
                 break
 
     def add_keyword_to_table(self, table: ModernTableWidget, result, device_type: str, update_ui: bool = True):
-        """테이블에 키워드 분석 결과 추가 (ModernTableWidget 사용)"""
-        # ModernTableWidget의 add_row_with_data 메서드를 사용하여 체크박스 자동 생성
-        # 데이터 준비
-        row_data = [result.keyword]  # 키워드는 첫 번째 데이터
-        
-        # 월검색량 데이터 준비
-        if hasattr(result, 'mobile_search_volume') and result.mobile_search_volume is not None and result.mobile_search_volume >= 0:
-            row_data.append(result.mobile_search_volume)
-        else:
-            row_data.append("-")
-        
-        # 임시로 데이터 추가 후 나머지는 기존 방식 유지
-        row = table.add_row_with_data(row_data[:2], checkable=True)  # 키워드와 월검색량만 먼저 추가
-        
-        # 키워드와 월검색량은 이미 add_row_with_data로 추가됨, 나머지 컬럼만 처리
-        
-        # 디바이스별 데이터 설정
-        if device_type == 'mobile':
-            # 3. 클릭수
-            if hasattr(result, 'mobile_clicks') and result.mobile_clicks is not None:
-                clicks_text, clicks_value = safe_format_number(result.mobile_clicks, "float1")
-                clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
-            else:
-                clicks_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 3, clicks_item)
+        """테이블에 키워드 분석 결과 추가 (ModernTableWidget 완전 사용)"""
+        try:
+            # 디바이스별 데이터 준비
+            if device_type == 'mobile':
+                # 월검색량
+                search_volume = f"{result.mobile_search_volume:,}" if hasattr(result, 'mobile_search_volume') and result.mobile_search_volume >= 0 else "-"
+                
+                # 클릭수
+                clicks = f"{result.mobile_clicks:.1f}" if hasattr(result, 'mobile_clicks') and result.mobile_clicks is not None else "-"
+                
+                # 클릭률
+                ctr = f"{result.mobile_ctr:.2f}%" if hasattr(result, 'mobile_ctr') and result.mobile_ctr is not None else "-"
+                
+                # 1p노출위치
+                position = f"{result.mobile_first_page_positions}위까지" if hasattr(result, 'mobile_first_page_positions') and result.mobile_first_page_positions is not None else "-"
+                
+                # 1등광고비
+                first_bid = f"{result.mobile_first_position_bid:,}원" if hasattr(result, 'mobile_first_position_bid') and result.mobile_first_position_bid is not None else "-"
+                
+                # 최소노출가격
+                min_bid = f"{result.mobile_min_exposure_bid:,}원" if hasattr(result, 'mobile_min_exposure_bid') and result.mobile_min_exposure_bid is not None else "-"
+                
+                # 추천순위
+                mobile_rank = getattr(result, 'mobile_recommendation_rank', 0) if hasattr(result, 'mobile_recommendation_rank') else 0
+                rank = f"{mobile_rank}위" if mobile_rank > 0 else "-"
+                
+            else:  # PC
+                # 월검색량
+                search_volume = f"{result.pc_search_volume:,}" if hasattr(result, 'pc_search_volume') and result.pc_search_volume >= 0 else "-"
+                
+                # 클릭수
+                clicks = f"{result.pc_clicks:.1f}" if hasattr(result, 'pc_clicks') and result.pc_clicks is not None else "-"
+                
+                # 클릭률
+                ctr = f"{result.pc_ctr:.2f}%" if hasattr(result, 'pc_ctr') and result.pc_ctr is not None else "-"
+                
+                # 1p노출위치
+                position = f"{result.pc_first_page_positions}위까지" if hasattr(result, 'pc_first_page_positions') and result.pc_first_page_positions is not None else "-"
+                
+                # 1등광고비
+                first_bid = f"{result.pc_first_position_bid:,}원" if hasattr(result, 'pc_first_position_bid') and result.pc_first_position_bid is not None else "-"
+                
+                # 최소노출가격
+                min_bid = f"{result.pc_min_exposure_bid:,}원" if hasattr(result, 'pc_min_exposure_bid') and result.pc_min_exposure_bid is not None else "-"
+                
+                # 추천순위
+                pc_rank = getattr(result, 'pc_recommendation_rank', 0) if hasattr(result, 'pc_recommendation_rank') else 0
+                rank = f"{pc_rank}위" if pc_rank > 0 else "-"
             
-            # 4. 클릭률
-            if hasattr(result, 'mobile_ctr') and result.mobile_ctr is not None:
-                ctr_text, ctr_value = safe_format_number(result.mobile_ctr, "float2", "%")
-                ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
-            else:
-                ctr_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 4, ctr_item)
+            # 행 데이터 준비 (체크박스 제외)
+            row_data = [
+                result.keyword,    # 키워드
+                search_volume,     # 월검색량
+                clicks,           # 클릭수
+                ctr,              # 클릭률
+                position,         # 1p노출위치
+                first_bid,        # 1등광고비
+                min_bid,          # 최소노출가격
+                rank,             # 추천순위
+                "상세"            # 상세 버튼
+            ]
             
-            # 5. 1p노출위치
-            if hasattr(result, 'mobile_first_page_positions') and result.mobile_first_page_positions is not None:
-                position_text, position_value = safe_format_number(result.mobile_first_page_positions, "int", "위까지")
-                position_item = SortableTableWidgetItem(position_text, position_value)
-            else:
-                position_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 5, position_item)
+            # ModernTableWidget API 사용하여 행 추가 (반환값으로 행 번호 받기)
+            row = table.add_row_with_data(row_data, checkable=True)
             
-            # 6. 1등광고비 (올바른 데이터 할당)
-            if hasattr(result, 'mobile_first_position_bid') and result.mobile_first_position_bid is not None:
-                first_bid_text, first_bid_value = safe_format_number(result.mobile_first_position_bid, "int", "원")
-                first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
-            else:
-                first_bid_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 6, first_bid_item)
+            # 상세 버튼 추가 (9번 컬럼)
+            detail_button = QPushButton("상세")
+            detail_button.setStyleSheet("""
+                QPushButton {
+                    background-color: #10b981;
+                    color: white;
+                    border: none;
+                    border-radius: 0px;
+                    font-weight: 600;
+                    font-size: 13px;
+                    margin: 0px;
+                    padding: 0px;
+                }
+                QPushButton:hover {
+                    background-color: #059669;
+                }
+                QPushButton:pressed {
+                    background-color: #047857;
+                }
+            """)
+            detail_button.clicked.connect(lambda: self.show_bid_details(result.keyword, result, device_type))
+            table.setCellWidget(row, 9, detail_button)
             
-            # 7. 최소노출가격 (올바른 데이터 할당)
-            if hasattr(result, 'mobile_min_exposure_bid') and result.mobile_min_exposure_bid is not None:
-                min_bid_text, min_bid_value = safe_format_number(result.mobile_min_exposure_bid, "int", "원")
-                min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
-            else:
-                min_bid_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 7, min_bid_item)
-            
-            # 8. 추천순위 (올바른 데이터 할당, "위" 접미사 포함)
-            mobile_rank = getattr(result, 'mobile_recommendation_rank', 0) if hasattr(result, 'mobile_recommendation_rank') else 0
-            if mobile_rank > 0:
-                rank_item = SortableTableWidgetItem(f"{mobile_rank}위", mobile_rank)
-            else:
-                rank_item = SortableTableWidgetItem("-", 0)  # 초기값 "-"
-            table.setItem(row, 8, rank_item)
-        else:  # PC
-            # 3. 클릭수
-            if hasattr(result, 'pc_clicks') and result.pc_clicks is not None:
-                clicks_text, clicks_value = safe_format_number(result.pc_clicks, "float1")
-                clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
-            else:
-                clicks_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 3, clicks_item)
-            
-            # 4. 클릭률
-            if hasattr(result, 'pc_ctr') and result.pc_ctr is not None:
-                ctr_text, ctr_value = safe_format_number(result.pc_ctr, "float2", "%")
-                ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
-            else:
-                ctr_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 4, ctr_item)
-            
-            # 5. 1p노출위치
-            if hasattr(result, 'pc_first_page_positions') and result.pc_first_page_positions is not None:
-                position_text, position_value = safe_format_number(result.pc_first_page_positions, "int", "위까지")
-                position_item = SortableTableWidgetItem(position_text, position_value)
-            else:
-                position_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 5, position_item)
-            
-            # 6. 1등광고비 (올바른 데이터 할당)
-            if hasattr(result, 'pc_first_position_bid') and result.pc_first_position_bid is not None:
-                first_bid_text, first_bid_value = safe_format_number(result.pc_first_position_bid, "int", "원")
-                first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
-            else:
-                first_bid_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 6, first_bid_item)
-            
-            # 7. 최소노출가격 (올바른 데이터 할당)
-            if hasattr(result, 'pc_min_exposure_bid') and result.pc_min_exposure_bid is not None:
-                min_bid_text, min_bid_value = safe_format_number(result.pc_min_exposure_bid, "int", "원")
-                min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
-            else:
-                min_bid_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 7, min_bid_item)
-            
-            # 8. 추천순위 (올바른 데이터 할당, "위" 접미사 포함)
-            pc_rank = getattr(result, 'pc_recommendation_rank', 0) if hasattr(result, 'pc_recommendation_rank') else 0
-            if pc_rank > 0:
-                rank_item = SortableTableWidgetItem(f"{pc_rank}위", pc_rank)
-            else:
-                rank_item = SortableTableWidgetItem("-", 0)  # 초기값 "-"
-            table.setItem(row, 8, rank_item)
-        
-        # 9. 상세보기 버튼 (셀 전체를 채우는 초록색 버튼)
-        detail_button = QPushButton("상세")
-        detail_button.setStyleSheet("""
-            QPushButton {
-                background-color: #10b981;
-                color: white;
-                border: none;
-                border-radius: 0px;
-                font-weight: 600;
-                font-size: 13px;
-                margin: 0px;
-                padding: 0px;
-            }
-            QPushButton:hover {
-                background-color: #059669;
-            }
-            QPushButton:pressed {
-                background-color: #047857;
-            }
-        """)
-        detail_button.clicked.connect(lambda: self.show_bid_details(result.keyword, result, device_type))
-        
-        # 버튼을 셀 전체에 배치 (여백 제거)
-        table.setCellWidget(row, 9, detail_button)
-        
-        # UI 업데이트 (rebuild 중에는 스킵)
-        if update_ui:
-            # 버튼 상태 업데이트 (새 데이터 추가되었으므로 클리어 버튼 활성화)
-            self.update_delete_button_state()
-            
-            # 상태 표시 업데이트 (키워드 개수 증가 반영)
-            self.update_status_display()
+            # UI 업데이트 (rebuild 중에는 스킵)
+            if update_ui:
+                # 버튼 상태 업데이트
+                self.update_delete_button_state()
+                
+                # 상태 표시 업데이트
+                self.update_status_display()
+                
+        except Exception as e:
+            logger.error(f"테이블 행 추가 실패: row {table.rowCount()}, device {device_type}: {e}")
+            raise
 
     def show_bid_details(self, keyword: str, result, device_type: str):
         """입찰가 상세 정보 표시"""
@@ -795,32 +753,26 @@ class PowerLinkResultsWidget(QWidget):
     
     def update_history_button_state(self):
         """히스토리 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
-        # 히스토리 테이블 체크 상태 확인
-        history_checked_rows = self.history_table.get_checked_rows()
-        history_checked_count = len(history_checked_rows)
-        history_has_checked = history_checked_count > 0
+        selected_count = self.history_table.get_selected_count()
         
-        # 버튼 상태 업데이트 (체크된 개수 표시)
-        if history_has_checked:
-            self.delete_history_button.setText(f"🗑️ 선택 삭제({history_checked_count})")
-            self.delete_history_button.setEnabled(True)
-            
-            self.view_history_button.setText(f"👀 보기({history_checked_count})")
-            self.view_history_button.setEnabled(True)
-            
-            self.export_selected_history_button.setText(f"💾 선택 저장({history_checked_count})")
-            self.export_selected_history_button.setEnabled(True)
+        # 삭제 및 내보내기 버튼: 1개 이상 선택시 활성화
+        has_selection = selected_count > 0
+        self.delete_history_button.setEnabled(has_selection)
+        self.export_selected_history_button.setEnabled(has_selection)
+        
+        # 보기 버튼: 정확히 1개만 선택시 활성화
+        self.view_history_button.setEnabled(selected_count == 1)
+        
+        # 버튼 텍스트 업데이트
+        if selected_count > 0:
+            self.delete_history_button.setText(f"🗑️ 선택 삭제 ({selected_count})")
+            self.export_selected_history_button.setText(f"💾 선택 저장 ({selected_count})")
         else:
             self.delete_history_button.setText("🗑️ 선택 삭제")
-            self.delete_history_button.setEnabled(False)
-            
-            self.view_history_button.setText("👀 보기")
-            self.view_history_button.setEnabled(False)
-            
             self.export_selected_history_button.setText("💾 선택 저장")
-            self.export_selected_history_button.setEnabled(False)
         
-        # Header checkbox states are handled automatically by ModernTableWidget
+        # 보기 버튼은 항상 기본 텍스트
+        self.view_history_button.setText("👀 보기")
 
     def update_status_display(self):
         """상태 표시 업데이트"""
@@ -1339,12 +1291,22 @@ class PowerLinkResultsWidget(QWidget):
                 if hasattr(self, 'loaded_session_id'):
                     delattr(self, 'loaded_session_id')
                 
-                # 메모리 데이터베이스 클리어
+                # 메모리 데이터베이스 클리어 (안전한 클리어)
+                keywords_before = len(keyword_database.keywords)
                 keyword_database.clear()
+                keywords_after = len(keyword_database.keywords)
+                logger.info(f"메모리 DB 클리어: {keywords_before}개 → {keywords_after}개")
                 
-                # 테이블 클리어
-                self.mobile_table.setRowCount(0)
-                self.pc_table.setRowCount(0)
+                # 테이블 클리어 (ModernTableWidget API 사용)
+                mobile_rows_before = self.mobile_table.rowCount()
+                pc_rows_before = self.pc_table.rowCount()
+                
+                self.mobile_table.clear_table()
+                self.pc_table.clear_table()
+                
+                mobile_rows_after = self.mobile_table.rowCount()
+                pc_rows_after = self.pc_table.rowCount()
+                logger.info(f"테이블 클리어: 모바일 {mobile_rows_before}→{mobile_rows_after}, PC {pc_rows_before}→{pc_rows_after}")
                 
                 # 버튼 상태 업데이트
                 self.update_save_button_state()
@@ -1355,52 +1317,7 @@ class PowerLinkResultsWidget(QWidget):
             logger.error(f"전체 클리어 실패: {e}")
             log_manager.add_log(f"PowerLink 전체 클리어 실패: {e}", "error")
     
-    def add_keyword_immediately(self, keyword: str):
-        """키워드를 즉시 테이블에 추가 (데이터 로딩 전 상태로)"""
-        try:
-            # 중복 체크 - 이미 테이블에 있는지 확인
-            mobile_existing = self.find_keyword_row_in_table(self.mobile_table, keyword)
-            pc_existing = self.find_keyword_row_in_table(self.pc_table, keyword)
-            
-            if mobile_existing >= 0 or pc_existing >= 0:
-                logger.debug(f"키워드 '{keyword}' 이미 테이블에 존재함 (모바일: {mobile_existing}, PC: {pc_existing})")
-                return
-            
-            # 빈 결과 객체 생성 (모든 값을 "-"로 초기화)
-            empty_result = KeywordAnalysisResult(
-                keyword=keyword,
-                pc_search_volume=-1,  # -1은 아직 분석되지 않음을 의미
-                mobile_search_volume=-1,  # -1은 아직 분석되지 않음을 의미
-                pc_clicks=-1,  # -1은 아직 분석되지 않음을 의미 (0과 구분)
-                pc_ctr=-1,  # -1은 아직 분석되지 않음을 의미 (0과 구분)
-                pc_first_page_positions=0,
-                pc_first_position_bid=0,
-                pc_min_exposure_bid=0,
-                pc_bid_positions=[],
-                mobile_clicks=-1,  # -1은 아직 분석되지 않음을 의미 (0과 구분)
-                mobile_ctr=-1,  # -1은 아직 분석되지 않음을 의미 (0과 구분)
-                mobile_first_page_positions=0,
-                mobile_first_position_bid=0,
-                mobile_min_exposure_bid=0,
-                mobile_bid_positions=[],
-                pc_recommendation_rank=0,
-                mobile_recommendation_rank=0,
-                analyzed_at=datetime.now()
-            )
-            
-            # 모바일과 PC 테이블에 모두 추가 (데이터는 "-"로 표시)
-            mobile_row = self.mobile_table.rowCount()
-            self.mobile_table.insertRow(mobile_row)
-            self.add_keyword_to_table_row(self.mobile_table, mobile_row, empty_result, 'mobile')
-            
-            pc_row = self.pc_table.rowCount()
-            self.pc_table.insertRow(pc_row)
-            self.add_keyword_to_table_row(self.pc_table, pc_row, empty_result, 'pc')
-            
-            logger.debug(f"키워드 '{keyword}' 즉시 추가 완료 (모바일: {mobile_row}, PC: {pc_row})")
-            
-        except Exception as e:
-            logger.error(f"키워드 즉시 추가 실패: {keyword}: {e}")
+    
     
     def update_keyword_data(self, keyword: str, result: KeywordAnalysisResult):
         """실시간으로 키워드 데이터 업데이트"""
@@ -1570,28 +1487,123 @@ class PowerLinkResultsWidget(QWidget):
         
         # 버튼 상태 업데이트
         self.update_save_button_state()
+        self.update_delete_button_state()
     
     def refresh_tables_from_database(self):
-        """데이터베이스에서 테이블 전체 새로고침"""
+        """데이터베이스에서 테이블 전체 새로고침 (ModernTableWidget API 사용)"""
         try:
             # 기존 테이블 데이터 클리어
-            self.mobile_table.setRowCount(0)
-            self.pc_table.setRowCount(0)
+            self.mobile_table.clear_table()
+            self.pc_table.clear_table()
             
             # 데이터베이스에서 모든 키워드 가져오기
             all_keywords = keyword_database.get_all_keywords()
             
-            # 테이블에 재추가
+            # 테이블에 재추가 (update_mobile_table/update_pc_table과 동일한 방식)
             for result in all_keywords:
-                # 모바일 테이블
-                mobile_row = self.mobile_table.rowCount()
-                self.mobile_table.insertRow(mobile_row)
-                self.add_keyword_to_table_row(self.mobile_table, mobile_row, result, 'mobile')
+                # 모바일 테이블에 추가
+                # 월검색량
+                if result.mobile_search_volume >= 0:
+                    mobile_search_volume = f"{result.mobile_search_volume:,}"
+                else:
+                    mobile_search_volume = "-"
                 
-                # PC 테이블
-                pc_row = self.pc_table.rowCount()
-                self.pc_table.insertRow(pc_row)
-                self.add_keyword_to_table_row(self.pc_table, pc_row, result, 'pc')
+                # 추천순위
+                if result.mobile_recommendation_rank > 0:
+                    mobile_rank_text = f"{result.mobile_recommendation_rank}위"
+                else:
+                    mobile_rank_text = "-"
+                
+                # 모바일 행 데이터 준비 (체크박스 제외)
+                mobile_row_data = [
+                    result.keyword,  # 키워드
+                    mobile_search_volume,  # 월검색량
+                    f"{result.mobile_clicks:.1f}" if result.mobile_clicks >= 0 else "-",  # 클릭수
+                    f"{result.mobile_ctr:.2f}%" if result.mobile_ctr >= 0 else "-",  # 클릭률
+                    f"{result.mobile_first_page_positions}위까지" if result.mobile_first_page_positions >= 0 else "-",  # 1p노출위치
+                    f"{result.mobile_first_position_bid:,}원" if result.mobile_first_position_bid >= 0 else "-",  # 1등광고비
+                    f"{result.mobile_min_exposure_bid:,}원" if result.mobile_min_exposure_bid >= 0 else "-",  # 최소노출가격
+                    mobile_rank_text,  # 추천순위
+                    "상세"  # 상세 버튼
+                ]
+                
+                # ModernTableWidget API 사용하여 행 추가
+                mobile_row = self.mobile_table.add_row_with_data(mobile_row_data, checkable=True)
+                
+                # 모바일 상세 버튼 추가
+                mobile_detail_button = QPushButton("상세")
+                mobile_detail_button.setStyleSheet("""
+                    QPushButton {
+                        background-color: #10b981;
+                        color: white;
+                        border: none;
+                        border-radius: 0px;
+                        font-weight: 600;
+                        font-size: 13px;
+                        margin: 0px;
+                        padding: 0px;
+                    }
+                    QPushButton:hover {
+                        background-color: #059669;
+                    }
+                    QPushButton:pressed {
+                        background-color: #047857;
+                    }
+                """)
+                mobile_detail_button.clicked.connect(lambda checked, r=result: self.show_bid_details(result.keyword, r, 'mobile'))
+                self.mobile_table.setCellWidget(mobile_row, 9, mobile_detail_button)
+                
+                # PC 테이블에 추가
+                # 월검색량
+                if result.pc_search_volume >= 0:
+                    pc_search_volume = f"{result.pc_search_volume:,}"
+                else:
+                    pc_search_volume = "-"
+                
+                # 추천순위
+                if result.pc_recommendation_rank > 0:
+                    pc_rank_text = f"{result.pc_recommendation_rank}위"
+                else:
+                    pc_rank_text = "-"
+                
+                # PC 행 데이터 준비 (체크박스 제외)
+                pc_row_data = [
+                    result.keyword,  # 키워드
+                    pc_search_volume,  # 월검색량
+                    f"{result.pc_clicks:.1f}" if result.pc_clicks >= 0 else "-",  # 클릭수
+                    f"{result.pc_ctr:.2f}%" if result.pc_ctr >= 0 else "-",  # 클릭률
+                    f"{result.pc_first_page_positions}위까지" if result.pc_first_page_positions >= 0 else "-",  # 1p노출위치
+                    f"{result.pc_first_position_bid:,}원" if result.pc_first_position_bid >= 0 else "-",  # 1등광고비
+                    f"{result.pc_min_exposure_bid:,}원" if result.pc_min_exposure_bid >= 0 else "-",  # 최소노출가격
+                    pc_rank_text,  # 추천순위
+                    "상세"  # 상세 버튼
+                ]
+                
+                # ModernTableWidget API 사용하여 행 추가
+                pc_row = self.pc_table.add_row_with_data(pc_row_data, checkable=True)
+                
+                # PC 상세 버튼 추가
+                pc_detail_button = QPushButton("상세")
+                pc_detail_button.setStyleSheet("""
+                    QPushButton {
+                        background-color: #10b981;
+                        color: white;
+                        border: none;
+                        border-radius: 0px;
+                        font-weight: 600;
+                        font-size: 13px;
+                        margin: 0px;
+                        padding: 0px;
+                    }
+                    QPushButton:hover {
+                        background-color: #059669;
+                    }
+                    QPushButton:pressed {
+                        background-color: #047857;
+                    }
+                """)
+                pc_detail_button.clicked.connect(lambda checked, r=result: self.show_bid_details(result.keyword, r, 'pc'))
+                self.pc_table.setCellWidget(pc_row, 9, pc_detail_button)
             
             logger.info(f"테이블 새로고침 완료: {len(all_keywords)}개 키워드")
             
@@ -1609,297 +1621,122 @@ class PowerLinkResultsWidget(QWidget):
         except Exception as e:
             logger.error(f"테이블 클리어 실패: {e}")
     
-    def add_keyword_to_table_row(self, table: QTableWidget, row: int, result: KeywordAnalysisResult, device_type: str):
-        """테이블 특정 행에 키워드 데이터 추가"""
-        try:
-            # 0. 체크박스 (히스토리 테이블과 동일한 스타일)
-            checkbox = QCheckBox()
-            checkbox.setStyleSheet(f"""
-                QCheckBox {{
-                    spacing: 0px;
-                    margin: 0px;
-                    padding: 0px;
-                    border: none;
-                    background-color: transparent;
-                }}
-                QCheckBox::indicator {{
-                    width: 16px;
-                    height: 16px;
-                    border: 2px solid #ccc;
-                    border-radius: 3px;
-                    background-color: white;
-                    margin: 0px;
-                }}
-                QCheckBox::indicator:checked {{
-                    background-color: {ModernStyle.COLORS['primary']};
-                    border-color: {ModernStyle.COLORS['primary']};
-                    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
-                }}
-                QCheckBox::indicator:hover {{
-                    border-color: #999999;
-                    background-color: #f8f9fa;
-                }}
-                QCheckBox::indicator:checked:hover {{
-                    background-color: #0056b3;
-                    border-color: #0056b3;
-                }}
-            """)
-            checkbox.stateChanged.connect(lambda: self.update_delete_button_state())
-            
-            # 체크박스를 중앙에 배치하기 위한 컨테이너 위젯
-            checkbox_widget = QWidget()
-            checkbox_layout = QHBoxLayout(checkbox_widget)
-            checkbox_layout.setContentsMargins(0, 0, 0, 0)
-            checkbox_layout.addWidget(checkbox)
-            checkbox_layout.setAlignment(Qt.AlignCenter)
-            
-            table.setCellWidget(row, 0, checkbox_widget)
-            
-            # 1. 키워드
-            table.setItem(row, 1, QTableWidgetItem(result.keyword))
-            
-            # 2. 월검색량 (device specific)
-            if device_type == 'mobile':
-                if hasattr(result, 'mobile_search_volume') and result.mobile_search_volume is not None and result.mobile_search_volume >= 0:
-                    volume_text, volume_value = safe_format_number(result.mobile_search_volume, "int")
-                    search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
-                else:
-                    search_volume_item = SortableTableWidgetItem("-", 0)
-            else:  # PC
-                if hasattr(result, 'pc_search_volume') and result.pc_search_volume is not None and result.pc_search_volume >= 0:
-                    volume_text, volume_value = safe_format_number(result.pc_search_volume, "int")
-                    search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
-                else:
-                    search_volume_item = SortableTableWidgetItem("-", 0)
-            table.setItem(row, 2, search_volume_item)
-            
-            # 디바이스별 데이터 설정
-            if device_type == 'mobile':
-                # 3. 클릭수
-                if hasattr(result, 'mobile_clicks') and result.mobile_clicks is not None and result.mobile_clicks >= 0:
-                    clicks_text, clicks_value = safe_format_number(result.mobile_clicks, "float1")
-                    clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
-                else:
-                    clicks_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 3, clicks_item)
-                
-                # 4. 클릭률
-                if hasattr(result, 'mobile_ctr') and result.mobile_ctr is not None and result.mobile_ctr >= 0:
-                    ctr_text, ctr_value = safe_format_number(result.mobile_ctr, "float2", "%")
-                    ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
-                else:
-                    ctr_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 4, ctr_item)
-                
-                # 5. 1p노출위치
-                if hasattr(result, 'mobile_first_page_positions') and result.mobile_first_page_positions is not None and result.mobile_first_page_positions > 0:
-                    position_text, position_value = safe_format_number(result.mobile_first_page_positions, "int", "위까지")
-                    position_item = SortableTableWidgetItem(position_text, position_value)
-                else:
-                    position_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 5, position_item)
-                
-                # 6. 1등광고비
-                if hasattr(result, 'mobile_first_position_bid') and result.mobile_first_position_bid is not None and result.mobile_first_position_bid > 0:
-                    first_bid_text, first_bid_value = safe_format_number(result.mobile_first_position_bid, "int", "원")
-                    first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
-                else:
-                    first_bid_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 6, first_bid_item)
-                
-                # 7. 최소노출가격
-                if hasattr(result, 'mobile_min_exposure_bid') and result.mobile_min_exposure_bid is not None and result.mobile_min_exposure_bid > 0:
-                    min_bid_text, min_bid_value = safe_format_number(result.mobile_min_exposure_bid, "int", "원")
-                    min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
-                else:
-                    min_bid_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 7, min_bid_item)
-                
-                # 8. 추천순위
-                mobile_rank = getattr(result, 'mobile_recommendation_rank', 0) if hasattr(result, 'mobile_recommendation_rank') else 0
-                if mobile_rank > 0:
-                    rank_item = SortableTableWidgetItem(str(mobile_rank), mobile_rank)
-                else:
-                    rank_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 8, rank_item)
-                
-            else:  # PC
-                # 3. 클릭수
-                if hasattr(result, 'pc_clicks') and result.pc_clicks is not None and result.pc_clicks >= 0:
-                    clicks_text, clicks_value = safe_format_number(result.pc_clicks, "float1")
-                    clicks_item = SortableTableWidgetItem(clicks_text, clicks_value)
-                else:
-                    clicks_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 3, clicks_item)
-                
-                # 4. 클릭률
-                if hasattr(result, 'pc_ctr') and result.pc_ctr is not None and result.pc_ctr >= 0:
-                    ctr_text, ctr_value = safe_format_number(result.pc_ctr, "float2", "%")
-                    ctr_item = SortableTableWidgetItem(ctr_text, ctr_value)
-                else:
-                    ctr_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 4, ctr_item)
-                
-                # 5. 1p노출위치
-                if hasattr(result, 'pc_first_page_positions') and result.pc_first_page_positions is not None and result.pc_first_page_positions > 0:
-                    position_text, position_value = safe_format_number(result.pc_first_page_positions, "int", "위까지")
-                    position_item = SortableTableWidgetItem(position_text, position_value)
-                else:
-                    position_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 5, position_item)
-                
-                # 6. 1등광고비
-                if hasattr(result, 'pc_first_position_bid') and result.pc_first_position_bid is not None and result.pc_first_position_bid > 0:
-                    first_bid_text, first_bid_value = safe_format_number(result.pc_first_position_bid, "int", "원")
-                    first_bid_item = SortableTableWidgetItem(first_bid_text, first_bid_value)
-                else:
-                    first_bid_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 6, first_bid_item)
-                
-                # 7. 최소노출가격
-                if hasattr(result, 'pc_min_exposure_bid') and result.pc_min_exposure_bid is not None and result.pc_min_exposure_bid > 0:
-                    min_bid_text, min_bid_value = safe_format_number(result.pc_min_exposure_bid, "int", "원")
-                    min_bid_item = SortableTableWidgetItem(min_bid_text, min_bid_value)
-                else:
-                    min_bid_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 7, min_bid_item)
-                
-                # 8. 추천순위
-                pc_rank = getattr(result, 'pc_recommendation_rank', 0) if hasattr(result, 'pc_recommendation_rank') else 0
-                if pc_rank > 0:
-                    rank_item = SortableTableWidgetItem(str(pc_rank), pc_rank)
-                else:
-                    rank_item = SortableTableWidgetItem("-", 0)
-                table.setItem(row, 8, rank_item)
-            
-            # 9. 상세보기 버튼 (셀 전체를 채우는 초록색 버튼)
-            detail_button = QPushButton("상세")
-            detail_button.setStyleSheet("""
-                QPushButton {
-                    background-color: #10b981;
-                    color: white;
-                    border: none;
-                    border-radius: 0px;
-                    font-weight: 600;
-                    font-size: 13px;
-                    margin: 0px;
-                    padding: 0px;
-                }
-                QPushButton:hover {
-                    background-color: #059669;
-                }
-                QPushButton:pressed {
-                    background-color: #047857;
-                }
-            """)
-            detail_button.clicked.connect(lambda: self.show_bid_details_dialog(result, device_type))
-            table.setCellWidget(row, 9, detail_button)
-            
-        except Exception as e:
-            logger.error(f"테이블 행 추가 실패: row {row}, device {device_type}: {e}")
-    
     def update_delete_button_state(self):
-        """선택삭제 버튼 상태 업데이트"""
+        """삭제 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
         try:
-            # 모바일 테이블 체크 여부 확인 (아이템 체크 방식)
-            mobile_checked = False
-            mobile_count = 0
-            if hasattr(self, 'mobile_table'):
-                for row in range(self.mobile_table.rowCount()):
-                    checkbox_item = self.mobile_table.item(row, 0)
-                    if checkbox_item and checkbox_item.checkState() == Qt.Checked:
-                        mobile_checked = True
-                        mobile_count += 1
+            # 모바일 테이블 선택 상태 확인
+            mobile_selected = self.mobile_table.get_selected_count()
+            self.mobile_delete_button.setEnabled(mobile_selected > 0)
             
-            # PC 테이블 체크 여부 확인 (아이템 체크 방식)
-            pc_checked = False
-            pc_count = 0
-            if hasattr(self, 'pc_table'):
-                for row in range(self.pc_table.rowCount()):
-                    checkbox_item = self.pc_table.item(row, 0)
-                    if checkbox_item and checkbox_item.checkState() == Qt.Checked:
-                        pc_checked = True
-                        pc_count += 1
+            # PC 테이블 선택 상태 확인
+            pc_selected = self.pc_table.get_selected_count()
+            self.pc_delete_button.setEnabled(pc_selected > 0)
             
-            # 버튼 상태 업데이트
-            if hasattr(self, 'mobile_delete_button'):
-                self.mobile_delete_button.setEnabled(mobile_checked)
-                # 선택된 개수 표시
-                if mobile_checked:
-                    self.mobile_delete_button.setText(f"🗑️ 선택 삭제 ({mobile_count})")
-                else:
-                    self.mobile_delete_button.setText("🗑️ 선택 삭제")
-            
-            if hasattr(self, 'pc_delete_button'):
-                self.pc_delete_button.setEnabled(pc_checked)
-                # 선택된 개수 표시
-                if pc_checked:
-                    self.pc_delete_button.setText(f"🗑️ 선택 삭제 ({pc_count})")
-                else:
-                    self.pc_delete_button.setText("🗑️ 선택 삭제")
-                    
+            # 버튼 텍스트 업데이트
+            if mobile_selected > 0:
+                self.mobile_delete_button.setText(f"🗑️ 선택 삭제 ({mobile_selected})")
+            else:
+                self.mobile_delete_button.setText("🗑️ 선택 삭제")
+                
+            if pc_selected > 0:
+                self.pc_delete_button.setText(f"🗑️ 선택 삭제 ({pc_selected})")
+            else:
+                self.pc_delete_button.setText("🗑️ 선택 삭제")
+                
         except Exception as e:
             logger.error(f"삭제 버튼 상태 업데이트 실패: {e}")
     
-    def delete_selected_mobile_keywords(self):
-        """모바일 선택된 키워드 삭제"""
-        self.delete_selected_keywords_from_table(self.mobile_table, "모바일")
-    
-    def delete_selected_pc_keywords(self):
-        """PC 선택된 키워드 삭제"""
-        self.delete_selected_keywords_from_table(self.pc_table, "PC")
-    
-    def delete_selected_keywords_from_table(self, table: QTableWidget, device_name: str):
-        """선택된 키워드를 테이블에서 삭제"""
+    def delete_selected_keywords(self, device_type: str):
+        """선택된 키워드만 삭제 (실제 선택삭제)"""
         try:
-            # 선택된 키워드들 찾기 (아이템 체크 방식)
+            # 선택된 키워드 수집
             selected_keywords = []
-            selected_rows = []
             
-            for row in range(table.rowCount()):
-                checkbox_item = table.item(row, 0)
-                if checkbox_item and checkbox_item.checkState() == Qt.Checked:
-                    keyword_item = table.item(row, 1)
-                    if keyword_item:
-                        selected_keywords.append(keyword_item.text())
-                        selected_rows.append(row)
+            # 모바일 테이블에서 체크된 키워드 수집
+            for row in self.mobile_table.get_checked_rows():
+                keyword_item = self.mobile_table.item(row, 1)  # 키워드는 1번 컬럼
+                if keyword_item:
+                    keyword = keyword_item.text()
+                    if keyword not in selected_keywords:
+                        selected_keywords.append(keyword)
+            
+            # PC 테이블에서도 체크된 키워드 수집 (중복 방지)
+            for row in self.pc_table.get_checked_rows():
+                keyword_item = self.pc_table.item(row, 1)  # 키워드는 1번 컬럼  
+                if keyword_item:
+                    keyword = keyword_item.text()
+                    if keyword not in selected_keywords:
+                        selected_keywords.append(keyword)
             
             if not selected_keywords:
                 return
             
-            # 모던 확인 다이얼로그
+            # 선택삭제 확인 다이얼로그
             from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
             dialog = ModernConfirmDialog(
                 self,
-                f"{device_name} 키워드 삭제 확인",
-                f"선택된 {len(selected_keywords)}개의 키워드를 삭제하시겠습니까?\\n\\n"
-                f"삭제할 키워드: {', '.join(selected_keywords[:3])}{'...' if len(selected_keywords) > 3 else ''}\\n\\n"
-                f"이 작업은 되돌릴 수 없습니다.",
+                "키워드 삭제 확인",
+                f"선택된 {len(selected_keywords)}개 키워드를 삭제하시겠습니까?",
                 confirm_text="삭제",
                 cancel_text="취소",
                 icon="🗑️"
             )
             
             if dialog.exec() == ModernConfirmDialog.Accepted:
-                # 메모리 데이터베이스에서 제거
+                # 선택된 키워드만 메모리 데이터베이스에서 제거
                 for keyword in selected_keywords:
                     keyword_database.remove_keyword(keyword)
-                
-                # 테이블에서 제거 (역순으로 제거해야 인덱스 꼬임 방지)
-                for row in sorted(selected_rows, reverse=True):
-                    table.removeRow(row)
                 
                 # 순위 재계산
                 keyword_database.recalculate_all_rankings()
                 
-                # 저장 버튼 상태 업데이트
+                # 테이블 전체 재구성 (남은 키워드들로)
+                self.update_all_tables()
+                
+                # UI 상태 업데이트
+                self.update_delete_button_state()
                 self.update_save_button_state()
                 
-                log_manager.add_log(f"PowerLink {device_name} 키워드 {len(selected_keywords)}개 삭제", "success")
+                # 성공 메시지
+                log_manager.add_log(f"PowerLink 선택된 {len(selected_keywords)}개 키워드 삭제 완료", "success")
                 
         except Exception as e:
-            logger.error(f"{device_name} 키워드 삭제 실패: {e}")
-            log_manager.add_log(f"PowerLink {device_name} 키워드 삭제 실패: {e}", "error")
+            logger.error(f"키워드 삭제 실패: {e}")
+            log_manager.add_log(f"PowerLink 키워드 삭제 실패: {e}", "error")
+    
+    
+    def _update_rankings_in_tables(self):
+        """테이블의 추천순위 컬럼만 업데이트 (전체 새로고침 없이)"""
+        try:
+            # 모바일 테이블 순위 업데이트
+            for row in range(self.mobile_table.rowCount()):
+                keyword_item = self.mobile_table.item(row, 1)  # 키워드는 1번 컬럼
+                if keyword_item:
+                    keyword = keyword_item.text()
+                    result = keyword_database.get_keyword(keyword)
+                    if result:
+                        # 추천순위 업데이트 (8번 컬럼)
+                        rank_text = f"{result.mobile_recommendation_rank}위" if result.mobile_recommendation_rank > 0 else "-"
+                        rank_item = self.mobile_table.item(row, 8)
+                        if rank_item:
+                            rank_item.setText(rank_text)
+            
+            # PC 테이블 순위 업데이트
+            for row in range(self.pc_table.rowCount()):
+                keyword_item = self.pc_table.item(row, 1)  # 키워드는 1번 컬럼
+                if keyword_item:
+                    keyword = keyword_item.text()
+                    result = keyword_database.get_keyword(keyword)
+                    if result:
+                        # 추천순위 업데이트 (8번 컬럼)
+                        rank_text = f"{result.pc_recommendation_rank}위" if result.pc_recommendation_rank > 0 else "-"
+                        rank_item = self.pc_table.item(row, 8)
+                        if rank_item:
+                            rank_item.setText(rank_text)
+                            
+        except Exception as e:
+            logger.error(f"순위 업데이트 실패: {e}")
+    
     
     def show_bid_details_dialog(self, result, device_type: str):
         """입찰가 상세 다이얼로그 표시"""
@@ -2185,51 +2022,45 @@ class BidDetailsDialog(QDialog):
             QMessageBox.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
     
     def view_selected_history(self):
-        """선택된 히스토리 항목 보기 (1개 또는 여러 개 선택 가능 - 키워드 병합)"""
+        """선택된 히스토리 항목 보기 (1개만 선택된 경우)"""
         try:
             selected_rows = self.history_table.get_checked_rows()
             
-            if len(selected_rows) == 0:
+            if len(selected_rows) != 1:
                 from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-                ModernInfoDialog.warning(self, "선택 없음", "보려는 기록을 선택해주세요.")
+                if len(selected_rows) == 0:
+                    ModernInfoDialog.warning(self, "선택 없음", "보려는 기록을 선택해주세요.")
+                else:
+                    ModernInfoDialog.warning(self, "선택 오류", "하나의 기록만 선택해주세요.")
                 return
             
-            # 선택된 모든 세션의 키워드 데이터 병합
-            merged_data = {}
-            session_names = []
+            # 선택된 행의 세션 데이터 가져오기
+            row = selected_rows[0]
+            session_name_item = self.history_table.item(row, 1)
             
-            for row in selected_rows:
-                session_name_item = self.history_table.item(row, 1)
-                
-                if not session_name_item:
-                    continue
-                
-                session_name = session_name_item.text()
-                session_names.append(session_name)
-                
-                # 세션 데이터 로드
-                session_data = keyword_database.load_session(session_name)
-                if session_data:
-                    # 키워드 데이터 병합 (중복시 최신 데이터 우선)
-                    merged_data.update(session_data)
-            
-            if not merged_data:
+            if not session_name_item:
                 from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-                ModernInfoDialog.warning(self, "로드 실패", "선택된 세션의 데이터를 로드할 수 없습니다.")
+                ModernInfoDialog.warning(self, "데이터 오류", "선택된 기록의 데이터를 찾을 수 없습니다.")
                 return
             
-            # 병합된 데이터를 현재 분석으로 설정
-            self.set_keywords_data(merged_data)
+            session_name = session_name_item.text()
             
-            # 성공 메시지
-            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-            if len(selected_rows) == 1:
-                message = f"'{session_names[0]}' 세션이 현재 분석으로 로드되었습니다.\n\n모바일/PC 탭에서 확인하실 수 있습니다."
+            # 해당 세션의 키워드 데이터 로드하고 표시
+            session_data = keyword_database.load_session(session_name)
+            if session_data:
+                # 새로운 분석으로 설정
+                self.set_keywords_data(session_data)
+                
+                # 성공 메시지
+                from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+                ModernInfoDialog.success(
+                    self, 
+                    "기록 로드 완료", 
+                    f"'{session_name}' 세션이 현재 분석으로 로드되었습니다.\n\n모바일/PC 탭에서 확인하실 수 있습니다."
+                )
             else:
-                session_list = "\n".join([f"• {name}" for name in session_names])
-                message = f"{len(selected_rows)}개 세션의 키워드가 병합되어 로드되었습니다:\n\n{session_list}\n\n총 {len(merged_data)}개 키워드를 모바일/PC 탭에서 확인하실 수 있습니다."
-            
-            ModernInfoDialog.success(self, "기록 로드 완료", message)
+                from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+                ModernInfoDialog.warning(self, "로드 실패", f"'{session_name}' 세션 데이터를 로드할 수 없습니다.")
             
         except Exception as e:
             logger.error(f"히스토리 보기 실패: {e}")
@@ -2240,21 +2071,21 @@ class BidDetailsDialog(QDialog):
         """히스토리 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
         selected_count = self.history_table.get_selected_count()
         
-        # 모든 버튼: 1개 이상 선택시 활성화 (보기 버튼도 여러 개 선택 허용)
+        # 삭제 및 내보내기 버튼: 1개 이상 선택시 활성화
         has_selection = selected_count > 0
         self.delete_history_button.setEnabled(has_selection)
         self.export_selected_history_button.setEnabled(has_selection)
-        self.view_history_button.setEnabled(has_selection)
+        
+        # 보기 버튼: 정확히 1개만 선택시 활성화
+        self.view_history_button.setEnabled(selected_count == 1)
         
         # 버튼 텍스트 업데이트
         if selected_count > 0:
             self.delete_history_button.setText(f"🗑️ 선택 삭제 ({selected_count})")
             self.export_selected_history_button.setText(f"💾 선택 저장 ({selected_count})")
-            if selected_count == 1:
-                self.view_history_button.setText("👀 보기")
-            else:
-                self.view_history_button.setText(f"👀 보기 ({selected_count}개 병합)")
         else:
             self.delete_history_button.setText("🗑️ 선택 삭제")
             self.export_selected_history_button.setText("💾 선택 저장")
-            self.view_history_button.setText("👀 보기")
+        
+        # 보기 버튼은 항상 기본 텍스트
+        self.view_history_button.setText("👀 보기")

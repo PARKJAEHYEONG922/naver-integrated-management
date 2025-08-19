@@ -110,7 +110,7 @@ class TextProcessor:
                 unique_keywords.append(cleaned)  # 원본 형태로 저장
                 seen.add(normalized)
         
-        logger.info(f"중복 제거 완료: {len(keywords)} -> {len(unique_keywords)}개")
+        logger.debug(f"중복 제거 완료: {len(keywords)} -> {len(unique_keywords)}개")
         return unique_keywords
     
     @staticmethod

@@ -46,7 +46,29 @@ class KeywordDatabase:
         
     def _calculate_hybrid_rankings(self, device_type: str, alpha: float = 0.7) -> List[KeywordAnalysisResult]:
         """하이브리드 방식 추천순위 계산 (통합 메서드)"""
-        keywords = self.get_all_keywords()
+        all_keywords = self.get_all_keywords()
+        
+        # 완전한 데이터가 있는 키워드들만 필터링 (분석 완료된 것들만)
+        keywords = []
+        for keyword in all_keywords:
+            if device_type == 'pc':
+                # PC 데이터가 모두 유효한 경우만 포함
+                if (keyword.pc_search_volume >= 0 and 
+                    keyword.pc_clicks >= 0 and 
+                    keyword.pc_ctr >= 0 and
+                    keyword.pc_min_exposure_bid > 0):
+                    keywords.append(keyword)
+            else:  # mobile
+                # 모바일 데이터가 모두 유효한 경우만 포함
+                if (keyword.mobile_search_volume >= 0 and 
+                    keyword.mobile_clicks >= 0 and 
+                    keyword.mobile_ctr >= 0 and
+                    keyword.mobile_min_exposure_bid > 0):
+                    keywords.append(keyword)
+        
+        # 유효한 키워드가 없으면 빈 리스트 반환
+        if not keywords:
+            return all_keywords
         
         def hybrid_efficiency_score(result: KeywordAnalysisResult) -> float:
             # device_type에 따라 필드 선택
@@ -107,14 +129,21 @@ class KeywordDatabase:
         # 키워드 리스트만 추출
         sorted_keywords = [keyword for keyword, score in sorted_keywords]
         
-        # device_type에 따라 순위 할당
+        # 먼저 모든 키워드의 순위를 -1로 초기화 (분석 대기 상태)
+        for keyword in all_keywords:
+            if device_type == 'pc':
+                keyword.pc_recommendation_rank = -1
+            else:  # mobile
+                keyword.mobile_recommendation_rank = -1
+        
+        # 유효한 키워드들에만 순위 할당
         for i, keyword in enumerate(sorted_keywords):
             if device_type == 'pc':
                 keyword.pc_recommendation_rank = i + 1
             else:  # mobile
                 keyword.mobile_recommendation_rank = i + 1
             
-        return sorted_keywords
+        return all_keywords
         
     def calculate_pc_rankings(self, alpha: float = 0.7) -> List[KeywordAnalysisResult]:
         """PC 추천순위 계산 및 반환 (하이브리드 방식)"""

@@ -19,7 +19,7 @@ from src.foundation.logging import get_logger
 from .models import AnalysisProgress
 from .service import keyword_database
 from .worker import PowerLinkAnalysisWorker
-from src.toolbox.text_utils import parse_keywords_from_text, process_keywords
+from src.toolbox.text_utils import parse_keywords_from_text, process_keywords, TextProcessor
 
 logger = get_logger("features.powerlink_analyzer.control_widget")
 
@@ -46,6 +46,7 @@ class PowerLinkControlWidget(QWidget):
         self.analysis_worker = None  # 분석 워커 스레드
         self.current_analysis_total = 0  # 현재 분석 중인 총 키워드 개수
         self.analysis_in_progress = False  # 분석 진행 중 여부 플래그
+        self.results_widget = None  # 결과 위젯 참조 (테이블 키워드 확인용)
         
         # 브라우저는 worker에서 관리
         
@@ -271,43 +272,24 @@ class PowerLinkControlWidget(QWidget):
         
         # 키워드 파싱
         keywords = parse_keywords_from_text(keywords_text)
-        existing_keywords = set(self.keywords_data.keys())
+        
+        # 테이블 위젯에 표시된 키워드들과 중복 체크 (정규화된 형태)
+        existing_keywords = self.get_table_keywords()
+        
+        logger.debug(f"테이블 키워드 {len(existing_keywords)}개, 정규화된 키워드: {existing_keywords}")
         
         # 중복 키워드 감지 및 로깅
         original_count = len(keywords)
+        logger.debug(f"입력된 키워드 {original_count}개: {keywords}")
         processed_keywords = process_keywords(keywords, existing_keywords)
         processed_count = len(processed_keywords)
+        logger.debug(f"중복 제거 후 키워드 {processed_count}개: {processed_keywords}")
         
-        # 중복 키워드 로깅
+        # 중복 키워드 로깅 (단순화)
         if original_count != processed_count:
             removed_count = original_count - processed_count
-            # 제거된 키워드들 찾기
-            processed_set = set(keyword.strip().replace(' ', '').upper() for keyword in processed_keywords)
-            removed_keywords = []
-            seen = set()
-            for original in keywords:
-                normalized = original.strip().replace(' ', '').upper()
-                if normalized not in processed_set or normalized in seen:
-                    if normalized not in seen:  # 중복으로 제거된 것만 기록
-                        removed_keywords.append(original)
-                    seen.add(normalized)
-            
-            # 기존 키워드와 중복인 것들도 찾기
-            existing_duplicates = []
-            for original in keywords:
-                normalized = original.strip().replace(' ', '').upper()
-                if normalized in existing_keywords:
-                    existing_duplicates.append(original)
-            
-            if removed_keywords or existing_duplicates:
-                total_removed = len(removed_keywords) + len(existing_duplicates)
-                duplicate_list = removed_keywords + existing_duplicates
-                duplicate_text = ", ".join(f"'{dup}'" for dup in duplicate_list)
-                log_manager.add_log(f"🔄 중복 키워드 감지: {total_removed}개 자동 제거됨", "info")
-                log_manager.add_log(f"   제거된 중복 키워드: {duplicate_text}", "info")
-                log_manager.add_log(f"   분석 대상: {processed_count}개 키워드 (중복 제거 후)", "info")
-            else:
-                log_manager.add_log(f"✅ 중복 키워드 없음: {processed_count}개 키워드 분석 시작", "info")
+            log_manager.add_log(f"🔄 중복 키워드 {removed_count}개 제거됨 (테이블 기준)", "info")
+            log_manager.add_log(f"   분석 대상: {processed_count}개 키워드", "info")
         else:
             log_manager.add_log(f"✅ 중복 키워드 없음: {processed_count}개 키워드 분석 시작", "info")
         
@@ -322,9 +304,9 @@ class PowerLinkControlWidget(QWidget):
             dialog.exec()
             return
         
-        # 키워드들을 즉시 테이블에 추가 (데이터 로딩 전 상태로)
-        for keyword in processed_keywords:
-            self.keyword_added_immediately.emit(keyword)
+        # 키워드 즉시 추가 제거 - 분석 완료 후에만 테이블에 표시
+        logger.info(f"분석 대상 키워드 {len(processed_keywords)}개 준비 완료: {processed_keywords}")
+        # 즉시 추가하지 않고 분석 완료 후 set_keywords_data에서 일괄 표시
         
         # 키워드 입력창 자동 클리어
         self.keyword_input.clear()
@@ -500,8 +482,6 @@ class PowerLinkControlWidget(QWidget):
             
             # 분석 진행 중에는 순위 계산하지 않음 (전체 완료 후 일괄 계산)
             
-            # 키워드 결과 저장 완료
-            
             # 키워드 개수 업데이트
             self.update_keyword_count_display()
     
@@ -535,6 +515,29 @@ class PowerLinkControlWidget(QWidget):
         self.keywords_data_cleared.emit()
         log_manager.add_log("PowerLink 데이터 전체 클리어 완료", "info")
     
+    def get_table_keywords(self) -> set:
+        """테이블 위젯에 현재 표시된 키워드들을 정규화된 형태로 반환"""
+        table_keywords = set()
+        try:
+            if self.results_widget:
+                # 모바일 테이블에서 키워드 수집 (모바일과 PC는 동일한 키워드 세트)
+                mobile_table = self.results_widget.mobile_table
+                for row in range(mobile_table.rowCount()):
+                    keyword_item = mobile_table.item(row, 1)  # 키워드는 1번 컬럼
+                    if keyword_item:
+                        keyword = keyword_item.text().strip()
+                        if keyword:
+                            normalized = TextProcessor.normalize_keyword(keyword)
+                            table_keywords.add(normalized)
+                
+                logger.debug(f"테이블에서 {len(table_keywords)}개 키워드 수집: {table_keywords}")
+            else:
+                logger.warning("results_widget 참조가 없어 테이블 키워드를 확인할 수 없음")
+        except Exception as e:
+            logger.error(f"테이블 키워드 수집 실패: {e}")
+        
+        return table_keywords
+
     def update_keyword_count_display(self):
         """키워드 개수 실시간 업데이트 (타이머용, 원본과 동일)"""
         completed_count = len(self.keywords_data)
@@ -545,7 +548,9 @@ class PowerLinkControlWidget(QWidget):
             self.keyword_count_label.setText(f"완료된 키워드: {completed_count}/{total_count}개")
         else:
             # 분석 완료 또는 대기 중일 때
-            self.keyword_count_label.setText(f"등록된 키워드: {completed_count}개")
+            table_keywords = self.get_table_keywords()
+            table_count = len(table_keywords)
+            self.keyword_count_label.setText(f"테이블 키워드: {table_count}개")
     
     
     
