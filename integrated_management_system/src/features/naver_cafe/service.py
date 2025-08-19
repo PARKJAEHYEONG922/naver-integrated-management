@@ -9,8 +9,7 @@ from pathlib import Path
 
 # PySide6 imports
 from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, 
-    QApplication, QFileDialog, QMessageBox
+    QFileDialog, QMessageBox
 )
 
 # Foundation imports
@@ -416,136 +415,20 @@ class NaverCafeExtractionService:
                 QMessageBox.critical(parent_widget, "오류", f"CSV 저장 중 오류가 발생했습니다.\n{str(e)}")
             return False
     
-    def show_save_format_dialog_and_export(self, users_data: List[List[str]], parent_widget=None) -> bool:
-        """저장 포맷 선택 다이얼로그를 표시하고 해당 포맷으로 내보내기 - 원본과 동일"""
+    def export_users_data(self, users_data: List[List[str]], format_type: str, parent_widget=None) -> bool:
+        """사용자 데이터 내보내기 - 비즈니스 로직만 담당 (CLAUDE.md: UI 분리)"""
         try:
-            
-            # 원본과 동일한 저장 방식 선택 다이얼로그
-            dialog = QDialog(parent_widget)
-            dialog.setWindowTitle("저장 방식 선택")
-            dialog.setFixedSize(600, 300)
-            dialog.setModal(True)
-            
-            # 레이아웃
-            layout = QVBoxLayout(dialog)
-            layout.setSpacing(20)
-            layout.setContentsMargins(30, 30, 30, 30)
-            
-            # 제목
-            title_label = QLabel("선택된 기록의 저장 방식을 선택해주세요")
-            title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #2d3748;")
-            layout.addWidget(title_label)
-            
-            # 설명
-            desc_label = QLabel(f"• Excel: 사용자ID, 닉네임 등 전체 정보\n• Meta CSV: 이메일 형태로 Meta 광고 활용 가능\n• 사용자: {len(users_data)}명")
-            desc_label.setStyleSheet("font-size: 12px; color: #4a5568; line-height: 1.4;")
-            layout.addWidget(desc_label)
-            
-            # 버튼 레이아웃
-            button_layout = QHBoxLayout()
-            button_layout.setSpacing(20)
-            button_layout.setContentsMargins(20, 0, 20, 0)
-            
-            excel_button = QPushButton("📊 Excel 파일")
-            excel_button.setStyleSheet("""
-                QPushButton {
-                    background-color: #3182ce;
-                    color: white;
-                    border: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    min-width: 100px;
-                    min-height: 40px;
-                }
-                QPushButton:hover {
-                    background-color: #2c5aa0;
-                }
-            """)
-            
-            meta_button = QPushButton("📧 Meta CSV")
-            meta_button.setStyleSheet("""
-                QPushButton {
-                    background-color: #e53e3e;
-                    color: white;
-                    border: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    min-width: 100px;
-                    min-height: 40px;
-                }
-                QPushButton:hover {
-                    background-color: #c53030;
-                }
-            """)
-            
-            cancel_button = QPushButton("취소")
-            cancel_button.setStyleSheet("""
-                QPushButton {
-                    background-color: #718096;
-                    color: white;
-                    border: none;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    min-width: 100px;
-                    min-height: 40px;
-                }
-                QPushButton:hover {
-                    background-color: #4a5568;
-                }
-            """)
-            
-            button_layout.addWidget(excel_button)
-            button_layout.addWidget(meta_button)
-            button_layout.addWidget(cancel_button)
-            layout.addLayout(button_layout)
-            
-            # 결과 변수
-            result = None
-            
-            def on_excel():
-                nonlocal result
-                result = "excel"
-                dialog.accept()
-            
-            def on_meta():
-                nonlocal result
-                result = "meta_csv"
-                dialog.accept()
-            
-            def on_cancel():
-                nonlocal result
-                result = None
-                dialog.reject()
-            
-            excel_button.clicked.connect(on_excel)
-            meta_button.clicked.connect(on_meta)
-            cancel_button.clicked.connect(on_cancel)
-            
-            # 다이얼로그 화면 중앙 위치 설정
-            screen = QApplication.primaryScreen()
-            screen_rect = screen.availableGeometry()
-            center_x = screen_rect.x() + screen_rect.width() // 2 - dialog.width() // 2
-            center_y = screen_rect.y() + screen_rect.height() // 2 - dialog.height() // 2
-            dialog.move(center_x, center_y)
-            
-            dialog.exec()
-            
             # 선택된 형식으로 내보내기
-            if result == "excel":
+            if format_type == "excel":
                 return self.export_to_excel_with_dialog(users_data, parent_widget)
-            elif result == "meta_csv":
+            elif format_type == "meta_csv":
                 return self.export_to_meta_csv_with_dialog(users_data, parent_widget)
             else:
+                logger.warning(f"지원하지 않는 내보내기 형식: {format_type}")
                 return False
                 
         except Exception as e:
-            logger.error(f"저장 포맷 선택 다이얼로그 오류: {e}")
+            logger.error(f"사용자 데이터 내보내기 오류: {e}")
             return False
     
     def _show_save_completion_dialog(self, parent_widget, title: str, message: str, file_path: str):

@@ -11,8 +11,7 @@ import asyncio
 
 from src.foundation.logging import get_logger
 from .models import KeywordAnalysisResult, AnalysisProgress, BidPosition
-from .adapters import PowerLinkDataAdapter, adaptive_rate_limiter
-from .config import POWERLINK_CONFIG, NAVER_MIN_BID
+from .adapters import PowerLinkDataAdapter, adaptive_rate_limiter, POWERLINK_CONFIG, NAVER_MIN_BID
 
 logger = get_logger("features.powerlink_analyzer.worker")
 
@@ -26,12 +25,11 @@ class PowerLinkAnalysisWorker(QThread):
     error_occurred = Signal(str)       # 오류 발생
     keyword_result_ready = Signal(str, object)  # 개별 키워드 결과 준비
     
-    def __init__(self, keywords: List[str], browser_context=None):
+    def __init__(self, keywords: List[str]):
         super().__init__()
         self.keywords = keywords
         self.should_stop = False
         self.adapter = PowerLinkDataAdapter()
-        self.external_browser_context = browser_context  # 외부에서 전달받은 브라우저 컨텍스트
         
         # 🚀 최적화된 페이지 관리
         self.pc_page = None
@@ -95,19 +93,12 @@ class PowerLinkAnalysisWorker(QThread):
         try:
             logger.info(f"파워링크 분석 워커 시작: {len(self.keywords)}개 키워드 (최적화된 병렬처리)")
             
-            # 외부에서 전달받은 브라우저 컨텍스트 사용
-            context = self.external_browser_context
-            if not context:
-                logger.error("브라우저 컨텍스트가 전달되지 않았습니다.")
-                self.error_occurred.emit("브라우저 초기화 실패: 컨텍스트가 없습니다.")
-                return
-            
             # 🚀 비동기 이벤트 루프에서 최적화된 분석 실행
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             
             try:
-                results = loop.run_until_complete(self._run_optimized_analysis(context))
+                results = loop.run_until_complete(self._run_optimized_analysis())
                 
                 if not self.should_stop and results:
                     # 분석 완료 시그널 발송
@@ -123,10 +114,9 @@ class PowerLinkAnalysisWorker(QThread):
             self.error_occurred.emit(error_msg)
             
         finally:
-            # 외부 브라우저 컨텍스트는 정리하지 않음 (control_widget에서 관리)
             logger.info("파워링크 분석 워커 종료")
     
-    async def _run_optimized_analysis(self, context):
+    async def _run_optimized_analysis(self):
         """🚀 최적화된 분석 실행 (API 병렬 + Playwright 2페이지 분리)"""
         total_keywords = len(self.keywords)
         
@@ -134,8 +124,8 @@ class PowerLinkAnalysisWorker(QThread):
             # 1단계: 초기 준비 (0% ~ 10%)
             self._emit_progress_safe('init', 0.3, "", "분석 준비 중", "페이지 초기화 및 병렬 처리 설정")
             
-            # 🚀 PC/Mobile 페이지 초기화
-            await self._initialize_pages(context)
+            # 🚀 PC/Mobile 페이지 초기화 (vendors 헬퍼로 자체 관리)
+            await self._initialize_pages()
             
             # 초기화 완료
             self._emit_progress_safe('init', 1.0, "", "병렬 작업 시작", "API 호출 + PC 크롤링 + Mobile 크롤링")
@@ -190,64 +180,43 @@ class PowerLinkAnalysisWorker(QThread):
             # 🧹 페이지 정리
             await self._cleanup_pages()
     
-    async def _initialize_pages(self, context):
-        """🚀 PC/Mobile 페이지 초기화"""
+    async def _initialize_pages(self):
+        """🚀 PC/Mobile 페이지 초기화 - vendors 헬퍼 활용"""
         try:
-            # sync_playwright를 async로 변환
-            from playwright.async_api import async_playwright
+            # vendors 헬퍼 사용으로 최적화된 브라우저 초기화
+            from src.vendors.web_automation.playwright_helper import create_playwright_helper, get_fast_browser_config
             
-            # context는 sync이므로 새로운 async context 생성
-            playwright = await async_playwright().start()
-            browser = await playwright.chromium.launch(
-                headless=True,
-                args=[
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-gpu',
-                    '--disable-blink-features=AutomationControlled'
-                ]
-            )
+            # vendors의 최적화된 설정 활용
+            config = get_fast_browser_config(headless=True)
+            self.playwright_helper = await create_playwright_helper(config)
             
-            # 새로운 async context 생성
-            self.async_context = await browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                viewport={"width": 1920, "height": 1080}
-            )
+            # vendors 헬퍼의 context와 페이지 사용 (최적화 자동 적용됨)
+            self.async_context = self.playwright_helper.context
             
-            # PC/Mobile 페이지 생성
+            # PC/Mobile 페이지 생성 (vendors 최적화 자동 적용)
             self.pc_page = await self.async_context.new_page()
             self.mobile_page = await self.async_context.new_page()
             
-            # PlaywrightHelper 최적화 자동 적용 (리소스 차단)
-            await self._setup_page_optimization(self.pc_page)
-            await self._setup_page_optimization(self.mobile_page)
-            
-            logger.info("PC/Mobile 페이지 초기화 완료")
+            logger.info("PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)")
             
         except Exception as e:
             logger.error(f"페이지 초기화 실패: {e}")
             raise
     
-    async def _setup_page_optimization(self, page):
-        """페이지 최적화 설정 (리소스 차단)"""
-        # 이미지 차단
-        await page.route("**/*.{png,jpg,jpeg,gif,svg,webp,ico}", lambda route: route.abort())
-        # 광고 차단
-        await page.route("**/ads/**", lambda route: route.abort())
-        await page.route("**/ad/**", lambda route: route.abort())
-        # 분석 스크립트 차단
-        await page.route("**/analytics/**", lambda route: route.abort())
-        await page.route("**/*google-analytics*", lambda route: route.abort())
     
     async def _cleanup_pages(self):
-        """🧹 페이지 정리"""
+        """🧹 페이지 정리 - vendors 헬퍼 활용"""
         try:
+            # 개별 페이지 정리
             if self.pc_page:
                 await self.pc_page.close()
             if self.mobile_page:
                 await self.mobile_page.close()
-            if hasattr(self, 'async_context') and self.async_context:
-                await self.async_context.close()
+            
+            # vendors 헬퍼 정리 (context, browser, playwright 모두 정리됨)
+            if hasattr(self, 'playwright_helper') and self.playwright_helper:
+                await self.playwright_helper.cleanup()
+                
             logger.info("페이지 정리 완료")
         except Exception as e:
             logger.warning(f"페이지 정리 중 오류: {e}")

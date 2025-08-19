@@ -6,12 +6,12 @@ from datetime import datetime
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QTabWidget, QTableWidget, QTableWidgetItem, 
-    QHeaderView, QApplication, QCheckBox
+    QLabel, QTabWidget, QTableWidgetItem, 
+    QHeaderView, QApplication, QDialog, QPushButton
 )
 from PySide6.QtCore import Qt
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import ModernStyle, ModernTableWidget
 from src.toolbox.ui_kit.components import ModernButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
@@ -95,52 +95,16 @@ class NaverCafeResultsWidget(QWidget):
         layout = QVBoxLayout(tab)
         layout.setSpacing(15)
         
-        # 사용자 테이블
-        self.users_table = QTableWidget()
-        self.users_table.setColumnCount(4)
-        self.users_table.setHorizontalHeaderLabels(["번호", "사용자 ID", "닉네임", "추출 시간"])
+        # 사용자 테이블 (ModernTableWidget 사용 - 체크박스 없음)
+        self.users_table = ModernTableWidget(
+            columns=["번호", "사용자 ID", "닉네임", "추출 시간"],
+            has_checkboxes=False,  # 사용자 테이블은 체크박스 없음
+            has_header_checkbox=False
+        )
         
-        # 테이블 스타일 (선택 시 파란 배경 + 흰색 글씨)
-        self.users_table.setStyleSheet(f"""
-            QTableWidget {{
-                gridline-color: {ModernStyle.COLORS['border']};
-                background-color: {ModernStyle.COLORS['bg_card']};
-                alternate-background-color: {ModernStyle.COLORS['bg_input']};
-                selection-background-color: {ModernStyle.COLORS['primary']};
-                selection-color: white;
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                font-size: 13px;
-            }}
-            QTableWidget::item {{
-                padding: 10px;
-                border-bottom: 1px solid {ModernStyle.COLORS['border']};
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-            QTableWidget::item:selected {{
-                background-color: {ModernStyle.COLORS['primary']};
-                color: white;
-            }}
-            QHeaderView::section {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border: none;
-                border-right: 1px solid {ModernStyle.COLORS['border']};
-                border-bottom: 2px solid {ModernStyle.COLORS['border']};
-                padding: 8px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-        """)
-        
-        # 헤더 설정
-        self.users_table.horizontalHeader().setStretchLastSection(True)
-        self.users_table.setAlternatingRowColors(True)
-        self.users_table.setSelectionBehavior(QTableWidget.SelectRows)
-        self.users_table.verticalHeader().setVisible(False)
-        
-        # 컬럼 너비 설정
+        # 컬럼 너비 설정 (체크박스가 없으므로 자유롭게 설정 가능)
         header = self.users_table.horizontalHeader()
-        header.resizeSection(0, int(80 * 0.8))   # 번호 (80 → 64)
+        header.resizeSection(0, int(64))   # 번호 
         header.resizeSection(1, 200)  # 사용자 ID
         header.resizeSection(2, int(180 * 0.8))  # 닉네임 (180 → 144)
         header.resizeSection(3, 150)  # 추출 시간
@@ -208,63 +172,26 @@ class NaverCafeResultsWidget(QWidget):
         
         layout.addLayout(top_layout)
         
-        # 기록 테이블
-        self.history_table = QTableWidget()
-        self.history_table.setColumnCount(6)
-        self.history_table.setHorizontalHeaderLabels([
-            "", "날짜", "카페명", "게시판명", "추출수", "페이지"
-        ])
+        # 기록 테이블 (ModernTableWidget 사용)
+        self.history_table = ModernTableWidget(
+            columns=["", "날짜", "카페명", "게시판명", "추출수", "페이지"],
+            has_checkboxes=True,  # 히스토리 테이블은 체크박스 있음
+            has_header_checkbox=True
+        )
         
-        # 테이블 스타일 (원본과 동일하게 선택 배경색 파란색, 텍스트 흰색)
-        self.history_table.setStyleSheet(f"""
-            QTableWidget {{
-                gridline-color: {ModernStyle.COLORS['border']};
-                background-color: {ModernStyle.COLORS['bg_card']};
-                alternate-background-color: {ModernStyle.COLORS['bg_input']};
-                selection-background-color: {ModernStyle.COLORS['primary']};
-                selection-color: white;
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                font-size: 13px;
-            }}
-            QTableWidget::item {{
-                padding: 12px 8px;
-                border-bottom: 1px solid {ModernStyle.COLORS['border']};
-                min-height: 30px;
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-            QTableWidget::item:selected {{
-                background-color: {ModernStyle.COLORS['primary']};
-                color: white;
-            }}
-            QHeaderView::section {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border: none;
-                border-right: 1px solid {ModernStyle.COLORS['border']};
-                border-bottom: 2px solid {ModernStyle.COLORS['border']};
-                padding: 8px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                min-height: 25px;
-                max-height: 25px;
-            }}
-        """)
-        self.history_table.horizontalHeader().setStretchLastSection(True)
-        self.history_table.setAlternatingRowColors(True)
-        self.history_table.setSelectionBehavior(QTableWidget.SelectRows)
-        self.history_table.verticalHeader().setVisible(False)
-        
-        # 컬럼 너비 설정 (원본과 동일하게)
+        # 컬럼 너비 설정 (체크박스 컬럼 제외하고 나머지만 설정)
         history_header = self.history_table.horizontalHeader()
-        history_header.resizeSection(0, 80)   # 선택 체크박스
+        # history_header.resizeSection(0, 80)   # 선택 체크박스 - ModernTableWidget에서 자동 처리
         history_header.resizeSection(1, 130)  # 날짜 + 시간 (더 넓게)
         history_header.resizeSection(2, 200)  # 카페명
         history_header.resizeSection(3, 144)  # 게시판명 
         history_header.resizeSection(4, 100)  # 추출수
         history_header.resizeSection(5, 120)  # 페이지
         
-        # 행 높이 설정 (더 넓게)
-        self.history_table.verticalHeader().setDefaultSectionSize(45)  # 행 높이 45px
+        # 행 높이는 ModernTableWidget 기본값(35px) 사용
+        
+        # 선택 상태 변경 시그널 연결
+        self.history_table.selection_changed.connect(self.update_selection_buttons)
         
         layout.addWidget(self.history_table)
         
@@ -272,23 +199,14 @@ class NaverCafeResultsWidget(QWidget):
         self.download_selected_button.clicked.connect(self.download_selected_history)
         self.delete_selected_button.clicked.connect(self.delete_selected_history)
         
-        # 헤더에 체크박스 설정 (원본과 동일하게) - 테이블 생성 후 지연 실행
-        from PySide6.QtCore import QTimer
-        QTimer.singleShot(100, self.setup_header_checkbox)
+        # ModernTableWidget에서 헤더 체크박스 자동 처리됨
         
         return tab
     
     def update_selection_buttons(self):
-        """선택된 항목 수에 따라 버튼 텍스트 업데이트"""
-        selected_count = 0
-        
-        # 선택된 체크박스 수 계산
-        for row in range(self.history_table.rowCount()):
-            checkbox_widget = self.history_table.cellWidget(row, 0)
-            if checkbox_widget:
-                checkbox = checkbox_widget.findChild(QCheckBox)
-                if checkbox and checkbox.isChecked():
-                        selected_count += 1
+        """선택된 항목 수에 따라 버튼 텍스트 업데이트 (ModernTableWidget API 사용)"""
+        # 선택된 항목 수 계산
+        selected_count = self.history_table.get_selected_count()
         
         # 버튼 텍스트 업데이트
         if selected_count > 0:
@@ -336,7 +254,7 @@ class NaverCafeResultsWidget(QWidget):
         """기록 테이블 새로고침 - service 경유 (CLAUDE.md 구조 준수)"""
         try:
             # 테이블 클리어
-            self.history_table.setRowCount(0)
+            self.history_table.clear_table()
             
             # service 경유로 기록 가져오기 (CLAUDE.md: UI는 service 경유만)
             tasks = self.service.get_extraction_history()
@@ -356,70 +274,26 @@ class NaverCafeResultsWidget(QWidget):
             logger.error(f"추출 기록 테이블 새로고침 실패: {e}")
         
     def add_history_to_table(self, task: ExtractionTask):
-        """기록 테이블에 추가 (원본과 동일하게)"""
-        row = self.history_table.rowCount()
-        self.history_table.insertRow(row)
-        
-        # 선택 체크박스 (중앙 정렬을 위한 컨테이너 위젯 사용)
-        checkbox_widget = QWidget()
-        checkbox_layout = QHBoxLayout(checkbox_widget)
-        checkbox_layout.setContentsMargins(0, 0, 0, 0)
-        checkbox_layout.setAlignment(Qt.AlignCenter)
-        
-        checkbox = QCheckBox()
-        checkbox.setStyleSheet("""
-            QCheckBox {
-                spacing: 0px;
-                padding: 0px;
-            }
-            QCheckBox::indicator {
-                width: 16px;
-                height: 16px;
-                border: 2px solid #ccc;
-                border-radius: 3px;
-                background-color: white;
-            }
-            QCheckBox::indicator:checked {
-                background-color: #007bff;
-                border-color: #007bff;
-                image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTExLjUgMy41TDUuNSA5LjVMMi41IDYuNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
-            }
-            QCheckBox::indicator:hover {
-                border-color: #999999;
-                background-color: #f8f9fa;
-            }
-            QCheckBox::indicator:checked:hover {
-                background-color: #0056b3;
-                border-color: #0056b3;
-            }
-        """)
-        
-        # 체크박스를 레이아웃에 추가
-        checkbox_layout.addWidget(checkbox)
-        
-        # 체크박스 상태 변경 시 버튼 텍스트 업데이트
-        checkbox.stateChanged.connect(self.update_selection_buttons)
-        self.history_table.setCellWidget(row, 0, checkbox_widget)
-        
+        """기록 테이블에 추가 (ModernTableWidget API 사용)"""
         # 날짜 (생성 시간)
         date_str = task.created_at.strftime("%Y-%m-%d %H:%M") if task.created_at else ""
-        date_item = QTableWidgetItem(date_str)
-        # task_id를 숨김 데이터로 저장
-        date_item.setData(Qt.UserRole, task.task_id)
-        self.history_table.setItem(row, 1, date_item)
-        
-        # 카페명
-        self.history_table.setItem(row, 2, QTableWidgetItem(task.cafe_info.name))
-        
-        # 게시판명
-        self.history_table.setItem(row, 3, QTableWidgetItem(task.board_info.name))
-        
-        # 추출수
-        self.history_table.setItem(row, 4, QTableWidgetItem(str(task.total_extracted)))
         
         # 페이지 (시작페이지-종료페이지 형식)
         page_range = f"{task.start_page}-{task.end_page}"
-        self.history_table.setItem(row, 5, QTableWidgetItem(page_range))
+        
+        # 데이터 추가 (체크박스 포함)
+        row = self.history_table.add_row_with_data([
+            date_str,  # 날짜
+            task.cafe_info.name,  # 카페명
+            task.board_info.name,  # 게시판명
+            str(task.total_extracted),  # 추출수
+            page_range  # 페이지
+        ], checkable=True)
+        
+        # task_id를 날짜 셀에 숨김 데이터로 저장
+        date_item = self.history_table.item(row, 1)  # 날짜 셀
+        if date_item:
+            date_item.setData(Qt.UserRole, task.task_id)
         
     def copy_to_clipboard(self):
         """엑셀 호환 형식으로 클립보드 복사 (원본과 동일)"""
@@ -491,38 +365,160 @@ class NaverCafeResultsWidget(QWidget):
             ModernInfoDialog.warning(self, "데이터 없음", "내보낼 사용자 데이터가 없습니다.")
             return
         
-        # service 경유로 저장 방식 선택 및 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
-        self.service.show_save_format_dialog_and_export(users_data, self)
+        # UI 레이어에서 다이얼로그 처리 후 service 호출 (CLAUDE.md: UI 분리)
+        format_type = self.show_save_format_dialog(len(users_data))
+        if format_type:
+            self.service.export_users_data(users_data, format_type, self)
     
+    def show_save_format_dialog(self, users_count: int) -> str:
+        """저장 포맷 선택 다이얼로그 표시 - UI 레이어 책임"""
+        try:
+            # 원본과 동일한 저장 방식 선택 다이얼로그
+            dialog = QDialog(self)
+            dialog.setWindowTitle("저장 방식 선택")
+            dialog.setFixedSize(600, 300)
+            dialog.setModal(True)
+            
+            # 레이아웃
+            layout = QVBoxLayout(dialog)
+            layout.setSpacing(20)
+            layout.setContentsMargins(30, 30, 30, 30)
+            
+            # 제목
+            title_label = QLabel("선택된 기록의 저장 방식을 선택해주세요")
+            title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: #2d3748;")
+            layout.addWidget(title_label)
+            
+            # 설명
+            desc_label = QLabel(f"• Excel: 사용자ID, 닉네임 등 전체 정보\n• Meta CSV: 이메일 형태로 Meta 광고 활용 가능\n• 사용자: {users_count}명")
+            desc_label.setStyleSheet("font-size: 12px; color: #4a5568; line-height: 1.4;")
+            layout.addWidget(desc_label)
+            
+            # 버튼 레이아웃
+            button_layout = QHBoxLayout()
+            button_layout.setSpacing(20)
+            button_layout.setContentsMargins(20, 0, 20, 0)
+            
+            excel_button = QPushButton("📊 Excel 파일")
+            excel_button.setStyleSheet("""
+                QPushButton {
+                    background-color: #3182ce;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    min-width: 100px;
+                    min-height: 40px;
+                }
+                QPushButton:hover {
+                    background-color: #2c5aa0;
+                }
+            """)
+            
+            meta_button = QPushButton("📧 Meta CSV")
+            meta_button.setStyleSheet("""
+                QPushButton {
+                    background-color: #e53e3e;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    min-width: 100px;
+                    min-height: 40px;
+                }
+                QPushButton:hover {
+                    background-color: #c53030;
+                }
+            """)
+            
+            cancel_button = QPushButton("취소")
+            cancel_button.setStyleSheet("""
+                QPushButton {
+                    background-color: #718096;
+                    color: white;
+                    border: none;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    min-width: 100px;
+                    min-height: 40px;
+                }
+                QPushButton:hover {
+                    background-color: #4a5568;
+                }
+            """)
+            
+            button_layout.addWidget(excel_button)
+            button_layout.addWidget(meta_button)
+            button_layout.addWidget(cancel_button)
+            layout.addLayout(button_layout)
+            
+            # 결과 변수
+            result = None
+            
+            def on_excel():
+                nonlocal result
+                result = "excel"
+                dialog.accept()
+            
+            def on_meta():
+                nonlocal result
+                result = "meta_csv"
+                dialog.accept()
+            
+            def on_cancel():
+                nonlocal result
+                result = None
+                dialog.reject()
+            
+            excel_button.clicked.connect(on_excel)
+            meta_button.clicked.connect(on_meta)
+            cancel_button.clicked.connect(on_cancel)
+            
+            # 다이얼로그 화면 중앙 위치 설정
+            screen = QApplication.primaryScreen()
+            screen_rect = screen.availableGeometry()
+            center_x = screen_rect.x() + screen_rect.width() // 2 - dialog.width() // 2
+            center_y = screen_rect.y() + screen_rect.height() // 2 - dialog.height() // 2
+            dialog.move(center_x, center_y)
+            
+            dialog.exec()
+            
+            return result
+                
+        except Exception as e:
+            logger.error(f"저장 포맷 선택 다이얼로그 오류: {e}")
+            return None
             
     def download_selected_history(self):
         """선택된 기록 다운로드 - Excel/Meta CSV 선택 다이얼로그"""
         selected_tasks = []
         selected_data = []
         
-        # 선택된 항목 찾기
-        for row in range(self.history_table.rowCount()):
-            checkbox_widget = self.history_table.cellWidget(row, 0)
-            if checkbox_widget:
-                checkbox = checkbox_widget.findChild(QCheckBox)
-                if checkbox and checkbox.isChecked():
-                        date_item = self.history_table.item(row, 1)
-                        if date_item:
-                            # 숨김 데이터에서 task_id 가져오기
-                            task_id = date_item.data(Qt.UserRole)
-                            if task_id:
-                                selected_tasks.append(task_id)
-                                
-                                # 해당 기록의 사용자 데이터 가져오기 - service 경유 (CLAUDE.md: UI는 service 경유)
-                                task_users = self.service.get_users_by_task_id(task_id)
-                                for user in task_users:
-                                    user_data = [
-                                        str(len(selected_data) + 1),  # 번호
-                                        user.user_id,                # 사용자 ID
-                                        user.nickname,               # 닉네임
-                                        user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
-                                    ]
-                                    selected_data.append(user_data)
+        # 선택된 항목 찾기 (ModernTableWidget API 사용)
+        for row in self.history_table.get_checked_rows():
+            date_item = self.history_table.item(row, 1)
+            if date_item:
+                # 숨김 데이터에서 task_id 가져오기
+                task_id = date_item.data(Qt.UserRole)
+                if task_id:
+                    selected_tasks.append(task_id)
+                    
+                    # 해당 기록의 사용자 데이터 가져오기 - service 경유 (CLAUDE.md: UI는 service 경유)
+                    task_users = self.service.get_users_by_task_id(task_id)
+                    for user in task_users:
+                        user_data = [
+                            str(len(selected_data) + 1),  # 번호
+                            user.user_id,                # 사용자 ID
+                            user.nickname,               # 닉네임
+                            user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
+                        ]
+                        selected_data.append(user_data)
         
         if not selected_tasks:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
@@ -534,11 +530,12 @@ class NaverCafeResultsWidget(QWidget):
             ModernInfoDialog.warning(self, "데이터 없음", "선택된 기록에 다운로드할 사용자 데이터가 없습니다.")
             return
         
-        # service 경유로 저장 방식 선택 및 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
-        success = self.service.show_save_format_dialog_and_export(selected_data, self)
-        
-        if success:
-            log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 다운로드 완료 (총 {len(selected_data)}명)", "success")
+        # UI 레이어에서 다이얼로그 처리 후 service 호출 (CLAUDE.md: UI 분리)
+        format_type = self.show_save_format_dialog(len(selected_data))
+        if format_type:
+            success = self.service.export_users_data(selected_data, format_type, self)
+            if success:
+                log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 다운로드 완료 (총 {len(selected_data)}명)", "success")
         
             
     def on_user_extracted(self, user: ExtractedUser):
@@ -570,23 +567,19 @@ class NaverCafeResultsWidget(QWidget):
     
     
     def delete_selected_history(self):
-        """선택된 기록 삭제"""
+        """선택된 기록 삭제 (ModernTableWidget API 사용)"""
         selected_tasks = []
         selected_rows = []
         
         # 선택된 항목 찾기
-        for row in range(self.history_table.rowCount()):
-            checkbox_widget = self.history_table.cellWidget(row, 0)
-            if checkbox_widget:
-                checkbox = checkbox_widget.findChild(QCheckBox)
-                if checkbox and checkbox.isChecked():
-                        date_item = self.history_table.item(row, 1)
-                        if date_item:
-                            # 숨김 데이터에서 task_id 가져오기
-                            task_id = date_item.data(Qt.UserRole)
-                            if task_id:
-                                selected_tasks.append(task_id)
-                                selected_rows.append(row)
+        for row in self.history_table.get_checked_rows():
+            date_item = self.history_table.item(row, 1)
+            if date_item:
+                # 숨김 데이터에서 task_id 가져오기
+                task_id = date_item.data(Qt.UserRole)
+                if task_id:
+                    selected_tasks.append(task_id)
+                    selected_rows.append(row)
         
         if not selected_tasks:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
@@ -629,25 +622,23 @@ class NaverCafeResultsWidget(QWidget):
         selected_tasks = []
         selected_data = []
         
-        # 선택된 항목 찾기
-        for row in range(self.history_table.rowCount()):
-            checkbox = self.history_table.cellWidget(row, 0)
-            if checkbox and checkbox.isChecked():
-                task_id_item = self.history_table.item(row, 1)
-                if task_id_item:
-                    task_id = task_id_item.text()
-                    selected_tasks.append(task_id)
-                    
-                    # 해당 기록의 사용자 데이터 가져오기 - Foundation DB에서 조회
-                    task_users = self._get_users_by_task_id(task_id)
-                    for user in task_users:
-                        user_data = [
-                            str(len(selected_data) + 1),  # 번호
-                            user.user_id,                # 사용자 ID
-                            user.nickname,               # 닉네임
-                            user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
-                        ]
-                        selected_data.append(user_data)
+        # 선택된 항목 찾기 (ModernTableWidget API 사용)
+        for row in self.history_table.get_checked_rows():
+            task_id_item = self.history_table.item(row, 1)
+            if task_id_item:
+                task_id = task_id_item.data(Qt.UserRole)  # 숨김 데이터에서 task_id 가져오기
+                selected_tasks.append(task_id)
+                
+                # 해당 기록의 사용자 데이터 가져오기 - Foundation DB에서 조회
+                task_users = self._get_users_by_task_id(task_id)
+                for user in task_users:
+                    user_data = [
+                        str(len(selected_data) + 1),  # 번호
+                        user.user_id,                # 사용자 ID
+                        user.nickname,               # 닉네임
+                        user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
+                    ]
+                    selected_data.append(user_data)
         
         if not selected_tasks:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
@@ -666,118 +657,9 @@ class NaverCafeResultsWidget(QWidget):
             log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 엑셀 내보내기 완료 (총 {len(selected_data)}명)", "success")
     
     
-    def setup_header_checkbox(self):
-        """QTableWidget 헤더에 체크박스 추가 (기존 방식)"""
-        try:
-            # 헤더용 체크박스 생성 (기존 스타일과 동일)
-            self.header_checkbox = QCheckBox()
-            self.header_checkbox.setStyleSheet("""
-                QCheckBox {
-                    spacing: 0px;
-                    padding: 0px;
-                }
-                QCheckBox::indicator {
-                    width: 16px;
-                    height: 16px;
-                    border: 2px solid #ccc;
-                    border-radius: 3px;
-                    background-color: white;
-                }
-                QCheckBox::indicator:checked {
-                    background-color: #007bff;
-                    border-color: #007bff;
-                    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTExLjUgMy41TDUuNSA5LjVMMi41IDYuNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+);
-                }
-                QCheckBox::indicator:hover {
-                    border-color: #999999;
-                    background-color: #f8f9fa;
-                }
-                QCheckBox::indicator:checked:hover {
-                    background-color: #0056b3;
-                    border-color: #0056b3;
-                }
-            """)
-            self.header_checkbox.stateChanged.connect(self.on_header_checkbox_changed)
-            
-            # 헤더 위젯 컨테이너 생성
-            self.header_widget = QWidget()
-            header_layout = QHBoxLayout(self.header_widget)
-            header_layout.setContentsMargins(0, 0, 0, 0)
-            header_layout.setAlignment(Qt.AlignCenter)
-            header_layout.addWidget(self.header_checkbox)
-            
-            # 헤더 설정
-            header = self.history_table.horizontalHeader()
-            header.setSectionResizeMode(0, QHeaderView.Fixed)
-            header.resizeSection(0, 80)
-            
-            # 첫 번째 컬럼 헤더를 빈 문자열로 설정
-            header_item = self.history_table.horizontalHeaderItem(0)
-            if not header_item:
-                header_item = QTableWidgetItem("")
-                self.history_table.setHorizontalHeaderItem(0, header_item)
-            header_item.setText("")
-            
-            # 헤더에 위젯 배치
-            self.position_header_checkbox()
-            
-        except Exception as e:
-            logger.error(f"헤더 체크박스 설정 실패: {e}")
+    # Legacy header checkbox method removed - ModernTableWidget handles automatically
     
-    def position_header_checkbox(self):
-        """헤더 체크박스를 헤더에 배치 (헤더와 함께 스크롤)"""
-        try:
-            if not hasattr(self, 'header_widget') or not self.header_widget:
-                return
-                
-            # QTableWidget의 헤더 영역 위치 계산
-            header = self.history_table.horizontalHeader()
-            
-            # 안전한 위치 계산
-            if header.sectionSize(0) <= 0:
-                return
-            
-            # 헤더 위젯을 헤더의 자식으로 설정 (헤더와 함께 움직임)
-            if self.header_widget.parent() != header:
-                self.header_widget.setParent(header)
-            
-            # 첫 번째 섹션 위치 계산
-            section_pos = header.sectionPosition(0)
-            section_width = header.sectionSize(0)
-            header_height = header.height()
-            
-            # 헤더 섹션에 정확히 맞춤
-            self.header_widget.setFixedSize(section_width, header_height)
-            self.header_widget.move(section_pos, 0)  # 첫 번째 섹션 위치
-            self.header_widget.show()
-            self.header_widget.raise_()
-            
-            # 투명한 배경 (헤더 배경이 보이도록)
-            self.header_widget.setStyleSheet("""
-                QWidget {
-                    background-color: transparent;
-                }
-            """)
-            
-        except Exception as e:
-            logger.error(f"헤더 체크박스 위치 설정 실패: {e}")
     
-    def on_header_checkbox_changed(self, state):
-        """헤더 체크박스 상태 변경 시 전체 선택/해제"""
-        checked = (state == 2)  # Qt.Checked = 2
-        
-        # 모든 행의 체크박스 상태 변경
-        for row in range(self.history_table.rowCount()):
-            checkbox_widget = self.history_table.cellWidget(row, 0)
-            if checkbox_widget:
-                checkbox = checkbox_widget.findChild(QCheckBox)
-                if checkbox:
-                    checkbox.blockSignals(True)  # 시그널 차단으로 무한루프 방지
-                    checkbox.setChecked(checked)
-                    checkbox.blockSignals(False)
-        
-        # 버튼 텍스트 업데이트
-        self.update_selection_buttons()
     
     # ==================== 시그널 핸들러 메서드 ====================
     

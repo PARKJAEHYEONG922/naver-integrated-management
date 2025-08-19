@@ -1364,6 +1364,10 @@ class CommonDB:
         """파워링크 세션 삭제 (UI 호환)"""
         return self.delete_powerlink_analysis_session(session_id)
     
+    def get_powerlink_session(self, session_id: int) -> Optional[Dict[str, Any]]:
+        """파워링크 세션 정보 조회 (UI 호환)"""
+        return self.get_powerlink_session_info(session_id)
+    
     # ========== 카페 추출 관련 메서드 ==========
     
     def create_cafe_extraction_task(self, task_data: Dict[str, Any]) -> str:
@@ -1752,11 +1756,31 @@ class CommonDB:
         except Exception as e:
             logger.error(f"카페 추출 결과 조회 실패: {e}")
             return []
+    
+    
 
 
 # 전역 DB 인스턴스 (싱글톤 패턴)
 _db_instance: Optional[CommonDB] = None
 
+
+def get_db() -> CommonDB:
+    """공용 DB 인스턴스 반환 (싱글톤)"""
+    global _db_instance
+    if _db_instance is None:
+        _db_instance = CommonDB()
+    return _db_instance
+
+
+def init_db(db_path: Optional[Path] = None):
+    """DB 초기화 (애플리케이션 시작시 호출)"""
+    global _db_instance
+    _db_instance = CommonDB(db_path)
+    logger.info("공용 DB 초기화 완료")
+
+
+# 전역 DB 인스턴스
+_db_instance: Optional[CommonDB] = None
 
 def get_db() -> CommonDB:
     """공용 DB 인스턴스 반환 (싱글톤)"""

@@ -41,6 +41,12 @@ from .sortable_items import (
     set_rank_sort_data
 )
 
+# 모던 테이블 컴포넌트
+from .modern_table import (
+    ModernTableWidget,
+    ModernTableContainer
+)
+
 
 # 전체 export 목록
 __all__ = [
@@ -67,5 +73,7 @@ __all__ = [
     "create_sortable_tree_item",
     "create_sortable_table_item",
     "set_numeric_sort_data",
-    "set_rank_sort_data"
+    "set_rank_sort_data",
+    "ModernTableWidget",
+    "ModernTableContainer"
 ]

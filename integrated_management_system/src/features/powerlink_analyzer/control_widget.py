@@ -7,169 +7,25 @@ from datetime import datetime
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QGroupBox,
-    QLabel, QPushButton, QProgressBar, QTextEdit, QMessageBox
+    QLabel, QPushButton, QProgressBar, QTextEdit
 )
 from PySide6.QtCore import Qt, QTimer, Signal
 
 from src.toolbox.ui_kit import ModernStyle
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, ModernDangerButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
-from .models import AnalysisProgress, keyword_database
+from .models import AnalysisProgress
+from .service import keyword_database
 from .worker import PowerLinkAnalysisWorker
 from src.toolbox.text_utils import parse_keywords_from_text, process_keywords
 
 logger = get_logger("features.powerlink_analyzer.control_widget")
 
 
-class ModernCard(QGroupBox):
-    """모던 스타일 카드 위젯"""
-    
-    def __init__(self, title="", parent=None):
-        super().__init__(title, parent)
-        self.setStyleSheet(f"""
-            QGroupBox {{
-                font-size: 14px;
-                font-weight: 600;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 12px;
-                margin: 8px 0;
-                padding-top: 8px;
-                background-color: {ModernStyle.COLORS['bg_card']};
-            }}
-            QGroupBox::title {{
-                subcontrol-origin: margin;
-                left: 15px;
-                padding: 0 8px;
-                color: {ModernStyle.COLORS['text_primary']};
-                background-color: {ModernStyle.COLORS['bg_card']};
-            }}
-        """)
 
 
-class ModernButton(QPushButton):
-    """모던 스타일 버튼"""
-    
-    def __init__(self, text, style="primary", parent=None):
-        super().__init__(text, parent)
-        self.style_type = style
-        self.setup_style()
-    
-    def setup_style(self):
-        if self.style_type == "primary":
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['primary']};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 600;
-                    font-size: 13px;
-                    font-family: 'Segoe UI', sans-serif;
-                }}
-                QPushButton:hover {{
-                    background-color: {ModernStyle.COLORS['primary_hover']};
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: {ModernStyle.COLORS['text_muted']};
-                }}
-            """)
-        elif self.style_type == "danger":
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['danger']};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 600;
-                    font-size: 13px;
-                }}
-                QPushButton:hover {{
-                    background-color: #dc2626;
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: {ModernStyle.COLORS['text_muted']};
-                }}
-            """)
-        elif self.style_type == "success":
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['success']};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 600;
-                    font-size: 13px;
-                    font-family: 'Segoe UI', sans-serif;
-                }}
-                QPushButton:hover {{
-                    background-color: #059669;
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: {ModernStyle.COLORS['text_muted']};
-                }}
-            """)
-        elif self.style_type == "warning":
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['warning']};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 600;
-                    font-size: 13px;
-                }}
-                QPushButton:hover {{
-                    background-color: #f59e0b;
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: {ModernStyle.COLORS['text_muted']};
-                }}
-            """)
-        else:  # secondary or default
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {ModernStyle.COLORS['bg_secondary']};
-                    color: {ModernStyle.COLORS['text_primary']};
-                    border: 2px solid {ModernStyle.COLORS['border']};
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-weight: 500;
-                    font-size: 13px;
-                }}
-                QPushButton:hover {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    border-color: {ModernStyle.COLORS['primary']};
-                }}
-                QPushButton:pressed {{
-                    margin-top: 1px;
-                    background-color: {ModernStyle.COLORS['bg_card']};
-                }}
-                QPushButton:disabled {{
-                    background-color: {ModernStyle.COLORS['bg_muted']};
-                    color: {ModernStyle.COLORS['text_muted']};
-                }}
-            """)
 
 
 class PowerLinkControlWidget(QWidget):
@@ -191,10 +47,7 @@ class PowerLinkControlWidget(QWidget):
         self.current_analysis_total = 0  # 현재 분석 중인 총 키워드 개수
         self.analysis_in_progress = False  # 분석 진행 중 여부 플래그
         
-        # Playwright 브라우저 관리 (UI 끄기 전까지 지속)
-        self.playwright = None
-        self.browser = None
-        self.browser_context = None
+        # 브라우저는 worker에서 관리
         
         # 실시간 UI 업데이트를 위한 타이머
         self.ui_update_timer = QTimer()
@@ -206,76 +59,14 @@ class PowerLinkControlWidget(QWidget):
         
     def closeEvent(self, event):
         """위젯 종료 시 리소스 정리"""
-        # 분석 워커 정리
+        # 분석 워커 정리 (워커에서 브라우저 정리 담당)
         if hasattr(self, 'analysis_worker') and self.analysis_worker:
-            if hasattr(self.analysis_worker, 'cleanup_playwright'):
-                self.analysis_worker.cleanup_playwright()
+            self.analysis_worker.stop()
+            self.analysis_worker.wait()  # 워커 종료 대기
         
-        # 브라우저 리소스 정리
-        self.cleanup_browser()
-        log_manager.add_log("🧹 PowerLink 브라우저 리소스 정리 완료", "info")
+        log_manager.add_log("🧹 PowerLink 리소스 정리 완료", "info")
         super().closeEvent(event)
     
-    def initialize_browser(self):
-        """브라우저 초기화 (한 번만 실행)"""
-        if self.playwright is not None:
-            return  # 이미 초기화됨
-        
-        try:
-            from playwright.sync_api import sync_playwright
-            
-            log_manager.add_log("🌐 PowerLink 브라우저 초기화 중...", "info")
-            
-            self.playwright = sync_playwright().start()
-            self.browser = self.playwright.chromium.launch(
-                headless=True,
-                args=[
-                    "--no-sandbox",
-                    "--disable-dev-shm-usage", 
-                    "--disable-gpu",
-                    "--disable-web-security",
-                    "--disable-features=VizDisplayCompositor",
-                    "--disable-background-timer-throttling",
-                    "--disable-backgrounding-occluded-windows",
-                    "--disable-renderer-backgrounding",
-                    "--disable-blink-features=AutomationControlled",
-                    "--exclude-switches=enable-automation"
-                ]
-            )
-            
-            self.browser_context = self.browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                viewport={"width": 1920, "height": 1080}
-            )
-            
-            log_manager.add_log("✅ PowerLink 브라우저 초기화 완료", "info")
-            
-        except Exception as e:
-            log_manager.add_log(f"❌ PowerLink 브라우저 초기화 실패: {e}", "error")
-            self.cleanup_browser()
-    
-    def cleanup_browser(self):
-        """브라우저 리소스 정리"""
-        if self.browser_context:
-            try:
-                self.browser_context.close()
-            except:
-                pass
-            self.browser_context = None
-        
-        if self.browser:
-            try:
-                self.browser.close()
-            except:
-                pass
-            self.browser = None
-        
-        if self.playwright:
-            try:
-                self.playwright.stop()
-            except:
-                pass
-            self.playwright = None
         
     def setup_ui(self):
         """UI 초기화"""
@@ -423,14 +214,14 @@ class PowerLinkControlWidget(QWidget):
         button_layout.setContentsMargins(0, 8, 0, 0)  # 좌우 여백 제거
         
         # 분석 시작 버튼
-        self.analyze_button = ModernButton("🚀 분석 시작", "primary")
+        self.analyze_button = ModernPrimaryButton("🚀 분석 시작")
         self.analyze_button.setFixedHeight(45)
-        self.analyze_button.setFixedWidth(140)  # 고정 너비로 변경
+        self.analyze_button.setFixedWidth(150)  # 너비 조정 (300 → 150)
         
         # 정지 버튼
-        self.stop_button = ModernButton("⏹ 정지", "danger")
+        self.stop_button = ModernDangerButton("⏹ 정지")
         self.stop_button.setFixedHeight(45)
-        self.stop_button.setFixedWidth(140)  # 시작 버튼과 동일한 너비
+        self.stop_button.setFixedWidth(150)  # 시작 버튼과 동일한 너비
         self.stop_button.setEnabled(False)
         
         # 완전 중앙 정렬
@@ -468,7 +259,14 @@ class PowerLinkControlWidget(QWidget):
         """분석 시작"""
         keywords_text = self.keyword_input.toPlainText().strip()
         if not keywords_text:
-            QMessageBox.warning(self, "경고", "분석할 키워드를 입력해주세요.")
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            dialog = ModernInfoDialog(
+                self,
+                "키워드 입력 필요",
+                "분석할 키워드를 입력해주세요.",
+                icon="⚠️"
+            )
+            dialog.exec()
             return
         
         # 키워드 파싱
@@ -514,7 +312,14 @@ class PowerLinkControlWidget(QWidget):
             log_manager.add_log(f"✅ 중복 키워드 없음: {processed_count}개 키워드 분석 시작", "info")
         
         if not processed_keywords:
-            QMessageBox.warning(self, "경고", "유효한 키워드가 없거나 모두 중복된 키워드입니다.")
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            dialog = ModernInfoDialog(
+                self,
+                "키워드 없음",
+                "유효한 키워드가 없거나 모두 중복된 키워드입니다.",
+                icon="⚠️"
+            )
+            dialog.exec()
             return
         
         # 키워드들을 즉시 테이블에 추가 (데이터 로딩 전 상태로)
@@ -524,15 +329,12 @@ class PowerLinkControlWidget(QWidget):
         # 키워드 입력창 자동 클리어
         self.keyword_input.clear()
         
-        # 브라우저 초기화 (한 번만 실행)
-        self.initialize_browser()
-        
         # 분석 상태 설정
         self.analysis_in_progress = True
         self.current_analysis_total = len(processed_keywords)
         
-        # 분석 워커 시작 (브라우저 컨텍스트 전달)
-        self.analysis_worker = PowerLinkAnalysisWorker(processed_keywords, self.browser_context)
+        # 분석 워커 시작 (브라우저는 worker에서 자체 관리)
+        self.analysis_worker = PowerLinkAnalysisWorker(processed_keywords)
         self.analysis_worker.progress_updated.connect(self.on_progress_updated)
         self.analysis_worker.analysis_completed.connect(self.on_analysis_completed)
         self.analysis_worker.error_occurred.connect(self.on_analysis_error)

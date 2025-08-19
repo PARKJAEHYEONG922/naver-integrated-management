@@ -51,7 +51,6 @@ class ModernStyle:
                 font-weight: 600;
                 font-size: 13px;
                 font-family: '{cls.DEFAULT_FONT}';
-                min-width: 80px;
             }}
             QPushButton:pressed {{
                 margin-top: 1px;

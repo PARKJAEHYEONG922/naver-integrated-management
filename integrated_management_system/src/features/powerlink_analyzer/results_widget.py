@@ -9,18 +9,20 @@ import os
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QTabWidget, QTableWidget, QTableWidgetItem, 
-    QCheckBox, QMessageBox, QFileDialog, QHeaderView, QDialog,
+    QFileDialog, QHeaderView, QDialog,
     QScrollArea, QFrame
 )
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtGui import QFont
 
-from src.toolbox.ui_kit import ModernStyle, SortableTableWidgetItem
+from src.toolbox.ui_kit import ModernStyle, SortableTableWidgetItem, ModernTableWidget
+from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton, ModernSuccessButton, ModernButton
 from src.desktop.common_log import log_manager
-from .control_widget import ModernButton
-from src.foundation.db import get_db
 from src.foundation.logging import get_logger
-from .models import KeywordAnalysisResult, keyword_database
+from src.foundation.db import get_db
+from .models import KeywordAnalysisResult
+from .service import keyword_database
+from .service import powerlink_service
 
 logger = get_logger("features.powerlink_analyzer.results_widget")
 
@@ -134,29 +136,13 @@ class PowerLinkSaveDialog(QDialog):
         self.export_button.clicked.connect(self.export_to_excel)
         
     def export_to_excel(self):
-        """엑셀 내보내기 실행"""
+        """엑셀 내보내기 실행 (service 위임)"""
         try:
-            # 파일 저장 다이얼로그
             from datetime import datetime
-            from src.foundation.db import get_db
+            from PySide6.QtWidgets import QFileDialog
             
-            # 파일명 생성 (세션 생성 시간 사용)
-            if self.session_id and self.session_id > 0:
-                # DB에서 세션 정보 가져오기
-                db = get_db()
-                session_info = db.get_powerlink_session_info(self.session_id)
-                if session_info and 'created_at' in session_info:
-                    # 세션 생성 시간 사용
-                    session_time = datetime.fromisoformat(session_info['created_at'])
-                    time_str = session_time.strftime('%Y%m%d_%H%M%S')
-                else:
-                    # 세션 정보가 없으면 현재 시간 사용
-                    time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
-            else:
-                # 중복이거나 세션 ID가 없으면 현재 시간 사용
-                time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
-                
-            # 단순한 파일명 생성
+            # 파일명 생성 (service에서 세션 정보 조회)
+            time_str = datetime.now().strftime('%Y%m%d_%H%M%S')
             default_filename = f"파워링크광고비분석_{time_str}.xlsx"
             
             file_path, _ = QFileDialog.getSaveFileName(
@@ -167,24 +153,24 @@ class PowerLinkSaveDialog(QDialog):
             )
             
             if file_path:
-                # 엑셀 파일 생성
-                self.create_excel_file(file_path)
+                # service를 통해 엑셀 파일 생성
+                keywords_data = keyword_database.keywords
                 
-                # 저장 완료 다이얼로그 (엑셀 내보내기 버튼 근처에 표시)
+                success = powerlink_service.save_to_excel(keywords_data, file_path, self.session_name)
+                
+                if not success:
+                    raise Exception("엑셀 파일 생성 실패")
+                
+                # 저장 완료 다이얼로그 (공용 방식 사용)
                 from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
-                success_dialog = ModernSaveCompletionDialog(
-                    parent=self,
-                    title="엑셀 내보내기 완료",
-                    message="엑셀 파일이 성공적으로 저장되었습니다.",
-                    file_path=file_path
+                from pathlib import Path
+                filename = Path(file_path).name
+                ModernSaveCompletionDialog.show_save_completion(
+                    self,
+                    "엑셀 내보내기 완료",
+                    f"파워링크 분석 데이터가 성공적으로 Excel 파일로 저장되었습니다.\n\n파일명: {filename}\n키워드 수: {len(keywords_data)}개",
+                    file_path
                 )
-                
-                # 엑셀 내보내기 버튼 근처에 위치 설정
-                if hasattr(self, 'export_button'):
-                    success_dialog.position_near_widget(self.export_button)
-                    
-                success_dialog.exec()
-                
                 self.accept()
                 
         except Exception as e:
@@ -200,19 +186,6 @@ class PowerLinkSaveDialog(QDialog):
             )
             error_dialog.exec()
             
-    def create_excel_file(self, file_path: str):
-        """엑셀 파일 생성 (excel_export 모듈 사용)"""
-        from .excel_export import powerlink_excel_exporter
-        
-        # 현재 키워드 데이터 가져오기
-        keywords_data = keyword_database.keywords
-        
-        # 엑셀 익스포터를 사용하여 파일 생성
-        powerlink_excel_exporter.export_to_excel(
-            keywords_data=keywords_data,
-            file_path=file_path,
-            session_name=self.session_name
-        )
 
 
 def safe_format_number(value, format_type="int", suffix=""):
@@ -258,10 +231,13 @@ class PowerLinkResultsWidget(QWidget):
         super().__init__(parent)
         self.keywords_data = {}  # 키워드 데이터 참조
         
+        # 히스토리 로드 플래그 초기화
+        self.is_loaded_from_history = False
+        
         self.setup_ui()
         self.setup_connections()
         
-        # 초기 히스토리 로드
+        # 초기 히스토리 로드 (UI 생성 후)
         try:
             self.refresh_history_list()
         except Exception as e:
@@ -397,52 +373,16 @@ class PowerLinkResultsWidget(QWidget):
         
         layout.addLayout(button_layout)
         
-        # 이전 기록 테이블
-        self.history_table = QTableWidget()
-        headers = ["", "세션명", "생성일시", "키워드 수"]
-        self.history_table.setColumnCount(len(headers))
-        self.history_table.setHorizontalHeaderLabels(headers)
+        # 이전 기록 테이블 (ModernTableWidget 사용)
+        self.history_table = ModernTableWidget(
+            columns=["", "세션명", "생성일시", "키워드 수"],
+            has_checkboxes=True,
+            has_header_checkbox=True
+        )
         
-        self.history_table.setStyleSheet(f"""
-            QTableWidget {{
-                gridline-color: {ModernStyle.COLORS['border']};
-                background-color: {ModernStyle.COLORS['bg_card']};
-                selection-background-color: {ModernStyle.COLORS['primary']};
-                selection-color: white;
-                color: {ModernStyle.COLORS['text_primary']};
-                font-size: 13px;
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                alternate-background-color: {ModernStyle.COLORS['bg_secondary']};
-            }}
-            QTableWidget::item {{
-                padding: 8px;
-                border-bottom: 1px solid {ModernStyle.COLORS['border']};
-            }}
-            QTableWidget::item:selected {{
-                background-color: {ModernStyle.COLORS['primary']};
-                color: white;
-            }}
-            QHeaderView::section {{
-                background-color: {ModernStyle.COLORS['bg_secondary']};
-                color: {ModernStyle.COLORS['text_primary']};
-                padding: 8px;
-                border: 1px solid {ModernStyle.COLORS['border']};
-                font-weight: 600;
-                font-size: 12px;
-            }}
-        """)
-        
-        self.history_table.setAlternatingRowColors(True)
-        self.history_table.setSelectionBehavior(QTableWidget.SelectRows)
-        self.history_table.verticalHeader().setVisible(False)
-        
-        # 행 높이 늘리기 (40px)
-        self.history_table.verticalHeader().setDefaultSectionSize(40)
-        
-        # 컬럼 설정
+        # 컬럼 너비 설정 (체크박스 컬럼 제외)
         header = self.history_table.horizontalHeader()
-        header.resizeSection(0, 50)   # 체크박스 컬럼
+        # header.resizeSection(0, 50)   # 체크박스 컬럼 - ModernTableWidget에서 자동으로 80px 고정 처리
         header.resizeSection(1, 300)  # 세션명 컬럼  
         header.resizeSection(2, 150)  # 생성일시 컬럼
         header.resizeSection(3, 100)  # 키워드 수 컬럼
@@ -450,77 +390,26 @@ class PowerLinkResultsWidget(QWidget):
         
         layout.addWidget(self.history_table)
         
-        # 히스토리 테이블 헤더 체크박스 설정
-        self.setup_history_header_checkbox()
-        
         return tab
     
-    def create_analysis_table(self) -> QTableWidget:
-        """분석 결과 테이블 생성 (카페 추출기와 동일한 스타일 적용)"""
-        table = QTableWidget()
-        
-        # 헤더 설정 (첫 번째 컬럼은 빈 문자열로 설정 - 체크박스용)
+    def create_analysis_table(self) -> ModernTableWidget:
+        """분석 결과 테이블 생성 (ModernTableWidget 사용)"""
+        # 헤더 설정 (체크박스는 자동으로 처리됨)
         headers = [
             "", "키워드", "월검색량", "클릭수", "클릭률", 
             "1p노출위치", "1등광고비", "최소노출가격", "추천순위", "상세"
         ]
-        table.setColumnCount(len(headers))
-        table.setHorizontalHeaderLabels(headers)
         
-        # 카페 추출기와 동일한 테이블 스타일 적용
-        table.setStyleSheet(f"""
-            QTableWidget {{
-                gridline-color: {ModernStyle.COLORS['border']};
-                background-color: {ModernStyle.COLORS['bg_card']};
-                alternate-background-color: {ModernStyle.COLORS['bg_input']};
-                selection-background-color: {ModernStyle.COLORS['primary']};
-                selection-color: white;
-                color: {ModernStyle.COLORS['text_primary']};
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                font-size: 13px;
-            }}
-            QTableWidget::item {{
-                padding: 10px 8px;
-                border-bottom: 1px solid {ModernStyle.COLORS['border']};
-                min-height: 20px;
-            }}
-            QTableWidget::item:selected {{
-                background-color: {ModernStyle.COLORS['primary']};
-                color: white;
-            }}
-            QHeaderView::section {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border: none;
-                border-right: 1px solid {ModernStyle.COLORS['border']};
-                border-bottom: 2px solid {ModernStyle.COLORS['border']};
-                padding: 8px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-        """)
-        
-        # 테이블 설정 (카페 추출기와 동일)
-        table.horizontalHeader().setStretchLastSection(True)
-        table.setAlternatingRowColors(True)
-        table.setSelectionBehavior(QTableWidget.SelectRows)
-        
-        # 각 데이터 행의 높이를 체크박스에 맞게 적절히 조정
-        table.verticalHeader().setDefaultSectionSize(40)  # 행 높이 40px
-        
-        # 행 헤더 숨기기 (체크박스가 있어서 불필요)
-        table.verticalHeader().setVisible(False)
+        table = ModernTableWidget(
+            columns=headers,
+            has_checkboxes=True,
+            has_header_checkbox=True
+        )
         
         # 헤더 설정
         header = table.horizontalHeader()
         
-        # 첫 번째 컬럼의 크기를 고정하고 위젯을 배치할 공간 확보
-        header.setSectionResizeMode(0, QHeaderView.Fixed)
-        header.resizeSection(0, 80)   # 체크박스 컬럼 너비
-        
-        # 나머지 컬럼 크기는 Interactive로 설정
-        for i in range(1, len(headers)):
-            header.setSectionResizeMode(i, QHeaderView.Interactive)
+        # 체크박스 컬럼은 ModernTableWidget에서 자동으로 80px 고정 처리됨
         
         # 컬럼 너비 설정
         header.resizeSection(1, 156)  # 키워드 (120 × 1.3)
@@ -533,8 +422,7 @@ class PowerLinkResultsWidget(QWidget):
         header.resizeSection(8, 80)   # 추천순위
         header.resizeSection(9, 60)   # 상세 (60px로 조정)
         
-        # 정렬 활성화
-        table.setSortingEnabled(True)
+        # ModernTableWidget에서 정렬 자동 활성화
         
         return table
     
@@ -553,15 +441,13 @@ class PowerLinkResultsWidget(QWidget):
         self.view_history_button.clicked.connect(self.view_selected_history)
         self.export_selected_history_button.clicked.connect(self.export_selected_history)
         
-        # 헤더 체크박스 설정
-        self.setup_mobile_header_checkbox()
-        self.setup_pc_header_checkbox()
+        # ModernTableWidget 선택 상태 변경 시그널 연결
+        self.mobile_table.selection_changed.connect(self.update_delete_button_state)
+        self.pc_table.selection_changed.connect(self.update_delete_button_state)
+        self.history_table.selection_changed.connect(self.update_history_button_state)
         
         # 탭 변경 시그널 연결 (이전기록 탭에서 저장 버튼 비활성화)
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
-        
-        # 헤더 체크박스 위치 조정을 위한 타이머 설정
-        QTimer.singleShot(100, self.position_all_header_checkboxes)
     
     def set_keywords_data(self, keywords_data):
         """키워드 데이터 설정"""
@@ -575,72 +461,44 @@ class PowerLinkResultsWidget(QWidget):
         self.update_pc_table()
         
     def update_mobile_table(self):
-        """모바일 테이블 업데이트"""
+        """모바일 테이블 업데이트 (ModernTableWidget API 사용)"""
         mobile_sorted = keyword_database.calculate_mobile_rankings()
         
-        self.mobile_table.setRowCount(len(mobile_sorted))
+        # 테이블 클리어
+        self.mobile_table.clear_table()
         
-        for row, result in enumerate(mobile_sorted):
-            # 체크박스 (원본과 동일한 빨간색 스타일)
-            checkbox = QCheckBox()
-            checkbox.setStyleSheet(f"""
-                QCheckBox::indicator {{
-                    width: 18px;
-                    height: 18px;
-                }}
-                QCheckBox::indicator:unchecked {{
-                    background-color: white;
-                    border: 2px solid {ModernStyle.COLORS['border']};
-                    border-radius: 4px;
-                }}
-                QCheckBox::indicator:checked {{
-                    background-color: {ModernStyle.COLORS['danger']};
-                    border: 2px solid {ModernStyle.COLORS['danger']};
-                    border-radius: 4px;
-                    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDEyIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEwLjI4IDEuMjhMMy44NSA3LjcxTDEuNzIgNS41OCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=);
-                }}
-                QCheckBox::indicator:hover:unchecked {{
-                    border-color: {ModernStyle.COLORS['danger']};
-                }}
-            """)
-            checkbox.stateChanged.connect(self.update_delete_button_state)  # 시그널 연결 추가
+        for result in mobile_sorted:
             
-            checkbox_widget = QWidget()
-            checkbox_layout = QHBoxLayout(checkbox_widget)
-            checkbox_layout.addWidget(checkbox)
-            checkbox_layout.setAlignment(Qt.AlignCenter)
-            checkbox_layout.setContentsMargins(0, 0, 0, 0)
-            self.mobile_table.setCellWidget(row, 0, checkbox_widget)
+            # 데이터 준비
+            keyword = result.keyword
             
-            # 키워드
-            self.mobile_table.setItem(row, 1, QTableWidgetItem(result.keyword))
-            
-            # 월검색량 (Mobile)
+            # 월검색량
             if result.mobile_search_volume >= 0:
-                self.mobile_table.setItem(row, 2, SortableTableWidgetItem(
-                    f"{result.mobile_search_volume:,}", result.mobile_search_volume))
+                search_volume = f"{result.mobile_search_volume:,}"
             else:
-                self.mobile_table.setItem(row, 2, SortableTableWidgetItem("-", 0))
+                search_volume = "-"
             
-            # 모바일 데이터
-            self.mobile_table.setItem(row, 3, SortableTableWidgetItem(
-                f"{result.mobile_clicks:.1f}", result.mobile_clicks))
-            self.mobile_table.setItem(row, 4, SortableTableWidgetItem(
-                f"{result.mobile_ctr:.2f}%", result.mobile_ctr))
-            self.mobile_table.setItem(row, 5, SortableTableWidgetItem(
-                f"{result.mobile_first_page_positions}위까지", result.mobile_first_page_positions))
-            self.mobile_table.setItem(row, 6, SortableTableWidgetItem(
-                f"{result.mobile_first_position_bid:,}원", result.mobile_first_position_bid))
-            self.mobile_table.setItem(row, 7, SortableTableWidgetItem(
-                f"{result.mobile_min_exposure_bid:,}원", result.mobile_min_exposure_bid))
-            
-            # 추천순위 ("위" 접미사 포함)
+            # 추천순위
             if result.mobile_recommendation_rank > 0:
                 rank_text = f"{result.mobile_recommendation_rank}위"
             else:
                 rank_text = "-"
-            self.mobile_table.setItem(row, 8, SortableTableWidgetItem(
-                rank_text, result.mobile_recommendation_rank))
+            
+            # 행 데이터 준비 (체크박스 제외)
+            row_data = [
+                keyword,  # 키워드
+                search_volume,  # 월검색량
+                f"{result.mobile_clicks:.1f}",  # 클릭수
+                f"{result.mobile_ctr:.2f}%",  # 클릭률
+                f"{result.mobile_first_page_positions}위까지",  # 1p노출위치
+                f"{result.mobile_first_position_bid:,}원",  # 1등광고비
+                f"{result.mobile_min_exposure_bid:,}원",  # 최소노출가격
+                rank_text,  # 추천순위
+                "상세"  # 상세 버튼
+            ]
+            
+            # ModernTableWidget API 사용하여 행 추가 (반환값으로 행 번호 받기)
+            row = self.mobile_table.add_row_with_data(row_data, checkable=True)
             
             # 상세 버튼 (원본과 동일한 초록색 스타일)
             detail_button = QPushButton("상세")
@@ -666,72 +524,43 @@ class PowerLinkResultsWidget(QWidget):
             self.mobile_table.setCellWidget(row, 9, detail_button)
             
     def update_pc_table(self):
-        """PC 테이블 업데이트"""
+        """PC 테이블 업데이트 (ModernTableWidget API 사용)"""
         pc_sorted = keyword_database.calculate_pc_rankings()
         
-        self.pc_table.setRowCount(len(pc_sorted))
+        # 테이블 클리어
+        self.pc_table.clear_table()
         
-        for row, result in enumerate(pc_sorted):
-            # 체크박스 (원본과 동일한 빨간색 스타일)
-            checkbox = QCheckBox()
-            checkbox.setStyleSheet(f"""
-                QCheckBox::indicator {{
-                    width: 18px;
-                    height: 18px;
-                }}
-                QCheckBox::indicator:unchecked {{
-                    background-color: white;
-                    border: 2px solid {ModernStyle.COLORS['border']};
-                    border-radius: 4px;
-                }}
-                QCheckBox::indicator:checked {{
-                    background-color: {ModernStyle.COLORS['danger']};
-                    border: 2px solid {ModernStyle.COLORS['danger']};
-                    border-radius: 4px;
-                    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDEyIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEwLjI4IDEuMjhMMy44NSA3LjcxTDEuNzIgNS41OCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=);
-                }}
-                QCheckBox::indicator:hover:unchecked {{
-                    border-color: {ModernStyle.COLORS['danger']};
-                }}
-            """)
-            checkbox.stateChanged.connect(self.update_delete_button_state)  # 시그널 연결 추가
+        for result in pc_sorted:
+            # 데이터 준비
+            keyword = result.keyword
             
-            checkbox_widget = QWidget()
-            checkbox_layout = QHBoxLayout(checkbox_widget)
-            checkbox_layout.addWidget(checkbox)
-            checkbox_layout.setAlignment(Qt.AlignCenter)
-            checkbox_layout.setContentsMargins(0, 0, 0, 0)
-            self.pc_table.setCellWidget(row, 0, checkbox_widget)
-            
-            # 키워드
-            self.pc_table.setItem(row, 1, QTableWidgetItem(result.keyword))
-            
-            # PC 월검색량
+            # 월검색량
             if result.pc_search_volume >= 0:
-                self.pc_table.setItem(row, 2, SortableTableWidgetItem(
-                    f"{result.pc_search_volume:,}", result.pc_search_volume))
+                search_volume = f"{result.pc_search_volume:,}"
             else:
-                self.pc_table.setItem(row, 2, SortableTableWidgetItem("-", 0))
+                search_volume = "-"
             
-            # PC 데이터
-            self.pc_table.setItem(row, 3, SortableTableWidgetItem(
-                f"{result.pc_clicks:.1f}", result.pc_clicks))
-            self.pc_table.setItem(row, 4, SortableTableWidgetItem(
-                f"{result.pc_ctr:.2f}%", result.pc_ctr))
-            self.pc_table.setItem(row, 5, SortableTableWidgetItem(
-                f"{result.pc_first_page_positions}위까지", result.pc_first_page_positions))
-            self.pc_table.setItem(row, 6, SortableTableWidgetItem(
-                f"{result.pc_first_position_bid:,}원", result.pc_first_position_bid))
-            self.pc_table.setItem(row, 7, SortableTableWidgetItem(
-                f"{result.pc_min_exposure_bid:,}원", result.pc_min_exposure_bid))
-            
-            # 추천순위 ("위" 접미사 포함)
+            # 추천순위
             if result.pc_recommendation_rank > 0:
                 rank_text = f"{result.pc_recommendation_rank}위"
             else:
                 rank_text = "-"
-            self.pc_table.setItem(row, 8, SortableTableWidgetItem(
-                rank_text, result.pc_recommendation_rank))
+            
+            # 행 데이터 준비 (체크박스 제외)
+            row_data = [
+                keyword,  # 키워드
+                search_volume,  # 월검색량
+                f"{result.pc_clicks:.1f}",  # 클릭수
+                f"{result.pc_ctr:.2f}%",  # 클릭률
+                f"{result.pc_first_page_positions}위까지",  # 1p노출위치
+                f"{result.pc_first_position_bid:,}원",  # 1등광고비
+                f"{result.pc_min_exposure_bid:,}원",  # 최소노출가격
+                rank_text,  # 추천순위
+                "상세"  # 상세 버튼
+            ]
+            
+            # ModernTableWidget API 사용하여 행 추가 (반환값으로 행 번호 받기)
+            row = self.pc_table.add_row_with_data(row_data, checkable=True)
             
             # 상세 버튼 (원본과 동일한 초록색 스타일)
             detail_button = QPushButton("상세")
@@ -778,64 +607,22 @@ class PowerLinkResultsWidget(QWidget):
                 self.update_table_row_data(table, row, result, device_type)
                 break
 
-    def add_keyword_to_table(self, table: QTableWidget, result, device_type: str, update_ui: bool = True):
-        """테이블에 키워드 분석 결과 추가 (원본과 동일)"""
-        row = table.rowCount()
-        table.insertRow(row)
+    def add_keyword_to_table(self, table: ModernTableWidget, result, device_type: str, update_ui: bool = True):
+        """테이블에 키워드 분석 결과 추가 (ModernTableWidget 사용)"""
+        # ModernTableWidget의 add_row_with_data 메서드를 사용하여 체크박스 자동 생성
+        # 데이터 준비
+        row_data = [result.keyword]  # 키워드는 첫 번째 데이터
         
-        # 0. 체크박스 (히스토리 테이블과 동일한 스타일)
-        checkbox = QCheckBox()
-        checkbox.setStyleSheet(f"""
-            QCheckBox {{
-                spacing: 0px;
-                margin: 0px;
-                padding: 0px;
-                border: none;
-                background-color: transparent;
-            }}
-            QCheckBox::indicator {{
-                width: 16px;
-                height: 16px;
-                border: 2px solid #ccc;
-                border-radius: 3px;
-                background-color: white;
-                margin: 0px;
-            }}
-            QCheckBox::indicator:checked {{
-                background-color: {ModernStyle.COLORS['danger']};
-                border-color: {ModernStyle.COLORS['danger']};
-                image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
-            }}
-            QCheckBox::indicator:hover {{
-                border-color: #999999;
-                background-color: #f8f9fa;
-            }}
-            QCheckBox::indicator:checked:hover {{
-                background-color: #dc2626;
-                border-color: #dc2626;
-            }}
-        """)
-        checkbox.stateChanged.connect(lambda: self.update_delete_button_state())
-        
-        # 체크박스를 중앙에 배치하기 위한 컨테이너 위젯
-        checkbox_widget = QWidget()
-        checkbox_layout = QHBoxLayout(checkbox_widget)
-        checkbox_layout.setContentsMargins(0, 0, 0, 0)
-        checkbox_layout.addWidget(checkbox)
-        checkbox_layout.setAlignment(Qt.AlignCenter)
-        
-        table.setCellWidget(row, 0, checkbox_widget)
-        
-        # 1. 키워드
-        table.setItem(row, 1, QTableWidgetItem(result.keyword))
-        
-        # 2. 월검색량 (Mobile)
+        # 월검색량 데이터 준비
         if hasattr(result, 'mobile_search_volume') and result.mobile_search_volume is not None and result.mobile_search_volume >= 0:
-            volume_text, volume_value = safe_format_number(result.mobile_search_volume, "int")
-            search_volume_item = SortableTableWidgetItem(volume_text, volume_value)
+            row_data.append(result.mobile_search_volume)
         else:
-            search_volume_item = SortableTableWidgetItem("-", 0)
-        table.setItem(row, 2, search_volume_item)
+            row_data.append("-")
+        
+        # 임시로 데이터 추가 후 나머지는 기존 방식 유지
+        row = table.add_row_with_data(row_data[:2], checkable=True)  # 키워드와 월검색량만 먼저 추가
+        
+        # 키워드와 월검색량은 이미 add_row_with_data로 추가됨, 나머지 컬럼만 처리
         
         # 디바이스별 데이터 설정
         if device_type == 'mobile':
@@ -975,43 +762,15 @@ class PowerLinkResultsWidget(QWidget):
     
     def update_delete_button_state(self):
         """삭제 버튼 상태 업데이트 및 헤더 체크박스 상태 업데이트"""
-        # 모바일 테이블 체크 상태 확인
-        mobile_has_checked = False
-        mobile_all_checked = True
-        mobile_total_rows = self.mobile_table.rowCount()
-        mobile_checked_count = 0
+        # 모바일 테이블 체크 상태 확인 (ModernTableWidget API 사용)
+        mobile_checked_rows = self.mobile_table.get_checked_rows()
+        mobile_checked_count = len(mobile_checked_rows)
+        mobile_has_checked = mobile_checked_count > 0
         
-        for row in range(mobile_total_rows):
-            checkbox_widget = self.mobile_table.cellWidget(row, 0)
-            if checkbox_widget:
-                # 컨테이너 내부의 QCheckBox 찾기
-                checkbox = checkbox_widget.findChild(QCheckBox)
-                if checkbox and checkbox.isChecked():
-                    mobile_has_checked = True
-                    mobile_checked_count += 1
-                else:
-                    mobile_all_checked = False
-            else:
-                mobile_all_checked = False
-                
-        # PC 테이블 체크 상태 확인  
-        pc_has_checked = False
-        pc_all_checked = True
-        pc_total_rows = self.pc_table.rowCount()
-        pc_checked_count = 0
-        
-        for row in range(pc_total_rows):
-            checkbox_widget = self.pc_table.cellWidget(row, 0)
-            if checkbox_widget:
-                # 컨테이너 내부의 QCheckBox 찾기
-                checkbox = checkbox_widget.findChild(QCheckBox)
-                if checkbox and checkbox.isChecked():
-                    pc_has_checked = True
-                    pc_checked_count += 1
-                else:
-                    pc_all_checked = False
-            else:
-                pc_all_checked = False
+        # PC 테이블 체크 상태 확인 (ModernTableWidget API 사용)
+        pc_checked_rows = self.pc_table.get_checked_rows()
+        pc_checked_count = len(pc_checked_rows)
+        pc_has_checked = pc_checked_count > 0
                 
         # 버튼 상태 업데이트 (체크된 개수 표시)
         if mobile_has_checked:
@@ -1029,33 +788,39 @@ class PowerLinkResultsWidget(QWidget):
             self.pc_delete_button.setEnabled(False)
         
         # 클리어 버튼 상태 업데이트 (테이블에 데이터가 있으면 활성화)
+        mobile_total_rows = self.mobile_table.rowCount()
+        pc_total_rows = self.pc_table.rowCount()
         has_data = mobile_total_rows > 0 or pc_total_rows > 0
         self.clear_button.setEnabled(has_data)
+    
+    def update_history_button_state(self):
+        """히스토리 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
+        # 히스토리 테이블 체크 상태 확인
+        history_checked_rows = self.history_table.get_checked_rows()
+        history_checked_count = len(history_checked_rows)
+        history_has_checked = history_checked_count > 0
         
-        # 헤더 체크박스 상태 업데이트 (시그널 차단으로 무한 루프 방지)
-        if hasattr(self, 'mobile_header_checkbox') and self.mobile_header_checkbox:
-            self.mobile_header_checkbox.blockSignals(True)
-            if mobile_total_rows == 0:
-                self.mobile_header_checkbox.setCheckState(Qt.Unchecked)
-            elif mobile_checked_count == mobile_total_rows:
-                self.mobile_header_checkbox.setCheckState(Qt.Checked)
-            elif mobile_checked_count > 0:
-                self.mobile_header_checkbox.setCheckState(Qt.PartiallyChecked)
-            else:
-                self.mobile_header_checkbox.setCheckState(Qt.Unchecked)
-            self.mobile_header_checkbox.blockSignals(False)
+        # 버튼 상태 업데이트 (체크된 개수 표시)
+        if history_has_checked:
+            self.delete_history_button.setText(f"🗑️ 선택 삭제({history_checked_count})")
+            self.delete_history_button.setEnabled(True)
+            
+            self.view_history_button.setText(f"👀 보기({history_checked_count})")
+            self.view_history_button.setEnabled(True)
+            
+            self.export_selected_history_button.setText(f"💾 선택 저장({history_checked_count})")
+            self.export_selected_history_button.setEnabled(True)
+        else:
+            self.delete_history_button.setText("🗑️ 선택 삭제")
+            self.delete_history_button.setEnabled(False)
+            
+            self.view_history_button.setText("👀 보기")
+            self.view_history_button.setEnabled(False)
+            
+            self.export_selected_history_button.setText("💾 선택 저장")
+            self.export_selected_history_button.setEnabled(False)
         
-        if hasattr(self, 'pc_header_checkbox') and self.pc_header_checkbox:
-            self.pc_header_checkbox.blockSignals(True)
-            if pc_total_rows == 0:
-                self.pc_header_checkbox.setCheckState(Qt.Unchecked)
-            elif pc_checked_count == pc_total_rows:
-                self.pc_header_checkbox.setCheckState(Qt.Checked)
-            elif pc_checked_count > 0:
-                self.pc_header_checkbox.setCheckState(Qt.PartiallyChecked)
-            else:
-                self.pc_header_checkbox.setCheckState(Qt.Unchecked)
-            self.pc_header_checkbox.blockSignals(False)
+        # Header checkbox states are handled automatically by ModernTableWidget
 
     def update_status_display(self):
         """상태 표시 업데이트"""
@@ -1066,28 +831,35 @@ class PowerLinkResultsWidget(QWidget):
         """선택된 키워드 삭제"""
         table = self.mobile_table if table_type == 'mobile' else self.pc_table
         
-        # 선택된 행 찾기
+        # 선택된 행 찾기 (ModernTableWidget API 사용)
         selected_keywords = []
-        for row in range(table.rowCount()):
-            checkbox_widget = table.cellWidget(row, 0)
-            if checkbox_widget:
-                checkbox = checkbox_widget.findChild(QCheckBox)
-                if checkbox and checkbox.isChecked():
-                    keyword_item = table.item(row, 1)
-                    if keyword_item:
-                        selected_keywords.append(keyword_item.text())
+        for row in table.get_checked_rows():
+            keyword_item = table.item(row, 1)
+            if keyword_item:
+                selected_keywords.append(keyword_item.text())
         
         if not selected_keywords:
-            QMessageBox.information(self, "알림", "삭제할 키워드를 선택해주세요.")
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            dialog = ModernInfoDialog(
+                self,
+                "키워드 선택 필요",
+                "삭제할 키워드를 선택해주세요.",
+                icon="⚠️"
+            )
+            dialog.exec()
             return
         
-        reply = QMessageBox.question(
-            self, "확인", 
+        from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+        dialog = ModernConfirmDialog(
+            self,
+            "키워드 삭제 확인",
             f"{len(selected_keywords)}개 키워드를 삭제하시겠습니까?",
-            QMessageBox.Yes | QMessageBox.No
+            confirm_text="삭제",
+            cancel_text="취소",
+            icon="🗑️"
         )
         
-        if reply == QMessageBox.Yes:
+        if dialog.exec():
             # 키워드 삭제
             for keyword in selected_keywords:
                 if keyword in self.keywords_data:
@@ -1103,30 +875,6 @@ class PowerLinkResultsWidget(QWidget):
             
             log_manager.add_log(f"{len(selected_keywords)}개 키워드 삭제 완료", "success")
     
-    def clear_all_data(self):
-        """모든 데이터 지우기"""
-        if not self.keywords_data:
-            return
-            
-        # 모던 다이얼로그로 확인 (클리어 버튼 근처에 표시)
-        from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-        dialog = ModernConfirmDialog(
-            self, 
-            "전체 삭제 확인", 
-            "모든 분석 데이터를 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.", 
-            confirm_text="삭제", 
-            cancel_text="취소", 
-            icon="🗑️",
-            position_near_widget=self.clear_button
-        )
-        
-        if dialog.exec() == ModernConfirmDialog.Accepted:
-            self.keywords_data.clear()
-            keyword_database.clear()
-            self.mobile_table.setRowCount(0)
-            self.pc_table.setRowCount(0)
-            self.update_button_states()
-            log_manager.add_log("PowerLink 분석 결과 전체 삭제", "success")
     
     
     def refresh_history_list(self):
@@ -1135,55 +883,14 @@ class PowerLinkResultsWidget(QWidget):
             db = get_db()
             sessions = db.list_powerlink_sessions()
             
-            self.history_table.setRowCount(len(sessions))
+            if not hasattr(self, 'history_table') or self.history_table is None:
+                logger.error("history_table이 초기화되지 않음")
+                return
+                
+            # ModernTableWidget 사용: 기존 데이터 클리어
+            self.history_table.clear_table()
             
-            for row, session in enumerate(sessions):
-                # 체크박스 (원본과 동일한 빨간색 스타일)
-                checkbox = QCheckBox()
-                checkbox.setStyleSheet(f"""
-                    QCheckBox {{
-                        spacing: 0px;
-                        margin: 0px;
-                        padding: 0px;
-                        border: none;
-                        background-color: transparent;
-                    }}
-                    QCheckBox::indicator {{
-                        width: 16px;
-                        height: 16px;
-                        border: 2px solid #ccc;
-                        border-radius: 3px;
-                        background-color: white;
-                        margin: 0px;
-                    }}
-                    QCheckBox::indicator:checked {{
-                        background-color: {ModernStyle.COLORS['danger']};
-                        border-color: {ModernStyle.COLORS['danger']};
-                        image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
-                    }}
-                    QCheckBox::indicator:hover {{
-                        border-color: #999999;
-                        background-color: #f8f9fa;
-                    }}
-                    QCheckBox::indicator:checked:hover {{
-                        background-color: #dc2626;
-                        border-color: #dc2626;
-                    }}
-                """)
-                checkbox.stateChanged.connect(self.update_history_button_states)
-                
-                checkbox_widget = QWidget()
-                checkbox_layout = QHBoxLayout(checkbox_widget)
-                checkbox_layout.addWidget(checkbox)
-                checkbox_layout.setAlignment(Qt.AlignCenter)
-                checkbox_layout.setContentsMargins(0, 0, 0, 0)
-                self.history_table.setCellWidget(row, 0, checkbox_widget)
-                
-                # 세션명 (세션 ID도 함께 저장)
-                session_name_item = QTableWidgetItem(session['session_name'])
-                session_name_item.setData(Qt.UserRole, session['id'])
-                self.history_table.setItem(row, 1, session_name_item)
-                
+            for session in sessions:
                 # 생성일시 (한국시간으로 변환)
                 created_at = session['created_at']
                 if isinstance(created_at, str):
@@ -1193,11 +900,17 @@ class PowerLinkResultsWidget(QWidget):
                 from datetime import timedelta
                 kst_time = created_at + timedelta(hours=9)
                 
-                self.history_table.setItem(row, 2, QTableWidgetItem(
-                    kst_time.strftime('%Y-%m-%d %H:%M:%S')))
+                # ModernTableWidget.add_row_with_data 사용
+                row_index = self.history_table.add_row_with_data([
+                    session['session_name'],
+                    kst_time.strftime('%Y-%m-%d %H:%M:%S'),
+                    str(session['keyword_count'])
+                ])
                 
-                # 키워드 수
-                self.history_table.setItem(row, 3, QTableWidgetItem(str(session['keyword_count'])))
+                # 세션 ID를 세션명 아이템에 저장
+                session_name_item = self.history_table.item(row_index, 1)
+                if session_name_item:
+                    session_name_item.setData(Qt.UserRole, session['id'])
                 
             log_manager.add_log(f"PowerLink 히스토리 새로고침: {len(sessions)}개 세션", "info")
             
@@ -1207,15 +920,11 @@ class PowerLinkResultsWidget(QWidget):
     def delete_selected_history(self):
         """선택된 히스토리 삭제"""
         try:
-            # 선택된 세션 ID 목록 가져오기
+            # 선택된 세션 ID 목록 가져오기 (ModernTableWidget API 사용)
             selected_sessions = []
-            for row in range(self.history_table.rowCount()):
-                container_widget = self.history_table.cellWidget(row, 0)
-                if container_widget:
-                    checkbox = container_widget.findChild(QCheckBox)
-                    if checkbox and checkbox.isChecked():
-                        session_name = self.history_table.item(row, 1).text()
-                        selected_sessions.append((row, session_name))
+            for row in self.history_table.get_checked_rows():
+                session_name = self.history_table.item(row, 1).text()
+                selected_sessions.append((row, session_name))
             
             if not selected_sessions:
                 return
@@ -1229,125 +938,89 @@ class PowerLinkResultsWidget(QWidget):
                 f"이 작업은 되돌릴 수 없습니다.", 
                 confirm_text="삭제", 
                 cancel_text="취소", 
-                icon="🗑️",
-                position_near_widget=self.delete_history_button
+                icon="🗑️"
             )
             
             if dialog.exec() == ModernConfirmDialog.Accepted:
-                # DB에서 삭제 (구현 필요시)
-                # db = get_db()
-                # for _, session_name in selected_sessions:
-                #     db.delete_powerlink_session(session_name)
+                # 선택된 세션들의 session_id 추출 후 DB에서 삭제
+                from src.foundation.db import get_db
+                db = get_db()
+                session_ids_to_delete = []
+                
+                for row, session_name in selected_sessions:
+                    # 테이블에서 session_id 가져오기 (UserRole로 저장된 데이터)
+                    date_item = self.history_table.item(row, 1)  # 날짜 열
+                    if date_item:
+                        session_id = date_item.data(Qt.UserRole)
+                        if session_id:
+                            session_ids_to_delete.append(session_id)
+                
+                # DB에서 실제 삭제 수행
+                if session_ids_to_delete:
+                    for session_id in session_ids_to_delete:
+                        db.delete_powerlink_session(session_id)
+                    
+                    log_manager.add_log(f"PowerLink 히스토리 {len(session_ids_to_delete)}개 DB에서 삭제 완료", "success")
+                else:
+                    log_manager.add_log("PowerLink 히스토리 삭제 실패: session_id를 찾을 수 없음", "warning")
                 
                 # 히스토리 새로고침
                 self.refresh_history_list()
-                log_manager.add_log(f"PowerLink 히스토리 {len(selected_sessions)}개 삭제", "success")
                 
         except Exception as e:
             log_manager.add_log(f"PowerLink 히스토리 삭제 실패: {e}", "error")
     
     def view_selected_history(self):
-        """선택된 히스토리 보기 - 모바일/PC 분석 탭에 다시 로드 (다이얼로그 제거)"""
+        """선택된 히스토리 보기 - 모바일/PC 분석 탭에 다시 로드 (service 위임)"""
         try:
-            # 선택된 하나의 세션 찾기
+            # 선택된 하나의 세션 찾기 (아이템 체크 방식)
             selected_session_id = None
             selected_session_name = None
             for row in range(self.history_table.rowCount()):
-                container_widget = self.history_table.cellWidget(row, 0)
-                if container_widget:
-                    checkbox = container_widget.findChild(QCheckBox)
-                    if checkbox and checkbox.isChecked():
-                        # 세션 ID 가져오기 (세션명 아이템에서)
-                        session_name_item = self.history_table.item(row, 1)
-                        selected_session_id = session_name_item.data(Qt.UserRole)
-                        selected_session_name = session_name_item.text()
-                        break
+                checkbox_item = self.history_table.item(row, 0)
+                if checkbox_item and checkbox_item.checkState() == Qt.Checked:
+                    # 세션 ID 가져오기 (세션명 아이템에서)
+                    session_name_item = self.history_table.item(row, 1)
+                    selected_session_id = session_name_item.data(Qt.UserRole)
+                    selected_session_name = session_name_item.text()
+                    break
             
             if not selected_session_id:
                 return
             
-            # DB에서 세션 키워드 데이터 로드
-            db = get_db()
-            session_keywords_data = db.get_powerlink_session_keywords(selected_session_id)
-            if not session_keywords_data:
+            # service를 통해 히스토리 세션 데이터 로드
+            loaded_keywords_data = powerlink_service.load_history_session_data(selected_session_id)
+            
+            if not loaded_keywords_data:
                 log_manager.add_log(f"PowerLink 히스토리 로드 실패: 키워드 데이터 없음 - {selected_session_name}", "error")
                 return
             
-            # 키워드 데이터를 KeywordAnalysisResult 객체로 변환
-            from .models import KeywordAnalysisResult, BidPosition
-            loaded_keywords_data = {}
+            # 기존 데이터 초기화
+            self.keywords_data.clear()
+            keyword_database.clear()
             
-            for keyword, data in session_keywords_data.items():
-                try:
-                    # BidPosition 객체들 복원
-                    pc_bid_positions = []
-                    if data.get('pc_bid_positions'):
-                        for bid_data in data['pc_bid_positions']:
-                            pc_bid_positions.append(BidPosition(
-                                position=bid_data['position'],
-                                bid_price=bid_data['bid_price']
-                            ))
-                    
-                    mobile_bid_positions = []
-                    if data.get('mobile_bid_positions'):
-                        for bid_data in data['mobile_bid_positions']:
-                            mobile_bid_positions.append(BidPosition(
-                                position=bid_data['position'],
-                                bid_price=bid_data['bid_price']
-                            ))
-                    
-                    # KeywordAnalysisResult 객체 복원
-                    result = KeywordAnalysisResult(
-                        keyword=keyword,
-                        pc_search_volume=data.get('pc_search_volume', 0),
-                        mobile_search_volume=data.get('mobile_search_volume', 0),
-                        pc_clicks=data.get('pc_clicks', 0),
-                        pc_ctr=data.get('pc_ctr', 0),
-                        pc_first_page_positions=data.get('pc_first_page_positions', 0),
-                        pc_first_position_bid=data.get('pc_first_position_bid', 0),
-                        pc_min_exposure_bid=data.get('pc_min_exposure_bid', 0),
-                        pc_bid_positions=pc_bid_positions,
-                        mobile_clicks=data.get('mobile_clicks', 0),
-                        mobile_ctr=data.get('mobile_ctr', 0),
-                        mobile_first_page_positions=data.get('mobile_first_page_positions', 0),
-                        mobile_first_position_bid=data.get('mobile_first_position_bid', 0),
-                        mobile_min_exposure_bid=data.get('mobile_min_exposure_bid', 0),
-                        mobile_bid_positions=mobile_bid_positions,
-                        analyzed_at=datetime.fromisoformat(data.get('analyzed_at', datetime.now().isoformat()))
-                    )
-                    
-                    loaded_keywords_data[keyword] = result
-                    keyword_database.add_keyword(result)
-                    
-                except Exception as e:
-                    log_manager.add_log(f"PowerLink 키워드 복원 실패: {keyword}: {e}", "error")
-                    continue
+            # 새 데이터 설정
+            self.keywords_data = loaded_keywords_data
             
-            if loaded_keywords_data:
-                # 기존 데이터 초기화
-                self.keywords_data.clear()
-                keyword_database.clear()
-                
-                # 새 데이터 설정
-                self.keywords_data = loaded_keywords_data
-                
-                # keyword_database에도 데이터 추가
-                for keyword, result in loaded_keywords_data.items():
-                    keyword_database.add_keyword(result)
-                
-                # 순위 재계산
-                keyword_database.recalculate_all_rankings()
-                
-                # 테이블 갱신 (직접 호출로 확실히 업데이트)
-                self.update_all_tables()
-                self.update_save_button_state()
-                
-                # 모바일 분석 탭으로 자동 이동
-                self.tab_widget.setCurrentIndex(0)  # 모바일 분석 탭
-                
-                log_manager.add_log(f"PowerLink 히스토리 로드 완료: {selected_session_name} ({len(loaded_keywords_data)}개 키워드)", "info")
-            else:
-                log_manager.add_log(f"PowerLink 히스토리 로드 실패: 유효한 키워드 없음 - {selected_session_name}", "error")
+            # keyword_database에도 데이터 추가
+            for keyword, result in loaded_keywords_data.items():
+                keyword_database.add_keyword(result)
+            
+            # 히스토리에서 로드된 데이터임을 표시 (중복 저장 방지)
+            self.is_loaded_from_history = True
+            self.loaded_session_id = selected_session_id
+            
+            # 순위 재계산
+            keyword_database.recalculate_all_rankings()
+            
+            # 테이블 갱신 (직접 호출로 확실히 업데이트)
+            self.update_all_tables()
+            self.update_save_button_state()
+            
+            # 모바일 분석 탭으로 자동 이동
+            self.tab_widget.setCurrentIndex(0)  # 모바일 분석 탭
+            
+            log_manager.add_log(f"PowerLink 히스토리 로드 완료: {selected_session_name} ({len(loaded_keywords_data)}개 키워드)", "info")
                 
         except Exception as e:
             log_manager.add_log(f"PowerLink 히스토리 보기 실패: {e}", "error")
@@ -1355,52 +1028,31 @@ class PowerLinkResultsWidget(QWidget):
     def export_selected_history(self):
         """선택된 히스토리 엑셀 내보내기"""
         try:
-            # 선택된 세션 정보 가져오기
+            # 선택된 세션 정보 가져오기 (ModernTableWidget API 사용)
             selected_sessions = []
-            for row in range(self.history_table.rowCount()):
-                container_widget = self.history_table.cellWidget(row, 0)
-                if container_widget:
-                    checkbox = container_widget.findChild(QCheckBox)
-                    if checkbox and checkbox.isChecked():
-                        # 세션 ID 가져오기 (세션명 아이템에서)
-                        session_name_item = self.history_table.item(row, 1)
-                        session_id = session_name_item.data(Qt.UserRole)
-                        session_name = session_name_item.text()
-                        created_at = self.history_table.item(row, 2).text()
-                        selected_sessions.append({
-                            'id': session_id,
-                            'name': session_name,
-                            'created_at': created_at
-                        })
+            for row in self.history_table.get_checked_rows():
+                # 세션 ID 가져오기 (세션명 아이템에서)
+                session_name_item = self.history_table.item(row, 1)
+                session_id = session_name_item.data(Qt.UserRole)
+                session_name = session_name_item.text()
+                created_at = self.history_table.item(row, 2).text()
+                selected_sessions.append({
+                    'id': session_id,
+                    'name': session_name,
+                    'created_at': created_at
+                })
             
             if not selected_sessions:
                 return
             
-            from src.foundation.db import get_db
             from datetime import datetime
             import os
-            
-            db = get_db()
             
             # 선택된 세션이 1개인 경우: 일반 엑셀내보내기처럼 파일 다이얼로그
             if len(selected_sessions) == 1:
                 session = selected_sessions[0]
                 
-                # 세션 키워드 데이터 가져오기
-                keywords_data = db.get_powerlink_session_keywords(session['id'])
-                
-                if not keywords_data:
-                    from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-                    dialog = ModernConfirmDialog(
-                        self,
-                        "데이터 없음",
-                        "선택된 기록에 키워드 데이터가 없습니다.",
-                        confirm_text="확인",
-                        cancel_text=None,
-                        icon="⚠️"
-                    )
-                    dialog.exec()
-                    return
+                # service를 통해 데이터 사전 검증은 export_history_sessions에서 처리됨
                 
                 # 파일 저장 다이얼로그 (원본 세션 시간으로 기본 파일명 설정)
                 session_time = datetime.fromisoformat(session['created_at'])
@@ -1417,13 +1069,10 @@ class PowerLinkResultsWidget(QWidget):
                 
                 if file_path:
                     try:
-                        # 엑셀 파일 생성
-                        from .excel_export import powerlink_excel_exporter
-                        powerlink_excel_exporter.export_to_excel(
-                            keywords_data=keywords_data,
-                            file_path=file_path,
-                            session_name=session['name']
-                        )
+                        # 엑셀 파일 생성 - service 위임
+                        success, _ = powerlink_service.export_history_sessions([session['id']], single_file_path=file_path)
+                        if not success:
+                            raise Exception("엑셀 파일 생성 실패")
                         
                         # 저장 완료 다이얼로그
                         from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
@@ -1468,34 +1117,9 @@ class PowerLinkResultsWidget(QWidget):
                 if not folder_path:
                     return
                 
-                # 각 세션별로 엑셀 파일 생성
-                saved_files = []
-                
-                for session in selected_sessions:
-                    try:
-                        # 세션 키워드 데이터 가져오기
-                        keywords_data = db.get_powerlink_session_keywords(session['id'])
-                        
-                        if keywords_data:
-                            # 파일명 생성 (세션 생성 시간 사용)
-                            session_time = datetime.fromisoformat(session['created_at'])
-                            time_str = session_time.strftime('%Y%m%d_%H%M%S')
-                            filename = f"파워링크광고비분석_{time_str}.xlsx"
-                            file_path = os.path.join(folder_path, filename)
-                            
-                            # 엑셀 파일 생성
-                            from .excel_export import powerlink_excel_exporter
-                            powerlink_excel_exporter.export_to_excel(
-                                keywords_data=keywords_data,
-                                file_path=file_path,
-                                session_name=session['name']
-                            )
-                            
-                            saved_files.append(file_path)
-                            
-                    except Exception as e:
-                        log_manager.add_log(f"세션 {session['name']} 내보내기 실패: {e}", "error")
-                        continue
+                # service를 통해 다중 세션 엑셀 내보내기
+                session_ids = [session['id'] for session in selected_sessions]
+                success, saved_files = powerlink_service.export_history_sessions(session_ids, output_folder=folder_path)
                 
                 if saved_files:
                     # 저장 완료 다이얼로그 (폴더 열기 옵션 포함)
@@ -1547,301 +1171,23 @@ class PowerLinkResultsWidget(QWidget):
         self.save_button_state_changed.emit(has_data)
         self.clear_button_state_changed.emit(has_data)
     
-    def setup_mobile_header_checkbox(self):
-        """모바일 테이블 헤더에 체크박스 추가 (원본과 동일)"""
-        try:
-            # 헤더용 체크박스 생성
-            self.mobile_header_checkbox = QCheckBox()
-            self.mobile_header_checkbox.setStyleSheet("""
-                QCheckBox {
-                    spacing: 0px;
-                    margin: 0px;
-                    padding: 0px;
-                    border: none;
-                    background-color: transparent;
-                }
-                QCheckBox::indicator {
-                    width: 18px;
-                    height: 18px;
-                    border: 2px solid #ccc;
-                    border-radius: 3px;
-                    background-color: white;
-                    margin: 1px;
-                }
-                QCheckBox::indicator:checked {
-                    background-color: #dc3545;
-                    border-color: #dc3545;
-                    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
-                }
-                QCheckBox::indicator:hover {
-                    border-color: #999999;
-                    background-color: #f8f9fa;
-                }
-                QCheckBox::indicator:checked:hover {
-                    background-color: #c82333;
-                    border-color: #c82333;
-                }
-            """)
-            self.mobile_header_checkbox.stateChanged.connect(lambda state: self.on_header_checkbox_changed(self.mobile_table, self.mobile_header_checkbox))
-            
-            # 첫 번째 컬럼 헤더를 빈 문자열로 설정
-            header_item = self.mobile_table.horizontalHeaderItem(0)
-            if header_item:
-                header_item.setText("")
-            
-            # 실제 위젯을 헤더에 직접 배치 (Qt의 제약으로 직접적인 위젯 설정은 어려움)
-            # 대신 헤더 위치에 overlay 방식으로 체크박스 배치
-            self.position_mobile_header_checkbox()
-            
-        except Exception as e:
-            print(f"모바일 헤더 체크박스 설정 실패: {e}")
+    # Legacy header checkbox methods removed - ModernTableWidget handles automatically
     
-    def setup_pc_header_checkbox(self):
-        """PC 테이블 헤더에 체크박스 추가 (원본과 동일)"""
-        try:
-            # 헤더용 체크박스 생성
-            self.pc_header_checkbox = QCheckBox()
-            self.pc_header_checkbox.setStyleSheet("""
-                QCheckBox {
-                    spacing: 0px;
-                    margin: 0px;
-                    padding: 0px;
-                    border: none;
-                    background-color: transparent;
-                }
-                QCheckBox::indicator {
-                    width: 18px;
-                    height: 18px;
-                    border: 2px solid #ccc;
-                    border-radius: 3px;
-                    background-color: white;
-                    margin: 1px;
-                }
-                QCheckBox::indicator:checked {
-                    background-color: #dc3545;
-                    border-color: #dc3545;
-                    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
-                }
-                QCheckBox::indicator:hover {
-                    border-color: #999999;
-                    background-color: #f8f9fa;
-                }
-                QCheckBox::indicator:checked:hover {
-                    background-color: #c82333;
-                    border-color: #c82333;
-                }
-            """)
-            self.pc_header_checkbox.stateChanged.connect(lambda state: self.on_header_checkbox_changed(self.pc_table, self.pc_header_checkbox))
-            
-            # 첫 번째 컬럼 헤더를 빈 문자열로 설정
-            header_item = self.pc_table.horizontalHeaderItem(0)
-            if header_item:
-                header_item.setText("")
-            
-            # 실제 위젯을 헤더에 직접 배치 (Qt의 제약으로 직접적인 위젯 설정은 어려움)
-            # 대신 헤더 위치에 overlay 방식으로 체크박스 배치
-            self.position_pc_header_checkbox()
-            
-        except Exception as e:
-            print(f"PC 헤더 체크박스 설정 실패: {e}")
     
-    def position_mobile_header_checkbox(self):
-        """모바일 테이블 헤더 위치에 체크박스 오버레이"""
-        try:
-            if not hasattr(self, 'mobile_header_checkbox') or not self.mobile_header_checkbox:
-                return
-                
-            # QTableWidget의 헤더 영역 위치 계산
-            header = self.mobile_table.horizontalHeader()
-            
-            # 안전한 위치 계산
-            if header.sectionSize(0) <= 0:
-                return
-                
-            header_rect = header.sectionViewportPosition(0), 0, header.sectionSize(0), header.height()
-            
-            # 체크박스를 헤더 위에 오버레이로 배치 (부모는 한번만 설정)
-            if self.mobile_header_checkbox.parent() != self.mobile_table:
-                self.mobile_header_checkbox.setParent(self.mobile_table)
-            
-            # 체크박스 위치 계산 및 설정 (센터 정렬, 18px 크기)
-            checkbox_x = header_rect[0] + (header_rect[2] - 22) // 2
-            checkbox_y = (header_rect[3] - 22) // 2
-            
-            self.mobile_header_checkbox.setGeometry(checkbox_x, checkbox_y, 22, 22)
-            self.mobile_header_checkbox.show()
-            self.mobile_header_checkbox.raise_()  # 최상위로 올리기
-            
-        except Exception as e:
-            print(f"모바일 헤더 체크박스 위치 설정 실패: {e}")
     
-    def position_pc_header_checkbox(self):
-        """PC 테이블 헤더 위치에 체크박스 오버레이"""
-        try:
-            if not hasattr(self, 'pc_header_checkbox') or not self.pc_header_checkbox:
-                return
-                
-            # QTableWidget의 헤더 영역 위치 계산
-            header = self.pc_table.horizontalHeader()
-            
-            # 안전한 위치 계산
-            if header.sectionSize(0) <= 0:
-                return
-                
-            header_rect = header.sectionViewportPosition(0), 0, header.sectionSize(0), header.height()
-            
-            # 체크박스를 헤더 위에 오버레이로 배치 (부모는 한번만 설정)
-            if self.pc_header_checkbox.parent() != self.pc_table:
-                self.pc_header_checkbox.setParent(self.pc_table)
-            
-            # 체크박스 위치 계산 및 설정 (센터 정렬, 18px 크기)
-            checkbox_x = header_rect[0] + (header_rect[2] - 22) // 2
-            checkbox_y = (header_rect[3] - 22) // 2
-            
-            self.pc_header_checkbox.setGeometry(checkbox_x, checkbox_y, 22, 22)
-            self.pc_header_checkbox.show()
-            self.pc_header_checkbox.raise_()  # 최상위로 올리기
-            
-        except Exception as e:
-            print(f"PC 헤더 체크박스 위치 설정 실패: {e}")
     
-    def on_header_checkbox_changed(self, table: QTableWidget, header_checkbox: QCheckBox):
-        """헤더 체크박스 상태 변경 시 모든 행 체크박스 상태 변경"""
-        try:
-            is_checked = header_checkbox.isChecked()
-            
-            # 모든 행의 체크박스 상태를 헤더 체크박스와 동일하게 설정
-            for row in range(table.rowCount()):
-                # 컨테이너 위젯 내의 체크박스 찾기
-                container_widget = table.cellWidget(row, 0)
-                if container_widget:
-                    checkbox = container_widget.findChild(QCheckBox)
-                    if checkbox:
-                        checkbox.blockSignals(True)  # 시그널 차단으로 무한 루프 방지
-                        checkbox.setChecked(is_checked)
-                        checkbox.blockSignals(False)  # 시그널 재활성화
-            
-            # 삭제 버튼 상태 업데이트
-            self.update_delete_button_state()
-            
-        except Exception as e:
-            print(f"헤더 체크박스 변경 처리 실패: {e}")
     
-    def position_all_header_checkboxes(self):
-        """모든 헤더 체크박스 위치 조정"""
-        self.position_mobile_header_checkbox()
-        self.position_pc_header_checkbox()
-        self.position_history_header_checkbox()
     
-    def setup_history_header_checkbox(self):
-        """히스토리 테이블 헤더에 체크박스 추가 (원본과 동일)"""
-        try:
-            # 헤더용 체크박스 생성
-            self.history_header_checkbox = QCheckBox()
-            self.history_header_checkbox.setStyleSheet(f"""
-                QCheckBox {{
-                    spacing: 0px;
-                    margin: 0px;
-                    padding: 0px;
-                    border: none;
-                    background-color: transparent;
-                }}
-                QCheckBox::indicator {{
-                    width: 18px;
-                    height: 18px;
-                    border: 2px solid #ccc;
-                    border-radius: 3px;
-                    background-color: white;
-                    margin: 1px;
-                }}
-                QCheckBox::indicator:checked {{
-                    background-color: {ModernStyle.COLORS['danger']};
-                    border-color: {ModernStyle.COLORS['danger']};
-                    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
-                }}
-                QCheckBox::indicator:hover {{
-                    border-color: #999999;
-                    background-color: #f8f9fa;
-                }}
-                QCheckBox::indicator:checked:hover {{
-                    background-color: #c82333;
-                    border-color: #c82333;
-                }}
-            """)
-            self.history_header_checkbox.stateChanged.connect(lambda state: self.on_history_header_checkbox_changed(state))
-            
-            # 첫 번째 컬럼 헤더를 빈 문자열로 설정
-            header_item = self.history_table.horizontalHeaderItem(0)
-            if header_item:
-                header_item.setText("")
-            
-            # 헤더 위치에 오버레이로 체크박스 배치
-            self.position_history_header_checkbox()
-            
-        except Exception as e:
-            print(f"히스토리 헤더 체크박스 설정 실패: {e}")
     
-    def position_history_header_checkbox(self):
-        """히스토리 테이블 헤더 위치에 체크박스 오버레이"""
-        try:
-            if not hasattr(self, 'history_header_checkbox') or not self.history_header_checkbox:
-                return
-                
-            # QTableWidget의 헤더 영역 위치 계산
-            header = self.history_table.horizontalHeader()
-            
-            # 안전한 위치 계산
-            if header.sectionSize(0) <= 0:
-                return
-                
-            header_rect = header.sectionViewportPosition(0), 0, header.sectionSize(0), header.height()
-            
-            # 체크박스를 헤더 위에 오버레이로 배치 (부모는 한번만 설정)
-            if self.history_header_checkbox.parent() != self.history_table:
-                self.history_header_checkbox.setParent(self.history_table)
-            
-            # 체크박스 위치 조정 (중앙 정렬)
-            x = header_rect[0] + (header_rect[2] - self.history_header_checkbox.width()) // 2
-            y = header_rect[1] + (header_rect[3] - self.history_header_checkbox.height()) // 2
-            
-            self.history_header_checkbox.move(x, y)
-            self.history_header_checkbox.show()
-            self.history_header_checkbox.raise_()  # 다른 위젯 위로 올리기
-            
-        except Exception as e:
-            print(f"히스토리 헤더 체크박스 위치 조정 실패: {e}")
-    
-    def on_history_header_checkbox_changed(self, state):
-        """히스토리 헤더 체크박스 상태 변경 처리"""
-        try:
-            is_checked = (state == 2)  # Qt.Checked
-            
-            # 모든 행의 체크박스 상태 변경
-            for row in range(self.history_table.rowCount()):
-                container_widget = self.history_table.cellWidget(row, 0)
-                if container_widget:
-                    checkbox = container_widget.findChild(QCheckBox)
-                    if checkbox:
-                        checkbox.blockSignals(True)  # 시그널 차단으로 무한 루프 방지
-                        checkbox.setChecked(is_checked)
-                        checkbox.blockSignals(False)  # 시그널 재활성화
-            
-            # 히스토리 버튼 상태 업데이트
-            self.update_history_button_states()
-            
-        except Exception as e:
-            print(f"히스토리 헤더 체크박스 변경 처리 실패: {e}")
     
     def update_history_button_states(self):
         """히스토리 관련 버튼 상태 업데이트"""
         try:
             selected_count = 0
             for row in range(self.history_table.rowCount()):
-                container_widget = self.history_table.cellWidget(row, 0)
-                if container_widget:
-                    checkbox = container_widget.findChild(QCheckBox)
-                    if checkbox and checkbox.isChecked():
-                        selected_count += 1
+                checkbox_item = self.history_table.item(row, 0)
+                if checkbox_item and checkbox_item.checkState() == Qt.Checked:
+                    selected_count += 1
             
             # 버튼 활성화 상태 및 텍스트 업데이트
             has_selection = selected_count > 0
@@ -1888,6 +1234,11 @@ class PowerLinkResultsWidget(QWidget):
     
     def on_analysis_started(self):
         """분석 시작 시 저장 버튼 비활성화"""
+        # 새로운 분석 시작 시 히스토리 플래그 초기화
+        self.is_loaded_from_history = False
+        if hasattr(self, 'loaded_session_id'):
+            delattr(self, 'loaded_session_id')
+        
         self.save_analysis_button.setEnabled(False)
         self.save_analysis_button.setText("💾 분석 중...")
         log_manager.add_log("PowerLink 분석 시작 - 저장 버튼 비활성화", "info")
@@ -1900,12 +1251,26 @@ class PowerLinkResultsWidget(QWidget):
         log_manager.add_log("PowerLink 분석 완료 - 저장 버튼 상태 업데이트", "info")
     
     def save_current_analysis(self):
-        """현재 분석 결과 저장"""
+        """현재 분석 결과 저장 - service 위임"""
         try:
-            # 현재 키워드 데이터 가져오기
-            keywords_data = keyword_database.keywords
+            # 히스토리에서 로드된 데이터인지 확인
+            if hasattr(self, 'is_loaded_from_history') and self.is_loaded_from_history:
+                from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+                dialog = ModernConfirmDialog(
+                    self,
+                    "저장 불가",
+                    "이미 저장된 히스토리 데이터입니다.\n\n새로운 분석을 실행한 후 저장해주세요.",
+                    confirm_text="확인",
+                    cancel_text=None,
+                    icon="⚠️"
+                )
+                dialog.exec()
+                return
             
-            if not keywords_data:
+            # service를 통해 저장 처리
+            success, session_id, session_name, is_duplicate = powerlink_service.save_current_analysis_to_db()
+            
+            if not success:
                 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
                 dialog = ModernConfirmDialog(
                     self,
@@ -1918,40 +1283,22 @@ class PowerLinkResultsWidget(QWidget):
                 dialog.exec()
                 return
             
-            # 중복 확인
-            db = get_db()
-            is_duplicate = db.check_powerlink_session_duplicate_24h(keywords_data)
+            # 키워드 개수 가져오기
+            keyword_count = len(keyword_database.keywords)
             
-            from datetime import datetime
-            session_name = f"PowerLink분석_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            # 저장 다이얼로그 표시
+            save_dialog = PowerLinkSaveDialog(
+                session_id=session_id,
+                session_name=session_name,
+                keyword_count=keyword_count,
+                is_duplicate=is_duplicate,
+                parent=self
+            )
+            save_dialog.exec()
             
-            if is_duplicate:
-                # 중복이면 저장하지 않고 다이얼로그만 표시
-                save_dialog = PowerLinkSaveDialog(
-                    session_id=0,  # 더미값
-                    session_name=session_name,
-                    keyword_count=len(keywords_data),
-                    is_duplicate=True,
-                    parent=self
-                )
-                save_dialog.exec()
-            else:
-                # 중복이 아니면 DB에 저장하고 다이얼로그 표시
-                session_id = db.save_powerlink_analysis_session(keywords_data)
-                
-                # 히스토리 새로고침
+            # 저장이 성공했고 중복이 아닌 경우에만 히스토리 새로고침
+            if not is_duplicate:
                 self.refresh_history_list()
-                
-                save_dialog = PowerLinkSaveDialog(
-                    session_id=session_id,
-                    session_name=session_name,
-                    keyword_count=len(keywords_data),
-                    is_duplicate=False,
-                    parent=self
-                )
-                save_dialog.exec()
-                
-                log_manager.add_log(f"PowerLink 분석 세션 저장 완료: {session_name} ({len(keywords_data)}개 키워드)", "success")
             
         except Exception as e:
             logger.error(f"PowerLink 분석 세션 저장 실패: {e}")
@@ -1964,19 +1311,34 @@ class PowerLinkResultsWidget(QWidget):
             if not keyword_database.keywords:
                 return
             
-            # 모던 확인 다이얼로그 (클리어 버튼 근처에 표시)
+            # 모던 확인 다이얼로그 (키워드분석기와 동일한 방식)
             from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-            dialog = ModernConfirmDialog(
-                self,
-                "전체 클리어 확인",
-                f"모든 분석 결과를 삭제하시겠습니까?\\n\\n현재 키워드: {len(keyword_database.keywords)}개\\n\\n이 작업은 되돌릴 수 없습니다.",
-                confirm_text="삭제",
-                cancel_text="취소",
-                icon="🗑",
-                position_near_widget=self.clear_button
-            )
+            try:
+                confirmed = ModernConfirmDialog.warning(
+                    self, 
+                    "분석 결과 삭제", 
+                    f"모든 분석 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.",
+                    "삭제", 
+                    "취소"
+                )
+            except:
+                # fallback: 생성자 사용하여 ⚠️ 이모티콘 표시
+                dialog = ModernConfirmDialog(
+                    self,
+                    "분석 결과 삭제",
+                    f"모든 분석 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.",
+                    confirm_text="삭제",
+                    cancel_text="취소",
+                    icon="⚠️"
+                )
+                confirmed = dialog.exec()
             
-            if dialog.exec() == ModernConfirmDialog.Accepted:
+            if confirmed:
+                # 히스토리 플래그 초기화
+                self.is_loaded_from_history = False
+                if hasattr(self, 'loaded_session_id'):
+                    delattr(self, 'loaded_session_id')
+                
                 # 메모리 데이터베이스 클리어
                 keyword_database.clear()
                 
@@ -2269,8 +1631,8 @@ class PowerLinkResultsWidget(QWidget):
                     margin: 0px;
                 }}
                 QCheckBox::indicator:checked {{
-                    background-color: {ModernStyle.COLORS['danger']};
-                    border-color: {ModernStyle.COLORS['danger']};
+                    background-color: {ModernStyle.COLORS['primary']};
+                    border-color: {ModernStyle.COLORS['primary']};
                     image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
                 }}
                 QCheckBox::indicator:hover {{
@@ -2278,8 +1640,8 @@ class PowerLinkResultsWidget(QWidget):
                     background-color: #f8f9fa;
                 }}
                 QCheckBox::indicator:checked:hover {{
-                    background-color: #dc2626;
-                    border-color: #dc2626;
+                    background-color: #0056b3;
+                    border-color: #0056b3;
                 }}
             """)
             checkbox.stateChanged.connect(lambda: self.update_delete_button_state())
@@ -2439,38 +1801,32 @@ class PowerLinkResultsWidget(QWidget):
     def update_delete_button_state(self):
         """선택삭제 버튼 상태 업데이트"""
         try:
-            # 모바일 테이블 체크 여부 확인
+            # 모바일 테이블 체크 여부 확인 (아이템 체크 방식)
             mobile_checked = False
+            mobile_count = 0
             if hasattr(self, 'mobile_table'):
                 for row in range(self.mobile_table.rowCount()):
-                    container_widget = self.mobile_table.cellWidget(row, 0)
-                    if container_widget:
-                        checkbox = container_widget.findChild(QCheckBox)
-                        if checkbox and checkbox.isChecked():
-                            mobile_checked = True
-                            break
+                    checkbox_item = self.mobile_table.item(row, 0)
+                    if checkbox_item and checkbox_item.checkState() == Qt.Checked:
+                        mobile_checked = True
+                        mobile_count += 1
             
-            # PC 테이블 체크 여부 확인
+            # PC 테이블 체크 여부 확인 (아이템 체크 방식)
             pc_checked = False
+            pc_count = 0
             if hasattr(self, 'pc_table'):
                 for row in range(self.pc_table.rowCount()):
-                    container_widget = self.pc_table.cellWidget(row, 0)
-                    if container_widget:
-                        checkbox = container_widget.findChild(QCheckBox)
-                        if checkbox and checkbox.isChecked():
-                            pc_checked = True
-                            break
+                    checkbox_item = self.pc_table.item(row, 0)
+                    if checkbox_item and checkbox_item.checkState() == Qt.Checked:
+                        pc_checked = True
+                        pc_count += 1
             
             # 버튼 상태 업데이트
             if hasattr(self, 'mobile_delete_button'):
                 self.mobile_delete_button.setEnabled(mobile_checked)
                 # 선택된 개수 표시
                 if mobile_checked:
-                    count = sum(1 for row in range(self.mobile_table.rowCount()) 
-                              if self.mobile_table.cellWidget(row, 0) and 
-                              self.mobile_table.cellWidget(row, 0).findChild(QCheckBox) and
-                              self.mobile_table.cellWidget(row, 0).findChild(QCheckBox).isChecked())
-                    self.mobile_delete_button.setText(f"🗑️ 선택 삭제 ({count})")
+                    self.mobile_delete_button.setText(f"🗑️ 선택 삭제 ({mobile_count})")
                 else:
                     self.mobile_delete_button.setText("🗑️ 선택 삭제")
             
@@ -2478,11 +1834,7 @@ class PowerLinkResultsWidget(QWidget):
                 self.pc_delete_button.setEnabled(pc_checked)
                 # 선택된 개수 표시
                 if pc_checked:
-                    count = sum(1 for row in range(self.pc_table.rowCount()) 
-                              if self.pc_table.cellWidget(row, 0) and 
-                              self.pc_table.cellWidget(row, 0).findChild(QCheckBox) and
-                              self.pc_table.cellWidget(row, 0).findChild(QCheckBox).isChecked())
-                    self.pc_delete_button.setText(f"🗑️ 선택 삭제 ({count})")
+                    self.pc_delete_button.setText(f"🗑️ 선택 삭제 ({pc_count})")
                 else:
                     self.pc_delete_button.setText("🗑️ 선택 삭제")
                     
@@ -2500,19 +1852,17 @@ class PowerLinkResultsWidget(QWidget):
     def delete_selected_keywords_from_table(self, table: QTableWidget, device_name: str):
         """선택된 키워드를 테이블에서 삭제"""
         try:
-            # 선택된 키워드들 찾기
+            # 선택된 키워드들 찾기 (아이템 체크 방식)
             selected_keywords = []
             selected_rows = []
             
             for row in range(table.rowCount()):
-                container_widget = table.cellWidget(row, 0)
-                if container_widget:
-                    checkbox = container_widget.findChild(QCheckBox)
-                    if checkbox and checkbox.isChecked():
-                        keyword_item = table.item(row, 1)
-                        if keyword_item:
-                            selected_keywords.append(keyword_item.text())
-                            selected_rows.append(row)
+                checkbox_item = table.item(row, 0)
+                if checkbox_item and checkbox_item.checkState() == Qt.Checked:
+                    keyword_item = table.item(row, 1)
+                    if keyword_item:
+                        selected_keywords.append(keyword_item.text())
+                        selected_rows.append(row)
             
             if not selected_keywords:
                 return
@@ -2834,3 +2184,77 @@ class BidDetailsDialog(QDialog):
             from PySide6.QtWidgets import QMessageBox
             QMessageBox.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
     
+    def view_selected_history(self):
+        """선택된 히스토리 항목 보기 (1개 또는 여러 개 선택 가능 - 키워드 병합)"""
+        try:
+            selected_rows = self.history_table.get_checked_rows()
+            
+            if len(selected_rows) == 0:
+                from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+                ModernInfoDialog.warning(self, "선택 없음", "보려는 기록을 선택해주세요.")
+                return
+            
+            # 선택된 모든 세션의 키워드 데이터 병합
+            merged_data = {}
+            session_names = []
+            
+            for row in selected_rows:
+                session_name_item = self.history_table.item(row, 1)
+                
+                if not session_name_item:
+                    continue
+                
+                session_name = session_name_item.text()
+                session_names.append(session_name)
+                
+                # 세션 데이터 로드
+                session_data = keyword_database.load_session(session_name)
+                if session_data:
+                    # 키워드 데이터 병합 (중복시 최신 데이터 우선)
+                    merged_data.update(session_data)
+            
+            if not merged_data:
+                from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+                ModernInfoDialog.warning(self, "로드 실패", "선택된 세션의 데이터를 로드할 수 없습니다.")
+                return
+            
+            # 병합된 데이터를 현재 분석으로 설정
+            self.set_keywords_data(merged_data)
+            
+            # 성공 메시지
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            if len(selected_rows) == 1:
+                message = f"'{session_names[0]}' 세션이 현재 분석으로 로드되었습니다.\n\n모바일/PC 탭에서 확인하실 수 있습니다."
+            else:
+                session_list = "\n".join([f"• {name}" for name in session_names])
+                message = f"{len(selected_rows)}개 세션의 키워드가 병합되어 로드되었습니다:\n\n{session_list}\n\n총 {len(merged_data)}개 키워드를 모바일/PC 탭에서 확인하실 수 있습니다."
+            
+            ModernInfoDialog.success(self, "기록 로드 완료", message)
+            
+        except Exception as e:
+            logger.error(f"히스토리 보기 실패: {e}")
+            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
+            ModernInfoDialog.warning(self, "오류", f"기록을 불러오는 중 오류가 발생했습니다: {str(e)}")
+    
+    def update_history_button_state(self):
+        """히스토리 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
+        selected_count = self.history_table.get_selected_count()
+        
+        # 모든 버튼: 1개 이상 선택시 활성화 (보기 버튼도 여러 개 선택 허용)
+        has_selection = selected_count > 0
+        self.delete_history_button.setEnabled(has_selection)
+        self.export_selected_history_button.setEnabled(has_selection)
+        self.view_history_button.setEnabled(has_selection)
+        
+        # 버튼 텍스트 업데이트
+        if selected_count > 0:
+            self.delete_history_button.setText(f"🗑️ 선택 삭제 ({selected_count})")
+            self.export_selected_history_button.setText(f"💾 선택 저장 ({selected_count})")
+            if selected_count == 1:
+                self.view_history_button.setText("👀 보기")
+            else:
+                self.view_history_button.setText(f"👀 보기 ({selected_count}개 병합)")
+        else:
+            self.delete_history_button.setText("🗑️ 선택 삭제")
+            self.export_selected_history_button.setText("💾 선택 저장")
+            self.view_history_button.setText("👀 보기")

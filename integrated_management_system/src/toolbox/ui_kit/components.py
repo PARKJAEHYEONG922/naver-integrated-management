@@ -172,14 +172,14 @@ class ModernTextEdit(QTextEdit):
 
 
 class ModernCard(QGroupBox):
-    """모던 스타일 카드 - 원본과 동일한 QGroupBox 기반"""
+    """모던 스타일 카드 - 네이버카페 버전 스타일 (공용 표준)"""
     
     def __init__(self, title: str = "", parent=None):
         super().__init__(title, parent)
         self._setup_style()
     
     def _setup_style(self):
-        """스타일 설정 - 원본과 동일"""
+        """스타일 설정 - 네이버카페 버전 스타일 (공용 표준)"""
         self.setStyleSheet(f"""
             QGroupBox {{
                 font-size: 13px;
