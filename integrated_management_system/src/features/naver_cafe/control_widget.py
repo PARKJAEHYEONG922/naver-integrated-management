@@ -17,19 +17,12 @@ from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from .models import (
     CafeInfo, BoardInfo, ExtractionTask, ExtractionProgress, 
-    cafe_extraction_db
+    ExtractionStatus, cafe_extraction_db
 )
 from .worker import NaverCafeUnifiedWorker
 from .service import NaverCafeExtractionService
-# config.py 삭제됨 - 필요한 메시지는 직접 사용
 
 logger = get_logger("features.naver_cafe.control_widget")
-
-
-
-
-
-# 중복된 UI 컴포넌트 제거 - toolbox.ui_kit.components 사용
 
 
 class NaverCafeControlWidget(QWidget):
@@ -49,8 +42,6 @@ class NaverCafeControlWidget(QWidget):
         self.current_boards: List[BoardInfo] = []
         self.extraction_in_progress = False
         self.is_manually_stopped = False
-        
-        # 검색 재시도 관련 변수들 제거 (실제 사용되지 않는 비즈니스 로직)
         
         # 통합 워커 (하나만 사용)
         self.unified_worker = None
@@ -387,18 +378,18 @@ class NaverCafeControlWidget(QWidget):
         return loading_widget
     
     def rotate_spinner(self):
-        """스피너 회전 애니메이션 (원본과 동일)"""
+        """스피너 회전 애니메이션"""
         self.spinner_index = (self.spinner_index + 1) % len(self.spinner_icons)
         self.loading_spinner.setText(self.spinner_icons[self.spinner_index])
     
     def show_board_loading(self, message="게시판 로딩 중..."):
-        """게시판 로딩 표시 시작 (원본과 동일)"""
+        """게시판 로딩 표시 시작"""
         self.loading_message.setText(message)
         self.board_loading_widget.show()
         self.spinner_timer.start(500)  # 0.5초마다 회전
     
     def hide_board_loading(self):
-        """게시판 로딩 표시 종료 (원본과 동일)"""
+        """게시판 로딩 표시 종료"""
         self.board_loading_widget.hide()
         self.spinner_timer.stop()
         self.spinner_index = 0
