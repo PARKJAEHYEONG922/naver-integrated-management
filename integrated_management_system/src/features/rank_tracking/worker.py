@@ -24,6 +24,7 @@ class RankingCheckWorker(QThread):
         super().__init__()
         self.project_id = project_id
         self.is_running = True
+        self.executor = None
     
     def run(self):
         """순위 확인 실행 (service 계층 활용으로 단순화)"""
@@ -82,6 +83,7 @@ class RankingCheckWorker(QThread):
             
             # ThreadPoolExecutor로 병렬 처리 (최대 3개 워커)
             with ThreadPoolExecutor(max_workers=min(len(keywords), 3)) as executor:
+                self.executor = executor
                 # 모든 키워드를 병렬로 제출
                 futures = {
                     executor.submit(process_single_keyword, keyword_obj): keyword_obj
@@ -140,6 +142,15 @@ class RankingCheckWorker(QThread):
     def stop(self):
         """워커 중단"""
         self.is_running = False
+        rank_tracking_service.stop_processing()
+        
+        # ThreadPoolExecutor 강제 종료
+        if self.executor:
+            try:
+                self.executor.shutdown(wait=False)
+                logger.info("ThreadPoolExecutor 강제 종료 완료")
+            except Exception as e:
+                logger.warning(f"ThreadPoolExecutor 종료 실패: {e}")
 
 
 class KeywordInfoWorker(QThread):

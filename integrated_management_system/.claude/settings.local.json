@@ -21,7 +21,8 @@
       "Bash(sed:*)",
       "Bash(dir:*)",
       "Bash(sqlite3:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(ren:*)"
     ],
     "deny": []
   }

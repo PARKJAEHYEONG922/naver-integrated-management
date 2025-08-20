@@ -766,9 +766,14 @@ class RankingTableWidget(QWidget):
             for row in range(self.ranking_table.rowCount()):
                 column_data.append("-")
             
-            # 동적 컬럼 추가 (최신 순위가 앞에 오도록 4번째 위치에 삽입)
-            # 현재는 맨 뒤에 추가하는 방식으로 구현 (순위 확인 완료 시 가장 최신이 앞에 오도록)
-            self.ranking_table.add_dynamic_column(formatted_time, column_data, 100)
+            # 동적 컬럼 추가 (월검색량 바로 다음인 4번째 위치에 삽입)
+            insert_position = 4
+            success = self.ranking_table.insert_column_at_position(insert_position, formatted_time, column_data, 100)
+            
+            if not success:
+                # 삽입 실패시 맨 뒤에 추가 (fallback)
+                logger.warning(f"4번째 위치 삽입 실패, 맨 뒤에 추가: {formatted_time}")
+                self.ranking_table.add_dynamic_column(formatted_time, column_data, 100)
             
             logger.info(f"새 순위 컬럼 '{formatted_time}' 추가 완료")
             
@@ -992,6 +997,10 @@ class RankingTableWidget(QWidget):
         log_manager.add_log(f"⏹️ {self.current_project.current_name} 순위 확인을 정지했습니다.", "warning")
         
         rank_tracking_service.stop_ranking_check(project_id)
+        
+        # 즉시 UI 상태 업데이트
+        self.update_button_state_for_current_project(running=False)
+        self.hide_progress()
     
     def add_keyword(self):
         """키워드 추가 다이얼로그"""

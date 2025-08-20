@@ -556,6 +556,132 @@ class ModernTableWidget(QTableWidget):
         
         return new_column_index
     
+    def insert_column_at_position(self, position: int, column_title: str, column_data: List[Any] = None, column_width: int = 100) -> bool:
+        """
+        특정 위치에 컬럼 삽입 (원본 순위추적과 동일한 로직)
+        
+        Args:
+            position: 삽입할 위치 (0-based index)
+            column_title: 새 컬럼 제목  
+            column_data: 각 행에 넣을 데이터 리스트 (None이면 빈 값)
+            column_width: 컬럼 너비
+            
+        Returns:
+            삽입 성공 여부
+        """
+        if position < 0 or position > self.columnCount():
+            return False
+            
+        try:
+            # 1. 기존 모든 데이터 백업
+            backup_data = []
+            for row in range(self.rowCount()):
+                row_data = []
+                for col in range(self.columnCount()):
+                    item = self.item(row, col)
+                    if item:
+                        row_data.append({
+                            'text': item.text(),
+                            'data': item.data(Qt.UserRole),
+                            'checkState': item.checkState() if col == 0 and self.has_checkboxes else None
+                        })
+                    else:
+                        row_data.append({'text': '', 'data': None, 'checkState': None})
+                backup_data.append(row_data)
+            
+            # 2. 기존 헤더 백업
+            old_headers = []
+            for col in range(self.columnCount()):
+                header_item = self.horizontalHeaderItem(col)
+                old_headers.append(header_item.text() if header_item else "")
+            
+            # 3. 새 컬럼 추가 (맨 뒤에 임시로)
+            self.insertColumn(self.columnCount())
+            
+            # 4. 새로운 헤더 순서 만들기 - position 위치에 새 헤더 삽입
+            new_headers = []
+            for i in range(self.columnCount()):
+                if i < position:
+                    # position 전까지는 기존 헤더
+                    if i < len(old_headers):
+                        new_headers.append(old_headers[i])
+                    else:
+                        new_headers.append("")
+                elif i == position:
+                    # position 위치에 새 헤더
+                    new_headers.append(column_title)
+                else:
+                    # position 후는 기존 헤더를 한 칸씩 뒤로
+                    original_index = i - 1
+                    if original_index < len(old_headers):
+                        new_headers.append(old_headers[original_index])
+                    else:
+                        new_headers.append("")
+            
+            # 5. 헤더 적용
+            self.setHorizontalHeaderLabels(new_headers)
+            
+            # 6. 데이터 재배치 - position 위치에 새 데이터 삽입
+            for row in range(len(backup_data)):
+                row_backup = backup_data[row]
+                
+                for col in range(self.columnCount()):
+                    if col < position:
+                        # position 전까지는 기존 데이터
+                        if col < len(row_backup):
+                            self._restore_item(row, col, row_backup[col])
+                    elif col == position:
+                        # position 위치에 새 데이터
+                        if column_data and row < len(column_data):
+                            value = column_data[row]
+                            str_value = str(value) if value is not None else ""
+                            
+                            if self._is_rank_data(str_value):
+                                item = SortableTableWidgetItem(str_value)
+                                from .sortable_items import set_rank_sort_data
+                                set_rank_sort_data(item, 0, str_value)
+                            else:
+                                item = SortableTableWidgetItem(str_value)
+                        else:
+                            item = SortableTableWidgetItem("")
+                        
+                        self.setItem(row, col, item)
+                    else:
+                        # position 후는 기존 데이터를 한 칸씩 뒤로
+                        original_col = col - 1
+                        if original_col < len(row_backup):
+                            self._restore_item(row, col, row_backup[original_col])
+            
+            # 7. 새 컬럼 너비 설정
+            self.setColumnWidth(position, column_width)
+            self.horizontalHeader().setSectionResizeMode(position, QHeaderView.Fixed)
+            
+            return True
+            
+        except Exception as e:
+            # 오류 시 원복은 너무 복잡하므로 로그만 남김
+            from src.foundation.logging import get_logger
+            logger = get_logger("toolbox.modern_table")
+            logger.error(f"컬럼 삽입 실패: position={position}, title={column_title}: {e}")
+            return False
+    
+    def _restore_item(self, row: int, col: int, backup_item: dict):
+        """백업된 아이템 복원"""
+        if self._is_rank_data(backup_item['text']):
+            item = SortableTableWidgetItem(backup_item['text'])
+            from .sortable_items import set_rank_sort_data
+            set_rank_sort_data(item, 0, backup_item['text'])
+        else:
+            item = SortableTableWidgetItem(backup_item['text'])
+        
+        if backup_item['data'] is not None:
+            item.setData(Qt.UserRole, backup_item['data'])
+            
+        if backup_item['checkState'] is not None and col == 0 and self.has_checkboxes:
+            item.setCheckState(backup_item['checkState'])
+            
+        self.setItem(row, col, item)
+    
     def _is_rank_data(self, value: str) -> bool:
         """값이 순위 데이터인지 판단"""
         if not value or value == "-":

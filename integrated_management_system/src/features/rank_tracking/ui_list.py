@@ -135,7 +135,7 @@ class ProjectListWidget(QWidget):
         """새 프로젝트 추가 - 기존 다이얼로그와 동일"""
         # 새 프로젝트 다이얼로그 표시
         # Local import to avoid circular dependency
-        from .ui import NewProjectDialog
+        from .ui_main import NewProjectDialog
         project_url, product_name, ok = NewProjectDialog.getProjectData(self, self.add_button)
         if ok and project_url and product_name:
             self.create_project_from_data(project_url, product_name)
@@ -235,11 +235,11 @@ class ProjectListWidget(QWidget):
         if api_product_info:
             # API에서 가져온 정보로 업데이트
             project_data.update({
-                'current_name': api_product_info.name or product_name,
-                'store_name': api_product_info.store_name or '',
-                'price': api_product_info.price or 0,
-                'category': api_product_info.category or '',
-                'image_url': api_product_info.image_url or '',
+                'current_name': api_product_info.get('name') or product_name,
+                'store_name': api_product_info.get('store_name') or '',
+                'price': api_product_info.get('price') or 0,
+                'category': api_product_info.get('category') or '',
+                'image_url': api_product_info.get('image_url') or '',
             })
             
             log_manager.add_log("✅ API 상품 정보 조회 성공:", "success")

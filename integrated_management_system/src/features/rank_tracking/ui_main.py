@@ -21,8 +21,8 @@ from src.foundation.logging import get_logger
 from src.desktop.common_log import log_manager
 
 # 분리된 위젯들 임포트
-from .project_list_widget import ProjectListWidget
-from .ranking_table_widget import RankingTableWidget
+from .ui_list import ProjectListWidget
+from .ui_table import RankingTableWidget
 from .service import rank_tracking_service
 
 logger = get_logger("features.rank_tracking.ui")

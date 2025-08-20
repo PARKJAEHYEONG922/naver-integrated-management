@@ -6,7 +6,7 @@
 def register(app):
     # 앱에 순위 추적 기능 등록
 """
-from .ui import RankTrackingWidget
+from .ui_main import RankTrackingWidget
 from .service import rank_tracking_service
 from .models import TrackingProject, TrackingKeyword
 
