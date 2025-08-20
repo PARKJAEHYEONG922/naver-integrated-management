@@ -17,7 +17,7 @@ from src.foundation.logging import get_logger
 from src.foundation.db import get_db
 
 # Toolbox imports
-from src.toolbox.validators import validate_url
+from src.toolbox.text_utils import validate_url
 from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
 
 # Local imports

@@ -20,7 +20,7 @@ from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDial
 from .worker import BackgroundWorker
 from .service import analysis_manager
 from .models import KeywordData, AnalysisProgress
-from src.toolbox.text_utils import parse_keywords_from_text, filter_unique_keywords, clean_keywords, filter_unique_keywords_with_skipped
+from src.toolbox.text_utils import parse_keywords, filter_unique_keywords_with_skipped
 from src.foundation.logging import get_logger
 
 logger = get_logger("features.keyword_analysis.ui")
@@ -550,8 +550,8 @@ class KeywordAnalysisWidget(QWidget):
                 QMessageBox.information(self, "API 설정 필요", "API 설정을 먼저 완료해주세요.")
             return
         
-        # 키워드 파싱
-        keywords = parse_keywords_from_text(text)
+        # 키워드 파싱 (validators 사용)
+        keywords = parse_keywords(text)
         if not keywords:
             self.add_log("❌ 유효한 키워드가 없습니다.", "error")
             try:

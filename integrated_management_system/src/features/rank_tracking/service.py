@@ -9,6 +9,7 @@ from PySide6.QtCore import QObject, Signal
 
 from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo
 from .adapters import RankTrackingAdapter
+from .engine_local import rank_tracking_engine
 from src.foundation.db import get_db
 from src.foundation.exceptions import (
     RankTrackingError, ProductNotFoundError, InvalidProjectURLError, 
@@ -83,57 +84,6 @@ def smart_product_search(product_name: str, product_id: str) -> Optional[dict]:
         return None
 
 
-def generate_keywords_from_product_name(product_name: str) -> List[str]:
-    """상품명에서 키워드들을 생성
-    
-    예: "엔젤링 15g 강아지 오래먹는 터키츄 칠면조 소힘줄 강아지 이갈이 개껌 간식"
-    -> 필터링 -> ["엔젤링", "강아지", "오래먹는", "터키츄", "칠면조", "소힘줄", "이갈이", "개껌", "간식"]
-    -> 조합 -> 단일키워드 + 2단어조합
-    """
-    import re
-    
-    # 공백으로 분리
-    words = product_name.strip().split()
-    
-    # 숫자+단위 필터링 (15g, 500ml, 2kg 등)
-    unit_pattern = r'^\d+[a-zA-Z가-힣]*$'
-    filtered_words = []
-    
-    for word in words:
-        # 숫자+단위 패턴 제거
-        if not re.match(unit_pattern, word):
-            # 공용 함수로 키워드 정리
-            clean_word = clean_keyword(word)
-            # 추가 정리: 특수문자 제거하고 한글/영문만 남기기
-            clean_word = re.sub(r'[^\w가-힣]', '', clean_word)
-            if len(clean_word) > 1:  # 1글자는 제외
-                filtered_words.append(clean_word)
-    
-    # 공용 함수로 중복 제거
-    unique_words = filter_unique_keywords(filtered_words)
-    
-    keywords = []
-    
-    # 1. 전체 상품명 (첫 번째)
-    keywords.append(product_name.strip())
-    
-    # 2. 단일 키워드들 (순서대로)
-    keywords.extend(unique_words[:3])  # 처음 3개만
-    
-    # 3. 2단어 조합
-    if len(unique_words) >= 2:
-        # 1+2, 1+3, 2+3 조합
-        combinations = [
-            f"{unique_words[0]} {unique_words[1]}",  # 1+2
-        ]
-        if len(unique_words) >= 3:
-            combinations.extend([
-                f"{unique_words[0]} {unique_words[2]}",  # 1+3
-                f"{unique_words[1]} {unique_words[2]}",  # 2+3
-            ])
-        keywords.extend(combinations)
-    
-    return keywords
 
 
 class RankTrackingService(QObject):
@@ -355,16 +305,17 @@ class RankTrackingService(QObject):
             return None
     
     def add_keyword(self, project_id: int, keyword: str) -> TrackingKeyword:
-        """키워드 추가 (빠른 추가, 월검색량/카테고리는 UI에서 백그라운드 처리)"""
+        """키워드 추가 (engine_local에서 분석 후 DB에 저장)"""
         try:
             db = get_db()
             
             logger.info(f"키워드 추가 시작: '{keyword}' (프로젝트 {project_id})")
             
-            # 키워드 추가 (비활성화된 키워드는 자동 재활성화됨)
-            keyword_id = db.add_keyword(project_id, keyword)
+            # engine_local에서 키워드 분석 수행
+            analysis_result = rank_tracking_engine.analyze_and_add_keyword(keyword)
             
-            logger.info(f"DB add_keyword 결과: keyword_id = {keyword_id}")
+            # DB에 키워드 추가
+            keyword_id = db.add_keyword(project_id, keyword)
             
             if keyword_id == 0:
                 # 이미 활성 상태인 키워드
@@ -373,21 +324,28 @@ class RankTrackingService(QObject):
             
             logger.info(f"키워드 추가 성공: {keyword} (ID: {keyword_id})")
             
-            # 키워드 관리 이력 기록 (성공적으로 추가된 경우에만)
+            # 분석 결과가 성공적이면 키워드 정보 업데이트
+            if analysis_result['success'] and analysis_result['ready_for_db']:
+                self.update_keyword_info(
+                    project_id=project_id,
+                    keyword=keyword,
+                    category=analysis_result['category'],
+                    monthly_volume=analysis_result['monthly_volume']
+                )
+            
+            # 키워드 관리 이력 기록
             if keyword_id > 0:
-                logger.info(f"키워드 추가 이력 기록 시작: {keyword} (프로젝트 {project_id})")
                 db.add_keyword_management_history(project_id, keyword, 'add')
-                logger.info(f"키워드 추가 이력 기록 완료: {keyword} (프로젝트 {project_id})")
             
             # TrackingKeyword 객체 생성
             tracking_keyword = TrackingKeyword(
                 id=keyword_id,
                 project_id=project_id,
                 keyword=keyword,
-                is_active=True
+                is_active=True,
+                category=analysis_result.get('category', '-'),
+                monthly_volume=analysis_result.get('monthly_volume', 0)
             )
-            
-            # 월검색량과 카테고리는 UI에서 백그라운드로 처리 (중복 제거)
             
             return tracking_keyword
             
@@ -523,39 +481,30 @@ class RankTrackingService(QObject):
             return False
     
     def add_keywords_to_project(self, project_id: int, keywords: List[str]) -> int:
-        """프로젝트에 키워드 추가 (여러 개)"""
-        added_count = 0
-        
+        """프로젝트에 키워드 추가 (engine_local에서 키워드 생성)"""
         try:
-            db = get_db()
+            # 프로젝트 정보 조회
+            project = self.get_project_by_id(project_id)
+            if not project:
+                logger.error(f"프로젝트를 찾을 수 없습니다: {project_id}")
+                return 0
             
-            for keyword in keywords:
-                try:
-                    # 중복 키워드 체크
-                    existing_keywords = db.get_project_keywords(project_id)
-                    existing_keyword_texts = {kw['keyword'].lower().strip() for kw in existing_keywords}
-                    
-                    if keyword.lower().strip() in existing_keyword_texts:
-                        logger.warning(f"키워드 중복 건너뛰기: {keyword}")
-                        continue
-                    
-                    # 새 키워드 추가 (월검색량과 카테고리 자동 업데이트)
-                    tracking_keyword = self.add_keyword(project_id, keyword.strip())
-                    if tracking_keyword.id:
-                        added_count += 1
-                    
-                except Exception as e:
-                    logger.error(f"키워드 '{keyword}' 추가 실패: {e}")
-                    continue
+            # engine_local에서 상품명으로부터 키워드 생성
+            if len(keywords) == 1 and keywords[0] == project.current_name:
+                # 상품명 하나만 전달된 경우 - 키워드 생성
+                generated_keywords = rank_tracking_engine.generate_keywords_from_product(project.current_name)
+                keywords = generated_keywords
             
-            return added_count
+            # 키워드 배치 추가
+            result = self.add_keywords_batch(project_id, keywords)
+            return result['added_count']
             
         except Exception as e:
             logger.error(f"키워드 추가 프로세스 실패: {e}")
             return 0
     
     def add_keywords_batch(self, project_id: int, keywords: List[str]) -> dict:
-        """UI용 키워드 배치 추가 (결과 상세 정보 포함)"""
+        """UI용 키워드 배치 추가 (engine_local 사용)"""
         try:
             db = get_db()
             
@@ -563,18 +512,13 @@ class RankTrackingService(QObject):
             existing_keywords = db.get_project_keywords(project_id)
             existing_keyword_texts = {kw['keyword'].lower().strip() for kw in existing_keywords}
             
-            new_keywords = []
-            duplicate_keywords = []
+            # engine_local에서 배치 결과 계산
+            batch_result = rank_tracking_engine.calculate_keyword_batch_results(keywords, existing_keyword_texts)
+            
+            new_keywords = batch_result['new_keywords']
+            duplicate_keywords = batch_result['duplicate_keywords']
             successfully_added_keywords = []
             failed_keywords = []
-            
-            # 중복 체크
-            for keyword in keywords:
-                keyword = keyword.strip()
-                if keyword.lower() in existing_keyword_texts:
-                    duplicate_keywords.append(keyword)
-                else:
-                    new_keywords.append(keyword)
             
             # 새 키워드 추가
             for keyword in new_keywords:
@@ -645,63 +589,47 @@ class RankTrackingService(QObject):
             }
     
     def batch_update_keywords_volume(self, project_id: int, keywords: List[str]) -> dict:
-        """키워드 배치 월검색량 업데이트 (UI용)"""
+        """키워드 배치 월검색량 업데이트 (engine_local 사용)"""
         try:
+            # engine_local에서 분석 수행
+            analysis_result = rank_tracking_engine.batch_update_keywords_volume(keywords)
+            
+            # DB 업데이트 수행
+            db = get_db()
             updated_count = 0
             failed_count = 0
-            results = []
             
-            for keyword in keywords:
+            for result in analysis_result['results']:
                 try:
-                    analysis = self.analyze_keyword_for_tracking(keyword)
-                    
-                    if analysis['success']:
+                    if result['success']:
                         # DB 업데이트
                         success = self.update_keyword_info(
                             project_id=project_id,
-                            keyword=keyword,
-                            category=analysis['category'],
-                            monthly_volume=analysis['monthly_volume']
+                            keyword=result['keyword'],
+                            category=result['category'],
+                            monthly_volume=result['monthly_volume']
                         )
                         
                         if success:
                             updated_count += 1
-                            results.append({
-                                'keyword': keyword,
-                                'success': True,
-                                'category': analysis['category'],
-                                'monthly_volume': analysis['monthly_volume']
-                            })
                         else:
                             failed_count += 1
-                            results.append({
-                                'keyword': keyword,
-                                'success': False,
-                                'error': 'DB 업데이트 실패'
-                            })
+                            result['error'] = 'DB 업데이트 실패'
                     else:
                         failed_count += 1
-                        results.append({
-                            'keyword': keyword,
-                            'success': False,
-                            'error': analysis.get('error', '분석 실패')
-                        })
                         
                 except Exception as e:
                     failed_count += 1
-                    results.append({
-                        'keyword': keyword,
-                        'success': False,
-                        'error': str(e)
-                    })
-                    logger.error(f"키워드 '{keyword}' 처리 실패: {e}")
+                    result['error'] = str(e)
+                    logger.error(f"키워드 '{result['keyword']}' DB 업데이트 실패: {e}")
             
+            # 결과 반환
             return {
                 'success': updated_count > 0,
                 'updated_count': updated_count,
                 'failed_count': failed_count,
                 'total_count': len(keywords),
-                'results': results
+                'results': analysis_result['results']
             }
             
         except Exception as e:
@@ -797,6 +725,298 @@ class RankTrackingService(QObject):
             logger.error(f"순위 이력 조회 실패 (키워드 ID: {keyword_id}): {e}")
             return []
     
+    def prepare_table_data(self, project_id: int) -> Dict[str, Any]:
+        """테이블 데이터 준비 (engine_local 사용)"""
+        try:
+            # 기본 데이터 조회 (service 담당)
+            project = self.get_project_by_id(project_id)
+            if not project:
+                return {"success": False, "message": "프로젝트를 찾을 수 없습니다."}
+            
+            keywords = self.get_project_keywords(project_id)
+            overview = self.get_project_overview(project_id)
+            
+            # engine_local에서 분석 수행
+            return rank_tracking_engine.prepare_table_data_analysis(project, keywords, overview)
+            
+        except Exception as e:
+            logger.error(f"테이블 데이터 준비 실패: {e}")
+            return {"success": False, "message": f"오류 발생: {e}"}
+    
+    def prepare_table_row_data(self, project_id: int, keyword_data: dict, all_dates: list, project_category_base: str) -> list:
+        """테이블 행 데이터 준비 (engine_local 사용)"""
+        try:
+            # 워커 매니저에서 현재 순위 데이터 가져오기 (service 담당)
+            from .worker import ranking_worker_manager
+            current_time = ranking_worker_manager.get_current_time(project_id)
+            current_rankings = ranking_worker_manager.get_current_rankings(project_id)
+            
+            # engine_local에서 분석 수행
+            return rank_tracking_engine.prepare_table_row_data_analysis(
+                keyword_data, all_dates, current_rankings, current_time
+            )
+            
+        except Exception as e:
+            logger.error(f"테이블 행 데이터 준비 실패: {e}")
+            return [keyword_data.get('keyword', ''), '-', '-'] + ['-'] * len(all_dates)
+    
+    def should_show_date_columns(self, project_id: int) -> bool:
+        """날짜 컬럼을 표시해야 하는지 판단 (키워드가 있을 때만)"""
+        try:
+            keywords = self.get_project_keywords(project_id)
+            overview = self.get_project_overview(project_id)
+            keywords_data = overview.get("keywords", {}) if overview else {}
+            
+            total_keywords = len(keywords_data) + len(keywords)
+            return total_keywords > 0
+        except Exception as e:
+            logger.error(f"날짜 컬럼 표시 판단 실패: {e}")
+            return False
+    
+    def delete_selected_keywords_by_ids(self, project_id: int, keyword_ids: List[int], keyword_names: List[str]) -> Tuple[bool, str]:
+        """선택된 키워드들 삭제 (UI에서 비즈니스 로직 분리)"""
+        try:
+            if not keyword_ids:
+                return False, "삭제할 키워드가 선택되지 않았습니다."
+            
+            success_count = 0
+            for i, keyword_id in enumerate(keyword_ids):
+                keyword_name = keyword_names[i] if i < len(keyword_names) else f"키워드 ID {keyword_id}"
+                try:
+                    if self.delete_keyword_by_id(keyword_id):
+                        success_count += 1
+                        logger.info(f"키워드 삭제 성공: {keyword_name} (ID: {keyword_id})")
+                    else:
+                        logger.warning(f"키워드 삭제 실패: {keyword_name} (ID: {keyword_id})")
+                except Exception as e:
+                    logger.error(f"키워드 삭제 중 오류: {keyword_name} (ID: {keyword_id}): {e}")
+            
+            if success_count > 0:
+                return True, f"✅ {success_count}개 키워드가 삭제되었습니다."
+            else:
+                return False, "❌ 키워드 삭제에 실패했습니다."
+                
+        except Exception as e:
+            logger.error(f"키워드 일괄 삭제 실패: {e}")
+            return False, f"❌ 키워드 삭제 중 오류가 발생했습니다: {str(e)}"
+    
+    def delete_keyword_by_id(self, keyword_id: int) -> bool:
+        """키워드 ID로 삭제"""
+        try:
+            db = get_db()
+            return db.delete_keyword_by_id(keyword_id)
+        except Exception as e:
+            logger.error(f"키워드 ID {keyword_id} 삭제 실패: {e}")
+            return False
+    
+    def process_ranking_check_for_project(self, project_id: int) -> Dict[str, Any]:
+        """프로젝트 순위 확인 처리 (worker에서 비즈니스 로직 분리)"""
+        try:
+            # 프로젝트 정보 조회
+            project = self.get_project_by_id(project_id)
+            if not project:
+                return {
+                    'success': False,
+                    'message': '프로젝트를 찾을 수 없습니다.',
+                    'data': None
+                }
+            
+            # 키워드 조회
+            keywords = self.get_project_keywords(project_id)
+            if not keywords:
+                return {
+                    'success': False,
+                    'message': '추적할 키워드가 없습니다.',
+                    'data': None
+                }
+            
+            return {
+                'success': True,
+                'message': f"프로젝트 '{project.current_name}' 순위 확인 준비 완료",
+                'data': {
+                    'project': project,
+                    'keywords': keywords
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"순위 확인 준비 실패 (프로젝트 {project_id}): {e}")
+            return {
+                'success': False,
+                'message': f'순위 확인 준비 실패: {str(e)}',
+                'data': None
+            }
+    
+    def process_single_keyword_ranking(self, keyword_obj, product_id: str) -> Tuple[Any, bool]:
+        """단일 키워드 순위 확인 처리 (engine_local 사용)"""
+        return rank_tracking_engine.process_single_keyword_ranking(keyword_obj, product_id)
+    
+    def create_failed_ranking_result(self, keyword: str, error_message: str) -> RankingResult:
+        """실패한 순위 결과 생성 (worker에서 models import 방지)"""
+        return RankingResult(
+            keyword=keyword,
+            success=False,
+            rank=999,
+            error_message=error_message
+        )
+    
+    def save_ranking_results_for_project(self, project_id: int, results: list) -> bool:
+        """프로젝트 순위 결과 저장 (worker에서 비즈니스 로직 분리)"""
+        try:
+            if results:
+                return self.save_ranking_results(project_id, results)
+            return True
+        except Exception as e:
+            logger.error(f"순위 결과 저장 실패 (프로젝트 {project_id}): {e}")
+            return False
+    
+    def start_ranking_check(self, project_id: int) -> bool:
+        """순위 확인 시작 (worker 매니저 호출)"""
+        try:
+            from .worker import ranking_worker_manager
+            return ranking_worker_manager.start_ranking_check(project_id)
+        except Exception as e:
+            logger.error(f"순위 확인 시작 실패 (프로젝트 {project_id}): {e}")
+            return False
+    
+    def stop_ranking_check(self, project_id: int):
+        """순위 확인 정지 (worker 매니저 호출)"""
+        try:
+            from .worker import ranking_worker_manager
+            ranking_worker_manager.stop_ranking_check(project_id)
+        except Exception as e:
+            logger.error(f"순위 확인 정지 실패 (프로젝트 {project_id}): {e}")
+    
+    def get_ranking_current_time(self, project_id: int) -> str:
+        """현재 순위 확인 시간 조회 (worker 매니저 호출)"""
+        try:
+            from .worker import ranking_worker_manager
+            return ranking_worker_manager.get_current_time(project_id)
+        except Exception as e:
+            logger.error(f"현재 순위 확인 시간 조회 실패 (프로젝트 {project_id}): {e}")
+            return ""
+    
+    def get_ranking_progress(self, project_id: int) -> tuple:
+        """현재 순위 확인 진행률 조회 (worker 매니저 호출)"""
+        try:
+            from .worker import ranking_worker_manager
+            return ranking_worker_manager.get_current_progress(project_id)
+        except Exception as e:
+            logger.error(f"순위 확인 진행률 조회 실패 (프로젝트 {project_id}): {e}")
+            return (0, 0)
+    
+    def is_ranking_in_progress(self, project_id: int) -> bool:
+        """순위 확인 진행 중인지 확인 (worker 매니저 호출)"""
+        try:
+            from .worker import ranking_worker_manager
+            return ranking_worker_manager.is_ranking_in_progress(project_id)
+        except Exception as e:
+            logger.error(f"순위 확인 진행 상태 조회 실패 (프로젝트 {project_id}): {e}")
+            return False
+    
+    def get_keyword_category_from_vendor(self, keyword: str) -> str:
+        """키워드 카테고리 조회 (worker에서 vendor 호출 분리)"""
+        try:
+            from src.vendors.naver.developer.shopping_client import shopping_client as naver_shopping_client
+            category = naver_shopping_client.get_keyword_category(keyword, sample_size=40)
+            return category if category else "-"
+        except Exception as e:
+            logger.warning(f"카테고리 조회 실패: {keyword}: {e}")
+            return "-"
+    
+    def get_keyword_volume_from_vendor(self, keyword: str) -> int:
+        """키워드 월검색량 조회 (worker에서 vendor 호출 분리)"""
+        try:
+            from src.vendors.naver.searchad.base_client import NaverKeywordToolClient
+            keyword_client = NaverKeywordToolClient()
+            volume_results = keyword_client.get_search_volume([keyword])
+            if volume_results and keyword in volume_results:
+                return volume_results[keyword].get('monthly_volume', 0)
+            else:
+                return -1  # API 호출 실패
+        except Exception as e:
+            logger.warning(f"월검색량 조회 실패: {keyword}: {e}")
+            return -1
+    
+    def process_keyword_info_update(self, project_id: int, keyword: str) -> Dict[str, Any]:
+        """키워드 정보 업데이트 처리 (engine_local 사용)"""
+        try:
+            # engine_local에서 분석 수행
+            analysis_result = rank_tracking_engine.process_keyword_info_analysis(keyword)
+            
+            # DB 업데이트
+            success_count = 0
+            category = analysis_result['category']
+            monthly_volume = analysis_result['monthly_volume']
+            
+            # 카테고리 업데이트
+            if category != "-":
+                try:
+                    if self.update_keyword_category_only(project_id, keyword, category):
+                        success_count += 1
+                except Exception as e:
+                    logger.error(f"카테고리 DB 업데이트 실패: {keyword}: {e}")
+            
+            # 월검색량 업데이트
+            if monthly_volume >= 0:
+                try:
+                    if self.update_keyword_volume_only(project_id, keyword, monthly_volume):
+                        success_count += 1
+                except Exception as e:
+                    logger.error(f"월검색량 DB 업데이트 실패: {keyword}: {e}")
+            
+            return {
+                'success': success_count > 0,
+                'category': category,
+                'monthly_volume': monthly_volume
+            }
+            
+        except Exception as e:
+            logger.error(f"키워드 정보 업데이트 실패: {keyword}: {e}")
+            return {
+                'success': False,
+                'category': '-',
+                'monthly_volume': -1
+            }
+    
+    def analyze_and_add_keyword(self, project_id: int, keyword: str) -> Tuple[bool, str]:
+        """키워드 분석 후 추가 (engine_local 사용)"""
+        try:
+            # engine_local에서 분석 수행
+            analysis_result = rank_tracking_engine.analyze_and_add_keyword_logic(keyword)
+            
+            if not analysis_result['success']:
+                return False, analysis_result.get('error', '키워드 분석에 실패했습니다.')
+            
+            if analysis_result['ready_for_db']:
+                # 키워드 정보 DB 업데이트
+                success = self.update_keyword_info(
+                    project_id, keyword, 
+                    analysis_result.get('category', ''), 
+                    analysis_result.get('monthly_volume', -1)
+                )
+                
+                if success:
+                    return True, f"키워드 '{keyword}' 추가 완료"
+                else:
+                    return False, "키워드 추가에 실패했습니다."
+            else:
+                return False, "키워드 분석 결과가 DB 저장에 적합하지 않습니다."
+                
+        except Exception as e:
+            logger.error(f"키워드 분석/추가 실패: {e}")
+            return False, f"오류 발생: {e}"
+    
+    def get_current_project_keywords_for_analysis(self, project_id: int) -> Tuple[bool, List[str]]:
+        """키워드 분석을 위한 현재 프로젝트 키워드 목록 조회"""
+        try:
+            keywords = self.get_project_keywords(project_id)
+            keyword_texts = [kw.keyword for kw in keywords if hasattr(kw, 'keyword')]
+            return True, keyword_texts
+        except Exception as e:
+            logger.error(f"키워드 목록 조회 실패: {e}")
+            return False, []
+    
     def get_keyword_ranking_history(self, project_id: int, keyword: str, limit: int = 50) -> List[Dict[str, Any]]:
         """키워드 텍스트로 순위 이력 조회"""
         try:
@@ -870,109 +1090,22 @@ class RankTrackingService(QObject):
             logger.error(f"프로젝트 개요 조회 실패: {e}")
             return {'dates': [], 'keywords': {}}
     
-    def check_api_connections(self) -> dict:
-        """API 연결 상태 확인"""
-        try:
-            results = {}
-            
-            # 네이버 쇼핑 API 테스트
-            try:
-                from src.vendors.naver.developer.shopping_client import shopping_client
-                test_result = shopping_client.search("테스트", display=1)
-                results['shopping_api'] = {
-                    'status': 'success' if test_result else 'failed',
-                    'message': '정상 연결' if test_result else '연결 실패'
-                }
-            except Exception as e:
-                results['shopping_api'] = {
-                    'status': 'failed',
-                    'message': f'오류: {str(e)}'
-                }
-            
-            # 네이버 검색광고 API 테스트
-            try:
-                from src.vendors.naver.searchad.keyword_client import get_keyword_tool_client
-                keyword_client = get_keyword_tool_client()
-                if keyword_client:
-                    # 간단한 테스트 키워드로 검색량 조회
-                    test_result = keyword_client.get_search_volume(["테스트"])
-                    results['searchad_api'] = {
-                        'status': 'success' if test_result is not None else 'failed',
-                        'message': '정상 연결' if test_result is not None else '연결 실패'
-                    }
-                else:
-                    results['searchad_api'] = {
-                        'status': 'failed',
-                        'message': 'API 클라이언트 초기화 실패'
-                    }
-            except Exception as e:
-                results['searchad_api'] = {
-                    'status': 'failed',
-                    'message': f'오류: {str(e)}'
-                }
-            
-            return results
-            
-        except Exception as e:
-            logger.error(f"API 연결 상태 확인 실패: {e}")
-            return {
-                'shopping_api': {'status': 'failed', 'message': '확인 실패'},
-                'searchad_api': {'status': 'failed', 'message': '확인 실패'}
-            }
     
     def get_product_category(self, product_id: str) -> tuple[bool, str]:
-        """상품 카테고리 조회"""
+        """상품 카테고리 조회 (engine_local 사용)"""
         try:
-            from src.vendors.naver.developer.shopping_client import shopping_client
+            # engine_local에서 분석 수행
+            analysis_result = rank_tracking_engine.get_product_category_analysis(product_id)
             
-            # 상품 정보에서 카테고리 추출
-            product_info = shopping_client.get_product_detail(product_id)
-            if product_info and 'category' in product_info:
-                return True, product_info['category']
-            
-            return False, ""
+            return analysis_result['success'], analysis_result['category']
             
         except Exception as e:
             logger.error(f"상품 카테고리 조회 실패: {e}")
             return False, ""
     
     def check_keyword_ranking(self, keyword: str, product_id: str) -> RankingResult:
-        """키워드 순위 확인"""
-        try:
-            from .adapters import rank_tracking_adapter
-            
-            # 어댑터를 통해 순위 확인
-            ranking_data = rank_tracking_adapter.check_keyword_ranking(keyword, product_id)
-            
-            if ranking_data['success']:
-                return RankingResult(
-                    keyword=keyword,
-                    product_id=product_id,
-                    rank=ranking_data['rank'],
-                    success=True,
-                    total_results=ranking_data.get('total_results', 0),
-                    checked_at=datetime.now()
-                )
-            else:
-                return RankingResult(
-                    keyword=keyword,
-                    product_id=product_id,
-                    rank=999,  # 순위 없음
-                    success=False,
-                    error_message=ranking_data.get('error', '순위 확인 실패'),
-                    checked_at=datetime.now()
-                )
-                
-        except Exception as e:
-            logger.error(f"키워드 '{keyword}' 순위 확인 실패: {e}")
-            return RankingResult(
-                keyword=keyword,
-                product_id=product_id,
-                rank=999,
-                success=False,
-                error_message=str(e),
-                checked_at=datetime.now()
-            )
+        """키워드 순위 확인 (engine_local 사용)"""
+        return rank_tracking_engine.check_keyword_ranking(keyword, product_id)
     
     def save_ranking_results(self, project_id: int, results: List[RankingResult]) -> bool:
         """순위 확인 결과 저장"""
@@ -980,9 +1113,15 @@ class RankTrackingService(QObject):
             db = get_db()
             saved_count = 0
             
+            # 워커 매니저에서 설정한 현재 시간 가져오기
+            from .worker import ranking_worker_manager
+            current_time = ranking_worker_manager.get_current_time(project_id)
+            
             # 프로젝트의 모든 키워드 가져오기
             keywords = db.get_keywords(project_id)
             keyword_map = {kw['keyword']: kw['id'] for kw in keywords}
+            
+            logger.info(f"순위 결과 저장 시작: 프로젝트={project_id}, 시간={current_time}, 결과수={len(results)}")
             
             for result in results:
                 try:
@@ -991,14 +1130,15 @@ class RankTrackingService(QObject):
                         logger.warning(f"키워드 ID를 찾을 수 없음: {result.keyword}")
                         continue
                     
-                    logger.info(f"순위 저장 시도: 키워드={result.keyword}, 키워드ID={keyword_id}, 순위={result.rank}")
+                    logger.info(f"순위 저장 시도: 키워드={result.keyword}, 키워드ID={keyword_id}, 순위={result.rank}, 시간={current_time}")
                     
                     ranking_id = db.save_ranking_result(
                         keyword_id=keyword_id,
                         rank_position=result.rank,
                         page_number=1,
                         total_results=result.total_results or 0,
-                        competitor_data={}
+                        competitor_data={},
+                        search_date=current_time  # 워커에서 설정한 시간 사용
                     )
                     if ranking_id:
                         saved_count += 1
@@ -1092,7 +1232,7 @@ class RankTrackingService(QObject):
         self._stop_processing = False
     
     def refresh_project_info(self, project_id: int) -> Dict[str, Any]:
-        """프로젝트 상품 정보 새로고침 - 기존 코드 재사용"""
+        """프로젝트 상품 정보 새로고침 (engine_local 사용)"""
         try:
             # 1. 프로젝트 조회
             project = self.get_project_by_id(project_id)
@@ -1102,99 +1242,32 @@ class RankTrackingService(QObject):
                     'message': '프로젝트를 찾을 수 없습니다.'
                 }
             
-            logger.info(f"프로젝트 정보 새로고침 시작: {project.current_name} (ID: {project_id})")
+            # 2. engine_local에서 분석
+            analysis_result = rank_tracking_engine.refresh_product_info_analysis(project)
             
-            # 2. 상품 정보 재조회 (기존 smart_product_search 함수 사용)
-            product_info_dict = smart_product_search(project.current_name, project.product_id)
+            if not analysis_result['success']:
+                return analysis_result
             
-            if not product_info_dict:
-                return {
-                    'success': False,
-                    'message': f'{project.current_name} 상품 정보를 찾을 수 없습니다.'
-                }
-            
-            # 3. 기존 정보와 새 정보 비교하여 변경사항 추적
-            from .adapters import rank_tracking_adapter
-            new_info = {
-                'current_name': rank_tracking_adapter._clean_product_name(product_info_dict.get('name', '')),
-                'price': product_info_dict.get('price', 0),
-                'category': product_info_dict.get('category', ''),
-                'store_name': product_info_dict.get('store_name', ''),
-            }
-            
-            # 변경사항 추적 및 DB 업데이트
-            changes_detected = []
-            db = get_db()
-            
-            # 각 필드별 변경사항 확인
-            field_map = {
-                'current_name': '상품명',
-                'price': '가격', 
-                'category': '카테고리',
-                'store_name': '스토어명'
-            }
-            
-            for field, display_name in field_map.items():
-                old_value = getattr(project, field, '')
-                new_value = new_info[field]
+            # 3. DB 업데이트 (service의 책임)
+            changes_detected = analysis_result['changes']
+            if changes_detected:
+                db = get_db()
                 
-                # 가격은 정수로 비교
-                if field == 'price':
-                    old_value = int(old_value) if old_value else 0
-                    new_value = int(new_value) if new_value else 0
-                
-                # 문자열 필드는 빈 값을 통일
-                if isinstance(old_value, str):
-                    old_value = old_value.strip() if old_value else ''
-                if isinstance(new_value, str):
-                    new_value = new_value.strip() if new_value else ''
-                
-                # 변경사항 감지
-                if str(old_value) != str(new_value):
-                    # DB에 변경 기록 저장
+                # 변경 기록 저장
+                for change in changes_detected:
                     db.add_basic_info_change_record(
                         project_id=project_id,
-                        field_name=field,
-                        old_value=str(old_value),
-                        new_value=str(new_value),
-                        is_auto=True  # 새로고침은 자동 감지
+                        field_name=change['field_name'],
+                        old_value=change['old_value'],
+                        new_value=change['new_value'],
+                        is_auto=True
                     )
-                    
-                    # 변경사항 메시지용 정보 저장
-                    if field == 'price':
-                        old_display = f"{int(old_value):,}원" if old_value else "0원"
-                        new_display = f"{int(new_value):,}원" if new_value else "0원"
-                    else:
-                        old_display = old_value if old_value else '-'
-                        new_display = new_value if new_value else '-'
-                    
-                    changes_detected.append({
-                        'field': display_name,
-                        'old': old_display,
-                        'new': new_display
-                    })
-                    
-                    logger.info(f"변경사항 감지 - {display_name}: '{old_value}' → '{new_value}'")
-            
-            # 4. 프로젝트 정보 업데이트
-            if changes_detected:
-                # 변경된 필드들만 업데이트
-                self.update_project(project_id, new_info)
+                
+                # 프로젝트 정보 업데이트
+                self.update_project(project_id, analysis_result['new_info'])
                 logger.info(f"프로젝트 정보 업데이트 완료: {len(changes_detected)}개 변경사항")
             
-            # 5. ProductInfo 객체로 변환
-            product_info = ProductInfo(
-                product_id=product_info_dict.get('product_id', ''),
-                name=new_info['current_name'],
-                price=new_info['price'],
-                category=new_info['category'],
-                store_name=new_info['store_name'],
-                description=product_info_dict.get('description', ''),
-                image_url=product_info_dict.get('image_url', ''),
-                url=product_info_dict.get('url', '')
-            )
-            
-            # 6. 결과 메시지 생성
+            # 4. 결과 메시지 생성
             if changes_detected:
                 change_messages = []
                 for change in changes_detected:
@@ -1204,18 +1277,15 @@ class RankTrackingService(QObject):
             else:
                 message = f"ℹ️ {project.current_name} 상품 정보에 변경사항이 없습니다."
             
-            logger.info(f"상품 정보 새로고침 완료: 변경사항 {len(changes_detected)}개")
             return {
                 'success': True,
                 'message': message,
-                'product_info': product_info,
+                'product_info': analysis_result['product_info'],
                 'changes_count': len(changes_detected)
             }
             
         except Exception as e:
             logger.error(f"프로젝트 정보 새로고침 실패: {e}")
-            import traceback
-            logger.error(traceback.format_exc())
             return {
                 'success': False,
                 'message': f'상품 정보 새로고침 중 오류가 발생했습니다: {str(e)}'
@@ -1300,6 +1370,278 @@ class RankTrackingService(QObject):
             return []
 
 
+
+    
+    # ================ Excel 내보내기 메서드들 ================
+    
+    def export_single_project(self, project_id: int, parent_widget=None) -> bool:
+        """단일 프로젝트 Excel 내보내기 (adapters 위임)"""
+        try:
+            from PySide6.QtWidgets import QFileDialog
+            from .adapters import rank_tracking_excel_exporter
+            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
+            from src.desktop.common_log import log_manager
+            
+            # 기본 파일명 생성
+            default_filename = rank_tracking_excel_exporter.get_default_filename(project_id)
+            
+            # 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                parent_widget, 
+                "순위 이력 Excel 저장", 
+                default_filename,
+                "Excel 파일 (*.xlsx);;모든 파일 (*)"
+            )
+            
+            if file_path:
+                # 어댑터를 통한 엑셀 저장
+                success = rank_tracking_excel_exporter.export_ranking_history_to_excel(
+                    project_id, file_path
+                )
+                if success:
+                    project = self.get_project_by_id(project_id)
+                    project_name = project.current_name if project else f"프로젝트 {project_id}"
+                    
+                    log_manager.add_log(f"✅ 순위 이력 Excel 파일이 저장되었습니다: {file_path}", "success")
+                    
+                    # 공용 저장 완료 다이얼로그
+                    main_window = parent_widget.window() if parent_widget else None
+                    ModernSaveCompletionDialog.show_save_completion(
+                        main_window,
+                        "저장 완료",
+                        f"순위 이력이 성공적으로 저장되었습니다.\n\n프로젝트: {project_name}",
+                        file_path
+                    )
+                    return True
+                else:
+                    log_manager.add_log("❌ Excel 파일 저장에 실패했습니다.", "error")
+                    return False
+            return False
+            
+        except Exception as e:
+            logger.error(f"단일 프로젝트 내보내기 오류: {e}")
+            return False
+    
+    def export_multiple_projects(self, project_ids: List[int], parent_widget=None) -> bool:
+        """다중 프로젝트 Excel 내보내기 (adapters 위임)"""
+        try:
+            from PySide6.QtWidgets import QFileDialog
+            from .adapters import rank_tracking_excel_exporter
+            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
+            from src.desktop.common_log import log_manager
+            
+            # 기본 파일명 생성 (다중 프로젝트)
+            default_filename = f"순위이력_다중프로젝트_{len(project_ids)}개_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+            
+            # 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                parent_widget,
+                "다중 프로젝트 순위 이력 Excel 저장",
+                default_filename,
+                "Excel 파일 (*.xlsx);;모든 파일 (*)"
+            )
+            
+            if file_path:
+                # 어댑터를 통한 다중 프로젝트 엑셀 저장
+                success = rank_tracking_excel_exporter.export_multiple_projects_to_excel(
+                    project_ids, file_path
+                )
+                if success:
+                    log_manager.add_log(f"✅ 다중 프로젝트 순위 이력 Excel 파일이 저장되었습니다: {file_path}", "success")
+                    
+                    # 공용 저장 완료 다이얼로그
+                    main_window = parent_widget.window() if parent_widget else None
+                    ModernSaveCompletionDialog.show_save_completion(
+                        main_window,
+                        "저장 완료",
+                        f"다중 프로젝트 순위 이력이 성공적으로 저장되었습니다.\n\n프로젝트 개수: {len(project_ids)}개",
+                        file_path
+                    )
+                    return True
+                else:
+                    log_manager.add_log("❌ 다중 프로젝트 Excel 파일 저장에 실패했습니다.", "error")
+                    return False
+            return False
+            
+        except Exception as e:
+            logger.error(f"다중 프로젝트 내보내기 오류: {e}")
+            return False
+    
+    # ================ 순위 확인 관련 메서드들 ================
+    
+    def start_ranking_check(self, project_id: int) -> bool:
+        """순위 확인 시작 (비즈니스 로직)"""
+        try:
+            # 프로젝트 존재 여부 확인
+            project = self.get_project_by_id(project_id)
+            if not project:
+                logger.warning(f"프로젝트가 존재하지 않습니다: {project_id}")
+                return False
+            
+            # 워커 매니저를 통해 순위 확인 시작
+            from .worker import ranking_worker_manager
+            success = ranking_worker_manager.start_ranking_check(project_id)
+            
+            if success:
+                logger.info(f"프로젝트 '{project.current_name}' 순위 확인 시작")
+            else:
+                logger.info(f"프로젝트 '{project.current_name}'의 순위 확인이 이미 실행 중입니다.")
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"순위 확인 시작 실패: {e}")
+            return False
+    
+    def stop_ranking_check(self, project_id: int) -> bool:
+        """순위 확인 정지 (비즈니스 로직)"""
+        try:
+            project = self.get_project_by_id(project_id)
+            if not project:
+                logger.warning(f"프로젝트가 존재하지 않습니다: {project_id}")
+                return False
+            
+            from .worker import ranking_worker_manager
+            success = ranking_worker_manager.stop_ranking_check(project_id)
+            
+            if success:
+                logger.info(f"프로젝트 '{project.current_name}' 순위 확인 정지")
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"순위 확인 정지 실패: {e}")
+            return False
+    
+    def is_ranking_in_progress(self, project_id: int) -> bool:
+        """순위 확인이 진행 중인지 확인"""
+        try:
+            from .worker import ranking_worker_manager
+            return ranking_worker_manager.is_ranking_in_progress(project_id)
+        except Exception as e:
+            logger.error(f"순위 확인 상태 조회 실패: {e}")
+            return False
+    
+    def get_ranking_progress(self, project_id: int) -> tuple[int, int]:
+        """순위 확인 진행률 조회 (current, total)"""
+        try:
+            from .worker import ranking_worker_manager
+            return ranking_worker_manager.get_current_progress(project_id)
+        except Exception as e:
+            logger.error(f"순위 확인 진행률 조회 실패: {e}")
+            return 0, 0
+    
+    def get_ranking_current_time(self, project_id: int) -> Optional[str]:
+        """현재 순위 확인 시간 조회"""
+        try:
+            from .worker import ranking_worker_manager
+            return ranking_worker_manager.get_current_time(project_id)
+        except Exception as e:
+            logger.error(f"순위 확인 시간 조회 실패: {e}")
+            return None
+    
+    # ================ 키워드 추가 관련 메서드들 ================
+    
+    def add_keywords_batch_with_background_update(self, project_id: int, keywords: List[str]) -> Dict[str, Any]:
+        """키워드 배치 추가 + 백그라운드 월검색량/카테고리 업데이트"""
+        try:
+            # 프로젝트 존재 여부 확인
+            project = self.get_project_by_id(project_id)
+            if not project:
+                logger.warning(f"프로젝트가 존재하지 않습니다: {project_id}")
+                return {
+                    'success': False,
+                    'added_keywords': [],
+                    'duplicate_keywords': [],
+                    'failed_keywords': keywords,
+                    'error': 'Project not found'
+                }
+            
+            added_keywords = []
+            duplicate_keywords = []
+            failed_keywords = []
+            
+            # 1단계: DB에 키워드 추가
+            for keyword in keywords:
+                try:
+                    keyword_obj = self.add_keyword(project_id, keyword)
+                    if keyword_obj:  # 성공적으로 추가된 경우
+                        added_keywords.append(keyword)
+                    else:
+                        duplicate_keywords.append(keyword)
+                except Exception as e:
+                    if "이미 등록되어 있습니다" in str(e):
+                        duplicate_keywords.append(keyword)
+                    else:
+                        failed_keywords.append(keyword)
+                        logger.error(f"키워드 추가 실패: {keyword}, 오류: {e}")
+            
+            # 2단계: 로그 처리
+            from src.desktop.common_log import log_manager
+            
+            # 성공 로그
+            for keyword in added_keywords:
+                log_manager.add_log(f"✅ '{keyword}' 키워드 추가 완료", "success")
+            
+            # 중복 로그  
+            for keyword in duplicate_keywords:
+                log_manager.add_log(f"⚠️ 중복: '{keyword}' 키워드가 이미 등록되어 있습니다.", "warning")
+            
+            # 실패 로그
+            for keyword in failed_keywords:
+                log_manager.add_log(f"❌ '{keyword}' 키워드 추가 실패", "error")
+            
+            # 3단계: 성공적으로 추가된 키워드가 있으면 백그라운드 업데이트 시작
+            if added_keywords:
+                log_manager.add_log(f"🎉 {len(added_keywords)}개 키워드 추가 완료!", "success")
+                log_manager.add_log(f"🔍 월검색량/카테고리 조회를 시작합니다.", "info")
+                self.start_background_keyword_info_update(project_id, added_keywords, project)
+                
+                if len(duplicate_keywords) > 0:
+                    log_manager.add_log(f"⚠️ {len(duplicate_keywords)}개 키워드는 중복으로 건너뜀", "warning")
+            
+            return {
+                'success': len(added_keywords) > 0,
+                'added_keywords': added_keywords,
+                'duplicate_keywords': duplicate_keywords,
+                'failed_keywords': failed_keywords,
+                'total_added': len(added_keywords)
+            }
+            
+        except Exception as e:
+            logger.error(f"키워드 배치 추가 실패: {e}")
+            return {
+                'success': False,
+                'added_keywords': [],
+                'duplicate_keywords': [],
+                'failed_keywords': keywords,
+                'error': str(e)
+            }
+    
+    def start_background_keyword_info_update(self, project_id: int, keywords: List[str], project) -> bool:
+        """백그라운드 키워드 정보 업데이트 시작"""
+        try:
+            if not keywords or not project_id:
+                return False
+            
+            # 키워드 정보 워커 매니저를 통해 백그라운드 작업 시작
+            from .worker import keyword_info_worker_manager
+            success = keyword_info_worker_manager.start_keyword_info_update(
+                project_id, 
+                keywords, 
+                project
+            )
+            
+            if success:
+                logger.info(f"프로젝트 '{project.current_name}' - {len(keywords)}개 키워드 월검색량/카테고리 조회 시작")
+            else:
+                logger.warning(f"프로젝트 '{project.current_name}' - 키워드 정보 조회 시작 실패")
+                
+            return success
+            
+        except Exception as e:
+            logger.error(f"백그라운드 키워드 정보 업데이트 시작 실패: {e}")
+            return False
 
 # 전역 서비스 인스턴스
 rank_tracking_service = RankTrackingService()

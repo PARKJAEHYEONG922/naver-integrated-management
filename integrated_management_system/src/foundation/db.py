@@ -651,17 +651,21 @@ class CommonDB:
     # ========== 순위 추적 관련 메서드 ==========
     
     def save_ranking_result(self, keyword_id: int, rank_position: int, page_number: int = 1, 
-                          total_results: int = 0, competitor_data: Dict[str, Any] = None) -> int:
+                          total_results: int = 0, competitor_data: Dict[str, Any] = None, search_date: str = None) -> int:
         """순위 결과 저장"""
         from datetime import datetime
         
         with self.get_connection() as conn:
             cursor = conn.cursor()
             
-            # 현재 한국 시간으로 타임스탬프 생성 (UTC +9 적용)
-            import pytz
-            korea_tz = pytz.timezone('Asia/Seoul')
-            current_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S')
+            # 전달받은 search_date가 있으면 사용, 없으면 현재 시간 생성
+            if search_date:
+                current_time = search_date
+            else:
+                # 현재 한국 시간으로 타임스탬프 생성 (UTC +9 적용)
+                import pytz
+                korea_tz = pytz.timezone('Asia/Seoul')
+                current_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S')
             
             cursor.execute("""
                 INSERT INTO ranking_results (

@@ -68,19 +68,20 @@ class ModernTableWidget(QTableWidget):
         
         # 헤더 설정
         header = self.horizontalHeader()
-        header.setDefaultSectionSize(120)
-        header.setStretchLastSection(True)
+        header.setDefaultSectionSize(100)  # 원본과 동일한 기본 크기
+        header.setStretchLastSection(False)  # 🔧 FIX: 마지막 컬럼 늘어나지 않게 설정 (원본과 동일)
+        header.setMinimumSectionSize(50)   # 원본과 동일한 최소 크기
         header.setMinimumHeight(40)  # 헤더 높이 40px로 고정
         header.setMaximumHeight(40)  # 헤더 높이 40px로 고정
         
-        # 체크박스 유무에 따른 컬럼 크기 조정 방식 설정
+        # 🔧 FIX: 모든 컬럼 너비 고정 (원본과 동일하게 설정)
+        # 원본은 모든 컬럼이 고정된 너비를 가지고 있음
+        header.setSectionResizeMode(QHeaderView.Fixed)  # 모든 컬럼 고정
+        
+        # 체크박스가 있는 경우에만 첫 번째 컬럼 특별 처리
         if self.has_checkboxes:
-            # 체크박스가 있는 경우: 첫 번째 컬럼 고정, 나머지는 조정 가능
-            header.setSectionResizeMode(QHeaderView.Interactive)
-            header.setSectionResizeMode(0, QHeaderView.Fixed)  # 체크박스 컬럼만 고정
-        else:
-            # 체크박스가 없는 경우: 모든 컬럼 조정 가능
-            header.setSectionResizeMode(QHeaderView.Interactive)
+            # 체크박스 컬럼은 이미 Fixed 모드로 설정됨
+            pass
         
         # 행 설정 (파워링크 이전기록과 동일)
         self.verticalHeader().setVisible(False)
@@ -111,8 +112,6 @@ class ModernTableWidget(QTableWidget):
                 text-align: center;
             }}
             """
-            # 체크박스 컬럼 너비 고정
-            column_width_setting = "self.horizontalHeader().resizeSection(0, 50)"
         else:
             first_header_style = f"""
             /* 첫 번째 컬럼 (일반 컬럼) - 체크박스가 없는 경우 */
@@ -123,7 +122,6 @@ class ModernTableWidget(QTableWidget):
                 text-align: center;
             }}
             """
-            column_width_setting = None
         
         self.setStyleSheet(f"""
             QTableWidget {{
@@ -198,7 +196,7 @@ class ModernTableWidget(QTableWidget):
         """)
         
         # 체크박스가 있는 경우 첫 번째 컬럼 너비 고정
-        if self.has_checkboxes and column_width_setting:
+        if self.has_checkboxes:
             self.horizontalHeader().resizeSection(0, 50)
     
     def setup_header_checkbox(self):
@@ -509,6 +507,117 @@ class ModernTableWidget(QTableWidget):
     def has_selection(self) -> bool:
         """선택된 행이 있는지 확인"""
         return self.get_selected_count() > 0
+    
+    def add_dynamic_column(self, column_title: str, column_data: List[Any] = None, column_width: int = 100) -> int:
+        """
+        동적으로 새 컬럼 추가 (순위추적 등에서 사용)
+        
+        Args:
+            column_title: 새 컬럼 제목
+            column_data: 각 행에 넣을 데이터 리스트 (None이면 빈 값)
+            column_width: 컬럼 너비
+            
+        Returns:
+            추가된 컬럼 인덱스
+        """
+        # 새 컬럼 추가
+        new_column_index = self.columnCount()
+        self.insertColumn(new_column_index)
+        
+        # 헤더 설정
+        self.setHorizontalHeaderItem(new_column_index, QTableWidgetItem(column_title))
+        
+        # 컬럼 너비 설정
+        self.setColumnWidth(new_column_index, column_width)
+        
+        # 🔧 FIX: 새로 추가된 컬럼도 고정 너비로 설정 (원본과 동일)
+        self.horizontalHeader().setSectionResizeMode(new_column_index, QHeaderView.Fixed)
+        
+        # 기존 행들에 데이터 추가
+        if column_data:
+            for row in range(min(self.rowCount(), len(column_data))):
+                value = column_data[row]
+                str_value = str(value) if value is not None else ""
+                
+                # 순위 데이터인지 체크 (숫자나 "-" 포함)
+                if self._is_rank_data(str_value):
+                    item = SortableTableWidgetItem(str_value)
+                    from .sortable_items import set_rank_sort_data
+                    set_rank_sort_data(item, 0, str_value)
+                else:
+                    item = SortableTableWidgetItem(str_value)
+                
+                self.setItem(row, new_column_index, item)
+        else:
+            # 빈 데이터로 채우기
+            for row in range(self.rowCount()):
+                item = SortableTableWidgetItem("")
+                self.setItem(row, new_column_index, item)
+        
+        return new_column_index
+    
+    def _is_rank_data(self, value: str) -> bool:
+        """값이 순위 데이터인지 판단"""
+        if not value or value == "-":
+            return True
+        try:
+            int(value)
+            return True
+        except ValueError:
+            return False
+    
+    def remove_column_by_title(self, column_title: str) -> bool:
+        """
+        컬럼 제목으로 컬럼 삭제
+        
+        Args:
+            column_title: 삭제할 컬럼 제목
+            
+        Returns:
+            삭제 성공 여부
+        """
+        for col in range(self.columnCount()):
+            header_item = self.horizontalHeaderItem(col)
+            if header_item and header_item.text() == column_title:
+                self.removeColumn(col)
+                return True
+        return False
+    
+    def get_column_titles(self) -> List[str]:
+        """모든 컬럼 제목 리스트 반환"""
+        titles = []
+        for col in range(self.columnCount()):
+            header_item = self.horizontalHeaderItem(col)
+            if header_item:
+                titles.append(header_item.text())
+            else:
+                titles.append("")
+        return titles
+    
+    def update_column_data(self, column_index: int, column_data: List[Any]):
+        """
+        특정 컬럼의 모든 데이터 업데이트
+        
+        Args:
+            column_index: 컬럼 인덱스
+            column_data: 새 데이터 리스트
+        """
+        if column_index >= self.columnCount():
+            return
+            
+        for row in range(min(self.rowCount(), len(column_data))):
+            value = column_data[row]
+            str_value = str(value) if value is not None else ""
+            
+            # 순위 데이터인지 체크
+            if self._is_rank_data(str_value):
+                item = SortableTableWidgetItem(str_value)
+                from .sortable_items import set_rank_sort_data
+                set_rank_sort_data(item, 0, str_value)
+            else:
+                item = SortableTableWidgetItem(str_value)
+            
+            self.setItem(row, column_index, item)
 
 
 class ModernTableContainer(QWidget):

@@ -1,0 +1,841 @@
+2025-08-19 09:10:54 - main - ERROR - 기능 모듈 로드 실패: name 'List' is not defined
+2025-08-19 09:10:54 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 11, in <module>
+    from .control_widget import NaverCafeControlWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 34, in <module>
+    class NaverCafeControlWidget(QWidget):
+    ...<1043 lines>...
+            super().closeEvent(event)
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 955, in NaverCafeControlWidget
+    def on_search_completed(self, cafes: List[CafeInfo]):
+                                         ^^^^
+NameError: name 'List' is not defined. Did you mean: 'list'?
+
+2025-08-19 09:10:54 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'List' is not defined
+2025-08-19 09:10:54 - main - ERROR - 애플리케이션 시작 실패: name 'List' is not defined
+2025-08-19 09:48:14 - main - ERROR - 기능 모듈 로드 실패: name 'List' is not defined
+2025-08-19 09:48:14 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 11, in <module>
+    from .control_widget import NaverCafeControlWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 27, in <module>
+    class NaverCafeControlWidget(QWidget):
+    ...<1041 lines>...
+            super().closeEvent(event)
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 946, in NaverCafeControlWidget
+    def on_search_completed(self, cafes: List[CafeInfo]):
+                                         ^^^^
+NameError: name 'List' is not defined. Did you mean: 'list'?
+
+2025-08-19 09:48:14 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'List' is not defined
+2025-08-19 09:48:14 - main - ERROR - 애플리케이션 시작 실패: name 'List' is not defined
+2025-08-19 10:19:09 - main - ERROR - 기능 모듈 로드 실패: name 'ExtractionProgress' is not defined
+2025-08-19 10:19:09 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 11, in <module>
+    from .control_widget import NaverCafeControlWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 25, in <module>
+    class NaverCafeControlWidget(QWidget):
+    ...<1041 lines>...
+            super().closeEvent(event)
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 847, in NaverCafeControlWidget
+    def on_progress_updated(self, progress: ExtractionProgress):
+                                            ^^^^^^^^^^^^^^^^^^
+NameError: name 'ExtractionProgress' is not defined
+
+2025-08-19 10:19:09 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'ExtractionProgress' is not defined
+2025-08-19 10:19:09 - main - ERROR - 애플리케이션 시작 실패: name 'ExtractionProgress' is not defined
+2025-08-19 10:19:33 - main - ERROR - 기능 모듈 로드 실패: name 'ExtractionProgress' is not defined
+2025-08-19 10:19:33 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 11, in <module>
+    from .control_widget import NaverCafeControlWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 25, in <module>
+    class NaverCafeControlWidget(QWidget):
+    ...<1041 lines>...
+            super().closeEvent(event)
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 847, in NaverCafeControlWidget
+    def on_progress_updated(self, progress: ExtractionProgress):
+                                            ^^^^^^^^^^^^^^^^^^
+NameError: name 'ExtractionProgress' is not defined
+
+2025-08-19 10:19:33 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'ExtractionProgress' is not defined
+2025-08-19 10:19:33 - main - ERROR - 애플리케이션 시작 실패: name 'ExtractionProgress' is not defined
+2025-08-19 10:41:42 - features.naver_cafe.service - ERROR - 저장 포맷 선택 다이얼로그 오류: 'primary_pressed'
+2025-08-19 10:41:43 - features.naver_cafe.service - ERROR - 저장 포맷 선택 다이얼로그 오류: 'primary_pressed'
+2025-08-19 10:41:44 - features.naver_cafe.service - ERROR - 저장 포맷 선택 다이얼로그 오류: 'primary_pressed'
+2025-08-19 10:41:44 - features.naver_cafe.service - ERROR - 저장 포맷 선택 다이얼로그 오류: 'primary_pressed'
+2025-08-19 10:42:24 - features.naver_cafe.service - ERROR - 저장 포맷 선택 다이얼로그 오류: 'bg_hover'
+2025-08-19 11:40:03 - main - ERROR - 기능 모듈 로드 실패: ModernButton.__init__() got an unexpected keyword argument 'style'
+2025-08-19 11:40:03 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 39, in setup_ui
+    self.setup_header(main_layout)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 73, in setup_header
+    self.help_button = ModernButton("❓ 사용법", style="secondary")
+                       ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ModernButton.__init__() got an unexpected keyword argument 'style'
+
+2025-08-19 11:40:03 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernButton.__init__() got an unexpected keyword argument 'style'
+2025-08-19 11:40:03 - main - ERROR - 애플리케이션 시작 실패: ModernButton.__init__() got an unexpected keyword argument 'style'
+2025-08-19 11:46:04 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ModernButton' from 'src.features.powerlink_analyzer.control_widget' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\control_widget.py)
+2025-08-19 11:46:04 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 14, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 20, in <module>
+    from .control_widget import ModernButton
+ImportError: cannot import name 'ModernButton' from 'src.features.powerlink_analyzer.control_widget' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\control_widget.py)
+
+2025-08-19 11:46:04 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ModernButton' from 'src.features.powerlink_analyzer.control_widget' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\control_widget.py)
+2025-08-19 11:46:04 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernButton' from 'src.features.powerlink_analyzer.control_widget' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\control_widget.py)
+2025-08-19 11:47:20 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ModernWarningButton' from 'src.toolbox.ui_kit.components' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+2025-08-19 11:47:20 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 14, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 19, in <module>
+    from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton, ModernWarningButton, ModernSuccessButton
+ImportError: cannot import name 'ModernWarningButton' from 'src.toolbox.ui_kit.components' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+
+2025-08-19 11:47:20 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ModernWarningButton' from 'src.toolbox.ui_kit.components' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+2025-08-19 11:47:20 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernWarningButton' from 'src.toolbox.ui_kit.components' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+2025-08-19 11:48:22 - main - ERROR - 기능 모듈 로드 실패: ModernButton.__init__() got an unexpected keyword argument 'style'
+2025-08-19 11:48:22 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 39, in setup_ui
+    self.setup_header(main_layout)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 73, in setup_header
+    self.help_button = ModernButton("❓ 사용법", style="secondary")
+                       ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ModernButton.__init__() got an unexpected keyword argument 'style'
+
+2025-08-19 11:48:22 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernButton.__init__() got an unexpected keyword argument 'style'
+2025-08-19 11:48:22 - main - ERROR - 애플리케이션 시작 실패: ModernButton.__init__() got an unexpected keyword argument 'style'
+2025-08-19 13:01:12 - features.powerlink_analyzer.service - ERROR - 히스토리 엑셀 내보내기 실패: 'CommonDB' object has no attribute 'get_powerlink_session'
+2025-08-19 13:01:24 - features.powerlink_analyzer.service - ERROR - 히스토리 엑셀 내보내기 실패: 'CommonDB' object has no attribute 'get_powerlink_session'
+2025-08-19 13:12:15 - features.powerlink_analyzer.service - ERROR - 히스토리 엑셀 내보내기 실패: 'name'
+2025-08-19 13:14:59 - features.powerlink_analyzer.service - ERROR - 히스토리 엑셀 내보내기 실패: 'name'
+2025-08-19 13:46:34 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (results_widget.py, line 1253)
+2025-08-19 13:46:34 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 15, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 1253
+    session_id = session_name_item.data(Qt.UserRole)
+IndentationError: unexpected indent
+
+2025-08-19 13:46:34 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (results_widget.py, line 1253)
+2025-08-19 13:46:34 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (results_widget.py, line 1253)
+2025-08-19 13:47:32 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (results_widget.py, line 1250)
+2025-08-19 13:47:32 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 15, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 1250
+    session_id = session_name_item.data(Qt.UserRole)
+IndentationError: unexpected indent
+
+2025-08-19 13:47:32 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (results_widget.py, line 1250)
+2025-08-19 13:47:32 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (results_widget.py, line 1250)
+2025-08-19 13:58:23 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (results_widget.py, line 1251)
+2025-08-19 13:58:23 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 15, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 1251
+    session_id = session_name_item.data(Qt.UserRole)
+IndentationError: unexpected indent
+
+2025-08-19 13:58:23 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (results_widget.py, line 1251)
+2025-08-19 13:58:23 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (results_widget.py, line 1251)
+2025-08-19 14:11:30 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (results_widget.py, line 516)
+2025-08-19 14:11:30 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 12, in <module>
+    from .results_widget import NaverCafeResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 516
+    task_users = self.service.get_users_by_task_id(task_id)
+IndentationError: unexpected indent
+
+2025-08-19 14:11:30 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (results_widget.py, line 516)
+2025-08-19 14:11:30 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (results_widget.py, line 516)
+2025-08-19 14:12:42 - main - ERROR - 기능 모듈 로드 실패: 'bg_hover'
+2025-08-19 14:12:42 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 15, in register
+    widget = NaverCafeWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 20, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 47, in setup_ui
+    self.results_widget = NaverCafeResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 31, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 70, in setup_ui
+    users_tab = self.create_users_tab()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 99, in create_users_tab
+    self.users_table = ModernTableWidget(
+                       ~~~~~~~~~~~~~~~~~^
+        columns=["번호", "사용자 ID", "닉네임", "추출 시간"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_checkboxes=False,  # 사용자 테이블은 체크박스 없음
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_header_checkbox=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_table.py", line 60, in __init__
+    self.setup_styling()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_table.py", line 110, in setup_styling
+    background-color: {ModernStyle.COLORS['bg_hover']};
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'bg_hover'
+
+2025-08-19 14:12:42 - desktop.app - ERROR - 애플리케이션 실행 실패: 'bg_hover'
+2025-08-19 14:12:42 - main - ERROR - 애플리케이션 시작 실패: 'bg_hover'
+2025-08-19 14:13:42 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (results_widget.py, line 1182)
+2025-08-19 14:13:42 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 15, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 1182
+    session_id = session_name_item.data(Qt.UserRole)
+IndentationError: unexpected indent
+
+2025-08-19 14:13:42 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (results_widget.py, line 1182)
+2025-08-19 14:13:42 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (results_widget.py, line 1182)
+2025-08-19 14:19:55 - main - ERROR - 기능 모듈 로드 실패: name 'QTableWidget' is not defined
+2025-08-19 14:19:55 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 15, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 221, in <module>
+    class PowerLinkResultsWidget(QWidget):
+    ...<2116 lines>...
+                QMessageBox.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 676, in PowerLinkResultsWidget
+    def update_keyword_row_in_table(self, table: QTableWidget, keyword: str, result, device_type: str):
+                                                 ^^^^^^^^^^^^
+NameError: name 'QTableWidget' is not defined. Did you mean: 'QTabWidget'?
+
+2025-08-19 14:19:55 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'QTableWidget' is not defined
+2025-08-19 14:19:55 - main - ERROR - 애플리케이션 시작 실패: name 'QTableWidget' is not defined
+2025-08-19 14:31:10 - main - ERROR - 기능 모듈 로드 실패: name 'QTableWidget' is not defined
+2025-08-19 14:31:10 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 15, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 221, in <module>
+    class PowerLinkResultsWidget(QWidget):
+    ...<1772 lines>...
+                QMessageBox.information(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 670, in PowerLinkResultsWidget
+    def update_keyword_row_in_table(self, table: QTableWidget, keyword: str, result, device_type: str):
+                                                 ^^^^^^^^^^^^
+NameError: name 'QTableWidget' is not defined. Did you mean: 'QTabWidget'?
+
+2025-08-19 14:31:10 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'QTableWidget' is not defined
+2025-08-19 14:31:10 - main - ERROR - 애플리케이션 시작 실패: name 'QTableWidget' is not defined
+2025-08-19 15:40:01 - main - ERROR - 애플리케이션 시작 실패: f-string: single '}' is not allowed (modern_table.py, line 184)
+2025-08-19 15:40:04 - main - ERROR - 애플리케이션 시작 실패: f-string: single '}' is not allowed (modern_table.py, line 184)
+2025-08-19 15:49:14 - features.naver_cafe.results_widget - ERROR - 추출 기록 테이블 새로고침 실패: 'ModernTableWidget' object has no attribute 'update_header_checkbox_text'
+2025-08-19 15:59:55 - main - ERROR - 기능 모듈 로드 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 15:59:55 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 15, in register
+    widget = NaverCafeWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 20, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 47, in setup_ui
+    self.results_widget = NaverCafeResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 31, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 70, in setup_ui
+    users_tab = self.create_users_tab()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 99, in create_users_tab
+    self.users_table = ModernTableWidget(
+                       ~~~~~~~~~~~~~~~~~^
+        columns=["번호", "사용자 ID", "닉네임", "추출 시간"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_checkboxes=False,  # 사용자 테이블은 체크박스 없음
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_header_checkbox=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_table.py", line 62, in __init__
+    self._header_update_timer.timeout.connect(self._do_header_update)
+                                              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModernTableWidget' object has no attribute '_do_header_update'
+
+2025-08-19 15:59:55 - desktop.app - ERROR - 애플리케이션 실행 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 15:59:55 - main - ERROR - 애플리케이션 시작 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 15:59:59 - main - ERROR - 기능 모듈 로드 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 15:59:59 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 15, in register
+    widget = NaverCafeWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 20, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 47, in setup_ui
+    self.results_widget = NaverCafeResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 31, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 70, in setup_ui
+    users_tab = self.create_users_tab()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 99, in create_users_tab
+    self.users_table = ModernTableWidget(
+                       ~~~~~~~~~~~~~~~~~^
+        columns=["번호", "사용자 ID", "닉네임", "추출 시간"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_checkboxes=False,  # 사용자 테이블은 체크박스 없음
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_header_checkbox=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_table.py", line 62, in __init__
+    self._header_update_timer.timeout.connect(self._do_header_update)
+                                              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModernTableWidget' object has no attribute '_do_header_update'
+
+2025-08-19 15:59:59 - desktop.app - ERROR - 애플리케이션 실행 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 15:59:59 - main - ERROR - 애플리케이션 시작 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:01:56 - main - ERROR - 기능 모듈 로드 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:01:56 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 15, in register
+    widget = NaverCafeWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 20, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 47, in setup_ui
+    self.results_widget = NaverCafeResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 31, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 70, in setup_ui
+    users_tab = self.create_users_tab()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 99, in create_users_tab
+    self.users_table = ModernTableWidget(
+                       ~~~~~~~~~~~~~~~~~^
+        columns=["번호", "사용자 ID", "닉네임", "추출 시간"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_checkboxes=False,  # 사용자 테이블은 체크박스 없음
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_header_checkbox=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_table.py", line 62, in __init__
+    self._header_update_timer.timeout.connect(self._do_header_update)
+                                              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModernTableWidget' object has no attribute '_do_header_update'
+
+2025-08-19 16:01:56 - desktop.app - ERROR - 애플리케이션 실행 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:01:56 - main - ERROR - 애플리케이션 시작 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:01:59 - main - ERROR - 기능 모듈 로드 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:01:59 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 15, in register
+    widget = NaverCafeWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 20, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 47, in setup_ui
+    self.results_widget = NaverCafeResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 31, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 70, in setup_ui
+    users_tab = self.create_users_tab()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 99, in create_users_tab
+    self.users_table = ModernTableWidget(
+                       ~~~~~~~~~~~~~~~~~^
+        columns=["번호", "사용자 ID", "닉네임", "추출 시간"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_checkboxes=False,  # 사용자 테이블은 체크박스 없음
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_header_checkbox=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_table.py", line 62, in __init__
+    self._header_update_timer.timeout.connect(self._do_header_update)
+                                              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModernTableWidget' object has no attribute '_do_header_update'
+
+2025-08-19 16:01:59 - desktop.app - ERROR - 애플리케이션 실행 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:01:59 - main - ERROR - 애플리케이션 시작 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:02:03 - main - ERROR - 기능 모듈 로드 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:02:03 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 15, in register
+    widget = NaverCafeWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 20, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 47, in setup_ui
+    self.results_widget = NaverCafeResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 31, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 70, in setup_ui
+    users_tab = self.create_users_tab()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\results_widget.py", line 99, in create_users_tab
+    self.users_table = ModernTableWidget(
+                       ~~~~~~~~~~~~~~~~~^
+        columns=["번호", "사용자 ID", "닉네임", "추출 시간"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_checkboxes=False,  # 사용자 테이블은 체크박스 없음
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        has_header_checkbox=False
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_table.py", line 62, in __init__
+    self._header_update_timer.timeout.connect(self._do_header_update)
+                                              ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModernTableWidget' object has no attribute '_do_header_update'
+
+2025-08-19 16:02:03 - desktop.app - ERROR - 애플리케이션 실행 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:02:03 - main - ERROR - 애플리케이션 시작 실패: 'ModernTableWidget' object has no attribute '_do_header_update'
+2025-08-19 16:38:07 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 8, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:07 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 8, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 0, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 0, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 1, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 1, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 2, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 2, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 3, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 3, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 4, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 4, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 5, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 5, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 6, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 6, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 7, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 7, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 8, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:12 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 8, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:32 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 0, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:32 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 0, device pc: name 'QCheckBox' is not defined
+2025-08-19 16:38:36 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 0, device mobile: name 'QCheckBox' is not defined
+2025-08-19 16:38:36 - features.powerlink_analyzer.results_widget - ERROR - 테이블 행 추가 실패: row 0, device pc: name 'QCheckBox' is not defined
+2025-08-19 17:05:34 - features.powerlink_analyzer.results_widget - ERROR - 키워드 즉시 추가 실패 소형견간식: 'KeywordDatabase' object has no attribute 'keywords_data'
+2025-08-19 17:05:51 - features.powerlink_analyzer.results_widget - ERROR - 키워드 즉시 추가 실패 강아지사료: 'KeywordDatabase' object has no attribute 'keywords_data'
+2025-08-19 17:06:38 - features.powerlink_analyzer.results_widget - ERROR - 키워드 즉시 추가 실패 애견보양식: 'KeywordDatabase' object has no attribute 'keywords_data'
+2025-08-19 17:07:01 - features.powerlink_analyzer.results_widget - ERROR - 키워드 즉시 추가 실패 오븐베이크: 'KeywordDatabase' object has no attribute 'keywords_data'
+2025-08-19 17:08:27 - features.powerlink_analyzer.results_widget - ERROR - 키워드 즉시 추가 실패 강아지사료: KeywordAnalysisResult.__init__() missing 14 required positional arguments: 'pc_search_volume', 'mobile_search_volume', 'pc_clicks', 'pc_ctr', 'pc_first_page_positions', 'pc_first_position_bid', 'pc_min_exposure_bid', 'pc_bid_positions', 'mobile_clicks', 'mobile_ctr', 'mobile_first_page_positions', 'mobile_first_position_bid', 'mobile_min_exposure_bid', and 'mobile_bid_positions'
+2025-08-19 17:09:06 - features.powerlink_analyzer.results_widget - ERROR - 키워드 즉시 추가 실패 오븐베이크: KeywordAnalysisResult.__init__() missing 14 required positional arguments: 'pc_search_volume', 'mobile_search_volume', 'pc_clicks', 'pc_ctr', 'pc_first_page_positions', 'pc_first_position_bid', 'pc_min_exposure_bid', 'pc_bid_positions', 'mobile_clicks', 'mobile_ctr', 'mobile_first_page_positions', 'mobile_first_position_bid', 'mobile_min_exposure_bid', and 'mobile_bid_positions'
+2025-08-19 18:02:07 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:07 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:07 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:08 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:09 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:10 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:11 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:12 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:13 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:14 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:15 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:16 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:17 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:18 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:19 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:20 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:21 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:22 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:23 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:24 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:25 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:26 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 18:02:27 - features.powerlink_analyzer.control_widget - ERROR - 테이블 키워드 수집 실패: name 'TextProcessor' is not defined
+2025-08-19 20:18:42 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ModernSecondaryButton' from 'src.toolbox.ui_kit.components' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+2025-08-19 20:18:42 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 18, in <module>
+    from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernSecondaryButton
+ImportError: cannot import name 'ModernSecondaryButton' from 'src.toolbox.ui_kit.components' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+
+2025-08-19 20:18:42 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ModernSecondaryButton' from 'src.toolbox.ui_kit.components' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+2025-08-19 20:18:42 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernSecondaryButton' from 'src.toolbox.ui_kit.components' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py)
+2025-08-19 20:20:17 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'NewProjectDialog' from partially initialized module 'src.features.rank_tracking.ui' (most likely due to a circular import) (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py)
+2025-08-19 20:20:17 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 24, in <module>
+    from .project_list_widget import ProjectListWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\project_list_widget.py", line 17, in <module>
+    from .ui import NewProjectDialog
+ImportError: cannot import name 'NewProjectDialog' from partially initialized module 'src.features.rank_tracking.ui' (most likely due to a circular import) (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py)
+
+2025-08-19 20:20:17 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'NewProjectDialog' from partially initialized module 'src.features.rank_tracking.ui' (most likely due to a circular import) (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py)
+2025-08-19 20:20:17 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'NewProjectDialog' from partially initialized module 'src.features.rank_tracking.ui' (most likely due to a circular import) (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py)
+2025-08-19 20:23:08 - features.rank_tracking.ranking_table_widget - ERROR - 프로젝트 변경사항 다이얼로그 표시 실패: No module named 'src.features.rank_tracking.history_dialog'
+2025-08-19 20:23:09 - features.rank_tracking.ranking_table_widget - ERROR - 프로젝트 변경사항 다이얼로그 표시 실패: No module named 'src.features.rank_tracking.history_dialog'
+2025-08-19 20:49:10 - features.rank_tracking.ui - ERROR - 기본정보 이력 로드 실패: 'CommonDB' object has no attribute 'fetch_all'
+2025-08-19 20:49:10 - features.rank_tracking.ui - ERROR - 키워드 이력 로드 실패: 'CommonDB' object has no attribute 'fetch_all'
+2025-08-19 20:49:10 - features.rank_tracking.ui - ERROR - 시스템 로그 로드 실패: 'LogManager' object has no attribute 'get_logs_by_category'
+2025-08-19 21:05:34 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (ranking_table_widget.py, line 1157)
+2025-08-19 21:05:34 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 25, in <module>
+    from .ranking_table_widget import RankingTableWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ranking_table_widget.py", line 1157
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+IndentationError: unexpected indent
+
+2025-08-19 21:05:34 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (ranking_table_widget.py, line 1157)
+2025-08-19 21:05:34 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (ranking_table_widget.py, line 1157)
+2025-08-19 21:18:38 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (ranking_table_widget.py, line 748)
+2025-08-19 21:18:38 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 25, in <module>
+    from .ranking_table_widget import RankingTableWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ranking_table_widget.py", line 748
+    background-color: white;
+IndentationError: unexpected indent
+
+2025-08-19 21:18:38 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (ranking_table_widget.py, line 748)
+2025-08-19 21:18:38 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (ranking_table_widget.py, line 748)
+2025-08-19 21:19:06 - main - ERROR - 기능 모듈 로드 실패: name 'QCheckBox' is not defined
+2025-08-19 21:19:06 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 25, in <module>
+    from .ranking_table_widget import RankingTableWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ranking_table_widget.py", line 32, in <module>
+    class RankingTableWidget(QWidget):
+    ...<1888 lines>...
+            rank_tracking_service.export_multiple_projects(project_ids, self)
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ranking_table_widget.py", line 747, in RankingTableWidget
+    def _create_header_checkbox(self) -> QCheckBox:
+                                         ^^^^^^^^^
+NameError: name 'QCheckBox' is not defined
+
+2025-08-19 21:19:06 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'QCheckBox' is not defined
+2025-08-19 21:19:06 - main - ERROR - 애플리케이션 시작 실패: name 'QCheckBox' is not defined
+2025-08-19 21:30:25 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:26 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:26 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:27 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:27 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:28 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:28 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:29 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:29 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:29 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:30 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:30 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:30:30 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'last_check_label'
+2025-08-19 21:46:18 - features.rank_tracking.ui - ERROR - 기본정보 이력 로드 실패: 'CommonDB' object has no attribute 'fetch_all'
+2025-08-19 21:46:18 - features.rank_tracking.ui - ERROR - 키워드 이력 로드 실패: 'CommonDB' object has no attribute 'fetch_all'
+2025-08-19 21:46:18 - features.rank_tracking.ui - ERROR - 시스템 로그 로드 실패: 'LogManager' object has no attribute 'get_logs_by_category'
+2025-08-19 21:46:42 - features.rank_tracking.ui - ERROR - 기본정보 이력 로드 실패: 'CommonDB' object has no attribute 'fetch_all'
+2025-08-19 21:46:42 - features.rank_tracking.ui - ERROR - 키워드 이력 로드 실패: 'CommonDB' object has no attribute 'fetch_all'
+2025-08-19 21:46:42 - features.rank_tracking.ui - ERROR - 시스템 로그 로드 실패: 'LogManager' object has no attribute 'get_logs_by_category'
+2025-08-19 21:49:33 - features.rank_tracking.ui - ERROR - 키워드 이력 로드 실패: 0
+2025-08-19 21:59:11 - features.rank_tracking.ui - ERROR - 키워드 이력 로드 실패: 'ProjectHistoryDialog' object has no attribute 'keyword_table'
+2025-08-19 21:59:11 - features.rank_tracking.ui - ERROR - 시스템 로그 로드 실패: 'ProjectHistoryDialog' object has no attribute 'system_log_table'
+2025-08-19 22:24:46 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:48 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:48 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:55 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:55 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:56 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:56 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:57 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:57 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:57 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:58 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:58 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:24:58 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:00 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:00 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:01 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:53 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:58 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:58 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:59 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:25:59 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:00 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:00 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:00 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:01 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:01 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:01 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:02 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:03 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:03 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:03 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:03 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:04 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:26:04 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankingTableWidget' object has no attribute 'update_delete_button_state'
+2025-08-19 22:32:38 - features.rank_tracking - ERROR - 네이버상품 순위추적 피처 등록 실패: 'RankingTableWidget' object has no attribute '_force_refresh_ranking_table'
+2025-08-19 22:51:45 - features.rank_tracking - ERROR - 네이버상품 순위추적 피처 등록 실패: name 'QGridLayout' is not defined
+2025-08-19 23:02:18 - features.rank_tracking.ui - ERROR - 최신 확인 시간 조회 실패: CommonDB.get_latest_rankings() got an unexpected keyword argument 'limit'
+2025-08-19 23:02:28 - features.rank_tracking.ui - ERROR - 최신 확인 시간 조회 실패: CommonDB.get_latest_rankings() got an unexpected keyword argument 'limit'

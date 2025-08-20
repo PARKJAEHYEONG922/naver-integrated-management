@@ -11,7 +11,7 @@ from PySide6.QtCore import QObject, Signal
 
 from src.vendors.naver import naver_shopping_client, naver_searchad_client
 from src.vendors.naver.normalizers import normalize_shopping_response
-from src.toolbox.text_utils import filter_unique_keywords, clean_keywords
+from src.toolbox.text_utils import filter_unique_keywords, clean_keyword
 from src.foundation.config import config_manager
 from src.foundation.exceptions import KeywordAnalysisError
 from src.foundation.logging import get_logger
@@ -236,7 +236,7 @@ class KeywordAnalysisService(QObject):
         """키워드 전처리"""
         try:
             # 키워드 정리
-            cleaned = clean_keywords(keywords)
+            cleaned = [clean_keyword(kw) for kw in keywords if kw.strip()]
             
             # 중복 제거
             unique_keywords = filter_unique_keywords(cleaned)

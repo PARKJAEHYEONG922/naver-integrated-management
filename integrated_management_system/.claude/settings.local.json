@@ -17,7 +17,11 @@
       "Bash(mv:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(sed:*)",
+      "Bash(dir:*)",
+      "Bash(sqlite3:*)",
+      "Bash(awk:*)"
     ],
     "deny": []
   }

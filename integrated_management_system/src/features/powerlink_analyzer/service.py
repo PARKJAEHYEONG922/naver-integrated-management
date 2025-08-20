@@ -7,7 +7,7 @@ from datetime import datetime
 
 from src.foundation.logging import get_logger
 from src.desktop.common_log import log_manager
-from src.toolbox.validators import validate_url
+from src.toolbox.text_utils import validate_url
 from src.toolbox.text_utils import parse_keywords_from_text, process_keywords
 
 from .adapters import PowerLinkDataAdapter, powerlink_excel_exporter

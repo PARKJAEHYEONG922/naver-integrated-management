@@ -340,6 +340,86 @@ class NaverShoppingClient(NaverSearchClient):
         except Exception as e:
             logger.error(f"키워드 카테고리 조회 실패: {keyword}: {e}")
             return None
+    
+    def find_product_rank(self, keyword: str, product_id: str, max_pages: int = 10) -> Optional[int]:
+        """
+        키워드 검색 결과에서 특정 상품의 순위를 찾음 (Raw API 방식)
+        
+        Args:
+            keyword: 검색 키워드
+            product_id: 찾을 상품 ID
+            max_pages: 최대 검색 페이지 수 (기본 10 = 1000개 상품)
+            
+        Returns:
+            순위 (1-based), 찾지 못하면 None
+        """
+        try:
+            # 키워드 정리 (공백 제거 + 대문자 변환)
+            clean_keyword = keyword.replace(' ', '').upper()
+            
+            # 페이지별로 검색 (100개씩)
+            for page in range(max_pages):
+                start = page * 100 + 1
+                display = 100
+                
+                params = {
+                    'query': clean_keyword,
+                    'display': display,
+                    'start': start,
+                    'sort': 'sim'  # 정확도순
+                }
+                
+                # API 재시도 로직 (3번 시도)
+                max_retries = 3
+                retry_count = 0
+                data = None
+                
+                while retry_count < max_retries:
+                    try:
+                        response = self._make_request('/search/shop.json', 'GET', params=params)
+                        data = response
+                        break  # 성공시 루프 탈출
+                        
+                    except Exception as e:
+                        retry_count += 1
+                        if retry_count < max_retries:
+                            import time
+                            wait_time = 1 * retry_count  # 1, 2, 3초 대기
+                            logger.warning(f"키워드 '{keyword}' API 호출 실패, {wait_time}초 대기 후 재시도 ({retry_count}/{max_retries}): {e}")
+                            time.sleep(wait_time)
+                        else:
+                            logger.error(f"키워드 '{keyword}' API 호출 {max_retries}번 시도 모두 실패: {e}")
+                            raise e
+                
+                if data is None:
+                    continue  # 다음 페이지로
+                
+                items = data.get('items', [])
+                if not items:
+                    continue
+                
+                # 상품 ID로 순위 찾기
+                for index, item in enumerate(items):
+                    try:
+                        link = item.get('link', '')
+                        if link and product_id in link:
+                            rank = start + index
+                            logger.info(f"키워드 '{keyword}' 순위 발견: {rank}위")
+                            return rank
+                    except Exception as e:
+                        continue
+                
+                # API 호출 간 딜레이
+                import time
+                time.sleep(0.5)
+            
+            # 찾지 못함
+            logger.info(f"키워드 '{keyword}' {max_pages * 100}위 이내에서 상품 {product_id} 찾지 못함")
+            return None
+            
+        except Exception as e:
+            logger.error(f"키워드 '{keyword}' 상품 순위 검색 실패: {e}")
+            raise e
 
 
 # 전역 클라이언트 인스턴스

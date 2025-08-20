@@ -6,18 +6,18 @@ from typing import Optional
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
     QTreeWidget, QTreeWidgetItem, QDialog, QMessageBox,
-    QAbstractItemView, QFrame
+    QAbstractItemView, QFrame, QGridLayout
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle, ModernConfirmDialog, ModernTextInputDialog, ModernInfoDialog
+from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton
 from src.desktop.common_log import log_manager
-from .dialogs import NewProjectDialog
+# Import removed to avoid circular import - will import locally when needed
 from src.foundation.logging import get_logger
 
 from .service import rank_tracking_service
-from .excel_export import rank_tracking_excel_exporter
 
 logger = get_logger("features.rank_tracking.project_list_widget")
 
@@ -58,33 +58,18 @@ class ProjectListWidget(QWidget):
         
         layout.addWidget(self.project_tree)
         
-        
         # 버튼 레이아웃 (트리 아래에 위치)
         button_layout = QHBoxLayout()
         
         # 새 프로젝트 추가 버튼
-        self.add_button = QPushButton("➕ 새 프로젝트")
+        self.add_button = ModernPrimaryButton("➕ 새 프로젝트")
         self.add_button.clicked.connect(self.add_project)
         button_layout.addWidget(self.add_button)
         
         # 프로젝트 삭제 버튼
-        self.delete_button = QPushButton("🗑️ 삭제")
+        self.delete_button = ModernDangerButton("🗑️ 프로젝트 삭제")
         self.delete_button.clicked.connect(self.delete_selected_project)
         self.delete_button.setEnabled(False)  # 처음에는 비활성화
-        self.delete_button.setStyleSheet("""
-            QPushButton { 
-                background-color: #EF4444; 
-                color: white; 
-                border-radius: 6px; 
-            } 
-            QPushButton:hover { 
-                background-color: #DC2626; 
-            } 
-            QPushButton:disabled { 
-                background-color: #D1D5DB; 
-                color: white; 
-            }
-        """)
         button_layout.addWidget(self.delete_button)
         
         layout.addLayout(button_layout)
@@ -149,6 +134,8 @@ class ProjectListWidget(QWidget):
     def add_project(self):
         """새 프로젝트 추가 - 기존 다이얼로그와 동일"""
         # 새 프로젝트 다이얼로그 표시
+        # Local import to avoid circular dependency
+        from .ui import NewProjectDialog
         project_url, product_name, ok = NewProjectDialog.getProjectData(self, self.add_button)
         if ok and project_url and product_name:
             self.create_project_from_data(project_url, product_name)
@@ -377,7 +364,7 @@ class ProjectListWidget(QWidget):
             # UI 상태 초기화
             self.current_project = None
             self.delete_button.setEnabled(False)
-            self.delete_button.setText("🗑️ 삭제")
+            self.delete_button.setText("🗑️ 프로젝트 삭제")
             self.load_projects()  # 목록 새로고침
             self.project_deleted.emit(0)  # 프로젝트 삭제 시그널 발송
     
@@ -421,10 +408,10 @@ class ProjectListWidget(QWidget):
         
         if count == 0:
             self.delete_button.setEnabled(False)
-            self.delete_button.setText("🗑️ 삭제")
+            self.delete_button.setText("🗑️ 프로젝트 삭제")
         elif count == 1:
             self.delete_button.setEnabled(True)
-            self.delete_button.setText("🗑️ 삭제")
+            self.delete_button.setText("🗑️ 프로젝트 삭제")
             # 단일 선택 시에만 프로젝트 상세 정보 표시
             item = selected_items[0]
             project = item.data(0, Qt.UserRole)
@@ -433,7 +420,9 @@ class ProjectListWidget(QWidget):
                 log_manager.add_log(f"🎯 {project.current_name} 프로젝트를 선택했습니다.", "info")
         else:
             self.delete_button.setEnabled(True)
-            self.delete_button.setText(f"🗑️ 삭제 ({count}개)")
+            self.delete_button.setText(f"🗑️ 프로젝트 삭제 ({count}개)")
+            # 다중 선택 시 기본정보는 메인 UI에서 처리
             log_manager.add_log(f"🎯 {count}개 프로젝트를 선택했습니다.", "info")
+    
 
 

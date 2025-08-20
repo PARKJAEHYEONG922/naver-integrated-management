@@ -1,6 +1,6 @@
 """
-순위 추적 워커 스레드 - 백그라운드 작업 처리
-QThread 기반 멀티스레딩, API 호출 병렬 처리
+순위 추적 워커 스레드 - 장시간 작업 처리만 담당
+CLAUDE.md 규칙: worker는 순수 장시간 작업 처리만, 비즈니스 로직은 service에서
 """
 from PySide6.QtCore import QThread, Signal, QObject
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -26,27 +26,20 @@ class RankingCheckWorker(QThread):
         self.is_running = True
     
     def run(self):
-        """순위 확인 실행 (실시간 업데이트)"""
+        """순위 확인 실행 (service 계층 활용으로 단순화)"""
         try:
             logger.info(f"RankingCheckWorker 시작: 프로젝트 ID {self.project_id}")
             
-            # 프로젝트 정보 조회
-            project = rank_tracking_service.get_project_by_id(self.project_id)
-            if not project:
-                logger.error(f"프로젝트를 찾을 수 없음: ID {self.project_id}")
-                self.finished.emit(False, '프로젝트를 찾을 수 없습니다.', [])
+            # service에서 순위 확인 준비
+            prep_result = rank_tracking_service.process_ranking_check_for_project(self.project_id)
+            if not prep_result['success']:
+                logger.error(f"순위 확인 준비 실패: {prep_result['message']}")
+                self.finished.emit(False, prep_result['message'], [])
                 return
             
-            logger.info(f"프로젝트 정보 조회 성공: {project.current_name}")
-            
-            # 키워드 조회
-            keywords = rank_tracking_service.get_project_keywords(self.project_id)
-            if not keywords:
-                logger.warning(f"프로젝트 {self.project_id}에 추적할 키워드가 없음")
-                self.finished.emit(False, '추적할 키워드가 없습니다.', [])
-                return
-            
-            logger.info(f"키워드 조회 성공: {len(keywords)}개 키워드")
+            project = prep_result['data']['project']
+            keywords = prep_result['data']['keywords']
+            logger.info(f"순위 확인 준비 완료: {project.current_name}, {len(keywords)}개 키워드")
             
             # 병렬 처리로 키워드별 실시간 순위 확인
             results = []
@@ -54,54 +47,38 @@ class RankingCheckWorker(QThread):
             completed_count = 0
             
             def process_single_keyword(keyword_obj):
-                """단일 키워드 처리 (병렬 실행용)"""
+                """단일 키워드 처리 (worker 전용 - 딜레이와 시그널만)"""
                 try:
                     # 적응형 딜레이 (요청 분산을 위한 jitter 포함)
                     base_delay = 0.5  # 기본 0.5초 딜레이
                     jitter = random.uniform(0.1, 0.3)  # 0.1~0.3초 랜덤 jitter
                     time.sleep(base_delay + jitter)
                     
-                    # 진행률 및 처리 시작 로그
                     logger.info(f"키워드 처리 시작: {keyword_obj.keyword}")
                     
-                    # 순위 확인
-                    result = rank_tracking_service.check_keyword_ranking(keyword_obj.keyword, project.product_id)
+                    # service에서 순위 확인 처리
+                    result, success = rank_tracking_service.process_single_keyword_ranking(keyword_obj, project.product_id)
                     
-                    logger.info(f"순위 확인 결과: {keyword_obj.keyword} -> 순위: {result.rank}, 성공: {result.success}")
+                    # 성공시 실시간 순위 업데이트 시그널 발출
+                    if success:
+                        try:
+                            self.keyword_rank_updated.emit(
+                                keyword_obj.id or 0,
+                                keyword_obj.keyword,
+                                result.rank,
+                                keyword_obj.monthly_volume or 0
+                            )
+                            logger.info(f"시그널 발출 성공: {keyword_obj.keyword}")
+                        except Exception as emit_error:
+                            logger.error(f"시그널 발출 실패: {emit_error}")
                     
-                    # 실시간 순위 업데이트 시그널 발출
-                    logger.info(f"🚨 시그널 발출 시도: keyword_rank_updated")
-                    logger.info(f"🚨 발출 파라미터: id={keyword_obj.id}, keyword={keyword_obj.keyword}, rank={result.rank}")
-                    
-                    try:
-                        self.keyword_rank_updated.emit(
-                            keyword_obj.id or 0,
-                            keyword_obj.keyword,
-                            result.rank,
-                            keyword_obj.monthly_volume or 0
-                        )
-                        logger.info(f"🚨 시그널 발출 성공: {keyword_obj.keyword}")
-                    except Exception as emit_error:
-                        logger.error(f"🚨 시그널 발출 실패: {emit_error}")
-                        import traceback
-                        logger.error(traceback.format_exc())
-                    
-                    return result, True
+                    return result, success
                     
                 except Exception as e:
                     logger.error(f"키워드 {keyword_obj.keyword} 처리 중 오류: {e}")
-                    import traceback
-                    logger.error(traceback.format_exc())
-                    
-                    # 실패한 결과 생성
-                    from .models import RankingResult
-                    failed_result = RankingResult(
-                        keyword=keyword_obj.keyword,
-                        success=False,
-                        rank=999,
-                        error_message=str(e)
-                    )
-                    return failed_result, False
+                    # service에서 실패 결과 생성
+                    result, success = rank_tracking_service.process_single_keyword_ranking(keyword_obj, project.product_id)
+                    return result, False
             
             # ThreadPoolExecutor로 병렬 처리 (최대 3개 워커)
             with ThreadPoolExecutor(max_workers=min(len(keywords), 3)) as executor:
@@ -133,27 +110,23 @@ class RankingCheckWorker(QThread):
                     except Exception as e:
                         logger.error(f"키워드 처리 미래 결과 획득 실패: {keyword_obj.keyword}: {e}")
                         
-                        # 실패한 결과 추가
-                        from .models import RankingResult
-                        failed_result = RankingResult(
-                            keyword=keyword_obj.keyword,
-                            success=False,
-                            rank=999,
-                            error_message=str(e)
-                        )
+                        # service에서 실패 결과 생성
+                        failed_result = rank_tracking_service.create_failed_ranking_result(keyword_obj.keyword, str(e))
                         results.append(failed_result)
             
             # 완료 진행률 업데이트 (병렬 처리 완료)
             self.progress.emit(len(keywords), len(keywords))
             
-            # 결과 저장
+            # 결과 저장 (service에서 처리)
+            save_success = False
             if results and self.is_running:
-                rank_tracking_service.save_ranking_results(self.project_id, results)
+                save_success = rank_tracking_service.save_ranking_results_for_project(self.project_id, results)
             
-            # 완료 시그널
-            logger.info(f"워커 완료: 성공 {success_count}/{len(keywords)} 키워드")
+            # 완료 시그널 (저장 결과 포함)
+            logger.info(f"워커 완료: 성공 {success_count}/{len(keywords)} 키워드, 저장: {save_success}")
+            final_success = success_count > 0 and save_success
             self.finished.emit(
-                success_count > 0,
+                final_success,
                 f"✅ {project.current_name} 순위 확인 완료: {success_count}/{len(keywords)} 키워드",
                 results
             )
@@ -167,7 +140,6 @@ class RankingCheckWorker(QThread):
     def stop(self):
         """워커 중단"""
         self.is_running = False
-        rank_tracking_service.stop_processing()
 
 
 class KeywordInfoWorker(QThread):
@@ -186,81 +158,26 @@ class KeywordInfoWorker(QThread):
         self.project = project
         self.is_running = True
     
-    def _get_keyword_category(self, keyword: str) -> str:
-        """키워드 카테고리 조회 (개별 스레드용)"""
-        try:
-            from src.vendors.naver.developer.shopping_client import shopping_client as naver_shopping_client
-            category = naver_shopping_client.get_keyword_category(keyword, sample_size=40)
-            return category if category else "-"
-        except Exception as e:
-            logger.warning(f"카테고리 조회 실패: {keyword}: {e}")
-            return "-"
-    
-    def _get_keyword_volume(self, keyword: str) -> int:
-        """키워드 월검색량 조회 (개별 스레드용)"""
-        try:
-            from src.vendors.naver.searchad.base_client import NaverKeywordToolClient
-            keyword_client = NaverKeywordToolClient()
-            volume_results = keyword_client.get_search_volume([keyword])
-            if volume_results and keyword in volume_results:
-                return volume_results[keyword].get('monthly_volume', 0)
-            else:
-                return -1  # API 호출 실패
-        except Exception as e:
-            logger.warning(f"월검색량 조회 실패: {keyword}: {e}")
-            return -1
-    
     def _process_single_keyword(self, keyword: str):
-        """단일 키워드의 카테고리와 월검색량을 병렬 처리"""
-        # 카테고리와 월검색량을 동시에 병렬 처리
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            # 두 API를 동시에 호출
-            category_future = executor.submit(self._get_keyword_category, keyword)
-            volume_future = executor.submit(self._get_keyword_volume, keyword)
+        """단일 키워드 처리 (service 활용으로 단순화)"""
+        try:
+            # service에서 키워드 정보 업데이트 처리
+            result = rank_tracking_service.process_keyword_info_update(self.project_id, keyword)
             
-            # 완료되는 즉시 시그널 발송
-            for future in as_completed([category_future, volume_future]):
-                if not self.is_running:
-                    break
-                    
-                if future == category_future:
-                    category = future.result()
-                    self.category_updated.emit(keyword, category)
-                    logger.info(f"카테고리 업데이트: {keyword} -> {category}")
-                    
-                elif future == volume_future:
-                    monthly_volume = future.result()
-                    self.volume_updated.emit(keyword, monthly_volume)
-                    logger.info(f"월검색량 업데이트: {keyword} -> {monthly_volume}")
+            # 결과에 따른 시그널 발송
+            if result['category'] != '-':
+                self.category_updated.emit(keyword, result['category'])
+                logger.info(f"카테고리 업데이트: {keyword} -> {result['category']}")
             
-            # 모든 결과가 완료되면 DB 업데이트
-            category = category_future.result()
-            monthly_volume = volume_future.result()
+            if result['monthly_volume'] >= 0:
+                self.volume_updated.emit(keyword, result['monthly_volume'])
+                logger.info(f"월검색량 업데이트: {keyword} -> {result['monthly_volume']}")
             
-            # DB 업데이트 (개별적으로, 성공한 항목만)
-            success_count = 0
+            return result['success']
             
-            # 카테고리 업데이트
-            if category != "-":
-                try:
-                    if rank_tracking_service.update_keyword_category_only(
-                        self.project_id, keyword, category
-                    ):
-                        success_count += 1
-                except Exception as e:
-                    logger.error(f"카테고리 DB 업데이트 실패: {keyword}: {e}")
-            
-            # 월검색량 업데이트
-            if monthly_volume >= 0:
-                try:
-                    if rank_tracking_service.update_keyword_volume_only(
-                        self.project_id, keyword, monthly_volume
-                    ):
-                        success_count += 1
-                except Exception as e:
-                    logger.error(f"월검색량 DB 업데이트 실패: {keyword}: {e}")
-            
-            return success_count > 0
+        except Exception as e:
+            logger.error(f"키워드 처리 실패: {keyword}: {e}")
+            return False
 
     def run(self):
         """키워드 정보 업데이트 실행 (병렬 처리)"""
@@ -381,7 +298,13 @@ class RankingWorkerManager(QObject):
     
     def get_current_time(self, project_id: int) -> str:
         """현재 진행 중인 시간 반환"""
-        return self.project_current_times.get(project_id, "")
+        result = self.project_current_times.get(project_id, "")
+        # 디버깅 로그 (간소화)
+        if result:
+            logger.debug(f"현재 진행 중인 시간: {project_id} -> {result}")
+        else:
+            logger.debug(f"진행 중인 시간 없음: {project_id}")
+        return result
     
     def get_current_rankings(self, project_id: int) -> dict:
         """현재 진행 중인 순위 데이터 반환"""

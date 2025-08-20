@@ -1,0 +1,712 @@
+2025-08-16 05:28:13 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:13 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:13 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:15 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:15 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:15 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:24 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:24 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:28:24 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:29:16 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:29:16 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:29:16 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernStyle' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 05:29:31 - main - ERROR - 애플리케이션 시작 실패: source code string cannot contain null bytes
+2025-08-16 05:29:33 - main - ERROR - 애플리케이션 시작 실패: source code string cannot contain null bytes
+2025-08-16 05:29:34 - main - ERROR - 애플리케이션 시작 실패: source code string cannot contain null bytes
+2025-08-16 05:29:35 - main - ERROR - 애플리케이션 시작 실패: source code string cannot contain null bytes
+2025-08-16 05:30:51 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernInputDialog' from 'src.toolbox.ui_kit.modern_dialog' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_dialog.py)
+2025-08-16 05:30:53 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ModernInputDialog' from 'src.toolbox.ui_kit.modern_dialog' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\modern_dialog.py)
+2025-08-16 05:31:31 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.desktop.common_log'
+2025-08-16 05:31:31 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.desktop.common_log'
+2025-08-16 05:31:31 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.desktop.common_log'
+2025-08-16 05:32:18 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.desktop.modern_style'
+2025-08-16 05:32:18 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.desktop.modern_style'
+2025-08-16 05:32:18 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.desktop.modern_style'
+2025-08-16 05:32:53 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'rank_tracking_excel_exporter' from 'src.features.rank_tracking.excel_export' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\excel_export.py)
+2025-08-16 05:32:53 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'rank_tracking_excel_exporter' from 'src.features.rank_tracking.excel_export' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\excel_export.py)
+2025-08-16 05:32:53 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'rank_tracking_excel_exporter' from 'src.features.rank_tracking.excel_export' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\excel_export.py)
+2025-08-16 05:43:59 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.desktop.modern_style'
+2025-08-16 05:44:41 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.desktop.modern_style'
+2025-08-16 05:58:22 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.ui_kit.file_dialog'
+2025-08-16 05:58:25 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.ui_kit.file_dialog'
+2025-08-16 06:01:27 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 강아지간식: 키워드 '강아지간식'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.view_model - ERROR - 키워드 추가 실패: 키워드 추가 실패: 키워드 '강아지간식'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 개껌: 키워드 '개껌'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.view_model - ERROR - 키워드 추가 실패: 키워드 추가 실패: 키워드 '개껌'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 강아지껌: 키워드 '강아지껌'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.view_model - ERROR - 키워드 추가 실패: 키워드 추가 실패: 키워드 '강아지껌'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 애견간식: 키워드 '애견간식'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.view_model - ERROR - 키워드 추가 실패: 키워드 추가 실패: 키워드 '애견간식'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 강아지우유껌: 키워드 '강아지우유껌'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.view_model - ERROR - 키워드 추가 실패: 키워드 추가 실패: 키워드 '강아지우유껌'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 개간식: 키워드 '개간식'는 이미 등록되어 있습니다.
+2025-08-16 06:01:27 - features.rank_tracking.view_model - ERROR - 키워드 추가 실패: 키워드 추가 실패: 키워드 '개간식'는 이미 등록되어 있습니다.
+2025-08-16 06:19:59 - features.rank_tracking.ranking_table_widget - ERROR - 최신 확인 시간 조회 실패: CommonDB.get_latest_rankings() got an unexpected keyword argument 'limit'
+2025-08-16 06:26:03 - features.rank_tracking.ranking_table_widget - ERROR - 엑셀 내보내기 중 오류: 'RankTrackingExcelExporter' object has no attribute 'show_save_dialog_and_export'
+2025-08-16 06:31:13 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 저장 중 오류: 'str' object has no attribute 'strftime'
+2025-08-16 06:34:13 - features.rank_tracking.ui - ERROR - 다중 프로젝트 선택 처리 오류: 'RankingTableWidget' object has no attribute 'set_selected_projects'
+2025-08-16 06:34:16 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 저장 중 오류: 'str' object has no attribute 'strftime'
+2025-08-16 06:38:15 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 저장 중 오류: 'str' object has no attribute 'strftime'
+2025-08-16 06:39:49 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 저장 중 오류: 'str' object has no attribute 'strftime'
+2025-08-16 06:40:02 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 저장 중 오류: 'str' object has no attribute 'strftime'
+2025-08-16 06:40:02 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 저장 중 오류: 'str' object has no attribute 'strftime'
+2025-08-16 06:40:02 - features.rank_tracking.ranking_table_widget - ERROR - 저장할 프로젝트 데이터가 없습니다
+2025-08-16 06:43:00 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 저장 중 오류: 'str' object has no attribute 'strftime'
+2025-08-16 06:57:08 - features.rank_tracking.excel_export - ERROR - 엑셀 파일 생성 중 오류: invalid literal for int() with base 10: '200 밖'
+2025-08-16 06:57:08 - features.rank_tracking.excel_export - ERROR - 순위 이력 엑셀 파일 생성 실패
+2025-08-16 07:02:12 - features.rank_tracking.ranking_table_widget - ERROR - 프로젝트 12 처리 실패: unhashable type: 'StyleProxy'
+2025-08-16 07:02:12 - features.rank_tracking.ranking_table_widget - ERROR - 프로젝트 11 처리 실패: unhashable type: 'StyleProxy'
+2025-08-16 07:02:12 - features.rank_tracking.ranking_table_widget - ERROR - 프로젝트 10 처리 실패: unhashable type: 'StyleProxy'
+2025-08-16 07:02:12 - features.rank_tracking.ranking_table_widget - ERROR - 저장할 프로젝트 데이터가 없습니다
+2025-08-16 07:05:36 - features.rank_tracking.ranking_table_widget - ERROR - 다중 프로젝트 내보내기 오류: cannot import name 'ModernSaveFileDialog' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 07:05:38 - features.rank_tracking.ranking_table_widget - ERROR - 다중 프로젝트 내보내기 오류: cannot import name 'ModernSaveFileDialog' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 07:05:47 - features.rank_tracking.ranking_table_widget - ERROR - 다중 프로젝트 내보내기 오류: cannot import name 'ModernSaveFileDialog' from 'src.toolbox.ui_kit' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\__init__.py)
+2025-08-16 07:06:40 - features.rank_tracking.excel_export - ERROR - 프로젝트 12 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:06:40 - features.rank_tracking.excel_export - ERROR - 프로젝트 11 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:06:40 - features.rank_tracking.excel_export - ERROR - 프로젝트 10 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:11:52 - features.rank_tracking.excel_export - ERROR - 프로젝트 12 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:11:52 - features.rank_tracking.excel_export - ERROR - 프로젝트 11 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:11:52 - features.rank_tracking.excel_export - ERROR - 프로젝트 10 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:15:52 - features.rank_tracking.ranking_table_widget - ERROR - 단일 프로젝트 내보내기 오류: ExcelExportDialog() takes no arguments
+2025-08-16 07:15:53 - features.rank_tracking.ranking_table_widget - ERROR - 단일 프로젝트 내보내기 오류: ExcelExportDialog() takes no arguments
+2025-08-16 07:16:19 - features.rank_tracking.ranking_table_widget - ERROR - 단일 프로젝트 내보내기 오류: ExcelExportDialog() takes no arguments
+2025-08-16 07:16:21 - features.rank_tracking.ranking_table_widget - ERROR - 단일 프로젝트 내보내기 오류: ExcelExportDialog() takes no arguments
+2025-08-16 07:16:35 - features.rank_tracking.ranking_table_widget - ERROR - 다중 프로젝트 내보내기 오류: ExcelExportDialog() takes no arguments
+2025-08-16 07:24:36 - features.rank_tracking.excel_export - ERROR - 프로젝트 12 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:24:36 - features.rank_tracking.excel_export - ERROR - 프로젝트 11 처리 중 오류: unhashable type: 'StyleProxy'
+2025-08-16 07:25:47 - features.rank_tracking.excel_export - ERROR - 프로젝트 10 처리 중 오류: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'temp_project_10.xlsx'
+2025-08-16 07:26:14 - features.rank_tracking.excel_export - ERROR - 프로젝트 12 처리 중 오류: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'temp_project_12.xlsx'
+2025-08-16 07:26:14 - features.rank_tracking.excel_export - ERROR - 프로젝트 11 처리 중 오류: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'temp_project_11.xlsx'
+2025-08-16 07:26:14 - features.rank_tracking.excel_export - ERROR - 프로젝트 10 처리 중 오류: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'temp_project_10.xlsx'
+2025-08-16 07:26:14 - features.rank_tracking.excel_export - ERROR - 프로젝트 9 처리 중 오류: [WinError 32] 다른 프로세스가 파일을 사용 중이기 때문에 프로세스가 액세스 할 수 없습니다: 'temp_project_9.xlsx'
+2025-08-16 15:54:02 - features.naver_cafe - ERROR - 네이버 카페 기능 등록 실패: type object 'ModernStyle' has no attribute 'DEFAULT_FONT'
+2025-08-16 15:54:02 - desktop.app - ERROR - 애플리케이션 실행 실패: type object 'ModernStyle' has no attribute 'DEFAULT_FONT'
+2025-08-16 15:54:02 - main - ERROR - 애플리케이션 시작 실패: type object 'ModernStyle' has no attribute 'DEFAULT_FONT'
+2025-08-16 15:59:59 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'Signal' is not defined
+2025-08-16 15:59:59 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:00:52 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'Signal' is not defined
+2025-08-16 16:00:52 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:01:24 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:02:09 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:08 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:20 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:22 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:29 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:31 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:33 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:37 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:05:38 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:06:00 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:06:22 - main - ERROR - 기능 모듈 로드 실패: name 'Signal' is not defined
+2025-08-16 16:06:22 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 14, in <module>
+    from .project_list_widget import ProjectListWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\project_list_widget.py", line 19, in <module>
+    from .service import rank_tracking_service
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\service.py", line 158, in <module>
+    class RankTrackingService(QObject):
+    ...<1136 lines>...
+                return []
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\service.py", line 162, in RankTrackingService
+    progress_updated = Signal(int, int, str)    # (현재, 전체, 메시지)
+                       ^^^^^^
+NameError: name 'Signal' is not defined
+
+2025-08-16 16:06:22 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'Signal' is not defined
+2025-08-16 16:06:22 - main - ERROR - 애플리케이션 시작 실패: name 'Signal' is not defined
+2025-08-16 16:06:35 - features.naver_cafe - ERROR - 네이버 카페 기능 등록 실패: type object 'ModernStyle' has no attribute 'FONT_SIZE_HEADER'
+2025-08-16 16:06:35 - main - ERROR - 기능 모듈 로드 실패: type object 'ModernStyle' has no attribute 'FONT_SIZE_HEADER'
+2025-08-16 16:06:35 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 14, in register
+    tab_widget = NaverCafeExtractorWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 118, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 134, in setup_ui
+    left_panel = self.create_settings_panel()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 226, in create_settings_panel
+    progress_card = ModernCard("📊 진행상황")
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py", line 137, in __init__
+    self._setup_ui()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py", line 148, in _setup_ui
+    self.title_label.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_HEADER, QFont.Bold))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'ModernStyle' has no attribute 'FONT_SIZE_HEADER'
+
+2025-08-16 16:06:35 - desktop.app - ERROR - 애플리케이션 실행 실패: type object 'ModernStyle' has no attribute 'FONT_SIZE_HEADER'
+2025-08-16 16:06:35 - main - ERROR - 애플리케이션 시작 실패: type object 'ModernStyle' has no attribute 'FONT_SIZE_HEADER'
+2025-08-16 16:07:05 - features.naver_cafe - ERROR - 네이버 카페 기능 등록 실패: type object 'ModernStyle' has no attribute 'CARD_COLOR'
+2025-08-16 16:07:05 - main - ERROR - 기능 모듈 로드 실패: type object 'ModernStyle' has no attribute 'CARD_COLOR'
+2025-08-16 16:07:05 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 14, in register
+    tab_widget = NaverCafeExtractorWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 118, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 134, in setup_ui
+    left_panel = self.create_settings_panel()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 226, in create_settings_panel
+    progress_card = ModernCard("📊 진행상황")
+                    ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py", line 138, in __init__
+    self._setup_style()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py", line 155, in _setup_style
+    background-color: {ModernStyle.CARD_COLOR};
+                       ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'ModernStyle' has no attribute 'CARD_COLOR'
+
+2025-08-16 16:07:05 - desktop.app - ERROR - 애플리케이션 실행 실패: type object 'ModernStyle' has no attribute 'CARD_COLOR'
+2025-08-16 16:07:05 - main - ERROR - 애플리케이션 시작 실패: type object 'ModernStyle' has no attribute 'CARD_COLOR'
+2025-08-16 16:07:23 - features.naver_cafe - ERROR - 네이버 카페 기능 등록 실패: type object 'ModernStyle' has no attribute 'MUTED_COLOR'
+2025-08-16 16:07:23 - main - ERROR - 기능 모듈 로드 실패: type object 'ModernStyle' has no attribute 'MUTED_COLOR'
+2025-08-16 16:07:23 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 14, in register
+    tab_widget = NaverCafeExtractorWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 118, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 134, in setup_ui
+    left_panel = self.create_settings_panel()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 241, in create_settings_panel
+    self.search_button = ModernButton("검색", "primary")
+                         ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py", line 26, in __init__
+    self._setup_style()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\toolbox\ui_kit\components.py", line 58, in _setup_style
+    background-color: {ModernStyle.MUTED_COLOR};
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'ModernStyle' has no attribute 'MUTED_COLOR'
+
+2025-08-16 16:07:23 - desktop.app - ERROR - 애플리케이션 실행 실패: type object 'ModernStyle' has no attribute 'MUTED_COLOR'
+2025-08-16 16:07:23 - main - ERROR - 애플리케이션 시작 실패: type object 'ModernStyle' has no attribute 'MUTED_COLOR'
+2025-08-16 16:10:18 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:18 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지껌' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:19 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지오래먹는간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:19 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지이갈이간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:20 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지칠면조간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:20 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지터키츄' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:21 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '개간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:21 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '개껌' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:22 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '대형개껌' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:22 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '대형견개껌' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:23 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '대형견껌' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:23 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '애견껌' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:24 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '애완견간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:24 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '엔젤링' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:25 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '오래먹는간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:25 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '오래먹는개껌' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:10:26 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '이갈이간식' 정보 업데이트 실패: 'RankTrackingService' object has no attribute '_update_keyword_info_realtime'
+2025-08-16 16:22:46 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: name 'extract_product_id_from_url' is not defined
+2025-08-16 16:23:01 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: name 'extract_product_id_from_url' is not defined
+2025-08-16 16:24:40 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:24:40 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 14, in <module>
+    from .project_list_widget import ProjectListWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\project_list_widget.py", line 19, in <module>
+    from .service import rank_tracking_service
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\service.py", line 11, in <module>
+    from .adapters import ShoppingRankAdapter
+ImportError: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+
+2025-08-16 16:24:40 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:24:40 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:24:43 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:24:43 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 14, in <module>
+    from .project_list_widget import ProjectListWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\project_list_widget.py", line 19, in <module>
+    from .service import rank_tracking_service
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\service.py", line 11, in <module>
+    from .adapters import ShoppingRankAdapter
+ImportError: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+
+2025-08-16 16:24:43 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:24:43 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:25:19 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:25:19 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 14, in <module>
+    from .project_list_widget import ProjectListWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\project_list_widget.py", line 19, in <module>
+    from .service import rank_tracking_service
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\service.py", line 11, in <module>
+    from .adapters import ShoppingRankAdapter
+ImportError: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+
+2025-08-16 16:25:19 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:25:19 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'ShoppingRankAdapter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-16 16:26:47 - features.rank_tracking.history_dialog - ERROR - Failed to load ranking history: '>' not supported between instances of 'NoneType' and 'int'
+2025-08-16 16:26:47 - features.rank_tracking.history_dialog - ERROR - Full traceback: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\history_dialog.py", line 633, in load_ranking_history
+    if current_rank > 200 and previous_rank > 200:
+                              ^^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+
+2025-08-16 16:26:56 - features.rank_tracking.history_dialog - ERROR - Failed to load ranking history: '>' not supported between instances of 'NoneType' and 'int'
+2025-08-16 16:26:56 - features.rank_tracking.history_dialog - ERROR - Full traceback: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\history_dialog.py", line 637, in load_ranking_history
+    elif previous_rank > 200:
+         ^^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+
+2025-08-16 16:29:10 - features.rank_tracking.history_dialog - ERROR - Failed to load ranking history: '>' not supported between instances of 'NoneType' and 'int'
+2025-08-16 16:29:10 - features.rank_tracking.history_dialog - ERROR - Full traceback: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\history_dialog.py", line 637, in load_ranking_history
+    change_display = "-"
+     ^^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+
+2025-08-16 16:29:17 - features.rank_tracking.history_dialog - ERROR - Failed to load ranking history: '>' not supported between instances of 'NoneType' and 'int'
+2025-08-16 16:29:17 - features.rank_tracking.history_dialog - ERROR - Full traceback: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\history_dialog.py", line 637, in load_ranking_history
+    change_display = "-"
+     ^^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+
+2025-08-16 17:18:50 - features.powerlink_analyzer.adapters - ERROR - 키워드 데이터 조회 최종 실패: NaverSearchAdClient.get_keyword_ideas() got an unexpected keyword argument 'show_detail'
+2025-08-16 17:18:50 - features.powerlink_analyzer.service - ERROR - 기본 키워드 정보 조회 실패: 강아지사료
+2025-08-16 17:31:31 - features.powerlink_analyzer.adapters - ERROR - 키워드 데이터 조회 최종 실패: NaverSearchAdClient.get_keyword_ideas() got an unexpected keyword argument 'show_detail'
+2025-08-16 17:31:31 - features.powerlink_analyzer.service - ERROR - 기본 키워드 정보 조회 실패: 강아지사료
+2025-08-16 18:11:05 - vendors.naver.searchad.keyword_tool - ERROR - keyword_tool API 호출 실패: Request failed: 400 Client Error: Bad Request for url: https://api.searchad.naver.com/estimate/average-position-bid/keyword
+2025-08-16 18:11:05 - vendors.naver.searchad.keyword_tool - ERROR - 입찰가 추정 조회 실패: 강아지사료 (ALL): API 호출 실패: Request failed: 400 Client Error: Bad Request for url: https://api.searchad.naver.com/estimate/average-position-bid/keyword
+2025-08-16 18:13:08 - vendors.naver.searchad.keyword_tool - ERROR - keyword_tool API 호출 실패: Request failed: 404 Client Error: Not Found for url: https://api.searchad.naver.com/estimate
+2025-08-16 18:13:08 - vendors.naver.searchad.keyword_tool - ERROR - keyword_tool API 호출 실패: Request failed: 404 Client Error: Not Found for url: https://api.searchad.naver.com/estimate
+2025-08-16 18:38:39 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (results_widget.py, line 610)
+2025-08-16 18:38:39 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 14, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 610
+    \"\"\"키워드를 즉시 테이블에 추가 (데이터 로딩 전 상태로)\"\"\"
+     ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-16 18:38:39 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (results_widget.py, line 610)
+2025-08-16 18:38:39 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (results_widget.py, line 610)
+2025-08-16 18:38:41 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (results_widget.py, line 610)
+2025-08-16 18:38:41 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 14, in <module>
+    from .results_widget import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 610
+    \"\"\"키워드를 즉시 테이블에 추가 (데이터 로딩 전 상태로)\"\"\"
+     ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-16 18:38:41 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (results_widget.py, line 610)
+2025-08-16 18:38:41 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (results_widget.py, line 610)
+2025-08-16 18:55:22 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001F1ABD8F6C0 (otid=0x000001F1E575E8B0) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001F1E5079640 (otid=0x000001F1E575D8C0) suspended active started main>
+2025-08-16 18:55:24 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001F1ABD8F6C0 (otid=0x000001F1E575E8B0) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001F1E5079640 (otid=0x000001F1E575D8C0) suspended active started main>
+2025-08-16 19:16:24 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:24 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7DC5BC300 (otid=0x000001E7C5F0DE90) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:25 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F3480 (otid=0x000001E7DC91B150) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:26 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:26 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7DC5BC300 (otid=0x000001E7C5F0DE90) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:27 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F3480 (otid=0x000001E7DC91B150) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:30 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7DC5BC300 (otid=0x000001E7C5F0DE90) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:30 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:30 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 19:16:30 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 19:16:30 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7DC5BC300 (otid=0x000001E7C5F0DE90) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:30 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:31 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F3480 (otid=0x000001E7DC91B150) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:31 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 19:16:31 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F3480 (otid=0x000001E7DC91B150) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:32 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:32 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7DC5BC300 (otid=0x000001E7C5F0DE90) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:33 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F3480 (otid=0x000001E7DC91B150) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:36 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:36 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 19:16:36 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7DC5BC300 (otid=0x000001E7C5F0DE90) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:36 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 19:16:37 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F3480 (otid=0x000001E7DC91B150) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:37 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 19:16:38 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:40 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:44 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:44 - features.powerlink_analyzer.adapters - ERROR - PC 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 19:16:44 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:46 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:50 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 오류 (브라우저 재사용): Cannot switch to a different thread
+	Current:  <greenlet.greenlet object at 0x000001E7A40F31C0 (otid=0x000001E7C472BC60) current active started main>
+	Expected: <greenlet.greenlet object at 0x000001E7C5ED7900 (otid=0x000001E7DC8805A0) suspended active started main>
+2025-08-16 19:16:50 - features.powerlink_analyzer.adapters - ERROR - MOBILE 크롤링 최대 재시도 횟수 초과 - 기본값 사용
+2025-08-16 21:45:19 - features.powerlink_analyzer.worker - ERROR - 분석 워커 실행 중 오류: property 'percentage' of 'AnalysisProgress' object has no setter
+2025-08-16 22:16:58 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:16:58 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:16:58 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:16:58 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:17:01 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:17:01 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:17:01 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:17:01 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:17:08 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:17:08 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:17:08 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:17:08 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:18:48 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:18:48 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:18:48 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:18:48 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:22:43 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:22:43 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:22:43 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:22:43 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:27:16 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:27:16 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:27:16 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:27:16 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:27:24 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:27:24 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:27:24 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:27:24 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:28:26 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:28:26 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:28:26 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:28:26 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:28:34 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:28:34 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 23, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 151, in setup_connections
+    self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+
+2025-08-16 22:28:34 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:28:34 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'on_analysis_started'
+2025-08-16 22:39:45 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-16 22:39:45 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 50, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 371, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 654, in setup_connections
+    self.save_analysis_button.clicked.connect(self.save_current_analysis)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+
+2025-08-16 22:39:45 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-16 22:39:45 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-16 22:41:36 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-16 22:41:36 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 50, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 371, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 654, in setup_connections
+    self.save_analysis_button.clicked.connect(self.save_current_analysis)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+
+2025-08-16 22:41:36 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-16 22:41:36 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-16 22:42:54 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:42:54 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 50, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 371, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 653, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-16 22:42:54 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:42:54 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:32 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:32 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 50, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 371, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 653, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-16 22:43:32 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:32 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:35 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:35 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 50, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 371, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 653, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-16 22:43:35 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:35 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:47 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:47 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 22, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui.py", line 50, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 371, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\results_widget.py", line 653, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-16 22:43:47 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 22:43:47 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-16 23:49:37 - features.powerlink_analyzer.excel_export - ERROR - PowerLink 엑셀 파일 생성 실패: 'dict' object has no attribute 'mobile_recommendation_rank'

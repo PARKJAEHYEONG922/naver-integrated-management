@@ -37,9 +37,9 @@ class LogManager:
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
         
-        # 콘솔 핸들러 (WARNING 이상만 출력)
+        # 콘솔 핸들러 (CRITICAL만 출력 - 거의 출력 안됨)
         console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(logging.WARNING)
+        console_handler.setLevel(logging.CRITICAL)
         console_handler.setFormatter(formatter)
         root_logger.addHandler(console_handler)
         

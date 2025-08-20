@@ -192,17 +192,17 @@ def set_rank_sort_data(item, column: int, rank_text: str):
     try:
         if rank_text == "-" or not rank_text.strip():
             # "-" 또는 빈 값은 가장 뒤로 정렬
-            item.setData(column, Qt.UserRole, 999)
+            item.setData(Qt.UserRole, 999)
         elif rank_text.startswith("100+"):
             # "100+" 형태는 201로 처리
-            item.setData(column, Qt.UserRole, 201)
+            item.setData(Qt.UserRole, 201)
         elif rank_text == "순위권 밖":
             # "순위권 밖"은 202로 처리
-            item.setData(column, Qt.UserRole, 202)
+            item.setData(Qt.UserRole, 202)
         else:
             # 일반 숫자 순위
             rank_num = int(rank_text)
-            item.setData(column, Qt.UserRole, rank_num)
+            item.setData(Qt.UserRole, rank_num)
     except (ValueError, TypeError):
         # 파싱 실패 시 가장 뒤로
-        item.setData(column, Qt.UserRole, 999)
+        item.setData(Qt.UserRole, 999)

@@ -1,12 +1,38 @@
 """
-공용 텍스트 처리 유틸리티
-키워드 파싱, 정규화, 카테고리 처리 등 모든 모듈에서 사용하는 텍스트 관련 기능
+통합 텍스트 처리 및 검증 유틸리티 (CLAUDE.md 구조)
+키워드 파싱/정규화, 카테고리 처리, URL/상품ID/파일 검증 등 모든 모듈에서 사용하는 텍스트 관련 기능
+validators.py 기능 통합 완료 - 중복 제거 및 단일 책임 원칙 적용
 """
 import re
-from typing import List, Set, Tuple, Optional
+import os
+from typing import List, Set, Tuple, Optional, Dict, Any
+from urllib.parse import urlparse
+from pathlib import Path
 from src.foundation.logging import get_logger
 
 logger = get_logger("toolbox.text_utils")
+
+
+def parse_keywords(text: str) -> List[str]:
+    """텍스트에서 키워드 파싱 (keyword_analysis와의 호환성)"""
+    return TextProcessor.parse_keywords_from_text(text)
+
+
+def filter_unique_keywords_with_skipped(keywords: List[str]) -> Tuple[List[str], List[str]]:
+    """중복 키워드 필터링 및 건너뛴 목록 반환"""
+    unique_keywords = []
+    skipped_keywords = []
+    seen = set()
+    
+    for keyword in keywords:
+        clean_keyword = keyword.strip().lower()
+        if clean_keyword and clean_keyword not in seen:
+            unique_keywords.append(keyword.strip())
+            seen.add(clean_keyword)
+        elif keyword.strip():
+            skipped_keywords.append(keyword.strip())
+    
+    return unique_keywords, skipped_keywords
 
 
 class TextProcessor:
@@ -356,3 +382,94 @@ def format_keyword_for_display(keyword: str) -> str:
         return ""
     
     return keyword.strip()
+
+
+# === 간단한 검증 함수들 (실제 사용되는 것들만) ===
+
+def validate_url(url: str) -> bool:
+    """URL 유효성 검사"""
+    if not url:
+        return False
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except:
+        return False
+
+
+def validate_naver_url(url: str) -> bool:
+    """네이버 쇼핑 URL 검증"""
+    if not validate_url(url):
+        return False
+    
+    naver_domains = [
+        'shopping.naver.com',
+        'smartstore.naver.com', 
+        'brand.naver.com'
+    ]
+    
+    parsed = urlparse(url)
+    return any(domain in parsed.netloc for domain in naver_domains)
+
+
+def extract_product_id(url: str) -> Optional[str]:
+    """네이버 쇼핑 URL에서 상품 ID 추출"""
+    if not validate_naver_url(url):
+        return None
+    
+    patterns = [
+        r'https?://shopping\.naver\.com/catalog/(\d+)',
+        r'https?://smartstore\.naver\.com/[^/]+/products/(\d+)',
+        r'https?://brand\.naver\.com/[^/]+/products/(\d+)',
+        r'/products/(\d+)',
+        r'nvMid=(\d+)',
+        r'productId=(\d+)'
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+    
+    return None
+
+
+def validate_product_id(product_id: str) -> bool:
+    """상품 ID 유효성 검사"""
+    if not product_id or not isinstance(product_id, str):
+        return False
+    return bool(re.match(r'^\d{5,}$', product_id.strip()))
+
+
+def validate_excel_file(filename: str) -> Tuple[bool, str]:
+    """엑셀 파일명 검증"""
+    if not filename or not isinstance(filename, str):
+        return False, "파일명이 없습니다"
+    
+    # 기본 안전성 검사
+    forbidden_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
+    if any(char in filename for char in forbidden_chars):
+        return False, "유효하지 않은 파일명입니다"
+    
+    # 엑셀 확장자 확인
+    valid_extensions = ['.xlsx', '.xls']
+    if not any(filename.lower().endswith(ext) for ext in valid_extensions):
+        return False, "엑셀 파일 확장자(.xlsx, .xls)가 필요합니다"
+    
+    return True, "유효한 엑셀 파일명입니다"
+
+
+# === 키워드 파싱/검증 편의 함수들 ===
+def parse_keywords(text: str) -> List[str]:
+    """키워드 텍스트 파싱 편의 함수"""
+    return TextProcessor.parse_keywords_from_text(text)
+
+
+def clean_keyword(keyword: str) -> str:
+    """키워드 정리 편의 함수"""
+    return TextProcessor.clean_keyword(keyword)
+
+
+def normalize_keyword(keyword: str) -> str:
+    """키워드 정규화 편의 함수"""
+    return TextProcessor.normalize_keyword(keyword)

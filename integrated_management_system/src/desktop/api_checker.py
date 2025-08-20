@@ -191,3 +191,5 @@ def log_api_requirements_reminder():
         apis_text = ", ".join(missing)
         log_manager.add_log(f"🔔 알림: {apis_text} 설정이 필요합니다.", "warning")
         log_manager.add_log("⚙️ 상단 메뉴 → API 설정에서 설정할 수 있습니다.", "info")
+
+

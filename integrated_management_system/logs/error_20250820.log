@@ -1,0 +1,139 @@
+2025-08-20 10:48:28 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지사료' 월검색량 테이블 업데이트 실패: 'ModernTableWidget' object has no attribute 'invisibleRootItem'
+2025-08-20 10:48:28 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 '강아지사료' 카테고리 테이블 업데이트 실패: 'ModernTableWidget' object has no attribute 'invisibleRootItem'
+2025-08-20 11:00:17 - features.rank_tracking.ranking_table_widget - ERROR - 새 순위 컬럼 추가 실패: setData expected 2 arguments, got 3
+2025-08-20 11:00:19 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 순위 실시간 업데이트 실패: 'ModernTableWidget' object has no attribute 'topLevelItemCount'
+2025-08-20 11:00:19 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 순위 실시간 업데이트 실패: 'ModernTableWidget' object has no attribute 'topLevelItemCount'
+2025-08-20 11:00:19 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 순위 실시간 업데이트 실패: 'ModernTableWidget' object has no attribute 'topLevelItemCount'
+2025-08-20 11:00:20 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 순위 실시간 업데이트 실패: 'ModernTableWidget' object has no attribute 'topLevelItemCount'
+2025-08-20 12:17:15 - features.rank_tracking.service - ERROR - 단일 프로젝트 내보내기 오류: No module named 'src.features.service'
+2025-08-20 12:17:16 - features.rank_tracking.service - ERROR - 단일 프로젝트 내보내기 오류: No module named 'src.features.service'
+2025-08-20 12:50:19 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 강아지사료: 키워드 '강아지사료'는 이미 등록되어 있습니다.
+2025-08-20 12:52:54 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 강아지껌: 키워드 '강아지껌'는 이미 등록되어 있습니다.
+2025-08-20 13:04:41 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 강아지사료: 키워드 '강아지사료'는 이미 등록되어 있습니다.
+2025-08-20 14:18:36 - features.rank_tracking.service - ERROR - 키워드 추가 실패: 강아지껌: 키워드 '강아지껌'는 이미 등록되어 있습니다.
+2025-08-20 14:18:49 - features.rank_tracking.worker - ERROR - 워커 생성/시작 실패: name 'datetime' is not defined
+2025-08-20 14:18:50 - features.rank_tracking.worker - ERROR - 워커 생성/시작 실패: name 'datetime' is not defined
+2025-08-20 14:23:05 - features.rank_tracking.worker - ERROR - 워커 생성/시작 실패: name 'datetime' is not defined
+2025-08-20 14:23:08 - features.rank_tracking.worker - ERROR - 워커 생성/시작 실패: name 'datetime' is not defined
+2025-08-20 14:23:09 - features.rank_tracking.worker - ERROR - 워커 생성/시작 실패: name 'datetime' is not defined
+2025-08-20 14:33:30 - features.rank_tracking.worker - ERROR - 워커 생성/시작 실패: name 'datetime' is not defined
+2025-08-20 14:33:30 - features.rank_tracking.ranking_table_widget - ERROR - 순위 확인 시작 실패
+2025-08-20 14:33:32 - features.rank_tracking.worker - ERROR - 워커 생성/시작 실패: name 'datetime' is not defined
+2025-08-20 14:33:32 - features.rank_tracking.ranking_table_widget - ERROR - 순위 확인 시작 실패
+2025-08-20 16:38:34 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:34 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:34 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 23, in <module>
+    from src.toolbox.validators import parse_keywords, filter_unique_keywords_with_skipped
+ModuleNotFoundError: No module named 'src.toolbox.validators'
+
+2025-08-20 16:38:34 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:34 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:45 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:45 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:45 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 23, in <module>
+    from src.toolbox.validators import parse_keywords, filter_unique_keywords_with_skipped
+ModuleNotFoundError: No module named 'src.toolbox.validators'
+
+2025-08-20 16:38:45 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:45 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:53 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:53 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:53 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 23, in <module>
+    from src.toolbox.validators import parse_keywords, filter_unique_keywords_with_skipped
+ModuleNotFoundError: No module named 'src.toolbox.validators'
+
+2025-08-20 16:38:53 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:38:53 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:00 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:00 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:00 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 23, in <module>
+    from src.toolbox.validators import parse_keywords, filter_unique_keywords_with_skipped
+ModuleNotFoundError: No module named 'src.toolbox.validators'
+
+2025-08-20 16:39:00 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:00 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:26 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:26 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:26 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 23, in <module>
+    from src.toolbox.validators import parse_keywords, filter_unique_keywords_with_skipped
+ModuleNotFoundError: No module named 'src.toolbox.validators'
+
+2025-08-20 16:39:26 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:26 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:31 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:31 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:31 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 23, in <module>
+    from src.toolbox.validators import parse_keywords, filter_unique_keywords_with_skipped
+ModuleNotFoundError: No module named 'src.toolbox.validators'
+
+2025-08-20 16:39:31 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:39:31 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:40:13 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'rank_tracking_excel_exporter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-20 16:40:13 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 29, in load_features
+    from src.features.rank_tracking import register as register_rank_tracking
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\__init__.py", line 9, in <module>
+    from .ui import RankTrackingWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\ui.py", line 24, in <module>
+    from .project_list_widget import ProjectListWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\project_list_widget.py", line 21, in <module>
+    from .adapters import rank_tracking_excel_exporter
+ImportError: cannot import name 'rank_tracking_excel_exporter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+
+2025-08-20 16:40:13 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'rank_tracking_excel_exporter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-20 16:40:13 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'rank_tracking_excel_exporter' from 'src.features.rank_tracking.adapters' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\rank_tracking\adapters.py)
+2025-08-20 16:41:14 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:41:14 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\ui.py", line 11, in <module>
+    from .control_widget import NaverCafeControlWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\control_widget.py", line 19, in <module>
+    from .worker import NaverCafeUnifiedWorker
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\worker.py", line 16, in <module>
+    from .service import NaverCafeExtractionService
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\service.py", line 20, in <module>
+    from src.toolbox.validators import validate_url
+ModuleNotFoundError: No module named 'src.toolbox.validators'
+
+2025-08-20 16:41:14 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.toolbox.validators'
+2025-08-20 16:41:14 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.validators'

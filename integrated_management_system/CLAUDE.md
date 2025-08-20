@@ -73,8 +73,7 @@ integrated_management_system/
 │  │
 │  ├─ toolbox/                         # 공용 유틸/공용 UI(벤더·비즈 지식 없음)
 │  │  ├─ __init__.py
-│  │  ├─ validators.py                 # 형식 검증(URL/키/경로/날짜 등, 네트워크 X)
-│  │  ├─ text_utils.py                 # 통합 텍스트 처리 유틸리티
+│  │  ├─ text_utils.py                 # 통합 텍스트 처리 유틸리티,형식 검증(URL/키/경로/날짜 등, 네트워크 X)
 │  │  └─ ui_kit/
 │  │     ├─ __init__.py
 │  │     ├─ modern_style.py            # CSS 스타일 시스템
@@ -130,6 +129,10 @@ models.py — 데이터 구조/스키마
 -한다: DTO/엔티티(dataclass/TypedDict), 상수/Enum, DDL/간단 레포 헬퍼(테이블 생성/INSERT 등) — 트랜잭션은 service에서.
 -하지 않는다: 벤더/파일/네트워크/로깅 등 I/O, 비즈니스 로직.
 
+text_utils.py    - 통합 텍스트 처리 유틸리티,형식 검증(URL/키/경로/날짜 등, 네트워크 X)
+네이버 API 연결 테스트는 **desktop/api_checker.py**로 이동.
+adapters.py 검증 유틸을 호출하고, 벤더 호출/엑셀 I/O만 담당.
+
 4) 의존 규칙
 
 service.py → adapters.py, models.py, foundation/*, toolbox/* OK
@@ -142,7 +145,7 @@ models.py → 표준 라이브러리/typing만 (service/adapters/벤더 호출 �
 service.py에서 흐름 확인/수정
 벤더 호출/정규화는 항상 adapters.py 수정
 데이터 구조/DDL은 models.py 수정
-형식검증은 toolbox/validators.py, 라이브 확인은 desktop/api_checker.py
+형식검증은 toolbox/text_utils.py, 라이브 확인은 desktop/api_checker.py
 DB는 foundation/db.py 경유
 
 UI 변경 금지(승인 전)
