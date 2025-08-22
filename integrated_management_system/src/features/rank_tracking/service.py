@@ -5,13 +5,10 @@ SQLite3 직접 사용으로 단순화된 깔끔한 코드
 from typing import List, Optional, Dict, Any, Tuple
 from PySide6.QtCore import QObject, Signal
 
-from .models import TrackingProject, TrackingKeyword, RankingResult, rank_tracking_repository
-from .adapters import RankTrackingAdapter, smart_product_search
-from .engine_local import rank_tracking_engine
-from src.foundation.exceptions import (
-    RankTrackingError, ProductNotFoundError, InvalidProjectURLError, 
-    RankCheckError, APIAuthenticationError
-)
+from src.features.rank_tracking.models import TrackingProject, TrackingKeyword, RankingResult, rank_tracking_repository
+from src.features.rank_tracking.adapters import RankTrackingAdapter, smart_product_search, rank_tracking_adapter
+from src.features.rank_tracking.engine_local import rank_tracking_engine
+from src.foundation.exceptions import RankTrackingError
 from src.foundation.logging import get_logger
 
 logger = get_logger("features.rank_tracking.service")
@@ -46,6 +43,19 @@ def _dict_to_tracking_keyword(k_dict: Dict[str, Any]) -> TrackingKeyword:
         created_at=k_dict.get('created_at')
     )
 
+
+
+def _dto_to_ranking_result(dto: Dict[str, Any]) -> RankingResult:
+    """DTO를 RankingResult 모델로 변환하는 헬퍼"""
+    rank = dto.get('rank', 999)
+    return RankingResult(
+        keyword=dto['keyword'],
+        product_id=dto['product_id'],
+        rank=rank if isinstance(rank, int) else 999,
+        total_results=dto.get('total_results', 0),
+        success=dto['success'],
+        error_message=dto.get('error', dto.get('error_message'))
+    )
 
 
 class RankTrackingService(QObject):
@@ -184,8 +194,8 @@ class RankTrackingService(QObject):
         try:
             logger.info(f"키워드 추가 시작: '{keyword}' (프로젝트 {project_id})")
             
-            # engine_local에서 키워드 분석 수행
-            analysis_result = rank_tracking_engine.analyze_and_add_keyword(keyword)
+            # adapter에서 키워드 분석 수행
+            analysis_result = rank_tracking_adapter.analyze_and_add_keyword(keyword)
             
             # DB에 키워드 추가
             keyword_id = rank_tracking_repository.add_keyword(project_id, keyword)
@@ -379,12 +389,17 @@ class RankTrackingService(QObject):
             failed_keywords = []
             
             # 새 키워드 추가
+            duplicate_keyword_set = {k.lower().strip() for k in duplicate_keywords}
+            
             for keyword in new_keywords:
                 try:
                     keyword_id = rank_tracking_repository.add_keyword(project_id, keyword)
                     if keyword_id and keyword_id > 0:
                         successfully_added_keywords.append(keyword)
                         logger.info(f"키워드 추가 성공: {keyword} (ID: {keyword_id})")
+                    elif keyword.lower().strip() in duplicate_keyword_set:
+                        # 엔진이 중복으로 판단한 케이스는 이미 duplicate_keywords에 있음
+                        pass
                     else:
                         failed_keywords.append(keyword)
                         logger.warning(f"키워드 추가 실패: {keyword} (ID: {keyword_id})")
@@ -432,7 +447,6 @@ class RankTrackingService(QObject):
     def analyze_keyword_for_tracking(self, keyword: str) -> dict:
         """키워드 분석 (어댑터 레이어 위임)"""
         try:
-            from .adapters import rank_tracking_adapter
             return rank_tracking_adapter.analyze_keyword_for_tracking(keyword)
         except Exception as e:
             logger.error(f"키워드 분석 실패: {keyword}: {e}")
@@ -447,8 +461,8 @@ class RankTrackingService(QObject):
     def batch_update_keywords_volume(self, project_id: int, keywords: List[str]) -> dict:
         """키워드 배치 월검색량 업데이트 (engine_local 사용)"""
         try:
-            # engine_local에서 분석 수행
-            analysis_result = rank_tracking_engine.batch_update_keywords_volume(keywords)
+            # adapter에서 분석 수행
+            analysis_result = rank_tracking_adapter.analyze_keywords_batch(keywords)
             
             # DB 업데이트 수행
             updated_count = 0
@@ -502,27 +516,27 @@ class RankTrackingService(QObject):
     def get_keyword_search_volume(self, keyword: str) -> tuple[bool, int]:
         """키워드 검색량 조회"""
         try:
-            from src.vendors.naver.searchad.keyword_client import get_keyword_tool_client
+            from src.vendors.naver.client_factory import get_keyword_tool_client
             
             keyword_client = get_keyword_tool_client()
             if not keyword_client:
-                return False, 0
+                return False, -1
             
             # 검색량 조회
             result = keyword_client.get_search_volume([keyword])
             if result and keyword in result:
                 return True, result[keyword].get('monthly_volume', -1)
             
-            return False, 0
+            return False, -1
             
         except Exception as e:
             logger.error(f"키워드 검색량 조회 실패: {keyword}: {e}")
-            return False, 0
+            return False, -1
     
     def update_keywords_search_volume(self, project_id: int) -> tuple[bool, str]:
         """프로젝트 키워드들의 검색량 업데이트"""
         try:
-            from src.vendors.naver.searchad.keyword_client import get_keyword_tool_client
+            from src.vendors.naver.client_factory import get_keyword_tool_client
             
             keyword_client = get_keyword_tool_client()
             if not keyword_client:
@@ -699,9 +713,9 @@ class RankTrackingService(QObject):
                 'data': None
             }
     
-    def process_single_keyword_ranking(self, keyword_obj, product_id: str) -> Tuple[Any, bool]:
-        """단일 키워드 순위 확인 처리 (engine_local 사용)"""
-        return rank_tracking_engine.process_single_keyword_ranking(keyword_obj, product_id)
+    def process_single_keyword_ranking(self, keyword_obj, product_id: str) -> Tuple[Dict[str, Any], bool]:
+        """단일 키워드 순위 확인 처리 (adapter 사용) - RankingCheckDTO 반환"""
+        return rank_tracking_adapter.process_single_keyword_ranking(keyword_obj, product_id)
     
     def create_failed_ranking_result(self, keyword: str, error_message: str) -> RankingResult:
         """실패한 순위 결과 생성 (worker에서 models import 방지)"""
@@ -749,8 +763,8 @@ class RankTrackingService(QObject):
     def process_keyword_info_update(self, project_id: int, keyword: str) -> Dict[str, Any]:
         """키워드 정보 업데이트 처리 (engine_local 사용)"""
         try:
-            # engine_local에서 분석 수행
-            analysis_result = rank_tracking_engine.process_keyword_info_analysis(keyword)
+            # adapter에서 분석 수행
+            analysis_result = rank_tracking_adapter.process_keyword_info_analysis(keyword)
             
             # DB 업데이트
             success_count = 0
@@ -791,7 +805,7 @@ class RankTrackingService(QObject):
         """키워드 분석 후 추가 (engine_local 사용)"""
         try:
             # engine_local에서 분석 수행
-            analysis_result = rank_tracking_engine.analyze_and_add_keyword_logic(keyword)
+            analysis_result = rank_tracking_adapter.analyze_and_add_keyword(keyword)
             
             if not analysis_result['success']:
                 return False, analysis_result.get('error', '키워드 분석에 실패했습니다.')
@@ -873,8 +887,8 @@ class RankTrackingService(QObject):
     def get_product_category(self, product_id: str) -> tuple[bool, str]:
         """상품 카테고리 조회 (engine_local 사용)"""
         try:
-            # engine_local에서 분석 수행
-            analysis_result = rank_tracking_engine.get_product_category_analysis(product_id)
+            # adapter에서 분석 수행
+            analysis_result = rank_tracking_adapter.get_product_category_analysis(product_id)
             
             return analysis_result['success'], analysis_result['category']
             
@@ -883,8 +897,9 @@ class RankTrackingService(QObject):
             return False, ""
     
     def check_keyword_ranking(self, keyword: str, product_id: str) -> RankingResult:
-        """키워드 순위 확인 (engine_local 사용)"""
-        return rank_tracking_engine.check_keyword_ranking(keyword, product_id)
+        """키워드 순위 확인 (adapter 사용 + DTO → Model 변환)"""
+        dto = rank_tracking_adapter.check_keyword_ranking(keyword, product_id)
+        return _dto_to_ranking_result(dto)
     
     def save_ranking_results(self, project_id: int, results: List[RankingResult]) -> bool:
         """순위 확인 결과 저장"""
@@ -1019,8 +1034,8 @@ class RankTrackingService(QObject):
                     'message': '프로젝트를 찾을 수 없습니다.'
                 }
             
-            # 2. engine_local에서 분석
-            analysis_result = rank_tracking_engine.refresh_product_info_analysis(project)
+            # 2. adapter에서 분석
+            analysis_result = rank_tracking_adapter.refresh_product_info_analysis(project)
             
             if not analysis_result['success']:
                 return analysis_result

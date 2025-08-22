@@ -8,7 +8,7 @@ import time
 import random
 from datetime import datetime
 from src.foundation.logging import get_logger
-from .service import rank_tracking_service
+from src.features.rank_tracking.service import rank_tracking_service
 
 logger = get_logger("features.rank_tracking.worker")
 
@@ -63,11 +63,13 @@ class RankingCheckWorker(QThread):
                     # 성공시 실시간 순위 업데이트 시그널 발출
                     if success:
                         try:
+                            mv = keyword_obj.monthly_volume
+                            safe_mv = mv if isinstance(mv, int) and mv >= 0 else -1
                             self.keyword_rank_updated.emit(
                                 keyword_obj.id or 0,
                                 keyword_obj.keyword,
                                 result.rank,
-                                keyword_obj.monthly_volume or 0
+                                safe_mv
                             )
                             logger.info(f"시그널 발출 성공: {keyword_obj.keyword}")
                         except Exception as emit_error:
@@ -77,9 +79,9 @@ class RankingCheckWorker(QThread):
                     
                 except Exception as e:
                     logger.error(f"키워드 {keyword_obj.keyword} 처리 중 오류: {e}")
-                    # service에서 실패 결과 생성
-                    result, success = rank_tracking_service.process_single_keyword_ranking(keyword_obj, project.product_id)
-                    return result, False
+                    # service에서 실패 결과 생성 (2번 호출 방지)
+                    failed_result = rank_tracking_service.create_failed_ranking_result(keyword_obj.keyword, str(e))
+                    return failed_result, False
             
             # ThreadPoolExecutor로 병렬 처리 (최대 3개 워커)
             with ThreadPoolExecutor(max_workers=min(len(keywords), 3)) as executor:
@@ -255,17 +257,21 @@ class RankingWorkerManager(QObject):
     
     def start_ranking_check(self, project_id: int) -> bool:
         """순위 확인 시작"""
-        import pytz
-        
         try:
             # 이미 실행 중인지 확인
             if project_id in self.project_workers and self.project_workers[project_id] is not None:
                 logger.info(f"프로젝트 {project_id}의 순위 확인이 이미 실행 중입니다.")
                 return False
             
-            # 현재 시간 저장
-            korea_tz = pytz.timezone('Asia/Seoul')
-            current_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S')
+            # 현재 시간 저장 (pytz 안전 fallback)
+            try:
+                import pytz
+                korea_tz = pytz.timezone('Asia/Seoul')
+                current_time = datetime.now(korea_tz).strftime('%Y-%m-%d %H:%M:%S')
+            except Exception:
+                # pytz 없거나 실패시 시스템 로컬 시간 사용
+                current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                
             self.project_current_times[project_id] = current_time
             
             # 현재 순위 데이터 초기화

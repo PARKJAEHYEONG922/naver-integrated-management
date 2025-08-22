@@ -30,7 +30,9 @@
       "Bash(move ui.py ui_main.py)",
       "Bash(move control_widget.py ui_list.py)",
       "Bash(move results_widget.py ui_table.py)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(git branch:*)",
+      "Bash(git restore:*)"
     ],
     "deny": []
   }

@@ -1,0 +1,385 @@
+2025-08-14 13:16:01 - main - ERROR - 애플리케이션 시작 실패: DLL load failed while importing QtCore: 지정된 프로시저를 찾을 수 없습니다.
+2025-08-14 13:16:03 - main - ERROR - 애플리케이션 시작 실패: DLL load failed while importing QtCore: 지정된 프로시저를 찾을 수 없습니다.
+2025-08-14 13:27:04 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'AnalysisConfig' from 'src.features.keyword_analysis.models' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\models.py)
+2025-08-14 13:27:04 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'AnalysisConfig' from 'src.features.keyword_analysis.models' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\models.py)
+2025-08-14 13:27:04 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'AnalysisConfig' from 'src.features.keyword_analysis.models' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\models.py)
+2025-08-14 13:27:05 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'AnalysisConfig' from 'src.features.keyword_analysis.models' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\models.py)
+2025-08-14 13:27:05 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'AnalysisConfig' from 'src.features.keyword_analysis.models' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\models.py)
+2025-08-14 13:27:05 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'AnalysisConfig' from 'src.features.keyword_analysis.models' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\models.py)
+2025-08-14 13:33:17 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.toolbox.ui_kit.sidebar_simple'; 'src.toolbox.ui_kit' is not a package
+2025-08-14 13:34:22 - desktop.app - ERROR - API 설정 오류: No module named 'src.toolbox.ui'
+2025-08-14 17:57:53 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.vendors.naver.shopping_client'
+2025-08-14 17:57:53 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.vendors.naver.shopping_client'
+2025-08-14 17:57:53 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.vendors.naver.shopping_client'
+2025-08-14 17:57:56 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.vendors.naver.shopping_client'
+2025-08-14 17:57:56 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.vendors.naver.shopping_client'
+2025-08-14 17:57:56 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.vendors.naver.shopping_client'
+2025-08-14 17:59:48 - vendors.naver.searchad - ERROR - 네이버 검색광고 API 호출 실패: API 호출 오류: 'RateLimiter' object does not support the context manager protocol
+2025-08-14 17:59:48 - vendors.naver.shopping - ERROR - 네이버 쇼핑 API 호출 실패: API 호출 오류: 'RateLimiter' object does not support the context manager protocol
+2025-08-14 19:14:09 - root - ERROR - BackgroundWorker 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\desktop\workers.py", line 64, in run
+    result = self._function(*self._args, **self._kwargs)
+TypeError: KeywordAnalysisService.analyze_keywords_parallel() got an unexpected keyword argument 'progress_callback'
+
+2025-08-14 19:31:13 - features.rank_tracking - ERROR - 네이버상품 순위추적 피처 등록 실패: type object 'ModernStyle' has no attribute 'apply_button_style'
+2025-08-14 19:37:27 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 19:37:27 - features.rank_tracking.ui - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 19:37:28 - features.rank_tracking - ERROR - 네이버상품 순위추적 피처 등록 실패: LogManager.add_log() takes from 2 to 3 positional arguments but 4 were given
+2025-08-14 19:37:33 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 19:37:33 - features.rank_tracking.ui - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 19:37:35 - features.rank_tracking - ERROR - 네이버상품 순위추적 피처 등록 실패: LogManager.add_log() takes from 2 to 3 positional arguments but 4 were given
+2025-08-14 19:43:11 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 19:43:11 - features.rank_tracking.ui - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 19:44:05 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 19:44:05 - features.rank_tracking.ui - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: tracking_projects
+[SQL: SELECT tracking_projects.id AS tracking_projects_id, tracking_projects.product_id AS tracking_projects_product_id, tracking_projects.current_name AS tracking_projects_current_name, tracking_projects.product_url AS tracking_projects_product_url, tracking_projects.created_at AS tracking_projects_created_at, tracking_projects.is_active AS tracking_projects_is_active, tracking_projects.category AS tracking_projects_category, tracking_projects.price AS tracking_projects_price, tracking_projects.store_name AS tracking_projects_store_name, tracking_projects.description AS tracking_projects_description, tracking_projects.image_url AS tracking_projects_image_url 
+FROM tracking_projects 
+WHERE tracking_projects.is_active = 1 ORDER BY tracking_projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 21:13:14 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: https://smartstore.naver.com/gaebabking/products/511081445?nl-query=%EC%95%A0%EC%99%84%EA%B2%AC%EA%B0%84%EC%8B%9D&nl-ts-pid=j52q2sqVOsCssch79wRssssstFh-067952&NaPm=ct%3Dmebbdbj4%7Cci%3Df8c9ba142a1f1ccd07ef4364bb9d1bb5e17a9aa8%7Ctr%3Dsls%7Csn%3D407581%7Chk%3D56ffa5a75cac73e4d9fb1a17af01ae2cbd1bd37b: 이미 추적 중인 상품입니다: 네츄럴코어 강아지간식
+2025-08-14 21:13:14 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: 프로젝트 생성 실패: 이미 추적 중인 상품입니다: 네츄럴코어 강아지간식
+2025-08-14 21:15:54 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: https://smartstore.naver.com/gaebabking/products/511081445?nl-query=%EC%95%A0%EC%99%84%EA%B2%AC%EA%B0%84%EC%8B%9D&nl-ts-pid=j52q2sqVOsCssch79wRssssstFh-067952&NaPm=ct%3Dmebbdbj4%7Cci%3Df8c9ba142a1f1ccd07ef4364bb9d1bb5e17a9aa8%7Ctr%3Dsls%7Csn%3D407581%7Chk%3D56ffa5a75cac73e4d9fb1a17af01ae2cbd1bd37b: Instance <TrackingProject at 0x215253a9310> is not present in this Session
+2025-08-14 21:15:54 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: 프로젝트 생성 실패: Instance <TrackingProject at 0x215253a9310> is not present in this Session
+2025-08-14 21:16:17 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x1d770cc9310> is not present in this Session
+2025-08-14 21:16:22 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x1d770d00180> is not present in this Session
+2025-08-14 21:16:26 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x1d746011370> is not present in this Session
+2025-08-14 21:16:43 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: https://smartstore.naver.com/gaebabking/products/511081445?nl-query=%EC%95%A0%EC%99%84%EA%B2%AC%EA%B0%84%EC%8B%9D&nl-ts-pid=j52q2sqVOsCssch79wRssssstFh-067952&NaPm=ct%3Dmebbdbj4%7Cci%3Df8c9ba142a1f1ccd07ef4364bb9d1bb5e17a9aa8%7Ctr%3Dsls%7Csn%3D407581%7Chk%3D56ffa5a75cac73e4d9fb1a17af01ae2cbd1bd37b: Instance <TrackingProject at 0x1d770ce4b50> is not present in this Session
+2025-08-14 21:16:43 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: 프로젝트 생성 실패: Instance <TrackingProject at 0x1d770ce4b50> is not present in this Session
+2025-08-14 21:23:31 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패 (product_id: 511081445): Instance <TrackingProject at 0x1ddf36b91d0> is not present in this Session
+2025-08-14 21:23:31 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: https://smartstore.naver.com/gaebabking/products/511081445?nl-query=%EC%95%A0%EC%99%84%EA%B2%AC%EA%B0%84%EC%8B%9D&nl-ts-pid=j52q2sqVOsCssch79wRssssstFh-067952&NaPm=ct%3Dmebbdbj4%7Cci%3Df8c9ba142a1f1ccd07ef4364bb9d1bb5e17a9aa8%7Ctr%3Dsls%7Csn%3D407581%7Chk%3D56ffa5a75cac73e4d9fb1a17af01ae2cbd1bd37b: (sqlite3.IntegrityError) UNIQUE constraint failed: tracking_projects.product_id
+[SQL: INSERT INTO tracking_projects (product_id, current_name, product_url, created_at, is_active, category, price, store_name, description, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('511081445', '네츄럴코어 강아지간식', 'https://smartstore.naver.com/gaebabking/products/511081445?nl-query=%EC%95%A0%EC%99%84%EA%B2%AC%EA%B0%84%EC%8B%9D&nl-ts-pid=j52q2sqVOsCssch79wRssssstFh-067952&NaPm=ct%3Dmebbdbj4%7Cci%3Df8c9ba142a1f1ccd07ef4364bb9d1bb5e17a9aa8%7Ctr%3Dsls%7Csn%3D407581%7Chk%3D56ffa5a75cac73e4d9fb1a17af01ae2cbd1bd37b', '2025-08-14 21:23:31.626096', 1, '', 0, '', '', '')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-08-14 21:23:31 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: 프로젝트 생성 실패: (sqlite3.IntegrityError) UNIQUE constraint failed: tracking_projects.product_id
+[SQL: INSERT INTO tracking_projects (product_id, current_name, product_url, created_at, is_active, category, price, store_name, description, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: ('511081445', '네츄럴코어 강아지간식', 'https://smartstore.naver.com/gaebabking/products/511081445?nl-query=%EC%95%A0%EC%99%84%EA%B2%AC%EA%B0%84%EC%8B%9D&nl-ts-pid=j52q2sqVOsCssch79wRssssstFh-067952&NaPm=ct%3Dmebbdbj4%7Cci%3Df8c9ba142a1f1ccd07ef4364bb9d1bb5e17a9aa8%7Ctr%3Dsls%7Csn%3D407581%7Chk%3D56ffa5a75cac73e4d9fb1a17af01ae2cbd1bd37b', '2025-08-14 21:23:31.626096', 1, '', 0, '', '', '')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-08-14 21:23:39 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x1ddf36e89d0> is not present in this Session
+2025-08-14 21:29:23 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x1e37bca91d0> is not present in this Session
+2025-08-14 21:29:35 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x1e351fa9370> is not present in this Session
+2025-08-14 21:29:58 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x229a612d310> is not present in this Session
+2025-08-14 21:31:40 - features.rank_tracking.service - ERROR - 프로젝트 조회 실패: 1: Instance <TrackingProject at 0x2b80b1d51d0> is not present in this Session
+2025-08-14 21:37:49 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:45:06 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:47:35 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:48:26 - features.rank_tracking.service - ERROR - 키워드 '강아지간식' 추가 실패: 'TrackingKeywordRepository' object has no attribute 'get_keyword_by_text'
+2025-08-14 21:48:26 - features.rank_tracking.service - ERROR - 키워드 '강아지닭가슴살' 추가 실패: 'TrackingKeywordRepository' object has no attribute 'get_keyword_by_text'
+2025-08-14 21:48:26 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:48:47 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:49:11 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:49:13 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:49:15 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:49:22 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:58:41 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 21:58:47 - features.rank_tracking.ranking_table_widget - ERROR - 순위 테이블 업데이트 실패: 'RankTrackingService' object has no attribute 'get_project_keywords'
+2025-08-14 22:01:04 - main - ERROR - 애플리케이션 시작 실패: 데이터베이스가 초기화되지 않았습니다
+2025-08-14 22:01:06 - main - ERROR - 애플리케이션 시작 실패: 데이터베이스가 초기화되지 않았습니다
+2025-08-14 22:01:08 - main - ERROR - 애플리케이션 시작 실패: 데이터베이스가 초기화되지 않았습니다
+2025-08-14 22:45:41 - features.rank_tracking.service - ERROR - 키워드 정보 업데이트 실패: 강아지양치껌: TrackingKeywordRepository.update_keyword_volume() takes 3 positional arguments but 4 were given
+2025-08-14 22:45:41 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: TrackingKeywordRepository.update_keyword_volume() takes 3 positional arguments but 4 were given
+2025-08-14 22:45:49 - features.rank_tracking.service - ERROR - 프로젝트 키워드 조회 실패: 3: 'TrackingKeyword' object has no attribute 'created_at'
+2025-08-14 22:45:49 - features.rank_tracking.service - ERROR - 키워드 정보 업데이트 실패: 터키츄: TrackingKeywordRepository.update_keyword_volume() takes 3 positional arguments but 4 were given
+2025-08-14 22:45:49 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: TrackingKeywordRepository.update_keyword_volume() takes 3 positional arguments but 4 were given
+2025-08-14 22:47:27 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:47:53 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:49:24 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:49:27 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:49:27 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:03 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:10 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:10 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:11 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:11 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:13 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:13 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:13 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:15 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:15 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:15 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:17 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:17 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:17 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:26 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:27 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:28 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:50:29 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:54:49 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:54:51 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:54:51 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:54:51 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:54:52 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:55:00 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 3: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (3,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:55:01 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:55:01 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:55:02 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:55:03 - features.rank_tracking.service - ERROR - 프로젝트 개요 조회 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE tracking_keywords.project_id = ? AND tracking_keywords.is_active = 1 ORDER BY tracking_keywords.keyword]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:55:04 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 2: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (2,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:55:04 - features.rank_tracking.service - ERROR - 프로젝트 삭제 실패: 1: (sqlite3.OperationalError) no such column: tracking_keywords.created_at
+[SQL: SELECT tracking_keywords.id AS tracking_keywords_id, tracking_keywords.project_id AS tracking_keywords_project_id, tracking_keywords.keyword AS tracking_keywords_keyword, tracking_keywords.created_at AS tracking_keywords_created_at, tracking_keywords.is_active AS tracking_keywords_is_active, tracking_keywords.monthly_volume AS tracking_keywords_monthly_volume, tracking_keywords.category AS tracking_keywords_category 
+FROM tracking_keywords 
+WHERE ? = tracking_keywords.project_id]
+[parameters: (1,)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 22:56:42 - features.rank_tracking.service - ERROR - 키워드 정보 업데이트 실패: 강아지양치껌: TrackingKeywordRepository.update_keyword_volume() got an unexpected keyword argument 'category'
+2025-08-14 22:56:42 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: TrackingKeywordRepository.update_keyword_volume() got an unexpected keyword argument 'category'
+2025-08-14 22:56:43 - features.rank_tracking.service - ERROR - 키워드 정보 업데이트 실패: 덴티페어리: TrackingKeywordRepository.update_keyword_volume() got an unexpected keyword argument 'category'
+2025-08-14 22:56:43 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: TrackingKeywordRepository.update_keyword_volume() got an unexpected keyword argument 'category'
+2025-08-14 23:02:04 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: Could not determine join condition between parent/child tables on relationship TrackingKeyword.ranking_history - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-08-14 23:02:04 - features.rank_tracking.project_list_widget - ERROR - 프로젝트 목록 로드 실패: Could not determine join condition between parent/child tables on relationship TrackingKeyword.ranking_history - there are no foreign keys linking these tables.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or specify a 'primaryjoin' expression.
+2025-08-14 23:02:55 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:02:55 - features.rank_tracking.project_list_widget - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:03:09 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:03:09 - features.rank_tracking.project_list_widget - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:06:19 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:06:19 - features.rank_tracking.project_list_widget - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:10:04 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:10:04 - features.rank_tracking.project_list_widget - ERROR - 프로젝트 목록 로드 실패: (sqlite3.OperationalError) no such table: projects
+[SQL: SELECT projects.id AS projects_id, projects.product_id AS projects_product_id, projects.current_name AS projects_current_name, projects.product_url AS projects_product_url, projects.created_at AS projects_created_at, projects.is_active AS projects_is_active, projects.category AS projects_category, projects.price AS projects_price, projects.store_name AS projects_store_name, projects.description AS projects_description, projects.image_url AS projects_image_url 
+FROM projects 
+WHERE projects.is_active = 1 ORDER BY projects.created_at DESC]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2025-08-14 23:17:34 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.models'
+2025-08-14 23:17:38 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.models'
+2025-08-14 23:56:58 - features.keyword_analysis.service - ERROR - 병렬 키워드 분석 실패: 'AnalysisSessionRepository' object has no attribute 'create_session'
+2025-08-14 23:56:58 - foundation.db - ERROR - 데이터베이스 트랜잭션 롤백: 키워드 분석 실패: 'AnalysisSessionRepository' object has no attribute 'create_session'
+2025-08-14 23:56:58 - root - ERROR - BackgroundWorker 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\service.py", line 187, in analyze_keywords_parallel
+    analysis_session = session_repo.create_session(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AnalysisSessionRepository' object has no attribute 'create_session'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\desktop\workers.py", line 64, in run
+    result = self._function(*self._args, **self._kwargs)
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\service.py", line 218, in analyze_keywords_parallel
+    raise KeywordAnalysisError(f"키워드 분석 실패: {e}")
+src.foundation.exceptions.KeywordAnalysisError: 키워드 분석 실패: 'AnalysisSessionRepository' object has no attribute 'create_session'
+

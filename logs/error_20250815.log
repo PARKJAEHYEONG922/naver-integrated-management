@@ -1,0 +1,55 @@
+2025-08-15 00:48:06 - vendors.naver.shopping - ERROR - 네이버 쇼핑 API 호출 실패: name 'requests' is not defined
+2025-08-15 00:48:06 - vendors.naver.shopping - ERROR - 스마트 상품 검색 실패: 강아지 양치껌 (5580702120): API 호출 실패: name 'requests' is not defined
+2025-08-15 01:02:41 - features.rank_tracking.service - ERROR - 키워드 정보 업데이트 실패: 강아지양치껌: 'CommonDB' object has no attribute 'update_keyword_volume_and_category'
+2025-08-15 01:02:42 - features.rank_tracking.service - ERROR - 키워드 정보 업데이트 실패: 덴티페어리: 'CommonDB' object has no attribute 'update_keyword_volume_and_category'
+2025-08-15 01:12:59 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 삭제 실패: RankTrackingService.delete_keyword() missing 1 required positional argument: 'keyword_text'
+2025-08-15 01:12:59 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 삭제 실패: RankTrackingService.delete_keyword() missing 1 required positional argument: 'keyword_text'
+2025-08-15 01:13:02 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 삭제 실패: RankTrackingService.delete_keyword() missing 1 required positional argument: 'keyword_text'
+2025-08-15 01:13:02 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 삭제 실패: RankTrackingService.delete_keyword() missing 1 required positional argument: 'keyword_text'
+2025-08-15 01:30:47 - foundation.db - ERROR - DB 연결 오류: 'CommonDB' object has no attribute '_init_cafe_extraction_tables'
+2025-08-15 01:30:47 - main - ERROR - 애플리케이션 시작 실패: 'CommonDB' object has no attribute '_init_cafe_extraction_tables'
+2025-08-15 01:30:49 - foundation.db - ERROR - DB 연결 오류: 'CommonDB' object has no attribute '_init_cafe_extraction_tables'
+2025-08-15 01:30:49 - main - ERROR - 애플리케이션 시작 실패: 'CommonDB' object has no attribute '_init_cafe_extraction_tables'
+2025-08-15 01:55:31 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 삭제 실패: RankTrackingService.delete_keyword() missing 1 required positional argument: 'keyword_text'
+2025-08-15 01:55:31 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 삭제 실패: RankTrackingService.delete_keyword() missing 1 required positional argument: 'keyword_text'
+2025-08-15 01:59:27 - features.rank_tracking.service - ERROR - 키워드 삭제 실패: 강아지양치껌: 'CommonDB' object has no attribute 'delete_keyword_by_text'
+2025-08-15 01:59:27 - features.rank_tracking.service - ERROR - 키워드 삭제 실패: 덴티페어리: 'CommonDB' object has no attribute 'delete_keyword_by_text'
+2025-08-15 02:00:08 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.naver_cafe.ui.main_widget'
+2025-08-15 02:00:08 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.naver_cafe.ui.main_widget'
+2025-08-15 02:00:08 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.naver_cafe.ui.main_widget'
+2025-08-15 02:00:15 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.naver_cafe.ui.main_widget'
+2025-08-15 02:00:15 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.naver_cafe.ui.main_widget'
+2025-08-15 02:00:15 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.naver_cafe.ui.main_widget'
+2025-08-15 02:08:11 - foundation.db - ERROR - DB 연결 오류: UNIQUE constraint failed: projects.product_id
+2025-08-15 02:08:11 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: UNIQUE constraint failed: projects.product_id
+2025-08-15 02:09:17 - desktop.app - ERROR - 애플리케이션 실행 실패: 'bg_tertiary'
+2025-08-15 02:09:17 - main - ERROR - 애플리케이션 시작 실패: 'bg_tertiary'
+2025-08-15 02:09:23 - desktop.app - ERROR - 애플리케이션 실행 실패: 'bg_tertiary'
+2025-08-15 02:09:23 - main - ERROR - 애플리케이션 시작 실패: 'bg_tertiary'
+2025-08-15 02:09:38 - desktop.app - ERROR - 애플리케이션 실행 실패: 'bg_tertiary'
+2025-08-15 02:09:38 - main - ERROR - 애플리케이션 시작 실패: 'bg_tertiary'
+2025-08-15 02:10:47 - desktop.app - ERROR - 애플리케이션 실행 실패: 'bg_tertiary'
+2025-08-15 02:10:47 - main - ERROR - 애플리케이션 시작 실패: 'bg_tertiary'
+2025-08-15 02:10:53 - desktop.app - ERROR - 애플리케이션 실행 실패: 'bg_tertiary'
+2025-08-15 02:10:53 - main - ERROR - 애플리케이션 시작 실패: 'bg_tertiary'
+2025-08-15 02:12:38 - foundation.db - ERROR - DB 연결 오류: UNIQUE constraint failed: projects.product_id
+2025-08-15 02:12:38 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: UNIQUE constraint failed: projects.product_id
+2025-08-15 02:14:09 - foundation.db - ERROR - DB 연결 오류: UNIQUE constraint failed: projects.product_id
+2025-08-15 02:14:09 - features.rank_tracking.service - ERROR - 프로젝트 생성 실패: UNIQUE constraint failed: projects.product_id
+2025-08-15 02:19:34 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:19:34 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:19:34 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:19:37 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:19:37 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:19:37 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:20:49 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:20:49 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:20:49 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:21:30 - main - ERROR - 기능 모듈 로드 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:21:30 - desktop.app - ERROR - 애플리케이션 실행 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 02:21:30 - main - ERROR - 애플리케이션 시작 실패: cannot import name 'QTimer' from 'PySide6.QtWidgets' (C:\Users\wogud\AppData\Local\Programs\Python\Python313\Lib\site-packages\PySide6\QtWidgets.pyd)
+2025-08-15 15:26:12 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 테이블 즉시 추가 실패: 'RankingTableWidget' object has no attribute 'update_table_with_keywords'
+2025-08-15 15:26:13 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 정보 테이블 업데이트 실패: 강아지사료: 'RankingTableWidget' object has no attribute 'table'
+2025-08-15 15:32:09 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 테이블 즉시 추가 실패: 'RankingTableWidget' object has no attribute 'update_table_with_keywords'
+2025-08-15 15:32:09 - vendors.naver.shopping - ERROR - 키워드 카테고리 조회 실패: 수제간식: 'builtin_function_or_method' object is not iterable
+2025-08-15 15:32:10 - features.rank_tracking.ranking_table_widget - ERROR - 키워드 정보 테이블 업데이트 실패: 수제간식: 'RankingTableWidget' object has no attribute 'table'
