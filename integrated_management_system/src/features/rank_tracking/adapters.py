@@ -14,8 +14,6 @@ from src.foundation.logging import get_logger
 
 logger = get_logger("features.rank_tracking.adapters")
 
-RANK_OUT_OF_RANGE = 999  # 200위 밖을 나타내는 상수
-
 
 class ProductInfoDTO(TypedDict, total=False):
     """상품 정보 DTO"""
@@ -225,10 +223,13 @@ class RankTrackingAdapter:
             logger.warning(f"월검색량 조회 실패: {keyword}: {e}")
             return None
     
-    def get_keyword_category(self, keyword: str) -> Optional[str]:
+    def get_keyword_category(self, keyword: str, sample_size: int = None) -> Optional[str]:
         """키워드 대표 카테고리 조회 (쇼핑 API 활용)"""
         try:
-            category = self.shopping_client.get_keyword_category(keyword, sample_size=40)
+            if sample_size is None:
+                from .models import DEFAULT_SAMPLE_SIZE
+                sample_size = DEFAULT_SAMPLE_SIZE
+            category = self.shopping_client.get_keyword_category(keyword, sample_size=sample_size)
             logger.debug(f"카테고리 조회: {keyword} -> {category}")
             return category
         except Exception as e:

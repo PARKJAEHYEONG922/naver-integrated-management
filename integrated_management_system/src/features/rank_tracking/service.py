@@ -2,12 +2,10 @@
 순위 추적 비즈니스 서비스 (단순화됨)
 SQLite3 직접 사용으로 단순화된 깔끔한 코드
 """
-import re
 from typing import List, Optional, Dict, Any, Tuple
-from datetime import datetime
 from PySide6.QtCore import QObject, Signal
 
-from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo, rank_tracking_repository
+from .models import TrackingProject, TrackingKeyword, RankingResult, rank_tracking_repository
 from .adapters import RankTrackingAdapter, smart_product_search
 from .engine_local import rank_tracking_engine
 from src.foundation.exceptions import (
@@ -16,7 +14,6 @@ from src.foundation.exceptions import (
 )
 from src.foundation.logging import get_logger
 from src.foundation.db import get_db
-from src.toolbox.text_utils import clean_keyword, filter_unique_keywords
 
 logger = get_logger("features.rank_tracking.service")
 
@@ -811,8 +808,8 @@ class RankTrackingService(QObject):
     def get_keyword_category_from_vendor(self, keyword: str) -> str:
         """키워드 카테고리 조회 - adapters로 위임"""
         try:
-            from .adapters import rank_tracking_adapter
-            return rank_tracking_adapter.get_keyword_category(keyword, sample_size=40) or "-"
+            adapter = RankTrackingAdapter()
+            return adapter.get_keyword_category(keyword) or "-"
         except Exception as e:
             logger.warning(f"카테고리 조회 실패: {keyword}: {e}")
             return "-"
@@ -820,8 +817,8 @@ class RankTrackingService(QObject):
     def get_keyword_volume_from_vendor(self, keyword: str) -> int:
         """키워드 월검색량 조회 - adapters로 위임"""
         try:
-            from .adapters import rank_tracking_adapter
-            vol = rank_tracking_adapter.get_keyword_volume(keyword)
+            adapter = RankTrackingAdapter()
+            vol = adapter.get_keyword_monthly_volume(keyword)
             return vol if isinstance(vol, int) else -1
         except Exception as e:
             logger.warning(f"월검색량 조회 실패: {keyword}: {e}")
@@ -1179,6 +1176,35 @@ class RankTrackingService(QObject):
                 'success': False,
                 'message': f'상품 정보 새로고침 중 오류가 발생했습니다: {str(e)}'
             }
+    
+    def update_project(self, project_id: int, new_info: Dict[str, Any]) -> bool:
+        """프로젝트 기본정보 일부 필드만 안전하게 갱신"""
+        try:
+            db = get_db()
+            # foundation.db의 직접 쿼리를 사용하여 프로젝트 업데이트
+            with db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    UPDATE projects
+                       SET current_name = ?,
+                           price        = ?,
+                           category     = ?,
+                           store_name   = ?
+                     WHERE id = ?
+                """, (
+                    new_info.get('current_name', ''),
+                    int(new_info.get('price', 0) or 0),
+                    new_info.get('category', ''),
+                    new_info.get('store_name', ''),
+                    project_id
+                ))
+                conn.commit()
+            
+            logger.info(f"프로젝트 업데이트 완료: ID={project_id}")
+            return True
+        except Exception as e:
+            logger.error(f"프로젝트 업데이트 실패(ID={project_id}): {e}")
+            return False
     
     def get_project_changes_history(self, project_id: int) -> Dict[str, Any]:
         """프로젝트 변경사항 이력 조회 (기존 통합관리프로그램과 동일)"""

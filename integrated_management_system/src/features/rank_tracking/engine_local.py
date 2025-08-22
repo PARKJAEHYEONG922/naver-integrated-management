@@ -7,8 +7,8 @@ from typing import List, Optional, Dict, Any, Tuple
 from datetime import datetime
 import re
 
-from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo
-from .adapters import rank_tracking_adapter, clean_product_name, smart_product_search
+from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo, RANK_OUT_OF_RANGE, DEFAULT_SAMPLE_SIZE
+from .adapters import RankTrackingAdapter, clean_product_name, smart_product_search
 from src.foundation.logging import get_logger
 
 logger = get_logger("features.rank_tracking.engine_local")
@@ -18,7 +18,7 @@ class RankTrackingEngine:
     """순위 추적 핵심 엔진 - 순수 계산 로직만"""
     
     def __init__(self):
-        self.adapter = rank_tracking_adapter
+        self.adapter = RankTrackingAdapter()
     
     def analyze_keyword_for_tracking(self, keyword: str) -> Dict[str, Any]:
         """키워드 분석 (어댑터 레이어 위임)"""
@@ -31,7 +31,7 @@ class RankTrackingEngine:
                 'keyword': keyword,
                 'category': '-',
                 'monthly_volume': 0,
-                'error': str(e)
+                'error_message': str(e)
             }
     
     def check_keyword_ranking(self, keyword: str, product_id: str) -> RankingResult:
@@ -98,7 +98,7 @@ class RankTrackingEngine:
                 'success': False,
                 'category': '-',
                 'monthly_volume': -1,
-                'error': str(e)
+                'error_message': str(e)
             }
     
     def get_keyword_category_from_vendor(self, keyword: str) -> str:
@@ -289,7 +289,7 @@ class RankTrackingEngine:
                         results.append({
                             'keyword': keyword,
                             'success': False,
-                            'error': analysis.get('error', '분석 실패')
+                            'error_message': analysis.get('error_message', '분석 실패')
                         })
                         
                 except Exception as e:
@@ -297,7 +297,7 @@ class RankTrackingEngine:
                     results.append({
                         'keyword': keyword,
                         'success': False,
-                        'error': str(e)
+                        'error_message': str(e)
                     })
                     logger.error(f"키워드 '{keyword}' 처리 실패: {e}")
             
@@ -317,64 +317,12 @@ class RankTrackingEngine:
                 'failed_count': len(keywords),
                 'total_count': len(keywords),
                 'results': [],
-                'error': str(e)
+                'error_message': str(e)
             }
 
 
-    def batch_update_keywords_volume(self, keywords: List[str]) -> dict:
-        """키워드 배치 월검색량 업데이트 (순수 분석 로직)"""
-        try:
-            updated_count = 0
-            failed_count = 0
-            results = []
-            
-            for keyword in keywords:
-                try:
-                    analysis = self.analyze_keyword_for_tracking(keyword)
-                    
-                    if analysis['success']:
-                        updated_count += 1
-                        results.append({
-                            'keyword': keyword,
-                            'success': True,
-                            'category': analysis['category'],
-                            'monthly_volume': analysis['monthly_volume']
-                        })
-                    else:
-                        failed_count += 1
-                        results.append({
-                            'keyword': keyword,
-                            'success': False,
-                            'error': analysis.get('error', '분석 실패')
-                        })
-                        
-                except Exception as e:
-                    failed_count += 1
-                    results.append({
-                        'keyword': keyword,
-                        'success': False,
-                        'error': str(e)
-                    })
-                    logger.error(f"키워드 '{keyword}' 처리 실패: {e}")
-            
-            return {
-                'success': updated_count > 0,
-                'updated_count': updated_count,
-                'failed_count': failed_count,
-                'total_count': len(keywords),
-                'results': results
-            }
-            
-        except Exception as e:
-            logger.error(f"키워드 배치 분석 실패: {e}")
-            return {
-                'success': False,
-                'updated_count': 0,
-                'failed_count': len(keywords),
-                'total_count': len(keywords),
-                'results': [],
-                'error': str(e)
-            }
+    # batch_update_keywords_volume은 analyze_keywords_batch와 동일하므로 제거됨
+    # analyze_keywords_batch를 사용하세요
     
     def analyze_and_add_keyword(self, keyword: str) -> Dict[str, Any]:
         """키워드 분석 및 추가 로직 (순수 계산)"""
@@ -396,7 +344,7 @@ class RankTrackingEngine:
                     'keyword': keyword,
                     'category': '-',
                     'monthly_volume': 0,
-                    'error': analysis.get('error', '분석 실패'),
+                    'error_message': analysis.get('error_message', '분석 실패'),
                     'ready_for_db': False
                 }
                 
@@ -407,7 +355,7 @@ class RankTrackingEngine:
                 'keyword': keyword,
                 'category': '-',
                 'monthly_volume': 0,
-                'error': str(e),
+                'error_message': str(e),
                 'ready_for_db': False
             }
     
@@ -491,7 +439,7 @@ class RankTrackingEngine:
                 'total_keywords': 0,
                 'new_count': 0,
                 'duplicate_count': 0,
-                'error': str(e)
+                'error_message': str(e)
             }
     
     def process_keyword_info_analysis(self, keyword: str) -> Dict[str, Any]:
@@ -515,7 +463,7 @@ class RankTrackingEngine:
                 'category': '-',
                 'monthly_volume': -1,
                 'keyword': keyword,
-                'error': str(e)
+                'error_message': str(e)
             }
     
     def analyze_and_add_keyword_logic(self, keyword: str) -> Dict[str, Any]:
@@ -536,7 +484,7 @@ class RankTrackingEngine:
                 return {
                     'success': False,
                     'keyword': keyword,
-                    'error': analysis.get('error', '분석 실패'),
+                    'error_message': analysis.get('error_message', '분석 실패'),
                     'ready_for_db': False
                 }
                 
@@ -545,7 +493,7 @@ class RankTrackingEngine:
             return {
                 'success': False,
                 'keyword': keyword,
-                'error': str(e),
+                'error_message': str(e),
                 'ready_for_db': False
             }
     
@@ -565,7 +513,7 @@ class RankTrackingEngine:
                 'success': False,
                 'category': '',
                 'product_id': product_id,
-                'error': '상품 정보 조회 실패'
+                'error_message': '상품 정보 조회 실패'
             }
             
         except Exception as e:
@@ -574,7 +522,7 @@ class RankTrackingEngine:
                 'success': False,
                 'category': '',
                 'product_id': product_id,
-                'error': str(e)
+                'error_message': str(e)
             }
     
     def prepare_table_data_analysis(self, project, keywords, overview) -> Dict[str, Any]:

@@ -13,6 +13,11 @@ logger = get_logger("features.rank_tracking.models")
 
 
 # === 상수/Enum 클래스들 ===
+
+# 순위 관련 상수
+RANK_OUT_OF_RANGE = 999  # 200위 밖 표시값
+MAX_RANK_PAGES = 10      # 최대 검색 페이지 (1000위까지)
+DEFAULT_SAMPLE_SIZE = 40 # 카테고리 분석 기본 샘플 수
 class KeywordAction(Enum):
     """키워드 관리 액션"""
     ADDED = "added"
