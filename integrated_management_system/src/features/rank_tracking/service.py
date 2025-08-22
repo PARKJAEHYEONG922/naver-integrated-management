@@ -653,6 +653,8 @@ class RankTrackingService(QObject):
                     if self.delete_keyword_by_id(keyword_id):
                         success_count += 1
                         logger.info(f"키워드 삭제 성공: {keyword_name} (ID: {keyword_id})")
+                        # 키워드 삭제 이력 기록
+                        rank_tracking_repository.add_keyword_management_history(project_id, keyword_name, 'delete')
                     else:
                         logger.warning(f"키워드 삭제 실패: {keyword_name} (ID: {keyword_id})")
                 except Exception as e:

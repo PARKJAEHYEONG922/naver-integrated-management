@@ -837,7 +837,7 @@ class ProjectHistoryDialog(QDialog):
                     keyword_item = QTableWidgetItem(keyword_obj.keyword)
                     self.current_keywords_table.setItem(row, 1, keyword_item)
                     
-                    # 카테고리 (마지막 부분만) - 일치 여부에 따라 색상 결정
+                    # 카테고리 (마지막 부분만 표시)
                     category = getattr(keyword_obj, 'category', '') or ""
                     if category and ">" in category:
                         # "쇼핑/검색 > 반려동물 > 강아지 간식 > 개껌" → "개껌"
@@ -848,12 +848,14 @@ class ProjectHistoryDialog(QDialog):
                     
                     category_item = QTableWidgetItem(display_category)
                     
-                    # 카테고리 색상 적용 (메인 UI와 동일한 방식)
-                    if project_category_base and category and category != '-':
-                        # 키워드 카테고리에서 괄호 앞 부분만 추출
-                        keyword_category_base = category.split('(')[0].strip()
+                    # 카테고리 색상 적용 (현재 방식: 전체 경로 비교)
+                    if project_info and hasattr(project_info, 'category') and project_info.category and category and category != '-':
+                        # 프로젝트 카테고리와 키워드 카테고리 전체 경로 비교
+                        # 괄호 앞 부분만 비교 (예: "쇼핑/검색 > 반려동물 > 강아지 간식 > 개껌(95%)" → "쇼핑/검색 > 반려동물 > 강아지 간식 > 개껌")
+                        project_category_clean = project_info.category.split('(')[0].strip()
+                        keyword_category_clean = category.split('(')[0].strip()
                         
-                        if project_category_base == keyword_category_base:
+                        if project_category_clean == keyword_category_clean:
                             # 일치하면 초록색 글자
                             category_item.setForeground(QBrush(QColor('#059669')))  # 초록색
                         else:
@@ -890,7 +892,45 @@ class ProjectHistoryDialog(QDialog):
                 self.show_no_data_message(self.ranking_history_table, "등록된 키워드가 없습니다.")
                 return
             
-            # 각 키워드별로 순위 데이터 표시 (실제 데이터 없이 예시 데이터)
+            # 프로젝트의 순위 데이터 가져오기
+            try:
+                ranking_overview = rank_tracking_service.get_ranking_overview(self.project_id)
+                all_dates = ranking_overview.get('dates', [])
+                keywords_data = ranking_overview.get('keywords', {})
+            except:
+                all_dates = []
+                keywords_data = {}
+            
+            # 헤더 레이블 업데이트 (날짜 시간 포함)
+            headers = ["키워드", "카테고리", "월검색량"]
+            
+            # 현재 순위 헤더
+            if all_dates and len(all_dates) > 0:
+                latest_date = all_dates[0]
+                date_display = format_datetime_short(latest_date).replace("-", "/")  # MM-DD → MM/DD
+                headers.append(f"현재 순위\n({date_display})")
+            else:
+                headers.append("현재 순위")
+            
+            # 이전 순위 헤더
+            if all_dates and len(all_dates) > 1:
+                previous_date = all_dates[1]
+                date_display = format_datetime_short(previous_date).replace("-", "/")  # MM-DD → MM/DD
+                headers.append(f"이전 순위\n({date_display})")
+            else:
+                headers.append("이전 순위")
+            
+            headers.append("순위변동")
+            
+            # 헤더 설정
+            self.ranking_history_table.setHorizontalHeaderLabels(headers)
+            
+            # 헤더 높이 조정 (2줄 표시를 위해)
+            header = self.ranking_history_table.horizontalHeader()
+            header.setDefaultSectionSize(100)
+            header.setMinimumHeight(50)  # 2줄 표시를 위한 높이
+            
+            # 각 키워드별로 순위 데이터 표시
             self.ranking_history_table.setRowCount(len(current_keywords))
             
             for row, keyword_obj in enumerate(current_keywords):
@@ -902,6 +942,24 @@ class ProjectHistoryDialog(QDialog):
                 category = getattr(keyword_obj, 'category', '') or '-'
                 category_display = category.split('>')[-1].strip() if '>' in category else category
                 category_item = QTableWidgetItem(category_display)
+                
+                # 카테고리 색상 적용 (현재 방식: 전체 경로 비교)
+                try:
+                    project_info = rank_tracking_service.get_project_by_id(self.project_id)
+                    if project_info and hasattr(project_info, 'category') and project_info.category and category and category != '-':
+                        # 프로젝트 카테고리와 키워드 카테고리 전체 경로 비교
+                        project_category_clean = project_info.category.split('(')[0].strip()
+                        keyword_category_clean = category.split('(')[0].strip()
+                        
+                        if project_category_clean == keyword_category_clean:
+                            # 일치하면 초록색 글자
+                            category_item.setForeground(QBrush(QColor('#059669')))  # 초록색
+                        else:
+                            # 불일치하면 빨간색 글자
+                            category_item.setForeground(QBrush(QColor('#DC2626')))  # 빨간색
+                except:
+                    pass  # 색상 적용 실패 시 기본 색상 유지
+                
                 self.ranking_history_table.setItem(row, 1, category_item)
                 
                 # 월검색량
@@ -910,16 +968,58 @@ class ProjectHistoryDialog(QDialog):
                 volume_item = SortableTableWidgetItem(volume_display, monthly_volume)
                 self.ranking_history_table.setItem(row, 2, volume_item)
                 
-                # 현재 순위 (예시 데이터)
-                current_rank_item = SortableTableWidgetItem("-", 999)
+                # 순위 데이터 가져오기
+                keyword_ranking_data = keywords_data.get(keyword_obj.keyword, {})
+                current_rank = None
+                previous_rank = None
+                
+                # 가장 최근 2개의 순위 데이터 찾기
+                if all_dates and len(all_dates) > 0:
+                    # 최신 날짜 (현재 순위)
+                    latest_date = all_dates[0]
+                    current_rank = keyword_ranking_data.get(latest_date)
+                    
+                    # 이전 날짜 (이전 순위)
+                    if len(all_dates) > 1:
+                        previous_date = all_dates[1]
+                        previous_rank = keyword_ranking_data.get(previous_date)
+                
+                # 현재 순위
+                if current_rank and isinstance(current_rank, int) and current_rank > 0:
+                    current_rank_display = f"{current_rank}위"
+                    current_rank_item = SortableTableWidgetItem(current_rank_display, current_rank)
+                else:
+                    current_rank_item = SortableTableWidgetItem("-", 999)
                 self.ranking_history_table.setItem(row, 3, current_rank_item)
                 
-                # 이전 순위 (예시 데이터)
-                previous_rank_item = SortableTableWidgetItem("-", 999)
+                # 이전 순위
+                if previous_rank and isinstance(previous_rank, int) and previous_rank > 0:
+                    previous_rank_display = f"{previous_rank}위"
+                    previous_rank_item = SortableTableWidgetItem(previous_rank_display, previous_rank)
+                else:
+                    previous_rank_item = SortableTableWidgetItem("-", 999)
                 self.ranking_history_table.setItem(row, 4, previous_rank_item)
                 
-                # 순위변동 (예시 데이터)
+                # 순위변동
                 change_item = QTableWidgetItem("-")
+                if current_rank and previous_rank and isinstance(current_rank, int) and isinstance(previous_rank, int) and current_rank > 0 and previous_rank > 0:
+                    rank_change = previous_rank - current_rank  # 이전 순위 - 현재 순위
+                    
+                    if rank_change > 0:
+                        # 순위 상승 (초록색)
+                        change_display = f"▲ {rank_change}"
+                        change_item = QTableWidgetItem(change_display)
+                        change_item.setForeground(QBrush(QColor(ModernStyle.COLORS['success'])))  # 초록색
+                    elif rank_change < 0:
+                        # 순위 하락 (빨간색)
+                        change_display = f"▼ {abs(rank_change)}"
+                        change_item = QTableWidgetItem(change_display)
+                        change_item.setForeground(QBrush(QColor(ModernStyle.COLORS['danger'])))  # 빨간색
+                    else:
+                        # 순위 변동 없음
+                        change_item = QTableWidgetItem("━")
+                        change_item.setForeground(QBrush(QColor(ModernStyle.COLORS['text_secondary'])))
+                
                 self.ranking_history_table.setItem(row, 5, change_item)
             
             # 모든 데이터 추가 후 정렬 활성화
