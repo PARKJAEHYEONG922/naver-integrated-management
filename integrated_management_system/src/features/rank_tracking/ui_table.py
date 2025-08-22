@@ -759,33 +759,88 @@ class RankingTableWidget(QWidget):
             logger.info(f"🎯🎯🎯 현재 프로젝트 ID({self.current_project_id})와 다름. UI 업데이트 건너뜀")
     
     def add_new_ranking_column_with_time(self, time_str: str):
-        """새로운 순위 컬럼을 월검색량 바로 다음(4번째)에 삽입"""
+        """새로운 순위 컬럼을 월검색량 바로 다음(4번째)에 삽입 (원본 방식 적용)"""
         try:
             logger.info(f"새 순위 컬럼 추가 시작: {time_str}")
             
+            # 삽입할 위치 (월검색량 다음 = 4번째 인덱스)
+            insert_position = 4
+            
+            column_count = self.ranking_table.columnCount()
+            row_count = self.ranking_table.rowCount()
+            logger.info(f"현재 컬럼 수: {column_count}, 행 수: {row_count}")
+            
+            # 새 컬럼 추가 (맨 뒤에 임시로 추가)
+            self.ranking_table.setColumnCount(column_count + 1)
+            
+            # 헤더 재배치: 4번째 위치에 새 시간 헤더 삽입 (원본과 동일)
             formatted_time = format_date(time_str)
             
-            # ModernTableWidget의 동적 컬럼 추가 기능 사용
-            # 각 키워드에 대해 빈 순위 데이터("-") 준비
-            column_data = []
-            for row in range(self.ranking_table.rowCount()):
-                column_data.append("-")
+            # 기존 헤더들을 수집하고 4번째 위치에 새 헤더 삽입
+            new_headers = []
+            for i in range(column_count + 1):  # 새로 추가된 컬럼까지 포함
+                if i < insert_position:
+                    # 4번째 위치 전까지는 기존 헤더 유지
+                    if i < column_count:
+                        header_item = self.ranking_table.horizontalHeaderItem(i)
+                        header_text = header_item.text() if header_item else ""
+                        new_headers.append(header_text)
+                    else:
+                        new_headers.append("")
+                elif i == insert_position:
+                    # 4번째 위치에 새 시간 헤더 삽입
+                    new_headers.append(formatted_time)
+                else:
+                    # 4번째 위치 이후는 기존 헤더를 한 칸씩 뒤로 이동
+                    original_index = i - 1
+                    if original_index < column_count:
+                        header_item = self.ranking_table.horizontalHeaderItem(original_index)
+                        header_text = header_item.text() if header_item else ""
+                        new_headers.append(header_text)
+                    else:
+                        new_headers.append("")
             
-            # 동적 컬럼 추가 (월검색량 바로 다음인 4번째 위치에 삽입)
-            insert_position = 4
-            success = self.ranking_table.insert_column_at_position(insert_position, formatted_time, column_data, 100)
+            # 새 헤더 적용
+            self.ranking_table.setHorizontalHeaderLabels(new_headers)
             
-            if not success:
-                # 삽입 실패시 맨 뒤에 추가 (fallback)
-                logger.warning(f"4번째 위치 삽입 실패, 맨 뒤에 추가: {formatted_time}")
-                self.ranking_table.add_dynamic_column(formatted_time, column_data, 100)
+            # 모든 행의 데이터 재배치: 4번째 위치에 "-" 삽입 (원본과 동일)
+            for row in range(row_count):
+                try:
+                    # 기존 데이터를 뒤에서부터 한 칸씩 뒤로 이동
+                    for col in range(column_count, insert_position, -1):
+                        old_item = self.ranking_table.item(row, col - 1)
+                        if old_item:
+                            old_text = old_item.text()
+                            # 새 위치에 아이템 설정
+                            from PySide6.QtWidgets import QTableWidgetItem
+                            new_item = QTableWidgetItem(old_text)
+                            # 기존 아이템의 스타일과 데이터 복사
+                            if old_item.background().color().isValid():
+                                new_item.setBackground(old_item.background())
+                            if old_item.foreground().color().isValid():
+                                new_item.setForeground(old_item.foreground())
+                            user_data = old_item.data(Qt.UserRole)
+                            if user_data is not None:
+                                new_item.setData(Qt.UserRole, user_data)
+                            self.ranking_table.setItem(row, col, new_item)
+                    
+                    # 4번째 위치에 "-" 삽입
+                    from PySide6.QtWidgets import QTableWidgetItem
+                    dash_item = QTableWidgetItem("-")
+                    self.ranking_table.setItem(row, insert_position, dash_item)
+                    
+                except Exception as item_e:
+                    logger.error(f"행 {row} 처리 실패: {item_e}")
             
-            logger.info(f"새 순위 컬럼 '{formatted_time}' 추가 완료")
+            # 새 컬럼 크기 조정
+            self.ranking_table.resizeColumnToContents(insert_position)
+            
+            logger.info(f"4번째 위치에 새 순위 컬럼 '{formatted_time}' 삽입 완료")
             
         except Exception as e:
             logger.error(f"새 순위 컬럼 추가 실패: {e}")
             import traceback
-            traceback.print_exc()
+            logger.error(traceback.format_exc())
     
     def setup_ranking_table_for_new_check(self, project_id: int, current_time: str):
         """순위 확인용 기본 테이블 구성 (키워드만 + 새 시간 컬럼)"""
@@ -840,31 +895,9 @@ class RankingTableWidget(QWidget):
             logger.error(traceback.format_exc())
     
     def update_single_keyword_rank(self, keyword_id, keyword, rank, volume):
-        """단일 키워드의 순위를 실시간으로 업데이트"""
+        """단일 키워드의 순위를 실시간으로 업데이트 (원본 방식 적용)"""
         try:
             logger.info(f"실시간 순위 업데이트 요청: 키워드ID={keyword_id}, 키워드={keyword}, 순위={rank}")
-            
-            # 🔧 FIX: 현재 진행 중인 순위 확인 시간으로 컬럼 찾기
-            current_time = rank_tracking_service.get_ranking_current_time(self.current_project_id)
-            if not current_time:
-                logger.warning("현재 진행 중인 순위 확인 시간을 찾을 수 없음")
-                return
-            
-            formatted_time = format_date(current_time)
-            logger.info(f"찾을 컬럼 헤더: '{formatted_time}'")
-            
-            # 헤더에서 해당 시간의 컬럼 인덱스 찾기
-            ranking_column = None
-            for col in range(self.ranking_table.columnCount()):
-                header_item = self.ranking_table.horizontalHeaderItem(col)
-                if header_item and header_item.text() == formatted_time:
-                    ranking_column = col
-                    logger.info(f"순위 업데이트 컬럼 찾음: {col}번째 ('{formatted_time}')")
-                    break
-            
-            if ranking_column is None:
-                logger.warning(f"순위 컬럼을 찾을 수 없음: '{formatted_time}'")
-                return
             
             # 테이블에서 해당 키워드 찾기 (ModernTableWidget 사용)
             found = False
@@ -876,7 +909,9 @@ class RankingTableWidget(QWidget):
                     
                     if stored_keyword_id == keyword_id:
                         found = True
-                        logger.info(f"키워드 찾음! 업데이트할 컬럼: {ranking_column}")
+                        # 새로 생성한 순위 컬럼(4번째)에 순위 업데이트 (원본과 동일)
+                        ranking_column = 4  # 월검색량(3) 다음 위치
+                        logger.info(f"키워드 찾음! 업데이트할 컬럼: {ranking_column} (4번째 컬럼)")
                         
                         rank_item = self.ranking_table.item(row, ranking_column)
                         if not rank_item:
@@ -895,9 +930,9 @@ class RankingTableWidget(QWidget):
                         color = get_rank_color(rank, "foreground")
                         rank_item.setForeground(QColor(color))
                         
-                        # 정렬용 데이터 설정 (통일된 방식 사용)
-                        from src.toolbox.ui_kit.sortable_items import set_rank_sort_data
-                        set_rank_sort_data(rank_item, ranking_column, rank_display)
+                        # 정렬용 데이터 설정 (원본과 동일)
+                        sort_rank = 201 if (rank == 0 or rank > 200) else rank
+                        rank_item.setData(Qt.UserRole, sort_rank)
                         logger.info(f"키워드 {keyword} 실시간 업데이트 완료")
                         break
             
