@@ -16,7 +16,8 @@ from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 
 from .worker import ranking_worker_manager, keyword_info_worker_manager
-from .adapters import format_date, format_rank_display, get_rank_color, format_monthly_volume, get_category_match_color
+from .adapters import format_date, format_rank_display, get_rank_color, get_category_match_color
+from src.toolbox.formatters import format_monthly_volume, format_rank
 from .service import rank_tracking_service
 # view_model은 service로 통합됨
 
@@ -499,23 +500,24 @@ class RankingTableWidget(QWidget):
             
             # 기본 데이터 추출
             headers = table_data["headers"]
-            keywords_data = table_data["overview"].get("keywords", {}) if table_data["overview"] else {}
             dates = table_data["dates"]
             project_category_base = table_data["project_category_base"]
             
-            # 키워드가 없으면 직접 키워드 목록에서 가져오기
-            if not keywords_data:
-                keywords = table_data["keywords"]
-                for keyword in keywords:
-                    keywords_data[keyword.id] = {
-                        'id': keyword.id,
-                        'keyword': keyword.keyword,
-                        'category': keyword.category or '-',
-                        'monthly_volume': keyword.monthly_volume if keyword.monthly_volume is not None else -1,
-                        'search_volume': getattr(keyword, 'search_volume', None),
-                        'is_active': True,
-                        'rankings': {}
-                    }
+            # 키워드 데이터 구성 (항상 keywords 목록에서 가져오기)
+            keywords_data = {}
+            keywords = table_data["keywords"]
+            overview_keywords = table_data["overview"].get("keywords", {}) if table_data["overview"] else {}
+            
+            for keyword in keywords:
+                keywords_data[keyword.id] = {
+                    'id': keyword.id,
+                    'keyword': keyword.keyword,
+                    'category': keyword.category or '-',
+                    'monthly_volume': keyword.monthly_volume if keyword.monthly_volume is not None else -1,
+                    'search_volume': getattr(keyword, 'search_volume', None),
+                    'is_active': True,
+                    'rankings': overview_keywords.get(keyword.keyword, {})
+                }
             
             # 날짜 컬럼 표시 여부 결정 (service 활용)
             should_show_dates = rank_tracking_service.should_show_date_columns(project_id)

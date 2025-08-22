@@ -3,14 +3,16 @@
 Raw API 응답을 비즈니스 로직에서 사용할 수 있는 형태로 변환
 엑셀 내보내기 포함
 """
-from typing import Optional, Dict, Any, List, TypedDict
+from typing import Optional, Dict, Any, List, TypedDict, Tuple
 import re
 from datetime import datetime
 
 from src.vendors.naver.developer.shopping_client import shopping_client as naver_shopping
 from src.vendors.naver.client_factory import get_keyword_tool_client
-from src.toolbox.text_utils import validate_naver_url, extract_product_id, validate_product_id, validate_excel_file
+from src.toolbox.text_utils import validate_naver_url, extract_product_id, validate_product_id
+from src.toolbox.formatters import format_monthly_volume, format_rank, format_datetime
 from src.foundation.logging import get_logger
+from .models import RANK_OUT_OF_RANGE
 
 logger = get_logger("features.rank_tracking.adapters")
 
@@ -37,15 +39,6 @@ class RankingCheckDTO(TypedDict, total=False):
     product_id: str
 
 
-def _to_dt(date_str: str):
-    """문자열을 datetime 객체로 변환 (ISO8601 'Z' 처리 포함)"""
-    try:
-        from datetime import datetime
-        return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
-    except Exception:
-        return None
-
-
 def format_date(date_str: str) -> str:
     """날짜 형식 변환 (8/6 14:26)"""
     dt = _to_dt(date_str)
@@ -59,13 +52,29 @@ def format_date_with_time(date_str: str) -> str:
 
 
 def format_rank_display(rank: int) -> str:
-    """순위 숫자를 사용자 친화적인 형태로 포맷팅"""
-    if rank == 999 or rank > 200:  # RANK_OUT_OF_RANGE = 999
+    """순위 숫자를 사용자 친화적인 형태로 포맷팅 (UI 표시용)"""
+    if not isinstance(rank, int):
+        return "-"
+    if rank == RANK_OUT_OF_RANGE or rank > 200:
         return "200위밖"
-    elif rank >= 1:  # 정상적인 순위 (1~200)
+    elif rank >= 1:
         return f"{rank}위"
-    else:
-        return "-"  # 0, None이나 기타 경우 (오류 상황 또는 아직 확인 안됨)
+    return "-"
+
+
+def _to_dt(date_str: str):
+    """문자열을 datetime 객체로 변환 (DATE와 ISO 형식 모두 처리)"""
+    try:
+        # 'YYYY-MM-DD HH:MM:SS' 또는 'YYYY-MM-DDTHH:MM:SS[Z]' 형식
+        return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+    except:
+        try:
+            # 'YYYY-MM-DD' 형식 (repository에서 반환)
+            return datetime.strptime(date_str, "%Y-%m-%d")
+        except:
+            return None
+
+
 
 
 def get_rank_color(rank: int, color_type: str = "background") -> str:
@@ -90,14 +99,7 @@ def get_rank_color(rank: int, color_type: str = "background") -> str:
             return "#DC2626"  # 빨간색 (50위 초과)
 
 
-def format_monthly_volume(volume: int) -> str:
-    """월검색량 포맷팅"""
-    if volume == -1:
-        return "API 호출 실패"
-    elif volume == 0:
-        return "0"
-    else:
-        return f"{volume:,}"
+# 기존 format_monthly_volume은 삭제됨 - toolbox.formatters.format_monthly_volume 사용
 
 
 def get_category_match_color(project_category: str, keyword_category: str) -> str:
@@ -240,7 +242,7 @@ class RankTrackingAdapter:
         """추적용 키워드 종합 분석 (월검색량 + 카테고리)"""
         result = {
             'keyword': keyword,
-            'monthly_volume': 0,
+            'monthly_volume': -1,
             'category': '',
             'success': False,
             'error_message': None
@@ -301,7 +303,7 @@ class RankTrackingAdapter:
                 # 실패한 경우도 결과에 포함
                 failed_result = {
                     'keyword': keyword,
-                    'monthly_volume': 0,
+                    'monthly_volume': -1,
                     'category': '',
                     'success': False,
                     'error_message': str(e)
@@ -317,6 +319,284 @@ class RankTrackingAdapter:
     def check_keyword_ranking(self, keyword: str, product_id: str) -> RankingCheckDTO:
         """키워드 순위 확인 (호호성 위한 alias - 향후 check_product_rank로 마이그레이션 후 제거)"""
         return self.check_product_rank(keyword, product_id)
+    
+    def analyze_keywords_batch(self, keywords: List[str]) -> Dict[str, Any]:
+        """키워드 배치 월검색량 분석 (engine_local에서 이동)"""
+        try:
+            updated_count = 0
+            failed_count = 0
+            results = []
+            
+            for keyword in keywords:
+                try:
+                    analysis = self.analyze_keyword_for_tracking(keyword)
+                    
+                    if analysis['success']:
+                        updated_count += 1
+                        results.append({
+                            'keyword': keyword,
+                            'success': True,
+                            'category': analysis['category'],
+                            'monthly_volume': analysis['monthly_volume']
+                        })
+                    else:
+                        failed_count += 1
+                        results.append({
+                            'keyword': keyword,
+                            'success': False,
+                            'error_message': analysis.get('error_message', '분석 실패')
+                        })
+                        
+                except Exception as e:
+                    failed_count += 1
+                    results.append({
+                        'keyword': keyword,
+                        'success': False,
+                        'error_message': str(e)
+                    })
+                    logger.error(f"키워드 '{keyword}' 처리 실패: {e}")
+            
+            return {
+                'success': updated_count > 0,
+                'updated_count': updated_count,
+                'failed_count': failed_count,
+                'total_count': len(keywords),
+                'results': results
+            }
+            
+        except Exception as e:
+            logger.error(f"키워드 배치 분석 실패: {e}")
+            return {
+                'success': False,
+                'updated_count': 0,
+                'failed_count': len(keywords),
+                'total_count': len(keywords),
+                'results': [],
+                'error_message': str(e)
+            }
+    
+    def check_project_rankings_analysis(self, project, keywords: List) -> Dict[str, Any]:
+        """프로젝트 전체 키워드 순위 확인 분석 (engine_local에서 이동)"""
+        try:
+            # 순위 확인 결과
+            results = []
+            success_count = 0
+            
+            for keyword_obj in keywords:
+                result = self.check_keyword_ranking(keyword_obj.keyword, project.product_id)
+                results.append(result)
+                if result['success']:
+                    success_count += 1
+            
+            return {
+                'success': success_count > 0,
+                'message': f"순위 확인 완료: {success_count}/{len(keywords)} 키워드",
+                'results': results,
+                'success_count': success_count,
+                'total_count': len(keywords)
+            }
+            
+        except Exception as e:
+            logger.error(f"프로젝트 순위 확인 분석 실패: {e}")
+            return {
+                'success': False,
+                'message': f"순위 확인 중 오류 발생: {e}",
+                'results': [],
+                'success_count': 0,
+                'total_count': len(keywords) if keywords else 0
+            }
+    
+    def process_single_keyword_ranking(self, keyword_obj, product_id: str) -> Tuple[Any, bool]:
+        """단일 키워드 순위 확인 처리 (engine_local에서 이동)"""
+        try:
+            # 순위 확인
+            result = self.check_keyword_ranking(keyword_obj.keyword, product_id)
+            logger.info(f"순위 확인 결과: {keyword_obj.keyword} -> 순위: {result['rank']}, 성공: {result['success']}")
+            return result, True
+            
+        except Exception as e:
+            logger.error(f"키워드 {keyword_obj.keyword} 순위 확인 실패: {e}")
+            failed_result = self._create_failed_ranking_result(keyword_obj.keyword, str(e))
+            return failed_result, False
+    
+    def _create_failed_ranking_result(self, keyword: str, error: str) -> RankingCheckDTO:
+        """실패한 순위 결과 생성"""
+        return RankingCheckDTO(
+            keyword=keyword,
+            success=False,
+            rank=RANK_OUT_OF_RANGE,
+            error=error
+        )
+    
+    def analyze_and_add_keyword(self, keyword: str) -> Dict[str, Any]:
+        """키워드 분석 및 추가 로직 (engine_local에서 이동)"""
+        try:
+            # 키워드 분석 수행
+            analysis = self.analyze_keyword_for_tracking(keyword)
+            
+            if analysis['success']:
+                return {
+                    'success': True,
+                    'keyword': keyword,
+                    'category': analysis['category'],
+                    'monthly_volume': analysis['monthly_volume'],
+                    'ready_for_db': True
+                }
+            else:
+                return {
+                    'success': False,
+                    'keyword': keyword,
+                    'category': '-',
+                    'monthly_volume': -1,
+                    'error_message': analysis.get('error_message', '분석 실패'),
+                    'ready_for_db': False
+                }
+                
+        except Exception as e:
+            logger.error(f"키워드 '{keyword}' 분석/추가 로직 실패: {e}")
+            return {
+                'success': False,
+                'keyword': keyword,
+                'category': '-',
+                'monthly_volume': -1,
+                'error_message': str(e),
+                'ready_for_db': False
+            }
+    
+    def refresh_product_info_analysis(self, project) -> Dict[str, Any]:
+        """프로젝트 상품 정보 새로고침 분석 (engine_local에서 이동)"""
+        try:
+            logger.info(f"프로젝트 정보 새로고침 시작: {project.current_name}")
+            
+            # 상품 정보 재조회
+            product_info_dict = smart_product_search(project.current_name, project.product_id)
+            
+            if not product_info_dict:
+                return {
+                    'success': False,
+                    'message': f'{project.current_name} 상품 정보를 찾을 수 없습니다.',
+                    'changes': []
+                }
+            
+            # 변경사항 분석은 engine에 위임
+            from .engine_local import rank_tracking_engine
+            from .models import ProductInfo
+            
+            # 변경사항 분석
+            new_info = {
+                'current_name': clean_product_name(product_info_dict.get('name', '')),
+                'price': product_info_dict.get('price', 0),
+                'category': product_info_dict.get('category', ''),
+                'store_name': product_info_dict.get('store_name', ''),
+            }
+            
+            # 변경사항 감지는 엔진에 위임 (순수 계산)
+            changes_detected = rank_tracking_engine.detect_project_changes(project, new_info)
+            
+            # ProductInfo 객체 생성
+            product_info = ProductInfo(
+                product_id=product_info_dict.get('product_id', ''),
+                name=new_info['current_name'],
+                price=new_info['price'],
+                category=new_info['category'],
+                store_name=new_info['store_name'],
+                description=product_info_dict.get('description', ''),
+                image_url=product_info_dict.get('image_url', ''),
+                url=product_info_dict.get('url', '')
+            )
+            
+            return {
+                'success': True,
+                'new_info': new_info,
+                'changes': changes_detected,
+                'product_info': product_info
+            }
+            
+        except Exception as e:
+            logger.error(f"프로젝트 정보 새로고침 분석 실패: {e}")
+            return {
+                'success': False,
+                'message': f'상품 정보 새로고침 중 오류가 발생했습니다: {str(e)}',
+                'changes': []
+            }
+    
+    def get_product_category_analysis(self, product_id: str) -> Dict[str, Any]:
+        """상품 카테고리 조회 분석 (engine_local에서 이동)"""
+        try:
+            # smart_product_search를 통해 상품 정보 조회
+            product_info = smart_product_search(f"상품ID_{product_id}", product_id)
+            if product_info and 'category' in product_info:
+                return {
+                    'success': True,
+                    'category': product_info['category'],
+                    'product_id': product_id
+                }
+            
+            return {
+                'success': False,
+                'category': '',
+                'product_id': product_id,
+                'error_message': '상품 정보 조회 실패'
+            }
+            
+        except Exception as e:
+            logger.error(f"상품 카테고리 분석 실패: {e}")
+            return {
+                'success': False,
+                'category': '',
+                'product_id': product_id,
+                'error_message': str(e)
+            }
+    
+    def process_keyword_info_analysis(self, keyword: str) -> Dict[str, Any]:
+        """키워드 정보 분석 처리 (engine_local에서 이동)"""
+        try:
+            # 카테고리와 월검색량 조회
+            category = self.get_keyword_category(keyword)
+            monthly_volume = self.get_keyword_monthly_volume(keyword)
+            
+            return {
+                'success': True,
+                'category': category if category else '-',
+                'monthly_volume': monthly_volume if monthly_volume is not None else -1,
+                'keyword': keyword
+            }
+            
+        except Exception as e:
+            logger.error(f"키워드 정보 분석 실패: {keyword}: {e}")
+            return {
+                'success': False,
+                'category': '-',
+                'monthly_volume': -1,
+                'keyword': keyword,
+                'error_message': str(e)
+            }
+
+
+def to_export_row(keyword_row: dict) -> dict:
+    """키워드 행 데이터를 엑셀 내보내기용 뷰모델로 변환"""
+    return {
+        "키워드": keyword_row.get("keyword", ""),
+        "카테고리": keyword_row.get("category", "") or "-",
+        "월검색량": format_monthly_volume(keyword_row.get("monthly_volume")),
+        "현재순위": format_rank(keyword_row.get("rank_position")),
+        "점검시각": format_datetime(keyword_row.get("search_date")),
+    }
+
+
+def to_display_row(keyword_row: dict) -> dict:
+    """키워드 행 데이터를 UI 표시용 뷰모델로 변환"""
+    return {
+        "keyword": keyword_row.get("keyword", ""),
+        "category": keyword_row.get("category", "") or "-",
+        "monthly_volume_display": format_monthly_volume(keyword_row.get("monthly_volume")),
+        "rank_display": format_rank(keyword_row.get("rank_position")),
+        "search_date_display": format_datetime(keyword_row.get("search_date")),
+        # 원본 데이터도 유지 (정렬/필터링용)
+        "monthly_volume_raw": keyword_row.get("monthly_volume"),
+        "rank_position_raw": keyword_row.get("rank_position"),
+        "search_date_raw": keyword_row.get("search_date"),
+    }
 
 
 class RankTrackingExcelExporter:
@@ -372,11 +652,10 @@ class RankTrackingExcelExporter:
             # 키워드별 순위 데이터 구성
             keyword_ranking_data = []
             for keyword_obj in keywords:
-                keyword_id = keyword_obj.id
-                keyword_data = keywords_data.get(keyword_id, {})
+                keyword_data = keywords_data.get(keyword_obj.keyword, {})
                 rankings = keyword_data.get('rankings', {})
                 
-                logger.info(f"디버깅: 키워드 '{keyword_obj.keyword}' (ID: {keyword_id}) 순위 이력 수 = {len(rankings)}")
+                logger.info(f"디버깅: 키워드 '{keyword_obj.keyword}' 순위 이력 수 = {len(rankings)}")
                 
                 # 날짜별 순위 매핑 (overview 데이터 형식에 맞춤)
                 rank_by_date = {}
@@ -400,11 +679,15 @@ class RankTrackingExcelExporter:
                 # 날짜를 MM/DD HH:MM 형식으로 변환
                 try:
                     if isinstance(date, str):
-                        dt = datetime.fromisoformat(date.replace('Z', '+00:00'))
-                        formatted_date = dt.strftime("%m/%d %H:%M")
-                        sorted_dates.append(date)  # 원본 날짜 (키 매칭용)
-                        formatted_dates.append(formatted_date)  # 표시용 날짜
-                        logger.info(f"디버깅: 날짜 변환 - {date} -> {formatted_date}")
+                        dt = _to_dt(date)
+                        if dt:
+                            formatted_date = dt.strftime("%m/%d %H:%M")
+                            sorted_dates.append(date)  # 원본 날짜 (키 매칭용)
+                            formatted_dates.append(formatted_date)  # 표시용 날짜
+                            logger.info(f"디버깅: 날짜 변환 - {date} -> {formatted_date}")
+                        else:
+                            logger.warning(f"디버깅: 날짜 파싱 실패 - {date}")
+                            continue
                 except Exception as e:
                     logger.warning(f"디버깅: 날짜 변환 실패 - {date}: {e}")
                     continue
@@ -436,14 +719,8 @@ class RankTrackingExcelExporter:
             
             # 3. 키워드별 순위 데이터
             for kw_data in keyword_ranking_data:
-                # UI와 동일한 월검색량 표시 규칙 적용
-                monthly_vol = kw_data['monthly_volume']
-                if monthly_vol == -1:
-                    volume_display = "-"  # 검색량 못가져왔을 때
-                elif monthly_vol == 0:
-                    volume_display = "0"  # 검색량이 0일 때
-                else:
-                    volume_display = f"{monthly_vol:,}"  # 정상 검색량
+                # 새로운 포맷터 사용
+                volume_display = format_monthly_volume(kw_data['monthly_volume'])
                 
                 data_row = [
                     kw_data['keyword'],
@@ -608,8 +885,8 @@ class RankTrackingExcelExporter:
         try:
             if isinstance(date_value, str):
                 # 문자열인 경우 datetime으로 변환
-                dt = datetime.fromisoformat(date_value.replace('Z', '+00:00'))
-                return dt.strftime("%Y-%m-%d")
+                dt = _to_dt(date_value)
+                return dt.strftime("%Y-%m-%d") if dt else str(date_value)
             elif hasattr(date_value, 'strftime'):
                 # datetime 객체인 경우
                 return date_value.strftime("%Y-%m-%d")
@@ -636,12 +913,12 @@ class RankTrackingExcelExporter:
                 for col_idx, cell_value in enumerate(row_data, 1):
                     # 월검색량과 순위 컬럼은 숫자로 저장하여 정렬 가능하게 함
                     if row_idx > 12 and col_idx == 3:  # 월검색량 컬럼
-                        # 월검색량을 UI와 동일하게 처리
+                        # 새로운 포맷터 기반 처리
                         try:
                             if isinstance(cell_value, str):
-                                if cell_value == "-":
-                                    # 검색량 못가져왔을 때는 "-" 문자열로 저장
-                                    cell = worksheet.cell(row=row_idx, column=col_idx, value="-")
+                                if cell_value == "미수집" or cell_value == "N/A":
+                                    # 미수집/N/A는 문자열로 저장
+                                    cell = worksheet.cell(row=row_idx, column=col_idx, value=cell_value)
                                 elif cell_value == "0":
                                     # 검색량 0일 때는 숫자 0으로 저장
                                     cell = worksheet.cell(row=row_idx, column=col_idx, value=0)

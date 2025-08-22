@@ -64,7 +64,7 @@ class TrackingKeyword:
     project_id: int
     keyword: str
     is_active: bool = True
-    monthly_volume: int = 0
+    monthly_volume: int = -1
     category: str = ""
     id: Optional[int] = None
     created_at: Optional[datetime] = None
@@ -201,7 +201,7 @@ class RankTrackingRepository:
             with self.db.get_connection() as conn:
                 cursor = conn.cursor()
                 cursor.executescript("""
-                CREATE TABLE IF NOT EXISTS tracking_projects (
+                CREATE TABLE IF NOT EXISTS projects (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     product_id TEXT NOT NULL UNIQUE,
                     current_name TEXT NOT NULL,
@@ -215,30 +215,35 @@ class RankTrackingRepository:
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     CHECK (price >= 0),
                     CHECK (length(current_name) > 0),
-                    CHECK (length(product_url) > 0)
+                    CHECK (length(product_url) > 0),
+                    CHECK (is_active IN (0,1))
                 );
                 
-                CREATE TABLE IF NOT EXISTS tracking_keywords (
+                CREATE TABLE IF NOT EXISTS keywords (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     project_id INTEGER NOT NULL,
                     keyword TEXT NOT NULL,
                     is_active BOOLEAN DEFAULT 1,
-                    monthly_volume INTEGER DEFAULT 0,
+                    monthly_volume INTEGER DEFAULT -1,
                     category TEXT DEFAULT '',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (project_id) REFERENCES tracking_projects (id) ON DELETE CASCADE,
+                    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
                     UNIQUE(project_id, keyword),
-                    CHECK (monthly_volume >= 0),
-                    CHECK (length(keyword) > 0)
+                    CHECK (monthly_volume >= -1),
+                    CHECK (length(keyword) > 0),
+                    CHECK (is_active IN (0,1))
                 );
                 
-                CREATE TABLE IF NOT EXISTS ranking_history (
+                CREATE TABLE IF NOT EXISTS ranking_results (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     keyword_id INTEGER NOT NULL,
-                    rank INTEGER,
-                    checked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (keyword_id) REFERENCES tracking_keywords (id) ON DELETE CASCADE,
-                    CHECK (rank IS NULL OR rank >= 1)
+                    rank_position INTEGER,
+                    page_number INTEGER DEFAULT 1,
+                    total_results INTEGER DEFAULT 0,
+                    competitor_data TEXT DEFAULT '{}',
+                    search_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (keyword_id) REFERENCES keywords (id) ON DELETE CASCADE,
+                    CHECK (rank_position IS NULL OR rank_position >= 1)
                 );
                 
                 CREATE TABLE IF NOT EXISTS basic_info_change_history (
@@ -249,7 +254,8 @@ class RankTrackingRepository:
                     new_value TEXT NOT NULL,
                     change_type TEXT DEFAULT 'auto',
                     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (project_id) REFERENCES tracking_projects (id) ON DELETE CASCADE
+                    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
+                    CHECK (change_type IN ('auto','manual','system'))
                 );
                 
                 CREATE TABLE IF NOT EXISTS keyword_management_history (
@@ -258,7 +264,8 @@ class RankTrackingRepository:
                     keyword TEXT NOT NULL,
                     action TEXT NOT NULL,
                     action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (project_id) REFERENCES tracking_projects (id) ON DELETE CASCADE
+                    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
+                    CHECK (action IN ('added','deleted','updated','activated','deactivated'))
                 );
                 
                 CREATE TABLE IF NOT EXISTS ranking_check_logs (
@@ -272,7 +279,7 @@ class RankTrackingRepository:
                     started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     completed_at TIMESTAMP,
                     duration_seconds INTEGER DEFAULT 0,
-                    FOREIGN KEY (project_id) REFERENCES tracking_projects (id) ON DELETE CASCADE,
+                    FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE,
                     CHECK (status IN ('started', 'completed', 'failed', 'cancelled')),
                     CHECK (total_keywords >= 0),
                     CHECK (successful_keywords >= 0),
@@ -280,14 +287,14 @@ class RankTrackingRepository:
                 );
                 
                 -- 성능 최적화 인덱스들
-                CREATE INDEX IF NOT EXISTS idx_ranking_history_keyword_time 
-                    ON ranking_history(keyword_id, checked_at DESC);
+                CREATE INDEX IF NOT EXISTS idx_ranking_results_keyword_time 
+                    ON ranking_results(keyword_id, search_date DESC);
                 
-                CREATE INDEX IF NOT EXISTS idx_tracking_keywords_project_active 
-                    ON tracking_keywords(project_id, is_active);
+                CREATE INDEX IF NOT EXISTS idx_keywords_project_active 
+                    ON keywords(project_id, is_active);
                 
-                CREATE INDEX IF NOT EXISTS idx_tracking_projects_active 
-                    ON tracking_projects(is_active);
+                CREATE INDEX IF NOT EXISTS idx_projects_active 
+                    ON projects(is_active);
                 
                 CREATE INDEX IF NOT EXISTS idx_basic_info_change_project_time 
                     ON basic_info_change_history(project_id, changed_at DESC);
@@ -327,15 +334,18 @@ class RankTrackingRepository:
     def insert_keyword(self, keyword: TrackingKeyword) -> Optional[int]:
         """키워드 삽입"""
         try:
-            result = self.db.execute_query("""
-                INSERT INTO tracking_keywords 
-                (project_id, keyword, is_active, monthly_volume, category)
-                VALUES (?, ?, ?, ?, ?)
-            """, (
-                keyword.project_id, keyword.keyword, int(keyword.is_active),
-                keyword.monthly_volume, keyword.category
-            ))
-            return result.lastrowid if result else None
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO keywords 
+                    (project_id, keyword, is_active, monthly_volume, category)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (
+                    keyword.project_id, keyword.keyword, int(keyword.is_active),
+                    keyword.monthly_volume, keyword.category
+                ))
+                conn.commit()
+                return cursor.lastrowid
         except Exception as e:
             logger.error(f"키워드 삽입 실패: {e}")
             return None
@@ -343,11 +353,14 @@ class RankTrackingRepository:
     def insert_ranking_history(self, history: RankingHistory) -> Optional[int]:
         """순위 이력 삽입"""
         try:
-            result = self.db.execute_query("""
-                INSERT INTO ranking_history (keyword_id, rank, checked_at)
-                VALUES (?, ?, ?)
-            """, (history.keyword_id, history.rank, history.checked_at))
-            return result.lastrowid if result else None
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO ranking_results (keyword_id, rank_position, search_date)
+                    VALUES (?, ?, ?)
+                """, (history.keyword_id, history.rank, history.checked_at))
+                conn.commit()
+                return cursor.lastrowid
         except Exception as e:
             logger.error(f"순위 이력 삽입 실패: {e}")
             return None
@@ -355,17 +368,20 @@ class RankTrackingRepository:
     def insert_ranking_check_log(self, log: RankingCheckLog) -> Optional[int]:
         """랭킹 점검 로그 삽입"""
         try:
-            result = self.db.execute_query("""
-                INSERT INTO ranking_check_logs 
-                (project_id, status, total_keywords, successful_keywords, failed_keywords, 
-                 error_message, started_at, completed_at, duration_seconds)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                log.project_id, log.status, log.total_keywords, 
-                log.successful_keywords, log.failed_keywords, log.error_message,
-                log.started_at, log.completed_at, log.duration_seconds
-            ))
-            return result.lastrowid if result else None
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO ranking_check_logs 
+                    (project_id, status, total_keywords, successful_keywords, failed_keywords, 
+                     error_message, started_at, completed_at, duration_seconds)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    log.project_id, log.status, log.total_keywords, 
+                    log.successful_keywords, log.failed_keywords, log.error_message,
+                    log.started_at, log.completed_at, log.duration_seconds
+                ))
+                conn.commit()
+                return cursor.lastrowid
         except Exception as e:
             logger.error(f"랭킹 점검 로그 삽입 실패: {e}")
             return None
@@ -373,18 +389,16 @@ class RankTrackingRepository:
     def get_latest_rank(self, keyword_id: int) -> Optional[int]:
         """키워드의 최신 순위 조회"""
         try:
-            result = self.db.execute_query("""
-                SELECT rank FROM ranking_history 
-                WHERE keyword_id = ? 
-                ORDER BY checked_at DESC 
-                LIMIT 1
-            """, (keyword_id,))
-            
-            if result:
-                row = result.fetchone()
-                if row:
-                    return row[0]
-            return None
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT rank_position FROM ranking_results
+                    WHERE keyword_id = ?
+                    ORDER BY search_date DESC
+                    LIMIT 1
+                """, (keyword_id,))
+                row = cursor.fetchone()
+                return row[0] if row else None
         except Exception as e:
             logger.error(f"최신 순위 조회 실패: {e}")
             return None
@@ -392,24 +406,17 @@ class RankTrackingRepository:
     def get_keyword_trend(self, keyword_id: int, limit: int = 30) -> List[Dict[str, Any]]:
         """키워드 순위 트렌드 조회 (최근 N개)"""
         try:
-            result = self.db.execute_query("""
-                SELECT rank, checked_at 
-                FROM ranking_history 
-                WHERE keyword_id = ? 
-                ORDER BY checked_at DESC 
-                LIMIT ?
-            """, (keyword_id, limit))
-            
-            if result:
-                rows = result.fetchall()
-                return [
-                    {
-                        'rank': row[0],
-                        'checked_at': row[1]
-                    }
-                    for row in rows
-                ]
-            return []
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT rank_position, search_date
+                    FROM ranking_results
+                    WHERE keyword_id = ?
+                    ORDER BY search_date DESC
+                    LIMIT ?
+                """, (keyword_id, limit))
+                rows = cursor.fetchall()
+                return [{'rank': row[0], 'checked_at': row[1]} for row in rows]
         except Exception as e:
             logger.error(f"키워드 트렌드 조회 실패: {e}")
             return []
@@ -578,11 +585,14 @@ class RankTrackingRepository:
             
             params.append(keyword_id)
             
-            self.db.execute_query(f"""
-                UPDATE tracking_keywords 
-                SET {', '.join(update_fields)}
-                WHERE id = ?
-            """, tuple(params))
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(f"""
+                    UPDATE keywords 
+                    SET {', '.join(update_fields)}
+                    WHERE id = ?
+                """, tuple(params))
+                conn.commit()
             
             return True
         except Exception as e:
@@ -592,9 +602,12 @@ class RankTrackingRepository:
     def delete_keyword(self, keyword_id: int) -> bool:
         """키워드 삭제 (CASCADE로 인해 관련 순위 이력도 자동 삭제)"""
         try:
-            self.db.execute_query("""
-                DELETE FROM tracking_keywords WHERE id = ?
-            """, (keyword_id,))
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    DELETE FROM keywords WHERE id = ?
+                """, (keyword_id,))
+                conn.commit()
             return True
         except Exception as e:
             logger.error(f"키워드 삭제 실패: {e}")
@@ -603,9 +616,12 @@ class RankTrackingRepository:
     def delete_project(self, project_id: int) -> bool:
         """프로젝트 삭제 (CASCADE로 인해 모든 관련 데이터 자동 삭제)"""
         try:
-            self.db.execute_query("""
-                DELETE FROM tracking_projects WHERE id = ?
-            """, (project_id,))
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    DELETE FROM projects WHERE id = ?
+                """, (project_id,))
+                conn.commit()
             return True
         except Exception as e:
             logger.error(f"프로젝트 삭제 실패: {e}")
@@ -614,11 +630,14 @@ class RankTrackingRepository:
     def start_rank_check_log(self, project_id: int, total_keywords: int) -> Optional[int]:
         """랭킹 점검 시작 로그"""
         try:
-            result = self.db.execute_query("""
-                INSERT INTO ranking_check_logs (project_id, status, total_keywords, started_at)
-                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
-            """, (project_id, RankCheckStatus.STARTED.value, total_keywords))
-            return result.lastrowid if result else None
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO ranking_check_logs (project_id, status, total_keywords, started_at)
+                    VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                """, (project_id, RankCheckStatus.STARTED.value, total_keywords))
+                conn.commit()
+                return cursor.lastrowid
         except Exception as e:
             logger.error(f"랭킹 점검 시작 로그 실패: {e}")
             return None
@@ -629,16 +648,388 @@ class RankTrackingRepository:
         """랭킹 점검 완료 로그"""
         try:
             status = RankCheckStatus.COMPLETED.value if success else RankCheckStatus.FAILED.value
-            self.db.execute_query("""
-                UPDATE ranking_check_logs
-                SET status = ?, successful_keywords = ?, failed_keywords = ?,
-                    error_message = ?, completed_at = CURRENT_TIMESTAMP,
-                    duration_seconds = CAST((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', started_at)) AS INTEGER)
-                WHERE id = ?
-            """, (status, successful_keywords, failed_keywords, error_message, log_id))
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    UPDATE ranking_check_logs
+                    SET status = ?, successful_keywords = ?, failed_keywords = ?,
+                        error_message = ?, completed_at = CURRENT_TIMESTAMP,
+                        duration_seconds = CAST((strftime('%s', CURRENT_TIMESTAMP) - strftime('%s', started_at)) AS INTEGER)
+                    WHERE id = ?
+                """, (status, successful_keywords, failed_keywords, error_message, log_id))
+                conn.commit()
             return True
         except Exception as e:
             logger.error(f"랭킹 점검 완료 로그 실패: {e}")
+            return False
+    
+    def add_keyword(self, project_id: int, keyword: str) -> int:
+        """키워드 추가"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO keywords (project_id, keyword, is_active)
+                    VALUES (?, ?, 1)
+                """, (project_id, keyword))
+                conn.commit()
+                return cursor.lastrowid
+        except Exception as e:
+            logger.error(f"키워드 추가 실패: {e}")
+            return 0
+    
+    def update_keyword_volume_and_category(self, project_id: int, keyword: str, monthly_volume: int, category: str) -> bool:
+        """키워드 볼륨 및 카테고리 업데이트"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    UPDATE keywords 
+                    SET monthly_volume = ?, category = ?
+                    WHERE project_id = ? AND keyword = ?
+                """, (monthly_volume, category, project_id, keyword))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"키워드 볼륨/카테고리 업데이트 실패: {e}")
+            return False
+    
+    def delete_keyword_by_text(self, project_id: int, keyword: str) -> bool:
+        """키워드 텍스트로 삭제"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    DELETE FROM keywords 
+                    WHERE project_id = ? AND keyword = ?
+                """, (project_id, keyword))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"키워드 삭제 실패: {e}")
+            return False
+    
+    def delete_keyword_by_id(self, keyword_id: int) -> bool:
+        """키워드 ID로 삭제"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    DELETE FROM keywords WHERE id = ?
+                """, (keyword_id,))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"키워드 삭제 실패: {e}")
+            return False
+    
+    def get_project_ranking_overview(self, project_id: int) -> dict:
+        """프로젝트 순위 현황 조회"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                # 최근 날짜들 조회
+                cursor.execute("""
+                    SELECT DISTINCT DATE(r.search_date) as date
+                    FROM ranking_results r
+                    JOIN keywords k ON r.keyword_id = k.id
+                    WHERE k.project_id = ?
+                    ORDER BY date DESC
+                    LIMIT 10
+                """, (project_id,))
+                
+                dates = [row[0] for row in cursor.fetchall()]
+                
+                # 키워드별 순위 데이터 조회
+                cursor.execute("""
+                    SELECT k.keyword, r.rank_position, DATE(r.search_date) as date
+                    FROM ranking_results r
+                    JOIN keywords k ON r.keyword_id = k.id
+                    WHERE k.project_id = ?
+                    ORDER BY k.keyword, r.search_date DESC
+                """, (project_id,))
+                
+                # 키워드별로 그룹화
+                keywords = {}
+                for row in cursor.fetchall():
+                    keyword, rank, date = row
+                    if keyword not in keywords:
+                        keywords[keyword] = {}
+                    keywords[keyword][date] = rank
+                
+                return {
+                    'dates': dates,
+                    'keywords': keywords
+                }
+        except Exception as e:
+            logger.error(f"순위 현황 조회 실패: {e}")
+            return {'dates': [], 'keywords': {}}
+    
+    def add_keyword_management_history(self, project_id: int, keyword: str, action: str) -> bool:
+        """키워드 관리 이력 추가"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO keyword_management_history (project_id, keyword, action)
+                    VALUES (?, ?, ?)
+                """, (project_id, keyword, action))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"키워드 관리 이력 추가 실패: {e}")
+            return False
+    
+    def get_keyword_management_history(self, project_id: int) -> List[Dict[str, Any]]:
+        """키워드 관리 이력 조회"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT keyword, action, action_date
+                    FROM keyword_management_history
+                    WHERE project_id = ?
+                    ORDER BY action_date DESC
+                """, (project_id,))
+                
+                return [
+                    {
+                        'keyword': row[0],
+                        'action': row[1],
+                        'action_date': row[2]
+                    }
+                    for row in cursor.fetchall()
+                ]
+        except Exception as e:
+            logger.error(f"키워드 관리 이력 조회 실패: {e}")
+            return []
+    
+    def get_basic_info_change_history(self, project_id: int) -> List[Dict[str, Any]]:
+        """기본정보 변경 이력 조회"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT field_name, old_value, new_value, change_type, changed_at
+                    FROM basic_info_change_history
+                    WHERE project_id = ?
+                    ORDER BY changed_at DESC
+                """, (project_id,))
+                
+                return [
+                    {
+                        'field_name': row[0],
+                        'old_value': row[1],
+                        'new_value': row[2],
+                        'change_type': row[3],
+                        'changed_at': row[4]
+                    }
+                    for row in cursor.fetchall()
+                ]
+        except Exception as e:
+            logger.error(f"기본정보 변경 이력 조회 실패: {e}")
+            return []
+    
+    def get_ranking_history_for_project(self, project_id: int) -> List[Dict[str, Any]]:
+        """프로젝트 순위 이력 조회"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT k.keyword, r.rank_position, r.search_date
+                    FROM ranking_results r
+                    JOIN keywords k ON r.keyword_id = k.id
+                    WHERE k.project_id = ?
+                    ORDER BY r.search_date DESC
+                """, (project_id,))
+                
+                return [
+                    {
+                        'keyword': row[0],
+                        'rank': row[1],
+                        'checked_at': row[2]
+                    }
+                    for row in cursor.fetchall()
+                ]
+        except Exception as e:
+            logger.error(f"프로젝트 순위 이력 조회 실패: {e}")
+            return []
+    
+    def get_ranking_history(self, keyword_id: int, limit: int = 50) -> List[Dict[str, Any]]:
+        """키워드 순위 이력 조회"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT rank_position, search_date, total_results
+                    FROM ranking_results
+                    WHERE keyword_id = ?
+                    ORDER BY search_date DESC
+                    LIMIT ?
+                """, (keyword_id, limit))
+                
+                return [
+                    {
+                        'rank': row[0],
+                        'checked_at': row[1],
+                        'total_results': row[2]
+                    }
+                    for row in cursor.fetchall()
+                ]
+        except Exception as e:
+            logger.error(f"키워드 순위 이력 조회 실패: {e}")
+            return []
+    
+    def get_keyword_ranking_history(self, project_id: int, keyword: str, limit: int = 50) -> List[Dict[str, Any]]:
+        """키워드 텍스트로 순위 이력 조회"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT r.rank_position, r.search_date, r.total_results
+                    FROM ranking_results r
+                    JOIN keywords k ON r.keyword_id = k.id
+                    WHERE k.project_id = ? AND k.keyword = ?
+                    ORDER BY r.search_date DESC
+                    LIMIT ?
+                """, (project_id, keyword, limit))
+                
+                return [
+                    {
+                        'keyword': keyword,
+                        'rank': row[0],
+                        'rank_position': row[0],
+                        'created_at': row[1],
+                        'search_date': row[1],
+                        'total_results': row[2]
+                    }
+                    for row in cursor.fetchall()
+                ]
+        except Exception as e:
+            logger.error(f"키워드 순위 이력 조회 실패: {e}")
+            return []
+    
+    def save_ranking_result(self, keyword_id: int, rank_position: int, page_number: int = 1, 
+                           total_results: int = 0, competitor_data: dict = None, 
+                           search_date: str = None) -> int:
+        """순위 결과 저장"""
+        try:
+            import json
+            competitor_json = json.dumps(competitor_data or {})
+            
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                if search_date:
+                    cursor.execute("""
+                        INSERT INTO ranking_results 
+                        (keyword_id, rank_position, page_number, total_results, competitor_data, search_date)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    """, (keyword_id, rank_position, page_number, total_results, competitor_json, search_date))
+                else:
+                    cursor.execute("""
+                        INSERT INTO ranking_results 
+                        (keyword_id, rank_position, page_number, total_results, competitor_data)
+                        VALUES (?, ?, ?, ?, ?)
+                    """, (keyword_id, rank_position, page_number, total_results, competitor_json))
+                conn.commit()
+                return cursor.lastrowid
+        except Exception as e:
+            logger.error(f"순위 결과 저장 실패: {e}")
+            return 0
+    
+    def get_keywords(self, project_id: int) -> List[Dict[str, Any]]:
+        """프로젝트 키워드 목록 조회 (service.py 호환)"""
+        return self.get_project_keywords(project_id)
+    
+    def update_keyword_by_text(self, project_id: int, keyword: str, **kwargs) -> bool:
+        """키워드 텍스트로 업데이트"""
+        try:
+            update_fields = []
+            params = []
+            
+            for field, value in kwargs.items():
+                if field in ['category', 'monthly_volume']:
+                    update_fields.append(f"{field} = ?")
+                    params.append(value)
+            
+            if not update_fields:
+                return True
+            
+            params.extend([project_id, keyword])
+            
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(f"""
+                    UPDATE keywords 
+                    SET {', '.join(update_fields)}
+                    WHERE project_id = ? AND keyword = ?
+                """, tuple(params))
+                conn.commit()
+            
+            return True
+        except Exception as e:
+            logger.error(f"키워드 업데이트 실패: {e}")
+            return False
+    
+    def delete_ranking_results_by_date(self, project_id: int, date_str: str) -> bool:
+        """특정 날짜의 순위 결과 삭제"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    DELETE FROM ranking_results 
+                    WHERE keyword_id IN (
+                        SELECT id FROM keywords WHERE project_id = ?
+                    ) AND DATE(search_date) = ?
+                """, (project_id, date_str))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"날짜별 순위 결과 삭제 실패: {e}")
+            return False
+    
+    def add_basic_info_change_record(self, project_id: int, field_name: str, old_value: str, 
+                                   new_value: str, is_auto: bool = True) -> bool:
+        """기본정보 변경 기록 추가"""
+        try:
+            change_type = 'auto' if is_auto else 'manual'
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO basic_info_change_history 
+                    (project_id, field_name, old_value, new_value, change_type)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (project_id, field_name, old_value, new_value, change_type))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"기본정보 변경 기록 추가 실패: {e}")
+            return False
+    
+    def update_project_info(self, project_id: int, new_info: Dict[str, Any]) -> bool:
+        """프로젝트 정보 업데이트"""
+        try:
+            with self.db.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    UPDATE projects
+                       SET current_name = ?,
+                           price        = ?,
+                           category     = ?,
+                           store_name   = ?
+                     WHERE id = ?
+                """, (
+                    new_info.get('current_name', ''),
+                    int(new_info.get('price', 0) or 0),
+                    new_info.get('category', ''),
+                    new_info.get('store_name', ''),
+                    project_id
+                ))
+                conn.commit()
+            return True
+        except Exception as e:
+            logger.error(f"프로젝트 정보 업데이트 실패: {e}")
             return False
 
 

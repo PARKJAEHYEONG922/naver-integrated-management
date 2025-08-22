@@ -189,10 +189,15 @@ def set_numeric_sort_data(item, column: int, value):
 
 def set_rank_sort_data(item, column: int, rank_text: str):
     """순위 정렬 데이터 설정 편의 함수 (순위 전용)"""
+    import re
+    
     try:
         if rank_text == "-" or not rank_text.strip():
             # "-" 또는 빈 값은 가장 뒤로 정렬
             item.setData(Qt.UserRole, 999)
+        elif "200위밖" in rank_text or "200+" in rank_text:
+            # "200위밖" 형태는 201로 처리
+            item.setData(Qt.UserRole, 201)
         elif rank_text.startswith("100+"):
             # "100+" 형태는 201로 처리
             item.setData(Qt.UserRole, 201)
@@ -200,9 +205,14 @@ def set_rank_sort_data(item, column: int, rank_text: str):
             # "순위권 밖"은 202로 처리
             item.setData(Qt.UserRole, 202)
         else:
-            # 일반 숫자 순위
-            rank_num = int(rank_text)
-            item.setData(Qt.UserRole, rank_num)
+            # 숫자 추출 (예: "1위" -> 1, "10위" -> 10)
+            numbers = re.findall(r'\d+', rank_text)
+            if numbers:
+                rank_num = int(numbers[0])
+                item.setData(Qt.UserRole, rank_num)
+            else:
+                # 숫자를 찾을 수 없으면 가장 뒤로
+                item.setData(Qt.UserRole, 999)
     except (ValueError, TypeError):
         # 파싱 실패 시 가장 뒤로
         item.setData(Qt.UserRole, 999)

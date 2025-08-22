@@ -13,7 +13,6 @@ from src.foundation.exceptions import (
     RankCheckError, APIAuthenticationError
 )
 from src.foundation.logging import get_logger
-from src.foundation.db import get_db
 
 logger = get_logger("features.rank_tracking.service")
 
@@ -42,7 +41,7 @@ def _dict_to_tracking_keyword(k_dict: Dict[str, Any]) -> TrackingKeyword:
         project_id=k_dict['project_id'],
         keyword=k_dict['keyword'],
         is_active=bool(k_dict['is_active']),
-        monthly_volume=k_dict.get('monthly_volume', 0),
+        monthly_volume=k_dict.get('monthly_volume', -1),
         category=k_dict.get('category', ''),
         created_at=k_dict.get('created_at')
     )
@@ -66,68 +65,9 @@ class RankTrackingService(QObject):
         self.is_running = False
         self.max_workers = 3  # 병렬 처리 스레드 수
     
-    def create_project_from_url_and_name(self, product_url: str, product_name: str) -> TrackingProject:
-        """URL과 상품명으로부터 새 추적 프로젝트 생성"""
-        try:
-            # 1. URL에서 상품 ID 추출
-            adapter = RankTrackingAdapter()
-            product_id = adapter.extract_product_id_from_url(product_url)
-            logger.info(f"상품 ID 추출 완료: {product_id}")
-            
-            # 2. 스마트 상품 검색으로 상품 정보 조회
-            logger.info("스마트 검색으로 상품 정보 조회 중...")
-            api_product_info = smart_product_search(product_name, product_id)
-                
-            # 3. 프로젝트 생성
-            if api_product_info:
-                # API에서 가져온 실제 상품명 사용
-                final_name = api_product_info.get('name', product_name)
-                store_name = api_product_info.get('store_name', '')
-                price = api_product_info.get('price', 0)
-                category = api_product_info.get('category', '')
-                image_url = api_product_info.get('image_url', '')
-                
-                logger.info("API 상품 정보 조회 성공:")
-                logger.info(f"  실제 상품명: {final_name}")
-                logger.info(f"  카테고리: {category}")
-                logger.info(f"  스토어명: {store_name}")
-            else:
-                # API 실패 시 사용자 입력 정보 사용
-                final_name = product_name
-                store_name = ''
-                price = 0
-                category = ''
-                image_url = ''
-                logger.warning("API 상품 정보 조회 실패, 기본 정보로 생성")
-            
-            # 프로젝트 객체 생성
-            project = TrackingProject(
-                product_id=product_id,
-                current_name=final_name,
-                product_url=product_url,
-                category=category,
-                price=price,
-                store_name=store_name,
-                image_url=image_url
-            )
-            
-            # repository를 통한 DB 저장
-            project_id = rank_tracking_repository.insert_project(project)
-            project.id = project_id
-            
-            logger.info(f"프로젝트 생성 완료: {final_name} (ID: {project_id})")
-            
-            # 시그널 발출
-            self.project_created.emit(project)
-            
-            return project
-            
-        except Exception as e:
-            logger.error(f"프로젝트 생성 실패: {e}")
-            raise RankTrackingError(f"프로젝트 생성 중 오류 발생: {e}")
     
     def create_project(self, project_url: str, product_name: str) -> TrackingProject:
-        """새 프로젝트 생성 (원본 호환)"""
+        """URL과 상품명으로부터 새 추적 프로젝트 생성"""
         try:
             # 1. URL에서 상품 ID 추출
             adapter = RankTrackingAdapter()
@@ -242,15 +182,13 @@ class RankTrackingService(QObject):
     def add_keyword(self, project_id: int, keyword: str) -> TrackingKeyword:
         """키워드 추가 (engine_local에서 분석 후 DB에 저장)"""
         try:
-            db = get_db()
-            
             logger.info(f"키워드 추가 시작: '{keyword}' (프로젝트 {project_id})")
             
             # engine_local에서 키워드 분석 수행
             analysis_result = rank_tracking_engine.analyze_and_add_keyword(keyword)
             
             # DB에 키워드 추가
-            keyword_id = db.add_keyword(project_id, keyword)
+            keyword_id = rank_tracking_repository.add_keyword(project_id, keyword)
             
             if keyword_id == 0:
                 # 이미 활성 상태인 키워드
@@ -270,7 +208,7 @@ class RankTrackingService(QObject):
             
             # 키워드 관리 이력 기록
             if keyword_id > 0:
-                db.add_keyword_management_history(project_id, keyword, 'add')
+                rank_tracking_repository.add_keyword_management_history(project_id, keyword, 'add')
             
             # TrackingKeyword 객체 생성
             tracking_keyword = TrackingKeyword(
@@ -279,7 +217,7 @@ class RankTrackingService(QObject):
                 keyword=keyword,
                 is_active=True,
                 category=analysis_result.get('category', '-'),
-                monthly_volume=analysis_result.get('monthly_volume', 0)
+                monthly_volume=analysis_result.get('monthly_volume', -1)
             )
             
             return tracking_keyword
@@ -300,8 +238,7 @@ class RankTrackingService(QObject):
     def update_keyword_info(self, project_id: int, keyword: str, category: str, monthly_volume: int) -> bool:
         """키워드 정보 업데이트 (백그라운드 워커에서 사용)"""
         try:
-            db = get_db()
-            result = db.update_keyword_volume_and_category(project_id, keyword, monthly_volume, category)
+            result = rank_tracking_repository.update_keyword_volume_and_category(project_id, keyword, monthly_volume, category)
             
             if result:
                 logger.info(f"키워드 정보 업데이트: {keyword} -> 볼륨: {monthly_volume}, 카테고리: {category}")
@@ -342,12 +279,11 @@ class RankTrackingService(QObject):
     def delete_keyword(self, project_id: int, keyword_text: str) -> bool:
         """키워드 삭제"""
         try:
-            db = get_db()
-            success = db.delete_keyword_by_text(project_id, keyword_text)
+            success = rank_tracking_repository.delete_keyword_by_text(project_id, keyword_text)
             
             # 삭제 성공 시 이력 기록
             if success:
-                db.add_keyword_management_history(project_id, keyword_text, 'delete')
+                rank_tracking_repository.add_keyword_management_history(project_id, keyword_text, 'delete')
             
             return success
         except Exception as e:
@@ -357,8 +293,7 @@ class RankTrackingService(QObject):
     def get_ranking_overview(self, project_id: int) -> dict:
         """순위 현황 조회"""
         try:
-            db = get_db()
-            return db.get_project_ranking_overview(project_id)
+            return rank_tracking_repository.get_project_ranking_overview(project_id)
         except Exception as e:
             logger.error(f"순위 현황 조회 실패 (프로젝트 ID: {project_id}): {e}")
             return {'dates': [], 'keywords': {}}
@@ -366,8 +301,7 @@ class RankTrackingService(QObject):
     def get_keyword_management_history(self, project_id: int) -> List[Dict[str, Any]]:
         """키워드 관리 이력 조회"""
         try:
-            db = get_db()
-            return db.get_keyword_management_history(project_id)
+            return rank_tracking_repository.get_keyword_management_history(project_id)
         except Exception as e:
             logger.error(f"키워드 관리 이력 조회 실패 (프로젝트 ID: {project_id}): {e}")
             return []
@@ -375,8 +309,7 @@ class RankTrackingService(QObject):
     def get_basic_info_change_history(self, project_id: int) -> List[Dict[str, Any]]:
         """기본정보 변경 이력 조회"""
         try:
-            db = get_db()
-            return db.get_basic_info_change_history(project_id)
+            return rank_tracking_repository.get_basic_info_change_history(project_id)
         except Exception as e:
             logger.error(f"기본정보 변경 이력 조회 실패 (프로젝트 ID: {project_id}): {e}")
             return []
@@ -384,8 +317,7 @@ class RankTrackingService(QObject):
     def get_ranking_history_for_project(self, project_id: int) -> List[Dict[str, Any]]:
         """프로젝트의 순위 이력 조회"""
         try:
-            db = get_db()
-            return db.get_ranking_history_for_project(project_id)
+            return rank_tracking_repository.get_ranking_history_for_project(project_id)
         except Exception as e:
             logger.error(f"프로젝트 순위 이력 조회 실패 (프로젝트 ID: {project_id}): {e}")
             return []
@@ -393,11 +325,9 @@ class RankTrackingService(QObject):
     def delete_project(self, project_id: int) -> bool:
         """프로젝트 삭제 (키워드, 순위 이력 모두 포함)"""
         try:
-            db = get_db()
-            
-            # Foundation DB의 delete_project 메서드를 호출
+            # Repository의 delete_project 메서드를 호출
             # 이 메서드는 프로젝트와 관련된 모든 데이터(키워드, 순위 이력)를 함께 삭제해야 함
-            success = db.delete_project(project_id)
+            success = rank_tracking_repository.delete_project(project_id)
             
             if success:
                 logger.info(f"프로젝트 삭제 완료 (ID: {project_id})")
@@ -436,10 +366,8 @@ class RankTrackingService(QObject):
     def add_keywords_batch(self, project_id: int, keywords: List[str]) -> dict:
         """UI용 키워드 배치 추가 (engine_local 사용)"""
         try:
-            db = get_db()
-            
             # 기존 키워드 목록 조회
-            existing_keywords = db.get_project_keywords(project_id)
+            existing_keywords = rank_tracking_repository.get_project_keywords(project_id)
             existing_keyword_texts = {kw['keyword'].lower().strip() for kw in existing_keywords}
             
             # engine_local에서 배치 결과 계산
@@ -453,7 +381,7 @@ class RankTrackingService(QObject):
             # 새 키워드 추가
             for keyword in new_keywords:
                 try:
-                    keyword_id = db.add_keyword(project_id, keyword)
+                    keyword_id = rank_tracking_repository.add_keyword(project_id, keyword)
                     if keyword_id and keyword_id > 0:
                         successfully_added_keywords.append(keyword)
                         logger.info(f"키워드 추가 성공: {keyword} (ID: {keyword_id})")
@@ -488,8 +416,7 @@ class RankTrackingService(QObject):
     def update_keyword_category_only(self, project_id: int, keyword: str, category: str) -> bool:
         """카테고리만 업데이트 (병렬 처리용)"""
         try:
-            db = get_db()
-            return db.update_keyword_by_text(project_id, keyword, category=category)
+            return rank_tracking_repository.update_keyword_by_text(project_id, keyword, category=category)
         except Exception as e:
             logger.error(f"카테고리 업데이트 실패: {keyword}: {e}")
             return False
@@ -497,8 +424,7 @@ class RankTrackingService(QObject):
     def update_keyword_volume_only(self, project_id: int, keyword: str, monthly_volume: int) -> bool:
         """월검색량만 업데이트 (병렬 처리용)"""
         try:
-            db = get_db()
-            return db.update_keyword_by_text(project_id, keyword, monthly_volume=monthly_volume)
+            return rank_tracking_repository.update_keyword_by_text(project_id, keyword, monthly_volume=monthly_volume)
         except Exception as e:
             logger.error(f"월검색량 업데이트 실패: {keyword}: {e}")
             return False
@@ -514,7 +440,7 @@ class RankTrackingService(QObject):
                 'success': False,
                 'keyword': keyword,
                 'category': '-',
-                'monthly_volume': 0,
+                'monthly_volume': -1,
                 'error': str(e)
             }
     
@@ -525,7 +451,6 @@ class RankTrackingService(QObject):
             analysis_result = rank_tracking_engine.batch_update_keywords_volume(keywords)
             
             # DB 업데이트 수행
-            db = get_db()
             updated_count = 0
             failed_count = 0
             
@@ -586,7 +511,7 @@ class RankTrackingService(QObject):
             # 검색량 조회
             result = keyword_client.get_search_volume([keyword])
             if result and keyword in result:
-                return True, result[keyword].get('monthly_volume', 0)
+                return True, result[keyword].get('monthly_volume', -1)
             
             return False, 0
             
@@ -614,16 +539,15 @@ class RankTrackingService(QObject):
             volume_results = keyword_client.get_search_volume(keyword_texts)
             
             updated_count = 0
-            db = get_db()
             
             for keyword in keywords:
                 if keyword.keyword in volume_results:
                     volume_data = volume_results[keyword.keyword]
-                    monthly_volume = volume_data.get('monthly_volume', 0)
+                    monthly_volume = volume_data.get('monthly_volume', -1)
                     category = volume_data.get('category', '')
                     
                     # DB 업데이트
-                    success = db.update_keyword_by_text(
+                    success = rank_tracking_repository.update_keyword_by_text(
                         project_id, 
                         keyword.keyword, 
                         category=category, 
@@ -649,8 +573,7 @@ class RankTrackingService(QObject):
     def get_ranking_history(self, keyword_id: int, limit: int = 50) -> List[Dict[str, Any]]:
         """키워드의 순위 변화 이력"""
         try:
-            db = get_db()
-            return db.get_ranking_history(keyword_id, limit)
+            return rank_tracking_repository.get_ranking_history(keyword_id, limit)
         except Exception as e:
             logger.error(f"순위 이력 조회 실패 (키워드 ID: {keyword_id}): {e}")
             return []
@@ -733,8 +656,7 @@ class RankTrackingService(QObject):
     def delete_keyword_by_id(self, keyword_id: int) -> bool:
         """키워드 ID로 삭제"""
         try:
-            db = get_db()
-            return db.delete_keyword_by_id(keyword_id)
+            return rank_tracking_repository.delete_keyword_by_id(keyword_id)
         except Exception as e:
             logger.error(f"키워드 ID {keyword_id} 삭제 실패: {e}")
             return False
@@ -906,8 +828,6 @@ class RankTrackingService(QObject):
     def get_keyword_ranking_history(self, project_id: int, keyword: str, limit: int = 50) -> List[Dict[str, Any]]:
         """키워드 텍스트로 순위 이력 조회"""
         try:
-            db = get_db()
-            
             # 먼저 키워드 존재 여부 확인
             keywords = self.get_project_keywords(project_id)
             keyword_obj = None
@@ -920,33 +840,8 @@ class RankTrackingService(QObject):
                 logger.warning(f"키워드 '{keyword}'를 프로젝트 {project_id}에서 찾을 수 없음")
                 return []
             
-            # 순위 이력 조회 (DB 직접 쿼리)
-            with db.get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                    SELECT r.rank_position, r.search_date, r.total_results
-                    FROM ranking_results r
-                    JOIN keywords k ON r.keyword_id = k.id
-                    WHERE k.project_id = ? AND k.keyword = ?
-                    ORDER BY r.search_date DESC
-                    LIMIT ?
-                """, (project_id, keyword, limit))
-                
-                rows = cursor.fetchall()
-                
-                # 결과를 리스트로 변환
-                rankings = []
-                for row in rows:
-                    rankings.append({
-                        'keyword': keyword,
-                        'rank': row[0],  # rank_position
-                        'rank_position': row[0],
-                        'created_at': row[1],  # search_date
-                        'search_date': row[1],
-                        'total_results': row[2]
-                    })
-                
-                return rankings
+            # 순위 이력 조회 (repository 사용)
+            return rank_tracking_repository.get_keyword_ranking_history(project_id, keyword, limit)
             
         except Exception as e:
             logger.error(f"키워드 순위 이력 조회 실패 (프로젝트: {project_id}, 키워드: {keyword}): {e}")
@@ -955,8 +850,7 @@ class RankTrackingService(QObject):
     def save_ranking_result(self, ranking_result) -> int:
         """순위 결과 저장"""
         try:
-            db = get_db()
-            return db.save_ranking_result(
+            return rank_tracking_repository.save_ranking_result(
                 ranking_result.keyword_id,
                 ranking_result.rank_position,
                 ranking_result.page_number,
@@ -970,8 +864,7 @@ class RankTrackingService(QObject):
     def get_project_overview(self, project_id: int, limit: int = 10) -> dict:
         """프로젝트 개요 정보"""
         try:
-            db = get_db()
-            return db.get_project_ranking_overview(project_id)
+            return rank_tracking_repository.get_project_ranking_overview(project_id)
         except Exception as e:
             logger.error(f"프로젝트 개요 조회 실패: {e}")
             return {'dates': [], 'keywords': {}}
@@ -996,7 +889,6 @@ class RankTrackingService(QObject):
     def save_ranking_results(self, project_id: int, results: List[RankingResult]) -> bool:
         """순위 확인 결과 저장"""
         try:
-            db = get_db()
             saved_count = 0
             
             # 워커 매니저에서 설정한 현재 시간 가져오기
@@ -1004,7 +896,7 @@ class RankTrackingService(QObject):
             current_time = ranking_worker_manager.get_current_time(project_id)
             
             # 프로젝트의 모든 키워드 가져오기
-            keywords = db.get_keywords(project_id)
+            keywords = rank_tracking_repository.get_keywords(project_id)
             keyword_map = {kw['keyword']: kw['id'] for kw in keywords}
             
             logger.info(f"순위 결과 저장 시작: 프로젝트={project_id}, 시간={current_time}, 결과수={len(results)}")
@@ -1018,7 +910,7 @@ class RankTrackingService(QObject):
                     
                     logger.info(f"순위 저장 시도: 키워드={result.keyword}, 키워드ID={keyword_id}, 순위={result.rank}, 시간={current_time}")
                     
-                    ranking_id = db.save_ranking_result(
+                    ranking_id = rank_tracking_repository.save_ranking_result(
                         keyword_id=keyword_id,
                         rank_position=result.rank,
                         page_number=1,
@@ -1092,8 +984,7 @@ class RankTrackingService(QObject):
     def delete_ranking_data_by_date(self, project_id: int, date_str: str) -> bool:
         """특정 날짜의 순위 데이터 삭제"""
         try:
-            db = get_db()
-            success = db.delete_ranking_results_by_date(project_id, date_str)
+            success = rank_tracking_repository.delete_ranking_results_by_date(project_id, date_str)
             
             if success:
                 logger.info(f"날짜별 순위 데이터 삭제 성공: 프로젝트 {project_id}, 날짜 {date_str}")
@@ -1137,11 +1028,9 @@ class RankTrackingService(QObject):
             # 3. DB 업데이트 (service의 책임)
             changes_detected = analysis_result['changes']
             if changes_detected:
-                db = get_db()
-                
                 # 변경 기록 저장
                 for change in changes_detected:
-                    db.add_basic_info_change_record(
+                    rank_tracking_repository.add_basic_info_change_record(
                         project_id=project_id,
                         field_name=change['field_name'],
                         old_value=change['old_value'],
@@ -1180,28 +1069,15 @@ class RankTrackingService(QObject):
     def update_project(self, project_id: int, new_info: Dict[str, Any]) -> bool:
         """프로젝트 기본정보 일부 필드만 안전하게 갱신"""
         try:
-            db = get_db()
-            # foundation.db의 직접 쿼리를 사용하여 프로젝트 업데이트
-            with db.get_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                    UPDATE projects
-                       SET current_name = ?,
-                           price        = ?,
-                           category     = ?,
-                           store_name   = ?
-                     WHERE id = ?
-                """, (
-                    new_info.get('current_name', ''),
-                    int(new_info.get('price', 0) or 0),
-                    new_info.get('category', ''),
-                    new_info.get('store_name', ''),
-                    project_id
-                ))
-                conn.commit()
+            # repository의 update_project_info 메서드 사용
+            success = rank_tracking_repository.update_project_info(project_id, new_info)
             
-            logger.info(f"프로젝트 업데이트 완료: ID={project_id}")
-            return True
+            if success:
+                logger.info(f"프로젝트 업데이트 완료: ID={project_id}")
+            else:
+                logger.error(f"프로젝트 업데이트 실패: ID={project_id}")
+            
+            return success
         except Exception as e:
             logger.error(f"프로젝트 업데이트 실패(ID={project_id}): {e}")
             return False

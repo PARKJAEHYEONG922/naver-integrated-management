@@ -309,7 +309,7 @@ class ModernTableWidget(QTableWidget):
                 # 순위 데이터 특수 처리
                 item = SortableTableWidgetItem(str_value)
                 from .sortable_items import set_rank_sort_data
-                set_rank_sort_data(item, 0, str_value)  # UserRole에 순위 정렬 데이터 설정
+                set_rank_sort_data(item, col + data_start_col, str_value)  # UserRole에 순위 정렬 데이터 설정
             elif isinstance(value, (int, float)):
                 # 숫자 데이터는 정렬 가능한 아이템 사용
                 if isinstance(value, float):

@@ -7,173 +7,36 @@ from typing import List, Optional, Dict, Any, Tuple
 from datetime import datetime
 import re
 
-from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo, RANK_OUT_OF_RANGE, DEFAULT_SAMPLE_SIZE
-from .adapters import RankTrackingAdapter, clean_product_name, smart_product_search
-from src.foundation.logging import get_logger
-
-logger = get_logger("features.rank_tracking.engine_local")
+from .models import TrackingProject, RankingResult, RANK_OUT_OF_RANGE
 
 
 class RankTrackingEngine:
-    """순위 추적 핵심 엔진 - 순수 계산 로직만"""
+    """순위 추적 핵심 엔진 - 순수 계산 로직만 (.pyd 컴파일 대상)"""
     
     def __init__(self):
-        self.adapter = RankTrackingAdapter()
+        pass  # 순수 계산만 담당 - 외부 의존성 없음
     
-    def analyze_keyword_for_tracking(self, keyword: str) -> Dict[str, Any]:
-        """키워드 분석 (어댑터 레이어 위임)"""
-        try:
-            return self.adapter.analyze_keyword_for_tracking(keyword)
-        except Exception as e:
-            logger.error(f"키워드 분석 실패: {keyword}: {e}")
-            return {
-                'success': False,
-                'keyword': keyword,
-                'category': '-',
-                'monthly_volume': 0,
-                'error_message': str(e)
-            }
+    # analyze_keyword_for_tracking 제거됨 - service 레이어에서 adapter 직접 호출
     
-    def check_keyword_ranking(self, keyword: str, product_id: str) -> RankingResult:
-        """키워드 순위 확인"""
-        try:
-            # 어댑터를 통해 순위 확인
-            ranking_data = self.adapter.check_keyword_ranking(keyword, product_id)
-            
-            if ranking_data['success']:
-                return RankingResult(
-                    keyword=keyword,
-                    product_id=product_id,
-                    rank=ranking_data['rank'],
-                    success=True,
-                    total_results=ranking_data.get('total_results', 0),
-                    checked_at=datetime.now()
-                )
-            else:
-                return RankingResult(
-                    keyword=keyword,
-                    product_id=product_id,
-                    rank=999,  # 순위 없음
-                    success=False,
-                    error_message=ranking_data.get('error', '순위 확인 실패'),
-                    checked_at=datetime.now()
-                )
-                
-        except Exception as e:
-            logger.error(f"키워드 '{keyword}' 순위 확인 실패: {e}")
-            return RankingResult(
-                keyword=keyword,
-                product_id=product_id,
-                rank=999,
-                success=False,
-                error_message=str(e),
-                checked_at=datetime.now()
-            )
+    # check_keyword_ranking 제거됨 - service 레이어에서 adapter 직접 호출
     
     def create_failed_ranking_result(self, keyword: str, error_message: str) -> RankingResult:
         """실패한 순위 결과 생성"""
         return RankingResult(
             keyword=keyword,
             success=False,
-            rank=999,
+            rank=RANK_OUT_OF_RANGE,
             error_message=error_message
         )
     
-    def process_keyword_info_update(self, keyword: str) -> Dict[str, Any]:
-        """키워드 정보 업데이트 처리 (순수 분석 로직)"""
-        try:
-            # 카테고리와 월검색량 조회
-            category = self.get_keyword_category_from_vendor(keyword)
-            monthly_volume = self.get_keyword_volume_from_vendor(keyword)
-            
-            return {
-                'success': True,
-                'category': category,
-                'monthly_volume': monthly_volume
-            }
-            
-        except Exception as e:
-            logger.error(f"키워드 정보 업데이트 실패: {keyword}: {e}")
-            return {
-                'success': False,
-                'category': '-',
-                'monthly_volume': -1,
-                'error_message': str(e)
-            }
+    # process_keyword_info_update 제거됨 - service 레이어에서 adapter 직접 호출
     
-    def get_keyword_category_from_vendor(self, keyword: str) -> str:
-        """키워드 카테고리 조회"""
-        try:
-            category = self.adapter.get_keyword_category(keyword)
-            return category if category else "-"
-        except Exception as e:
-            logger.warning(f"카테고리 조회 실패: {keyword}: {e}")
-            return "-"
+    # get_keyword_category_from_vendor, get_keyword_volume_from_vendor 제거됨 - service 레이어에서 adapter 직접 호출
     
-    def get_keyword_volume_from_vendor(self, keyword: str) -> int:
-        """키워드 월검색량 조회"""
-        try:
-            volume = self.adapter.get_keyword_monthly_volume(keyword)
-            return volume if volume is not None else -1
-        except Exception as e:
-            logger.warning(f"월검색량 조회 실패: {keyword}: {e}")
-            return -1
+    # refresh_product_info_analysis 제거됨 - service 레이어에서 adapter 호출 후 detect_project_changes 호출
     
-    def refresh_product_info_analysis(self, project: TrackingProject) -> Dict[str, Any]:
-        """프로젝트 상품 정보 새로고침 분석"""
-        try:
-            logger.info(f"프로젝트 정보 새로고침 시작: {project.current_name}")
-            
-            # 상품 정보 재조회
-            product_info_dict = smart_product_search(project.current_name, project.product_id)
-            
-            if not product_info_dict:
-                return {
-                    'success': False,
-                    'message': f'{project.current_name} 상품 정보를 찾을 수 없습니다.',
-                    'changes': []
-                }
-            
-            # 변경사항 분석
-            new_info = {
-                'current_name': clean_product_name(product_info_dict.get('name', '')),
-                'price': product_info_dict.get('price', 0),
-                'category': product_info_dict.get('category', ''),
-                'store_name': product_info_dict.get('store_name', ''),
-            }
-            
-            # 변경사항 감지
-            changes_detected = self._detect_project_changes(project, new_info)
-            
-            # ProductInfo 객체 생성
-            product_info = ProductInfo(
-                product_id=product_info_dict.get('product_id', ''),
-                name=new_info['current_name'],
-                price=new_info['price'],
-                category=new_info['category'],
-                store_name=new_info['store_name'],
-                description=product_info_dict.get('description', ''),
-                image_url=product_info_dict.get('image_url', ''),
-                url=product_info_dict.get('url', '')
-            )
-            
-            return {
-                'success': True,
-                'new_info': new_info,
-                'changes': changes_detected,
-                'product_info': product_info
-            }
-            
-        except Exception as e:
-            logger.error(f"프로젝트 정보 새로고침 분석 실패: {e}")
-            return {
-                'success': False,
-                'message': f'상품 정보 새로고침 중 오류가 발생했습니다: {str(e)}',
-                'changes': []
-            }
-    
-    def _detect_project_changes(self, project: TrackingProject, new_info: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """프로젝트 변경사항 감지"""
+    def detect_project_changes(self, project: TrackingProject, new_info: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """프로젝트 변경사항 감지 (순수 계산 로직)"""
         changes_detected = []
         
         field_map = {
@@ -216,152 +79,23 @@ class RankTrackingEngine:
                     'old_value': str(old_value),
                     'new_value': str(new_value)
                 })
-                
-                logger.info(f"변경사항 감지 - {display_name}: '{old_value}' → '{new_value}'")
         
         return changes_detected
     
-    def process_single_keyword_ranking(self, keyword_obj, product_id: str) -> Tuple[Any, bool]:
-        """단일 키워드 순위 확인 처리 (순수 비즈니스 로직)"""
-        try:
-            # 순위 확인
-            result = self.check_keyword_ranking(keyword_obj.keyword, product_id)
-            logger.info(f"순위 확인 결과: {keyword_obj.keyword} -> 순위: {result.rank}, 성공: {result.success}")
-            return result, True
-            
-        except Exception as e:
-            logger.error(f"키워드 {keyword_obj.keyword} 순위 확인 실패: {e}")
-            failed_result = self.create_failed_ranking_result(keyword_obj.keyword, str(e))
-            return failed_result, False
+    # process_single_keyword_ranking 제거됨 - service 레이어에서 adapter 직접 호출
     
-    def check_project_rankings_analysis(self, project, keywords: List) -> Dict[str, Any]:
-        """프로젝트 전체 키워드 순위 확인 분석 (순수 계산)"""
-        try:
-            # 순위 확인 결과
-            results = []
-            success_count = 0
-            
-            for keyword_obj in keywords:
-                result = self.check_keyword_ranking(keyword_obj.keyword, project.product_id)
-                results.append(result)
-                if result.success:
-                    success_count += 1
-            
-            return {
-                'success': success_count > 0,
-                'message': f"순위 확인 완료: {success_count}/{len(keywords)} 키워드",
-                'results': results,
-                'success_count': success_count,
-                'total_count': len(keywords)
-            }
-            
-        except Exception as e:
-            logger.error(f"프로젝트 순위 확인 분석 실패: {e}")
-            return {
-                'success': False,
-                'message': f"순위 확인 중 오류 발생: {e}",
-                'results': [],
-                'success_count': 0,
-                'total_count': len(keywords) if keywords else 0
-            }
+    # check_project_rankings_analysis 제거됨 - service 레이어에서 adapter 직접 호출
     
-    def analyze_keywords_batch(self, keywords: List[str]) -> Dict[str, Any]:
-        """키워드 배치 월검색량 분석 (순수 계산)"""
-        try:
-            updated_count = 0
-            failed_count = 0
-            results = []
-            
-            for keyword in keywords:
-                try:
-                    analysis = self.analyze_keyword_for_tracking(keyword)
-                    
-                    if analysis['success']:
-                        updated_count += 1
-                        results.append({
-                            'keyword': keyword,
-                            'success': True,
-                            'category': analysis['category'],
-                            'monthly_volume': analysis['monthly_volume']
-                        })
-                    else:
-                        failed_count += 1
-                        results.append({
-                            'keyword': keyword,
-                            'success': False,
-                            'error_message': analysis.get('error_message', '분석 실패')
-                        })
-                        
-                except Exception as e:
-                    failed_count += 1
-                    results.append({
-                        'keyword': keyword,
-                        'success': False,
-                        'error_message': str(e)
-                    })
-                    logger.error(f"키워드 '{keyword}' 처리 실패: {e}")
-            
-            return {
-                'success': updated_count > 0,
-                'updated_count': updated_count,
-                'failed_count': failed_count,
-                'total_count': len(keywords),
-                'results': results
-            }
-            
-        except Exception as e:
-            logger.error(f"키워드 배치 분석 실패: {e}")
-            return {
-                'success': False,
-                'updated_count': 0,
-                'failed_count': len(keywords),
-                'total_count': len(keywords),
-                'results': [],
-                'error_message': str(e)
-            }
+    # analyze_keywords_batch 제거됨 - service 레이어에서 adapter 직접 호출
 
 
     # batch_update_keywords_volume은 analyze_keywords_batch와 동일하므로 제거됨
     # analyze_keywords_batch를 사용하세요
     
-    def analyze_and_add_keyword(self, keyword: str) -> Dict[str, Any]:
-        """키워드 분석 및 추가 로직 (순수 계산)"""
-        try:
-            # 키워드 분석 수행
-            analysis = self.analyze_keyword_for_tracking(keyword)
-            
-            if analysis['success']:
-                return {
-                    'success': True,
-                    'keyword': keyword,
-                    'category': analysis['category'],
-                    'monthly_volume': analysis['monthly_volume'],
-                    'ready_for_db': True
-                }
-            else:
-                return {
-                    'success': False,
-                    'keyword': keyword,
-                    'category': '-',
-                    'monthly_volume': 0,
-                    'error_message': analysis.get('error_message', '분석 실패'),
-                    'ready_for_db': False
-                }
-                
-        except Exception as e:
-            logger.error(f"키워드 '{keyword}' 분석/추가 로직 실패: {e}")
-            return {
-                'success': False,
-                'keyword': keyword,
-                'category': '-',
-                'monthly_volume': 0,
-                'error_message': str(e),
-                'ready_for_db': False
-            }
+    # analyze_and_add_keyword 제거됨 - service 레이어에서 adapter 직접 호출 (analyze_and_add_keyword_logic과 중복)
     
     def generate_keywords_from_product(self, product_name: str) -> List[str]:
         """상품명에서 키워드 생성 (순수 계산 로직)"""
-        import re
         
         try:
             # 공백으로 분리
@@ -405,8 +139,7 @@ class RankTrackingEngine:
             
             return keywords
             
-        except Exception as e:
-            logger.error(f"상품명에서 키워드 생성 실패: {product_name}: {e}")
+        except Exception:
             return [product_name.strip()]  # 최소한 원본 상품명은 반환
     
     def calculate_keyword_batch_results(self, keywords: List[str], existing_keywords: set) -> Dict[str, Any]:
@@ -415,10 +148,16 @@ class RankTrackingEngine:
             new_keywords = []
             duplicate_keywords = []
             
+            # 키워드 정규화 함수
+            def norm(s: str) -> str:
+                return re.sub(r'\s+', ' ', s).strip().casefold()
+            
+            normalized_existing = {norm(k) for k in existing_keywords}
+            
             # 중복 체크
             for keyword in keywords:
                 keyword = keyword.strip()
-                if keyword.lower() in existing_keywords:
+                if norm(keyword) in normalized_existing:
                     duplicate_keywords.append(keyword)
                 else:
                     new_keywords.append(keyword)
@@ -431,108 +170,57 @@ class RankTrackingEngine:
                 'duplicate_count': len(duplicate_keywords)
             }
             
-        except Exception as e:
-            logger.error(f"키워드 배치 결과 계산 실패: {e}")
+        except Exception:
             return {
                 'new_keywords': [],
                 'duplicate_keywords': [],
                 'total_keywords': 0,
                 'new_count': 0,
-                'duplicate_count': 0,
-                'error_message': str(e)
+                'duplicate_count': 0
             }
     
-    def process_keyword_info_analysis(self, keyword: str) -> Dict[str, Any]:
-        """키워드 정보 분석 처리 (순수 분석 로직)"""
-        try:
-            # 카테고리와 월검색량 조회
-            category = self.get_keyword_category_from_vendor(keyword)
-            monthly_volume = self.get_keyword_volume_from_vendor(keyword)
-            
-            return {
-                'success': True,
-                'category': category,
-                'monthly_volume': monthly_volume,
-                'keyword': keyword
-            }
-            
-        except Exception as e:
-            logger.error(f"키워드 정보 분석 실패: {keyword}: {e}")
-            return {
-                'success': False,
-                'category': '-',
-                'monthly_volume': -1,
-                'keyword': keyword,
-                'error_message': str(e)
-            }
+    # process_keyword_info_analysis 제거됨 - service 레이어에서 adapter 직접 호출 (process_keyword_info_update와 중복)
     
-    def analyze_and_add_keyword_logic(self, keyword: str) -> Dict[str, Any]:
-        """키워드 분석 후 추가를 위한 순수 로직"""
-        try:
-            # 키워드 분석
-            analysis = self.analyze_keyword_for_tracking(keyword)
-            
-            if analysis['success']:
-                return {
-                    'success': True,
-                    'keyword': keyword,
-                    'category': analysis.get('category', ''),
-                    'monthly_volume': analysis.get('monthly_volume', -1),
-                    'ready_for_db': True
-                }
-            else:
-                return {
-                    'success': False,
-                    'keyword': keyword,
-                    'error_message': analysis.get('error_message', '분석 실패'),
-                    'ready_for_db': False
-                }
-                
-        except Exception as e:
-            logger.error(f"키워드 분석/추가 로직 실패: {e}")
-            return {
-                'success': False,
-                'keyword': keyword,
-                'error_message': str(e),
-                'ready_for_db': False
-            }
+    # analyze_and_add_keyword_logic 제거됨 - service 레이어에서 adapter 직접 호출 (analyze_and_add_keyword와 중복)
     
-    def get_product_category_analysis(self, product_id: str) -> Dict[str, Any]:
-        """상품 카테고리 조회 분석 (순수 로직)"""
-        try:
-            # smart_product_search를 통해 상품 정보 조회
-            product_info = smart_product_search(f"상품ID_{product_id}", product_id)
-            if product_info and 'category' in product_info:
-                return {
-                    'success': True,
-                    'category': product_info['category'],
-                    'product_id': product_id
-                }
-            
-            return {
-                'success': False,
-                'category': '',
-                'product_id': product_id,
-                'error_message': '상품 정보 조회 실패'
-            }
-            
-        except Exception as e:
-            logger.error(f"상품 카테고리 분석 실패: {e}")
-            return {
-                'success': False,
-                'category': '',
-                'product_id': product_id,
-                'error_message': str(e)
-            }
+    # get_product_category_analysis 제거됨 - service 레이어에서 adapter 직접 호출
     
     def prepare_table_data_analysis(self, project, keywords, overview) -> Dict[str, Any]:
         """테이블 데이터 준비를 위한 분석 로직 (순수 계산)"""
         try:
-            from .adapters import format_date, format_date_with_time
+            # 포맷터 함수들을 service에서 전달받거나 여기서 직접 구현
+            def format_date(date_str):
+                try:
+                    from datetime import datetime
+                    dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+                    return dt.strftime("%m/%d %H:%M")
+                except:
+                    return date_str
+            
+            def format_date_with_time(date_str):
+                try:
+                    from datetime import datetime
+                    dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+                    return dt.strftime("%Y-%m-%d %H:%M")
+                except:
+                    return date_str
             
             # 날짜 목록 추출 및 정렬
             dates = overview.get("dates", [])
-            all_dates = dates[:10] if dates else []  # 최대 10개
+            # 날짜 파싱 및 정렬
+            parsed_dates = []
+            unparsed_dates = []
+            for date in dates:
+                try:
+                    dt = datetime.fromisoformat(date.replace('Z', '+00:00'))
+                    parsed_dates.append((date, dt))
+                except:
+                    unparsed_dates.append(date)
+            
+            # 파싱된 날짜는 시간 내림차순 정렬, 실패한 것은 뒤에 추가
+            parsed_dates.sort(key=lambda x: x[1], reverse=True)
+            sorted_dates = [date for date, _ in parsed_dates] + unparsed_dates
+            all_dates = sorted_dates[:10]  # 최대 10개
             
             # 헤더 구성
             headers = ["", "키워드", "카테고리", "월검색량"]
@@ -562,14 +250,28 @@ class RankTrackingEngine:
                 "overview": overview
             }
             
-        except Exception as e:
-            logger.error(f"테이블 데이터 분석 실패: {e}")
-            return {"success": False, "message": f"오류 발생: {e}"}
+        except Exception:
+            return {"success": False, "message": "테이블 데이터 분석 실패"}
     
     def prepare_table_row_data_analysis(self, keyword_data: dict, all_dates: list, current_rankings: dict, current_time: str) -> list:
         """테이블 행 데이터 준비 분석 (순수 계산)"""
         try:
-            from .adapters import format_monthly_volume, format_rank_display
+            # 순수 계산 로직 - 외부 import 없이 직접 구현
+            def format_monthly_volume_local(vol):
+                if vol is None:
+                    return "N/A"
+                if vol < 0:
+                    return "미수집"
+                return f"{vol:,}" if vol > 0 else "0"
+            
+            def format_rank_display_local(rank):
+                if not isinstance(rank, int):
+                    return "-"
+                if rank == RANK_OUT_OF_RANGE or rank > 200:
+                    return "200위밖"
+                elif rank >= 1:
+                    return f"{rank}위"
+                return "-"
             
             keyword = keyword_data['keyword']
             rankings = keyword_data.get('rankings', {})
@@ -584,13 +286,10 @@ class RankTrackingEngine:
             # 월검색량
             search_vol = keyword_data.get('search_volume')
             monthly_vol = keyword_data.get('monthly_volume', -1)
-            volume = search_vol or monthly_vol
+            volume = search_vol if search_vol is not None else monthly_vol
             
             # 월검색량 포맷팅
-            if volume == -1:
-                volume_text = "-"  # 아직 API 호출 안됨
-            else:
-                volume_text = format_monthly_volume(volume)
+            volume_text = format_monthly_volume_local(volume)
             row_data.append(volume_text)
             
             # 날짜별 순위 추가
@@ -600,23 +299,29 @@ class RankTrackingEngine:
                     keyword_id = keyword_data.get('id')
                     if keyword_id and keyword_id in current_rankings:
                         rank = current_rankings[keyword_id]
-                        rank_display = format_rank_display(rank)
+                        rank_display = format_rank_display_local(rank)
                         row_data.append(rank_display)
                     else:
                         row_data.append("-")
                 else:
                     # 저장된 순위 데이터 확인
                     rank_data = rankings.get(date)
-                    if rank_data and rank_data.get('rank') is not None:
-                        rank_display = format_rank_display(rank_data['rank'])
+                    if rank_data is not None:
+                        # rank_data가 숫자인 경우 (기존 방식)
+                        if isinstance(rank_data, (int, float)):
+                            rank_display = format_rank_display_local(rank_data)
+                        # rank_data가 딕셔너리인 경우 (새로운 방식)
+                        elif isinstance(rank_data, dict) and rank_data.get('rank') is not None:
+                            rank_display = format_rank_display_local(rank_data['rank'])
+                        else:
+                            rank_display = "-"
                         row_data.append(rank_display)
                     else:
                         row_data.append("-")
             
             return row_data
             
-        except Exception as e:
-            logger.error(f"테이블 행 데이터 분석 실패: {e}")
+        except Exception:
             return [keyword_data.get('keyword', ''), '-', '-'] + ['-'] * len(all_dates)
     
     def analyze_keywords_for_deletion(self, keyword_ids: List[int], keyword_names: List[str]) -> Dict[str, Any]:
@@ -637,11 +342,10 @@ class RankTrackingEngine:
                 'keyword_names': keyword_names
             }
             
-        except Exception as e:
-            logger.error(f"키워드 삭제 분석 실패: {e}")
+        except Exception:
             return {
                 'success': False,
-                'message': f"키워드 삭제 분석 중 오류: {str(e)}",
+                'message': "키워드 삭제 분석 실패",
                 'deletable_count': 0
             }
 

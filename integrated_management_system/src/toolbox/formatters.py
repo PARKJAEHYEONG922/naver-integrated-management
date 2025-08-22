@@ -326,3 +326,55 @@ def format_duration_seconds(seconds: Optional[float], precision: int = 1) -> str
         parts.append(f"{remaining_seconds}초")
     
     return " ".join(parts)
+
+
+# === 도메인별 포맷터 (순위 추적) ===
+
+def format_monthly_volume(vol: Optional[int]) -> str:
+    """
+    월검색량 포맷팅 (순위 추적 도메인 전용)
+    
+    Args:
+        vol: 월검색량 (-1: 미수집, None: N/A, 0+: 숫자)
+    
+    Returns:
+        str: 포맷된 월검색량 문자열
+        
+    Examples:
+        >>> format_monthly_volume(1234)
+        '1,234'
+        >>> format_monthly_volume(-1)
+        '미수집'
+        >>> format_monthly_volume(None)
+        'N/A'
+        >>> format_monthly_volume(0)
+        '0'
+    """
+    if vol is None:
+        return "N/A"
+    if vol < 0:
+        return "미수집"
+    return format_int(vol, default="N/A", thousand_sep=True)
+
+
+def format_rank(rank: Optional[int]) -> str:
+    """
+    순위 포맷팅 (순위 추적 도메인 전용)
+    
+    Args:
+        rank: 순위 (None: 순위 없음)
+    
+    Returns:
+        str: 포맷된 순위 문자열
+        
+    Examples:
+        >>> format_rank(1)
+        '1'
+        >>> format_rank(999)
+        '999'
+        >>> format_rank(None)
+        '—'
+    """
+    if rank is None:
+        return "—"
+    return format_int(rank, default="—", thousand_sep=False)
