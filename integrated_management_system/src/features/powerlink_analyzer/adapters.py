@@ -832,8 +832,7 @@ class CurrentAnalysisExportAdapter:
             ModernSaveCompletionDialog.show_save_completion(
                 parent=parent_widget,
                 title="저장 완료",
-                message="엑셀 파일이 성공적으로 저장되었습니다.",
-                filename=filename,
+                message=f"엑셀 파일이 성공적으로 저장되었습니다.\n\n파일명: {filename}",
                 file_path=file_path
             )
             

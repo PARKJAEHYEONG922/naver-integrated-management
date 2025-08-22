@@ -668,7 +668,7 @@ class PowerLinkAnalysisService:
             # 순위 재계산
             keyword_database.recalculate_all_rankings()
             
-            log_manager.add_log(f"키워드 데이터 설정 완룼: {len(keywords_data)}개", "success")
+            log_manager.add_log(f"키워드 데이터 설정 완료: {len(keywords_data)}개", "success")
             return True
             
         except Exception as e:
@@ -687,7 +687,7 @@ class PowerLinkAnalysisService:
             # 순위 재계산
             keyword_database.recalculate_all_rankings()
             
-            log_manager.add_log(f"키워드 데이터 추가 완룼: {len(keywords_data)}개 (전체: {len(keyword_database.keywords)}개)", "success")
+            log_manager.add_log(f"키워드 데이터 추가 완료: {len(keywords_data)}개 (전체: {len(keyword_database.keywords)}개)", "success")
             return True
             
         except Exception as e:
@@ -729,7 +729,7 @@ class PowerLinkAnalysisService:
                     keyword_database.remove_keyword(keyword)
                     removed_count += 1
             keyword_database.recalculate_all_rankings()
-            log_manager.add_log(f"{removed_count}개 키워드 삭제 완룼", "info")
+            log_manager.add_log(f"{removed_count}개 키워드 삭제 완료", "info")
             return True
         except Exception as e:
             logger.error(f"키워드 삭제 실패: {e}")
@@ -773,6 +773,65 @@ class PowerLinkAnalysisService:
         except Exception as e:
             logger.error(f"세션 로드 및 설정 실패: {e}")
             return None
+    
+    def recalculate_rankings(self) -> bool:
+        """순위 재계산 (UI → Service → Engine 위임)"""
+        try:
+            keyword_database.recalculate_all_rankings()
+            log_manager.add_log("순위 재계산 완료", "info")
+            return True
+        except Exception as e:
+            logger.error(f"순위 재계산 실패: {e}")
+            return False
+    
+    def remove_incomplete_keywords(self) -> Dict[str, int]:
+        """불완전한 키워드 제거 (분석 중단 시 사용)"""
+        try:
+            # 완성된 키워드 찾기
+            completed_keywords = []
+            all_keywords = keyword_database.get_all_keywords()
+            
+            for result in all_keywords:
+                # 실제 분석 데이터가 있는지 확인 (PC+Mobile 검색량이 0 이상이면 분석 완료)
+                if (hasattr(result, 'pc_search_volume') and hasattr(result, 'mobile_search_volume') and 
+                    result.pc_search_volume >= 0 and result.mobile_search_volume >= 0):
+                    completed_keywords.append(result.keyword)
+            
+            # 불완전한 키워드들 제거
+            incomplete_keywords = []
+            for result in all_keywords:
+                if result.keyword not in completed_keywords:
+                    incomplete_keywords.append(result.keyword)
+                    keyword_database.remove_keyword(result.keyword)
+            
+            # 순위 재계산
+            keyword_database.recalculate_all_rankings()
+            
+            result_stats = {
+                'completed': len(completed_keywords),
+                'removed': len(incomplete_keywords)
+            }
+            
+            if incomplete_keywords:
+                log_manager.add_log(f"불완전한 키워드 {len(incomplete_keywords)}개 제거 완료", "info")
+            
+            return result_stats
+            
+        except Exception as e:
+            logger.error(f"불완전한 키워드 제거 실패: {e}")
+            return {'completed': 0, 'removed': 0}
+    
+    def get_keyword_count_info(self) -> Dict[str, any]:
+        """키워드 개수 및 목록 정보 반환 (디버그용)"""
+        try:
+            keywords = keyword_database.keywords
+            return {
+                'count': len(keywords),
+                'keywords': list(keywords.keys())
+            }
+        except Exception as e:
+            logger.error(f"키워드 정보 조회 실패: {e}")
+            return {'count': 0, 'keywords': []}
 
 
 # 전역 인스턴스 (UI에서 import)

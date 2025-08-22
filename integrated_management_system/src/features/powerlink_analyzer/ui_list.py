@@ -14,7 +14,7 @@ from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, Moder
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from src.toolbox.progress import throttle_ms
-from .service import keyword_database
+from .service import keyword_database, powerlink_service
 from .worker import PowerLinkAnalysisWorker
 from src.toolbox.text_utils import parse_keywords_from_text, process_keywords, TextProcessor
 
@@ -423,27 +423,12 @@ class PowerLinkControlWidget(QWidget):
     def _finalize_stop_analysis(self):
         """정지 후 UI 복원 및 정리"""
         try:
-            # 실제 분석 데이터가 있는 키워드 개수 확인
-            completed_keywords = []
-            for keyword, result in keyword_database.keywords.items():
-                # 실제 분석 데이터가 있는지 확인 (PC+Mobile 검색량이 0 이상이면 분석 완료, -1은 미분석)
-                if (hasattr(result, 'pc_search_volume') and hasattr(result, 'mobile_search_volume') and 
-                    result.pc_search_volume >= 0 and result.mobile_search_volume >= 0):
-                    completed_keywords.append(keyword)
+            # 서비스를 통해 불완전한 키워드 제거
+            result_stats = powerlink_service.remove_incomplete_keywords()
+            completed_count = result_stats.get('completed', 0)
+            removed_count = result_stats.get('removed', 0)
             
-            if completed_keywords:
-                # 완료된 키워드들만 유지하고 나머지는 제거
-                incomplete_keywords = []
-                for keyword in list(keyword_database.keywords.keys()):
-                    if keyword not in completed_keywords:
-                        incomplete_keywords.append(keyword)
-                        keyword_database.remove_keyword(keyword)
-                
-                # 순위 재계산
-                keyword_database.recalculate_all_rankings()
-                completed_count = len(completed_keywords)
-                removed_count = len(incomplete_keywords)
-                
+            if completed_count > 0:
                 if removed_count > 0:
                     self.status_label.setText(f"분석 중단됨 - {completed_count}개 완료, {removed_count}개 제거")
                     log_manager.add_log(f"분석 중단 - {completed_count}개 키워드 유지, {removed_count}개 미완성 키워드 제거", "warning")
@@ -454,8 +439,8 @@ class PowerLinkControlWidget(QWidget):
                 # 순위 업데이트 시그널 발송
                 self.all_rankings_updated.emit()
             else:
-                # 완료된 키워드가 없으면 모든 데이터 클리어
-                keyword_database.clear()
+                # 완료된 키워드가 없으면 모든 데이터 클리어 (서비스 통해)
+                powerlink_service.clear_all_keywords()
                 self.status_label.setText("분석 중단됨 - 완료된 키워드 없음 (전체 클리어)")
                 log_manager.add_log("분석 중단 - 미완성 키워드 전체 클리어", "warning")
                 
@@ -492,19 +477,22 @@ class PowerLinkControlWidget(QWidget):
         """분석 완료 처리"""
         log_manager.add_log(f"PowerLink 분석 완료: {len(results)}개 결과", "info")
         
-        # 결과를 메모리에 저장
+        # 결과를 메모리에 저장 (서비스 통해)
         for keyword, result in results.items():
             self.keywords_data[keyword] = result
-            keyword_database.add_keyword(result)
+        # 서비스를 통해 키워드 데이터 추가
+        powerlink_service.add_keywords_data(results)
             
-        # 디버그: 분석 완료 후 키워드 데이터베이스 상태
-        total_in_db = len(keyword_database.keywords)
+        # 디버그: 분석 완료 후 키워드 데이터베이스 상태 (서비스 통해)
+        keyword_info = powerlink_service.get_keyword_count_info()
+        total_in_db = keyword_info.get('count', 0)
+        keywords_list = keyword_info.get('keywords', [])
         log_manager.add_log(f"🔍 분석 완료 후 keyword_database에 {total_in_db}개 키워드 저장됨", "info")
-        log_manager.add_log(f"🔍 저장된 키워드 목록: {list(keyword_database.keywords.keys())}", "info")
+        log_manager.add_log(f"🔍 저장된 키워드 목록: {keywords_list}", "info")
         
-        # 분석 완료 후 순위 재계산 (모든 데이터가 완료된 후에만 실행)
+        # 분석 완료 후 순위 재계산 (서비스 통해 엔진 위임)
         self.analysis_in_progress = False
-        keyword_database.recalculate_all_rankings()
+        powerlink_service.recalculate_rankings()
         
         # 모든 순위 계산 완료 시그널 발송
         self.all_rankings_updated.emit()
@@ -547,9 +535,9 @@ class PowerLinkControlWidget(QWidget):
     def on_keyword_result_ready(self, keyword: str, result):
         """개별 키워드 결과 준비 시 실시간 업데이트"""
         if result:
-            # 메모리에 저장
+            # 메모리에 저장 (서비스 통해)
             self.keywords_data[keyword] = result
-            keyword_database.add_keyword(result)
+            powerlink_service.add_keyword_result(result)
             
             # 분석 진행 중에는 순위 계산하지 않음 (전체 완료 후 일괄 계산)
             
@@ -567,9 +555,9 @@ class PowerLinkControlWidget(QWidget):
             self.analysis_worker.stop()
             self.analysis_in_progress = False
         
-        # 데이터 클리어
+        # 데이터 클리어 (서비스 통해)
         self.keywords_data.clear()
-        keyword_database.clear()
+        powerlink_service.clear_all_keywords()
         
         # UI 상태 완전 초기화 (헬퍼 사용)
         self._restore_ui_state("cleared")

@@ -2,17 +2,13 @@
 파워링크 광고비 분석기 결과 위젯 (우측 패널)
 분석 결과 테이블, 키워드 관리, 히스토리 기능을 포함
 """
-from typing import List, Dict, Optional
-from datetime import datetime
-
+from datetime import datetime, timedelta, timezone
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QPushButton, QTabWidget, QTableWidget, QTableWidgetItem,
-    QHeaderView, QDialog,
-    QScrollArea, QFrame
+    QHeaderView, QDialog
 )
-from PySide6.QtCore import Qt, Signal, QTimer
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, Signal
 
 from src.toolbox.ui_kit import ModernStyle, ModernTableWidget
 from src.toolbox.ui_kit.components import ModernButton
@@ -454,7 +450,7 @@ class PowerLinkResultsWidget(QWidget):
                     background-color: #047857;
                 }
             """)
-            detail_button.clicked.connect(lambda checked, k=keyword, r=result: self.show_bid_details(k, r, 'mobile'))
+            detail_button.clicked.connect(lambda checked=False, k=keyword, r=result, d='mobile': self.show_bid_details(k, r, d))
             self.mobile_table.setCellWidget(row, 9, detail_button)
             
     def update_pc_table(self):
@@ -516,7 +512,7 @@ class PowerLinkResultsWidget(QWidget):
                     background-color: #047857;
                 }
             """)
-            detail_button.clicked.connect(lambda checked, k=keyword, r=result: self.show_bid_details(k, r, 'pc'))
+            detail_button.clicked.connect(lambda checked=False, k=keyword, r=result, d='pc': self.show_bid_details(k, r, d))
             self.pc_table.setCellWidget(row, 9, detail_button)
     
     
@@ -529,27 +525,35 @@ class PowerLinkResultsWidget(QWidget):
                 self.update_table_row_data(table, row, result, device_type)
                 break
     
+    def _safe_set_item_text(self, table: QTableWidget, row: int, col: int, text: str):
+        """안전한 셀 텍스트 설정 (None 체크 후 아이템 생성)"""
+        item = table.item(row, col)
+        if item is None:
+            item = QTableWidgetItem("")
+            table.setItem(row, col, item)
+        item.setText(text)
+    
     def update_table_row_data(self, table: QTableWidget, row: int, result, device_type: str):
         """테이블의 특정 행 데이터 업데이트"""
         try:
             if device_type == 'mobile':
                 # 모바일 데이터 업데이트
-                table.item(row, 2).setText(format_int(result.mobile_search_volume) if result.mobile_search_volume >= 0 else "-")  # 월검색량
-                table.item(row, 3).setText(format_float(result.mobile_clicks, precision=1) if result.mobile_clicks >= 0 else "-")  # 클릭수
-                table.item(row, 4).setText(f"{format_float(result.mobile_ctr, precision=2)}%" if result.mobile_ctr >= 0 else "-")  # 클릭률
-                table.item(row, 5).setText(f"{format_int(result.mobile_first_page_positions)}위까지" if result.mobile_first_page_positions >= 0 else "-")  # 1p노출위치
-                table.item(row, 6).setText(format_price_krw(result.mobile_first_position_bid) if result.mobile_first_position_bid >= 0 else "-")  # 1등광고비
-                table.item(row, 7).setText(format_price_krw(result.mobile_min_exposure_bid) if result.mobile_min_exposure_bid >= 0 else "-")  # 최소노출가격
-                table.item(row, 8).setText(f"{result.mobile_recommendation_rank}위" if result.mobile_recommendation_rank > 0 else "-")  # 추천순위
+                self._safe_set_item_text(table, row, 2, format_int(result.mobile_search_volume) if result.mobile_search_volume >= 0 else "-")  # 월검색량
+                self._safe_set_item_text(table, row, 3, format_float(result.mobile_clicks, precision=1) if result.mobile_clicks >= 0 else "-")  # 클릭수
+                self._safe_set_item_text(table, row, 4, f"{format_float(result.mobile_ctr, precision=2)}%" if result.mobile_ctr >= 0 else "-")  # 클릭률
+                self._safe_set_item_text(table, row, 5, f"{format_int(result.mobile_first_page_positions)}위까지" if result.mobile_first_page_positions >= 0 else "-")  # 1p노출위치
+                self._safe_set_item_text(table, row, 6, format_price_krw(result.mobile_first_position_bid) if result.mobile_first_position_bid >= 0 else "-")  # 1등광고비
+                self._safe_set_item_text(table, row, 7, format_price_krw(result.mobile_min_exposure_bid) if result.mobile_min_exposure_bid >= 0 else "-")  # 최소노출가격
+                self._safe_set_item_text(table, row, 8, f"{result.mobile_recommendation_rank}위" if result.mobile_recommendation_rank > 0 else "-")  # 추천순위
             else:  # PC
                 # PC 데이터 업데이트
-                table.item(row, 2).setText(format_int(result.pc_search_volume) if result.pc_search_volume >= 0 else "-")  # 월검색량
-                table.item(row, 3).setText(format_float(result.pc_clicks, precision=1) if result.pc_clicks >= 0 else "-")  # 클릭수
-                table.item(row, 4).setText(f"{format_float(result.pc_ctr, precision=2)}%" if result.pc_ctr >= 0 else "-")  # 클릭률
-                table.item(row, 5).setText(f"{format_int(result.pc_first_page_positions)}위까지" if result.pc_first_page_positions >= 0 else "-")  # 1p노출위치
-                table.item(row, 6).setText(format_price_krw(result.pc_first_position_bid) if result.pc_first_position_bid >= 0 else "-")  # 1등광고비
-                table.item(row, 7).setText(format_price_krw(result.pc_min_exposure_bid) if result.pc_min_exposure_bid >= 0 else "-")  # 최소노출가격
-                table.item(row, 8).setText(f"{result.pc_recommendation_rank}위" if result.pc_recommendation_rank > 0 else "-")  # 추천순위
+                self._safe_set_item_text(table, row, 2, format_int(result.pc_search_volume) if result.pc_search_volume >= 0 else "-")  # 월검색량
+                self._safe_set_item_text(table, row, 3, format_float(result.pc_clicks, precision=1) if result.pc_clicks >= 0 else "-")  # 클릭수
+                self._safe_set_item_text(table, row, 4, f"{format_float(result.pc_ctr, precision=2)}%" if result.pc_ctr >= 0 else "-")  # 클릭률
+                self._safe_set_item_text(table, row, 5, f"{format_int(result.pc_first_page_positions)}위까지" if result.pc_first_page_positions >= 0 else "-")  # 1p노출위치
+                self._safe_set_item_text(table, row, 6, format_price_krw(result.pc_first_position_bid) if result.pc_first_position_bid >= 0 else "-")  # 1등광고비
+                self._safe_set_item_text(table, row, 7, format_price_krw(result.pc_min_exposure_bid) if result.pc_min_exposure_bid >= 0 else "-")  # 최소노출가격
+                self._safe_set_item_text(table, row, 8, f"{result.pc_recommendation_rank}위" if result.pc_recommendation_rank > 0 else "-")  # 추천순위
         except Exception as e:
             logger.error(f"테이블 행 {row} 업데이트 실패 ({device_type}): {e}")
 
@@ -639,7 +643,7 @@ class PowerLinkResultsWidget(QWidget):
                     background-color: #047857;
                 }
             """)
-            detail_button.clicked.connect(lambda: self.show_bid_details(result.keyword, result, device_type))
+            detail_button.clicked.connect(lambda _=False, k=result.keyword, r=result, d=device_type: self.show_bid_details(k, r, d))
             table.setCellWidget(row, 9, detail_button)
             
             # UI 업데이트 (rebuild 중에는 스킵)
@@ -736,14 +740,20 @@ class PowerLinkResultsWidget(QWidget):
             self.history_table.clear_table()
             
             for session in sessions:
-                # 생성일시 (한국시간으로 변환)
+                # 생성일시 (한국시간으로 변환 - 타임존 안전)
                 created_at = session['created_at']
                 if isinstance(created_at, str):
-                    created_at = datetime.fromisoformat(created_at)
-                
-                # UTC에서 한국시간(KST, UTC+9)으로 변환
-                from datetime import timedelta
-                kst_time = created_at + timedelta(hours=9)
+                    dt = datetime.fromisoformat(created_at)
+                    # naive datetime이면 UTC로 가정
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=timezone.utc)
+                    # KST로 변환
+                    kst_time = dt.astimezone(timezone(timedelta(hours=9)))
+                else:
+                    # 이미 datetime 객체인 경우
+                    if created_at.tzinfo is None:
+                        created_at = created_at.replace(tzinfo=timezone.utc)
+                    kst_time = created_at.astimezone(timezone(timedelta(hours=9)))
                 
                 # ModernTableWidget.add_row_with_data 사용
                 row_index = self.history_table.add_row_with_data([
@@ -937,32 +947,6 @@ class PowerLinkResultsWidget(QWidget):
     
     
     
-    def update_history_button_states(self):
-        """히스토리 관련 버튼 상태 업데이트"""
-        try:
-            selected_count = 0
-            for row in range(self.history_table.rowCount()):
-                checkbox_item = self.history_table.item(row, 0)
-                if checkbox_item and checkbox_item.checkState() == Qt.Checked:
-                    selected_count += 1
-            
-            # 버튼 활성화 상태 및 텍스트 업데이트
-            has_selection = selected_count > 0
-            
-            # 선택삭제 버튼에 개수 표시
-            if has_selection:
-                self.delete_history_button.setText(f"🗑️ 선택삭제({selected_count})")
-                self.export_selected_history_button.setText(f"💾 선택저장({selected_count})")
-            else:
-                self.delete_history_button.setText("🗑️ 선택삭제")
-                self.export_selected_history_button.setText("💾 선택저장")
-            
-            self.delete_history_button.setEnabled(has_selection)
-            self.export_selected_history_button.setEnabled(has_selection)
-            self.view_history_button.setEnabled(selected_count == 1)  # 보기는 1개만 선택시
-            
-        except Exception as e:
-            print(f"히스토리 버튼 상태 업데이트 실패: {e}")
     
     def on_tab_changed(self, index):
         """탭 변경 시 처리"""
@@ -1195,7 +1179,7 @@ class PowerLinkResultsWidget(QWidget):
                 # 모바일 테이블에 추가
                 # 월검색량
                 if result.mobile_search_volume >= 0:
-                    mobile_search_volume = f"{result.mobile_search_volume:,}"
+                    mobile_search_volume = format_int(result.mobile_search_volume)
                 else:
                     mobile_search_volume = "-"
                 
@@ -1209,11 +1193,11 @@ class PowerLinkResultsWidget(QWidget):
                 mobile_row_data = [
                     result.keyword,  # 키워드
                     mobile_search_volume,  # 월검색량
-                    f"{result.mobile_clicks:.1f}" if result.mobile_clicks >= 0 else "-",  # 클릭수
-                    f"{result.mobile_ctr:.2f}%" if result.mobile_ctr >= 0 else "-",  # 클릭률
-                    f"{result.mobile_first_page_positions}위까지" if result.mobile_first_page_positions >= 0 else "-",  # 1p노출위치
-                    f"{result.mobile_first_position_bid:,}원" if result.mobile_first_position_bid >= 0 else "-",  # 1등광고비
-                    f"{result.mobile_min_exposure_bid:,}원" if result.mobile_min_exposure_bid >= 0 else "-",  # 최소노출가격
+                    format_float(result.mobile_clicks, precision=1) if result.mobile_clicks >= 0 else "-",  # 클릭수
+                    f"{format_float(result.mobile_ctr, precision=2)}%" if result.mobile_ctr >= 0 else "-",  # 클릭률
+                    f"{format_int(result.mobile_first_page_positions)}위까지" if result.mobile_first_page_positions >= 0 else "-",  # 1p노출위치
+                    format_price_krw(result.mobile_first_position_bid) if result.mobile_first_position_bid >= 0 else "-",  # 1등광고비
+                    format_price_krw(result.mobile_min_exposure_bid) if result.mobile_min_exposure_bid >= 0 else "-",  # 최소노출가격
                     mobile_rank_text,  # 추천순위
                     "상세"  # 상세 버튼
                 ]
@@ -1241,13 +1225,13 @@ class PowerLinkResultsWidget(QWidget):
                         background-color: #047857;
                     }
                 """)
-                mobile_detail_button.clicked.connect(lambda checked, k=result.keyword, r=result: self.show_bid_details(k, r, 'mobile'))
+                mobile_detail_button.clicked.connect(lambda checked=False, k=result.keyword, r=result, d='mobile': self.show_bid_details(k, r, d))
                 self.mobile_table.setCellWidget(mobile_row, 9, mobile_detail_button)
                 
                 # PC 테이블에 추가
                 # 월검색량
                 if result.pc_search_volume >= 0:
-                    pc_search_volume = f"{result.pc_search_volume:,}"
+                    pc_search_volume = format_int(result.pc_search_volume)
                 else:
                     pc_search_volume = "-"
                 
@@ -1261,11 +1245,11 @@ class PowerLinkResultsWidget(QWidget):
                 pc_row_data = [
                     result.keyword,  # 키워드
                     pc_search_volume,  # 월검색량
-                    f"{result.pc_clicks:.1f}" if result.pc_clicks >= 0 else "-",  # 클릭수
-                    f"{result.pc_ctr:.2f}%" if result.pc_ctr >= 0 else "-",  # 클릭률
-                    f"{result.pc_first_page_positions}위까지" if result.pc_first_page_positions >= 0 else "-",  # 1p노출위치
-                    f"{result.pc_first_position_bid:,}원" if result.pc_first_position_bid >= 0 else "-",  # 1등광고비
-                    f"{result.pc_min_exposure_bid:,}원" if result.pc_min_exposure_bid >= 0 else "-",  # 최소노출가격
+                    format_float(result.pc_clicks, precision=1) if result.pc_clicks >= 0 else "-",  # 클릭수
+                    f"{format_float(result.pc_ctr, precision=2)}%" if result.pc_ctr >= 0 else "-",  # 클릭률
+                    f"{format_int(result.pc_first_page_positions)}위까지" if result.pc_first_page_positions >= 0 else "-",  # 1p노출위치
+                    format_price_krw(result.pc_first_position_bid) if result.pc_first_position_bid >= 0 else "-",  # 1등광고비
+                    format_price_krw(result.pc_min_exposure_bid) if result.pc_min_exposure_bid >= 0 else "-",  # 최소노출가격
                     pc_rank_text,  # 추천순위
                     "상세"  # 상세 버튼
                 ]
@@ -1293,7 +1277,7 @@ class PowerLinkResultsWidget(QWidget):
                         background-color: #047857;
                     }
                 """)
-                pc_detail_button.clicked.connect(lambda checked, k=result.keyword, r=result: self.show_bid_details(k, r, 'pc'))
+                pc_detail_button.clicked.connect(lambda checked=False, k=result.keyword, r=result, d='pc': self.show_bid_details(k, r, d))
                 self.pc_table.setCellWidget(pc_row, 9, pc_detail_button)
             
             logger.info(f"테이블 새로고침 완료: {len(all_keywords)}개 키워드")
@@ -1308,7 +1292,7 @@ class PowerLinkResultsWidget(QWidget):
             self.pc_table.setRowCount(0)
             powerlink_service.clear_all_keywords()
             self.update_save_button_state()
-            logger.info("모든 테이블 클리어 완룼")
+            logger.info("모든 테이블 클리어 완료")
         except Exception as e:
             logger.error(f"테이블 클리어 실패: {e}")
     
@@ -1447,7 +1431,7 @@ class PowerLinkResultsWidget(QWidget):
             
             # 상세 다이얼로그 생성
             dialog = QDialog(self)
-            dialog.setWindowTitle("입찰가 상세 정보")
+            dialog.setWindowTitle(title)
             dialog.setModal(True)
             dialog.resize(420, 480)
             dialog.setStyleSheet(f"""
