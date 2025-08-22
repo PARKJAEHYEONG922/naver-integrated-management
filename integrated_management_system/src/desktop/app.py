@@ -146,7 +146,8 @@ class MainWindow(QMainWindow):
             
             log_manager.add_log("🔄 API 설정이 변경되었습니다. 연결 상태를 다시 확인합니다.", "info")
             
-            # API 상태 재확인
+            # 캐시 무효화 후 API 상태 재확인
+            APIChecker.invalidate_all_caches()
             QTimer.singleShot(500, self.recheck_api_status)
             
         except Exception as e:

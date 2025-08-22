@@ -13,7 +13,7 @@ def register(app):
     
     try:
         # 키워드 분석은 DB를 사용하지 않음 (메모리 기반)
-        from .ui import KeywordAnalysisWidget
+        from .ui_main import KeywordAnalysisWidget
         
         # 키워드 분석 위젯 생성
         widget = KeywordAnalysisWidget()

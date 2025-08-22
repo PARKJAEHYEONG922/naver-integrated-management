@@ -5,8 +5,24 @@
 - 모든 기능 모듈에서 재사용 가능
 """
 import traceback
+import inspect
+import threading
 from typing import Callable, Optional
 from PySide6.QtCore import QThread, Signal
+
+
+def _supports_kwarg(func: Callable, name: str) -> bool:
+    """함수가 특정 키워드 인자를 받는지 확인"""
+    try:
+        sig = inspect.signature(func)
+    except (ValueError, TypeError):
+        return True  # 안전하게 허용
+    for p in sig.parameters.values():
+        if p.kind in (p.POSITIONAL_OR_KEYWORD, p.KEYWORD_ONLY) and p.name == name:
+            return True
+        if p.kind == p.VAR_KEYWORD:  # **kwargs 있으면 ok
+            return True
+    return False
 
 
 class BackgroundWorker(QThread):
@@ -19,7 +35,7 @@ class BackgroundWorker(QThread):
     # 표준 시그널들
     progress_updated = Signal(int, int, str)  # (현재, 전체, 상태메시지)
     error_occurred = Signal(str)  # 에러 메시지
-    finished = Signal(object)  # 결과 객체
+    processing_finished = Signal(object)  # 결과 객체 (finished 충돌 방지)
     canceled = Signal()  # 취소됨
     
     def __init__(self, parent=None):
@@ -28,9 +44,7 @@ class BackgroundWorker(QThread):
         self._args = ()
         self._kwargs = {}
         self._is_canceled = False
-        
-        # 진행률 콜백 함수들
-        self._progress_callback = None
+        self._cancel_event = None
     
     def execute_function(self, func: Callable, *args, **kwargs):
         """
@@ -41,14 +55,38 @@ class BackgroundWorker(QThread):
             *args: 함수 인자들
             **kwargs: 함수 키워드 인자들
         """
+        if self.isRunning() or self.isFinished():
+            raise RuntimeError("BackgroundWorker는 재사용할 수 없습니다. 새 인스턴스를 만들세요.")
+        
         self._function = func
         self._args = args
         self._kwargs = kwargs
         self._is_canceled = False
+        self._cancel_event = threading.Event()
         
-        # 진행률 콜백을 kwargs에 추가 (함수가 지원하는 경우)
-        if 'progress_callback' not in kwargs:
-            self._kwargs['progress_callback'] = self._on_progress_update
+        # 외부 콜백을 빼서 래핑
+        user_cb = kwargs.pop('progress_callback', None)
+
+        def combined_progress(current: int = 0, total: int = 0, message: str = ""):
+            # 내부 신호는 항상 보냄
+            self._on_progress_update(current, total, message)
+            # 외부 콜백 있으면 뒤이어 호출(예외는 무시)
+            if user_cb:
+                try:
+                    user_cb(current, total, message)
+                except Exception:
+                    pass
+
+        # 실행 함수가 progress_callback을 받을 수 있을 때만 주입
+        if _supports_kwarg(func, 'progress_callback'):
+            self._kwargs['progress_callback'] = combined_progress
+        
+        # 협조적 취소 토큰 주입
+        if _supports_kwarg(func, 'cancel_event'):
+            self._kwargs['cancel_event'] = self._cancel_event
+        elif _supports_kwarg(func, 'is_canceled'):
+            # 콜러가 bool 콜러블을 원할 수도 있음
+            self._kwargs['is_canceled'] = lambda: self._is_canceled or self._cancel_event.is_set()
         
         self.start()
     
@@ -64,7 +102,7 @@ class BackgroundWorker(QThread):
             
             # 취소되지 않았으면 결과 발송
             if not self._is_canceled:
-                self.finished.emit(result)
+                self.processing_finished.emit(result)
                 
         except Exception as e:
             if not self._is_canceled:
@@ -75,20 +113,23 @@ class BackgroundWorker(QThread):
                 import logging
                 logging.error(f"BackgroundWorker 오류: {traceback.format_exc()}")
     
-    def cancel(self):
-        """작업 취소"""
+    def cancel(self, block: bool = False, timeout_ms: int = 0):
+        """작업 취소(협조적). block=True면 최대 timeout_ms 대기."""
         self._is_canceled = True
-        
-        # 함수가 취소를 지원하는 경우 (cancel_callback 파라미터)
+        if hasattr(self, "_cancel_event"):
+            self._cancel_event.set()
+
+        # 바운드 메서드가 stop_analysis를 구현한 경우 호출(옵셔널)
         if hasattr(self._function, '__self__') and hasattr(self._function.__self__, 'stop_analysis'):
             try:
                 self._function.__self__.stop_analysis()
-            except:
+            except Exception:
                 pass
-        
+
         self.canceled.emit()
-        self.quit()
-        self.wait(3000)  # 3초 대기
+        # run()은 override이므로 quit()는 의미 없음. block 옵션만 제공.
+        if block:
+            self.wait(timeout_ms)
     
     def _on_progress_update(self, current: int = 0, total: int = 0, message: str = ""):
         """진행률 업데이트 콜백"""

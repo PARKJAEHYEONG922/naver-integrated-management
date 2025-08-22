@@ -4,12 +4,12 @@
 """
 from PySide6.QtCore import QThread, Signal
 from typing import List, Dict, Optional
-from playwright.sync_api import sync_playwright
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 import threading
 import asyncio
 
 from src.foundation.logging import get_logger
+from src.toolbox.progress import calc_percentage
 from .models import KeywordAnalysisResult, AnalysisProgress, BidPosition
 from .adapters import PowerLinkDataAdapter, adaptive_rate_limiter, POWERLINK_CONFIG, NAVER_MIN_BID
 
@@ -53,12 +53,15 @@ class PowerLinkAnalysisWorker(QThread):
         self.should_stop = True
     
     def _emit_progress_safe(self, stage: str, stage_progress: float, keyword: str, status: str, detail: str):
-        """📊 순차적 진행률 업데이트 (역행 방지)"""
+        """📊 순차적 진행률 업데이트 (역행 방지) - toolbox.progress 활용"""
         with self.progress_lock:
             # 단계별 진행률 계산
             stage_start, stage_end = self.PROGRESS_STAGES[stage]
             stage_range = stage_end - stage_start
-            actual_progress = stage_start + (stage_progress * stage_range)
+            
+            # calc_percentage 사용하여 스테이지 내 진행률 계산
+            stage_percentage = calc_percentage(stage_progress, 1.0)  # stage_progress는 0.0~1.0
+            actual_progress = stage_start + (stage_percentage * stage_range / 100.0)
             
             # 역행 방지: 현재 진행률보다 작으면 업데이트하지 않음
             if actual_progress >= self.current_progress:
@@ -181,23 +184,10 @@ class PowerLinkAnalysisWorker(QThread):
             await self._cleanup_pages()
     
     async def _initialize_pages(self):
-        """🚀 PC/Mobile 페이지 초기화 - vendors 헬퍼 활용"""
+        """🚀 PC/Mobile 페이지 초기화 - adapters 통해 vendors 활용"""
         try:
-            # vendors 헬퍼 사용으로 최적화된 브라우저 초기화
-            from src.vendors.web_automation.playwright_helper import create_playwright_helper, get_fast_browser_config
-            
-            # vendors의 최적화된 설정 활용
-            config = get_fast_browser_config(headless=True)
-            self.playwright_helper = await create_playwright_helper(config)
-            
-            # vendors 헬퍼의 context와 페이지 사용 (최적화 자동 적용됨)
-            self.async_context = self.playwright_helper.context
-            
-            # PC/Mobile 페이지 생성 (vendors 최적화 자동 적용)
-            self.pc_page = await self.async_context.new_page()
-            self.mobile_page = await self.async_context.new_page()
-            
-            logger.info("PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)")
+            # adapters를 통해 페이지 초기화 (vendors 호출 캡슐화)
+            self.playwright_helper, self.pc_page, self.mobile_page = await self.adapter.initialize_playwright_pages()
             
         except Exception as e:
             logger.error(f"페이지 초기화 실패: {e}")
@@ -205,19 +195,14 @@ class PowerLinkAnalysisWorker(QThread):
     
     
     async def _cleanup_pages(self):
-        """🧹 페이지 정리 - vendors 헬퍼 활용"""
+        """🧹 페이지 정리 - adapters 통해 vendors 활용"""
         try:
-            # 개별 페이지 정리
-            if self.pc_page:
-                await self.pc_page.close()
-            if self.mobile_page:
-                await self.mobile_page.close()
-            
-            # vendors 헬퍼 정리 (context, browser, playwright 모두 정리됨)
-            if hasattr(self, 'playwright_helper') and self.playwright_helper:
-                await self.playwright_helper.cleanup()
-                
-            logger.info("페이지 정리 완료")
+            # adapters를 통해 페이지 정리 (vendors 호출 캡슐화)
+            await self.adapter.cleanup_playwright(
+                self.playwright_helper if hasattr(self, 'playwright_helper') else None,
+                self.pc_page if hasattr(self, 'pc_page') else None,
+                self.mobile_page if hasattr(self, 'mobile_page') else None
+            )
         except Exception as e:
             logger.warning(f"페이지 정리 중 오류: {e}")
     
@@ -244,7 +229,7 @@ class PowerLinkAnalysisWorker(QThread):
                     if api_data:
                         results[keyword] = api_data
                         # API 단계 진행률 업데이트 (10% ~ 40%)
-                        stage_progress = len(results) / len(self.keywords)
+                        stage_progress = calc_percentage(len(results), len(self.keywords)) / 100.0
                         self._emit_progress_safe('api', stage_progress, keyword,
                             f"API 호출 진행 중... ({len(results)}/{len(self.keywords)})",
                             f"기본 데이터 + 입찰가 정보")
@@ -296,25 +281,44 @@ class PowerLinkAnalysisWorker(QThread):
                 break
                 
             try:
-                # PC 검색 페이지로 이동
-                url = f"https://search.naver.com/search.naver?query={keyword}"
-                await self.pc_page.goto(url, wait_until='domcontentloaded', timeout=10000)
+                # URL 인코딩 추가
+                from urllib.parse import quote
+                encoded_keyword = quote(keyword)
+                url = f"https://search.naver.com/search.naver?query={encoded_keyword}"
+                
+                # PC 검색 페이지로 이동 - 타임아웃 증가 및 재시도
+                for retry in range(2):
+                    try:
+                        await self.pc_page.goto(url, wait_until='domcontentloaded', timeout=15000)
+                        break
+                    except Exception as nav_e:
+                        if retry == 0:
+                            logger.warning(f"PC 페이지 로딩 재시도: {keyword}: {nav_e}")
+                            await asyncio.sleep(1)
+                        else:
+                            raise nav_e
                 
                 # 파워링크 정보 추출
                 pc_exposure_info = await self._extract_pc_powerlink_async(self.pc_page, keyword)
                 results[keyword] = pc_exposure_info
                 
+                # 결과 검증 로그
+                if pc_exposure_info == (8, 8):
+                    logger.warning(f"PC 기본값 사용됨: {keyword} -> {pc_exposure_info}")
+                else:
+                    logger.debug(f"PC 크롤링 성공: {keyword} -> {pc_exposure_info}")
+                
                 # PC 크롤링 단계 진행률 업데이트 (40% ~ 65%)
-                stage_progress = (i + 1) / len(self.keywords)
+                stage_progress = calc_percentage(i + 1, len(self.keywords)) / 100.0
                 self._emit_progress_safe('pc', stage_progress, keyword,
                     f"PC 크롤링 진행 중... ({i + 1}/{len(self.keywords)})",
                     f"파워링크 노출 위치 분석")
                 
                 # 최소 딜레이
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.2)
                 
             except Exception as e:
-                logger.error(f"PC 크롤링 실패: {keyword}: {e}")
+                logger.error(f"PC 크롤링 완전 실패: {keyword}: {e}")
                 results[keyword] = (8, 8)  # 기본값
         
         logger.info(f"PC 크롤링 완료: {len(results)}/{len(self.keywords)}개 처리")
@@ -329,85 +333,168 @@ class PowerLinkAnalysisWorker(QThread):
                 break
                 
             try:
-                # Mobile 검색 페이지로 이동
-                url = f"https://m.search.naver.com/search.naver?query={keyword}"
-                await self.mobile_page.goto(url, wait_until='domcontentloaded', timeout=10000)
+                # URL 인코딩 추가
+                from urllib.parse import quote
+                encoded_keyword = quote(keyword)
+                url = f"https://m.search.naver.com/search.naver?query={encoded_keyword}"
+                
+                # Mobile 검색 페이지로 이동 - 타임아웃 증가 및 재시도
+                for retry in range(2):
+                    try:
+                        await self.mobile_page.goto(url, wait_until='domcontentloaded', timeout=15000)
+                        break
+                    except Exception as nav_e:
+                        if retry == 0:
+                            logger.warning(f"Mobile 페이지 로딩 재시도: {keyword}: {nav_e}")
+                            await asyncio.sleep(1)
+                        else:
+                            raise nav_e
                 
                 # 파워링크 정보 추출
                 mobile_exposure_info = await self._extract_mobile_powerlink_async(self.mobile_page, keyword)
                 results[keyword] = mobile_exposure_info
                 
+                # 결과 검증 로그
+                if mobile_exposure_info == (4, 4):
+                    logger.warning(f"Mobile 기본값 사용됨: {keyword} -> {mobile_exposure_info}")
+                else:
+                    logger.debug(f"Mobile 크롤링 성공: {keyword} -> {mobile_exposure_info}")
+                
                 # Mobile 크롤링 단계 진행률 업데이트 (65% ~ 90%)
-                stage_progress = (i + 1) / len(self.keywords)
+                stage_progress = calc_percentage(i + 1, len(self.keywords)) / 100.0
                 self._emit_progress_safe('mobile', stage_progress, keyword,
                     f"Mobile 크롤링 진행 중... ({i + 1}/{len(self.keywords)})",
                     f"모바일 파워링크 노출 위치 분석")
                 
                 # 최소 딜레이
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(0.2)
                 
             except Exception as e:
-                logger.error(f"Mobile 크롤링 실패: {keyword}: {e}")
+                logger.error(f"Mobile 크롤링 완전 실패: {keyword}: {e}")
                 results[keyword] = (4, 4)  # 기본값
         
         logger.info(f"Mobile 크롤링 완료: {len(results)}/{len(self.keywords)}개 처리")
         return results
     
     async def _extract_pc_powerlink_async(self, page, keyword):
-        """PC 파워링크 정보 비동기 추출"""
-        try:
-            # 파워링크 위치 찾기
-            title_wrap_divs = await page.query_selector_all(".title_wrap")
-            position_index = 0
-            
-            for idx, div in enumerate(title_wrap_divs, start=1):
-                try:
-                    h2_tag = await div.query_selector("h2")
-                    if h2_tag:
-                        h2_text = await h2_tag.inner_text()
-                        if "파워링크" in h2_text:
-                            position_index = idx
-                            break
-                except:
+        """PC 파워링크 정보 비동기 추출 (재시도 로직 포함)"""
+        max_retries = POWERLINK_CONFIG["max_retries"]
+        
+        for attempt in range(max_retries + 1):
+            try:
+                # 페이지 로딩 완료까지 대기 (networkidle로 변경)
+                await page.wait_for_load_state('networkidle', timeout=5000)
+                await page.wait_for_timeout(1000)  # 추가 안정화 대기
+                
+                # 파워링크 위치 찾기
+                title_wrap_divs = await page.query_selector_all(".title_wrap")
+                position_index = 0
+                
+                for idx, div in enumerate(title_wrap_divs, start=1):
+                    try:
+                        h2_tag = await div.query_selector("h2")
+                        if h2_tag:
+                            h2_text = await h2_tag.inner_text()
+                            if "파워링크" in h2_text:
+                                position_index = idx
+                                break
+                    except:
+                        continue
+                
+                # 파워링크 광고 개수 찾기
+                power_link_elements = await page.query_selector_all(".title_url_area")
+                power_link_count = len(power_link_elements)
+                
+                # 결과 검증 - 유효한 데이터가 있으면 반환
+                if position_index > 0 or power_link_count > 0:
+                    # 기본값 보장
+                    if position_index == 0:
+                        position_index = 8
+                    if power_link_count == 0:
+                        power_link_count = 8
+                    
+                    logger.debug(f"PC 파워링크 추출 성공: {keyword} -> 위치:{position_index}, 개수:{power_link_count}")
+                    return (position_index, power_link_count)
+                
+                # 데이터가 없으면 재시도
+                if attempt < max_retries:
+                    wait_time = (attempt + 1) * 1000  # 1초, 2초 대기
+                    logger.warning(f"PC 크롤링 데이터 없음 - {wait_time/1000}초 후 재시도 ({attempt + 1}/{max_retries}): {keyword}")
+                    await asyncio.sleep(wait_time/1000)
                     continue
-            
-            # 파워링크 광고 개수 찾기
-            power_link_elements = await page.query_selector_all(".title_url_area")
-            power_link_count = len(power_link_elements)
-            
-            return (position_index, power_link_count)
-            
-        except Exception as e:
-            logger.error(f"PC 파워링크 정보 추출 오류: {keyword}: {e}")
-            return (8, 8)  # 기본값
+                else:
+                    logger.warning(f"PC 크롤링 최대 재시도 초과 - 기본값 사용: {keyword}")
+                    return (8, 8)
+                    
+            except Exception as e:
+                logger.error(f"PC 크롤링 재시도 중 오류 ({attempt + 1}/{max_retries + 1}): {keyword}: {e}")
+                if attempt == max_retries:
+                    return (8, 8)
+                await asyncio.sleep(1)
+                continue
+        
+        # 모든 시도 실패
+        return (8, 8)
     
     async def _extract_mobile_powerlink_async(self, page, keyword):
-        """Mobile 파워링크 정보 비동기 추출"""
-        try:
-            # 파워링크 위치 찾기 (Mobile)
-            title_wrap_divs = await page.query_selector_all(".title_wrap")
-            position_index = 0
-            
-            for idx, div in enumerate(title_wrap_divs, start=1):
-                try:
-                    h2_tag = await div.query_selector("h2")
-                    if h2_tag:
-                        h2_text = await h2_tag.inner_text()
-                        if keyword in h2_text:
-                            position_index = idx
-                            break
-                except:
+        """Mobile 파워링크 정보 비동기 추출 (재시도 로직 포함)"""
+        max_retries = POWERLINK_CONFIG["max_retries"]
+        
+        for attempt in range(max_retries + 1):
+            try:
+                # 페이지 로딩 완료까지 대기 (networkidle로 변경)
+                await page.wait_for_load_state('networkidle', timeout=5000)
+                await page.wait_for_timeout(1000)  # 추가 안정화 대기
+                
+                # 파워링크 위치 찾기 (Mobile)
+                title_wrap_divs = await page.query_selector_all(".title_wrap")
+                position_index = 0
+                
+                for idx, div in enumerate(title_wrap_divs, start=1):
+                    try:
+                        h2_tag = await div.query_selector("h2")
+                        if h2_tag:
+                            h2_text = await h2_tag.inner_text()
+                            if keyword in h2_text:
+                                position_index = idx
+                                break
+                    except:
+                        continue
+                
+                # 파워링크 광고 개수 찾기 (Mobile)
+                power_link_elements = await page.query_selector_all(".url_area")
+                power_link_count = len(power_link_elements)
+                
+                # 결과 검증 - 유효한 데이터가 있으면 반환
+                if position_index > 0 or power_link_count > 0:
+                    # 기본값 보장
+                    if position_index == 0:
+                        position_index = 4
+                    if power_link_count == 0:
+                        power_link_count = 4
+                    
+                    logger.debug(f"Mobile 파워링크 추출 성공: {keyword} -> 위치:{position_index}, 개수:{power_link_count}")
+                    return (position_index, power_link_count)
+                
+                # 데이터가 없으면 재시도
+                if attempt < max_retries:
+                    wait_time = (attempt + 1) * 1000  # 1초, 2초 대기
+                    logger.warning(f"Mobile 크롤링 데이터 없음 - {wait_time/1000}초 후 재시도 ({attempt + 1}/{max_retries}): {keyword}")
+                    await asyncio.sleep(wait_time/1000)
                     continue
-            
-            # 파워링크 광고 개수 찾기 (Mobile)
-            power_link_elements = await page.query_selector_all(".url_area")
-            power_link_count = len(power_link_elements)
-            
-            return (position_index, power_link_count)
-            
-        except Exception as e:
-            logger.error(f"Mobile 파워링크 정보 추출 오류: {keyword}: {e}")
-            return (4, 4)  # 기본값
+                else:
+                    logger.warning(f"Mobile 크롤링 최대 재시도 초과 - 기본값 사용: {keyword}")
+                    return (4, 4)
+                    
+            except Exception as e:
+                logger.error(f"Mobile 크롤링 재시도 중 오류 ({attempt + 1}/{max_retries + 1}): {keyword}: {e}")
+                if attempt == max_retries:
+                    return (4, 4)
+                await asyncio.sleep(1)
+                continue
+        
+        # 모든 시도 실패
+        return (4, 4)
     
     def _combine_all_results(self, api_results, pc_results, mobile_results):
         """🎯 모든 결과 조합"""

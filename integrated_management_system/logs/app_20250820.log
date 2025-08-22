@@ -17941,3 +17941,1442 @@ ModuleNotFoundError: No module named 'src.features.rank_tracking.ui'
 2025-08-20 18:05:51 - features.rank_tracking.worker - DEBUG - 진행 중인 시간 없음: 16
 2025-08-20 18:05:51 - features.rank_tracking.worker - DEBUG - 진행 중인 시간 없음: 16
 2025-08-20 18:05:51 - features.rank_tracking.worker - DEBUG - 진행 중인 시간 없음: 16
+2025-08-20 20:16:02 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:16:02 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:16:02 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:16:02 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:16:02 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:16:02 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:16:03 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:16:03 - features.keyword_analysis.ui - ERROR - 서비스 시그널 연결 실패: 'KeywordAnalysisService' object has no attribute 'keyword_processed'
+2025-08-20 20:16:03 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 20:16:03 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 20:16:03 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 20:16:03 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 20:16:03 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 20:16:03 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 20:16:03 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 20:16:03 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 20:16:03 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 20:16:03 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 20:16:03 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 20:16:03 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 20:16:03 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 20:16:03 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 20:16:03 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 20:16:03 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 20:16:03 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 20:16:03 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 20:20:44 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:20:44 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:20:44 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:20:44 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:20:44 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:20:44 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:20:44 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:20:45 - features.keyword_analysis.ui - ERROR - 서비스 시그널 연결 실패: 'KeywordAnalysisService' object has no attribute 'keyword_processed'
+2025-08-20 20:20:45 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 20:20:45 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 20:20:45 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 20:20:45 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 20:20:45 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 20:20:45 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 20:20:45 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 20:20:45 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 20:20:45 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 20:20:45 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 20:20:45 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 20:20:45 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 20:20:45 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 20:20:45 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 20:20:45 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 20:20:45 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 20:20:45 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 20:20:45 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 20:30:26 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:30:26 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:30:26 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:30:26 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:30:26 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:30:26 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:30:26 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:30:26 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:26 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:26 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:26 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:26 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:29 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:30:29 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:30:29 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:30:29 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:30:29 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:30:29 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:30:29 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:30:30 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:30 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:30 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:30 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:30 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:31 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:30:31 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:30:31 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:30:31 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:30:31 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:30:31 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:30:32 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:30:32 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:32 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:32 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:32 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:32 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:44 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:30:44 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:30:44 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:30:44 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:30:44 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:30:44 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:30:44 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:30:45 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:45 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:45 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:45 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:45 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:36:24 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:36:24 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:36:24 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:36:24 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:36:24 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:36:24 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:36:24 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:36:25 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:25 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:25 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 25
+    from src.toolbox import formatters\nfrom src.toolbox.progress import calc_percentage
+                                       ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:36:25 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:25 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:36:27 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:36:27 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:36:27 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:36:27 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:36:27 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:36:27 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:36:27 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 25
+    from src.toolbox import formatters\nfrom src.toolbox.progress import calc_percentage
+                                       ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:36:27 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:37:43 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:37:43 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:37:43 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:37:43 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:37:43 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:37:43 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:37:44 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:37:44 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:44 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:44 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:37:44 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:44 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:45 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:37:45 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:37:45 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:37:45 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:37:45 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:37:45 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:37:45 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:37:46 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:46 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:46 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:37:46 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:46 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:09 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:38:09 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:38:09 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:38:09 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:38:09 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:38:09 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:38:10 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:38:10 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:10 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:10 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:38:10 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:10 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:19 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:38:19 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:38:19 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:38:19 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:38:19 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:38:19 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:38:19 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:38:20 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:20 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:20 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:38:20 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:20 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:42:15 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:42:15 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:42:15 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:42:15 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:42:15 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:42:15 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:42:15 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:42:15 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:17 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:42:17 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:42:17 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:42:17 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:42:17 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:42:17 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:42:17 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:42:18 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:18 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:18 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:42:18 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:18 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:41 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:46:41 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:46:41 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:46:41 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:46:41 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:46:41 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:46:42 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:46:42 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:42 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:42 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:46:42 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:42 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:55:29 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:55:29 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:55:29 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:55:29 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:55:29 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:55:29 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:55:29 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:55:30 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:30 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:30 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui'
+
+2025-08-20 20:55:30 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:30 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:35 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:55:35 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:55:35 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:55:35 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:55:35 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:55:35 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:55:35 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:55:36 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:36 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:36 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui'
+
+2025-08-20 20:55:36 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:36 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:56:37 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 20:56:37 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 20:56:37 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 20:56:37 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 20:56:37 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 20:56:37 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 20:56:38 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 20:56:38 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 20:56:38 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 20:56:38 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 20:56:38 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 20:56:38 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 20:56:38 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 20:56:38 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 20:56:38 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 20:56:38 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 20:56:38 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 20:56:38 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 20:56:38 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 20:56:38 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 20:56:38 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 20:56:38 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 20:56:38 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 20:56:38 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 20:56:45 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-20 20:56:45 - toolbox.text_utils - INFO - 중복 제거 완료: 1 -> 1개 (건너뛴: 0개)
+2025-08-20 20:56:45 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 아이폰케이스
+2025-08-20 20:56:45 - features.keyword_analysis.adapters - WARNING - 검색광고 데이터 수집 실패 - 아이폰케이스: cannot import name 'get_keyword_client' from 'src.vendors.naver.client_factory' (C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\vendors\naver\client_factory.py)
+2025-08-20 20:56:45 - vendors.naver.factory - DEBUG - 네이버 shop 클라이언트 생성됨
+2025-08-20 20:56:45 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 20:56:45 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): openapi.naver.com:443
+2025-08-20 20:56:45 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%84%EC%9D%B4%ED%8F%B0%EC%BC%80%EC%9D%B4%EC%8A%A4&display=40&start=1&sort=sim HTTP/1.1" 200 3409
+2025-08-20 20:56:45 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 20:56:45 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 4393626개 결과
+2025-08-20 20:56:45 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 20:56:45 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 아이폰케이스
+2025-08-20 20:56:45 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 아이폰케이스
+2025-08-20 20:56:45 - root - ERROR - BackgroundWorker 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 268, in _analyze_keywords_task
+    Q_ARG(object, data))
+    ~~~~~^^^^^^^^^^^^^^
+RuntimeError: qArgDataFromPyType: Unable to find a QMetaType for "object".
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\worker.py", line 101, in run
+    result = self._function(*self._args, **self._kwargs)
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 272, in _analyze_keywords_task
+    Q_ARG(object, data))
+    ~~~~~^^^^^^^^^^^^^^
+RuntimeError: qArgDataFromPyType: Unable to find a QMetaType for "object".
+
+2025-08-20 21:03:24 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:03:24 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:03:24 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:03:24 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:03:24 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:03:24 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:03:26 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:03:26 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:03:26 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:03:26 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:03:26 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:03:27 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:03:27 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:03:27 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:03:27 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:03:27 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:03:27 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:03:27 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:03:27 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:03:27 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:03:27 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:03:27 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:03:27 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:03:27 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:13:07 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:13:07 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:13:07 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:13:07 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:13:07 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:13:07 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:13:08 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:13:08 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:08 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:08 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui_main'
+
+2025-08-20 21:13:08 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:08 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:13:10 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:13:10 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:13:10 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:13:10 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:13:10 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:13:10 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:13:10 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui_main'
+
+2025-08-20 21:13:10 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:18:07 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:18:07 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:18:07 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:18:07 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:18:07 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:18:07 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:18:07 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:18:07 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:18:07 - main - ERROR - 기능 모듈 로드 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:18:07 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 39, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 53, in setup_ui
+    title_label.setStyleSheet(ModernStyle.TITLE)
+                              ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'ModernStyle' has no attribute 'TITLE'
+
+2025-08-20 21:18:07 - desktop.app - ERROR - 애플리케이션 실행 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:18:07 - main - ERROR - 애플리케이션 시작 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:20:15 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:20:15 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:20:15 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:20:15 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:20:15 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:20:15 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:20:16 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:20:16 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:20:16 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:20:16 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:20:16 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:20:16 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:20:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:20:16 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:20:16 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:20:16 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:20:16 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:20:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:20:16 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:20:16 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:20:16 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:20:16 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:20:16 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:20:16 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:28:22 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:28:22 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:28:22 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:28:22 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:28:22 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:28:22 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:28:23 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:28:23 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:23 - main - ERROR - 기능 모듈 로드 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:23 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 34, in <module>
+    class KeywordAnalysisWidget(QWidget):
+    ...<733 lines>...
+            self.add_log("🔄 API 설정이 업데이트되었습니다.", "info")
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 367, in KeywordAnalysisWidget
+    def update_progress(self, progress: AnalysisProgress):
+                                        ^^^^^^^^^^^^^^^^
+NameError: name 'AnalysisProgress' is not defined
+
+2025-08-20 21:28:23 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:23 - main - ERROR - 애플리케이션 시작 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:29 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:28:29 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:28:29 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:28:29 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:28:29 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:28:29 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:28:30 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:28:30 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:30 - main - ERROR - 기능 모듈 로드 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:30 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 34, in <module>
+    class KeywordAnalysisWidget(QWidget):
+    ...<733 lines>...
+            self.add_log("🔄 API 설정이 업데이트되었습니다.", "info")
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 367, in KeywordAnalysisWidget
+    def update_progress(self, progress: AnalysisProgress):
+                                        ^^^^^^^^^^^^^^^^
+NameError: name 'AnalysisProgress' is not defined
+
+2025-08-20 21:28:30 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:30 - main - ERROR - 애플리케이션 시작 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:32:42 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:32:42 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:32:42 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:33:17 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:33:17 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:33:17 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:33:17 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:33:17 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:33:17 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:33:17 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:33:18 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:33:18 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:33:18 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:33:18 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:33:18 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:33:18 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:33:18 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:33:18 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:33:18 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:33:18 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:33:18 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:33:18 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:33:18 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:33:18 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:33:18 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:33:18 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:33:18 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:33:18 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:33:23 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-20 21:33:23 - toolbox.text_utils - INFO - 중복 제거 완료: 1 -> 1개 (건너뛴: 0개)
+2025-08-20 21:33:23 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 아이폰케이스
+2025-08-20 21:33:23 - features.keyword_analysis.adapters - WARNING - 검색광고 데이터 수집 실패 - 아이폰케이스: cannot import name 'get_keyword_client' from 'src.vendors.naver.client_factory' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\vendors\naver\client_factory.py)
+2025-08-20 21:33:23 - vendors.naver.factory - DEBUG - 네이버 shop 클라이언트 생성됨
+2025-08-20 21:33:23 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:33:23 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): openapi.naver.com:443
+2025-08-20 21:33:24 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%84%EC%9D%B4%ED%8F%B0%EC%BC%80%EC%9D%B4%EC%8A%A4&display=40&start=1&sort=sim HTTP/1.1" 200 3411
+2025-08-20 21:33:24 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:33:24 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 4395105개 결과
+2025-08-20 21:33:24 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:33:24 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 아이폰케이스
+2025-08-20 21:33:24 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 아이폰케이스
+2025-08-20 21:34:42 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:34:42 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:34:42 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:34:42 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:34:42 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:34:42 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:34:43 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:34:43 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:34:43 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:34:43 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:34:43 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:34:43 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:34:43 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:34:43 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:34:43 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:34:43 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:34:43 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:34:43 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:34:43 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:34:43 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:34:43 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:34:43 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:34:43 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:34:43 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:34:44 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:35:40 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:35:40 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:35:40 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:35:40 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:35:40 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:35:40 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:35:41 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:35:41 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:35:41 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:35:41 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:35:41 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:35:41 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:35:41 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:35:41 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:35:41 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:35:41 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:35:41 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:35:41 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:35:41 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:35:41 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:35:41 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:35:41 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:35:41 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:35:41 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:35:41 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:35:45 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-20 21:35:45 - toolbox.text_utils - INFO - 중복 제거 완료: 1 -> 1개 (건너뛴: 0개)
+2025-08-20 21:35:45 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지사료
+2025-08-20 21:35:45 - features.keyword_analysis.adapters - WARNING - 검색광고 데이터 수집 실패 - 강아지사료: cannot import name 'get_keyword_client' from 'src.vendors.naver.client_factory' (c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\vendors\naver\client_factory.py)
+2025-08-20 21:35:45 - vendors.naver.factory - DEBUG - 네이버 shop 클라이언트 생성됨
+2025-08-20 21:35:45 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:35:45 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): openapi.naver.com:443
+2025-08-20 21:35:46 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&display=40&start=1&sort=sim HTTP/1.1" 200 3816
+2025-08-20 21:35:46 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:35:46 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 844360개 결과
+2025-08-20 21:35:46 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 2개 카테고리
+2025-08-20 21:35:46 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지사료
+2025-08-20 21:35:46 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지사료
+2025-08-20 21:38:07 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:38:20 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:38:20 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 아이폰
+2025-08-20 21:38:20 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:38:20 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:38:20 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:38:20 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-20 21:38:20 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%84%EC%9D%B4%ED%8F%B0&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:38:20 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:38:20 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 604개 키워드
+2025-08-20 21:39:06 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:39:06 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:39:06 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:39:06 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:39:06 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:39:06 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:39:06 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:39:06 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:39:06 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:39:06 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:39:06 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:39:06 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:39:06 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:39:06 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:39:06 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:39:06 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:39:06 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:39:07 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:39:07 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:39:07 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:39:07 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:39:07 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:39:07 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:39:07 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:39:07 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:39:08 - toolbox.text_utils - INFO - 텍스트에서 6개 키워드 파싱 완료
+2025-08-20 21:39:08 - toolbox.text_utils - INFO - 중복 제거 완료: 6 -> 6개 (건너뛴: 0개)
+2025-08-20 21:39:08 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 노견닭가슴살
+2025-08-20 21:39:08 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 노견닭가슴살
+2025-08-20 21:39:08 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:39:08 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-20 21:39:08 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%85%B8%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:39:08 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:39:08 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:39:08 - vendors.naver.factory - DEBUG - 네이버 shop 클라이언트 생성됨
+2025-08-20 21:39:08 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:39:08 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): openapi.naver.com:443
+2025-08-20 21:39:09 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%85%B8%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3247
+2025-08-20 21:39:09 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:39:09 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 2037개 결과
+2025-08-20 21:39:09 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 2개 카테고리
+2025-08-20 21:39:09 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 노견닭가슴살
+2025-08-20 21:39:09 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 노견닭가슴살
+2025-08-20 21:39:09 - root - ERROR - BackgroundWorker 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\worker.py", line 101, in run
+    result = self._function(*self._args, **self._kwargs)
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 562, in _analyze_keywords_task
+    Q_ARG(object, data)
+    ~~~~~^^^^^^^^^^^^^^
+RuntimeError: qArgDataFromPyType: Unable to find a QMetaType for "object".
+
+2025-08-20 21:39:54 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:39:54 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:39:54 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:39:54 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:39:54 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:39:54 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:39:55 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:39:55 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:39:55 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:39:55 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:39:55 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:39:55 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:39:55 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:39:55 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:39:55 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:39:55 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:39:55 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:39:55 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:39:55 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:39:55 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:39:55 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:39:55 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:39:55 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:39:55 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:39:55 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:40:01 - toolbox.text_utils - INFO - 텍스트에서 6개 키워드 파싱 완료
+2025-08-20 21:40:01 - toolbox.text_utils - INFO - 중복 제거 완료: 6 -> 6개 (건너뛴: 0개)
+2025-08-20 21:40:01 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 노견닭가슴살
+2025-08-20 21:40:01 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 노견닭가슴살
+2025-08-20 21:40:01 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:01 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-20 21:40:01 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%85%B8%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:01 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:01 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:40:01 - vendors.naver.factory - DEBUG - 네이버 shop 클라이언트 생성됨
+2025-08-20 21:40:01 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:01 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): openapi.naver.com:443
+2025-08-20 21:40:02 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%85%B8%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3246
+2025-08-20 21:40:02 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:02 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 2037개 결과
+2025-08-20 21:40:02 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 2개 카테고리
+2025-08-20 21:40:02 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 노견닭가슴살
+2025-08-20 21:40:02 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 노견닭가슴살
+2025-08-20 21:40:02 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 소형견고구마
+2025-08-20 21:40:02 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 소형견고구마
+2025-08-20 21:40:02 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:02 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%86%8C%ED%98%95%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:02 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:02 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:40:02 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:02 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%86%8C%ED%98%95%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3827
+2025-08-20 21:40:02 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:02 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 3064개 결과
+2025-08-20 21:40:02 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 2개 카테고리
+2025-08-20 21:40:02 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 소형견고구마
+2025-08-20 21:40:02 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 소형견고구마
+2025-08-20 21:40:02 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 대형견대용량간식
+2025-08-20 21:40:02 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 대형견대용량간식
+2025-08-20 21:40:03 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:03 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%8C%80%ED%98%95%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:03 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:03 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:40:03 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:03 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%8C%80%ED%98%95%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3086
+2025-08-20 21:40:03 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:03 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 18028개 결과
+2025-08-20 21:40:03 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:03 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 대형견대용량간식
+2025-08-20 21:40:03 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 대형견대용량간식
+2025-08-20 21:40:03 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지오리고구마
+2025-08-20 21:40:03 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지오리고구마
+2025-08-20 21:40:04 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:04 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:04 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:04 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:40:04 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:04 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3088
+2025-08-20 21:40:04 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:04 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 16513개 결과
+2025-08-20 21:40:04 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:04 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지오리고구마
+2025-08-20 21:40:04 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지오리고구마
+2025-08-20 21:40:04 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지간식오리고기
+2025-08-20 21:40:04 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지간식오리고기
+2025-08-20 21:40:05 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:05 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B8%B0&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:05 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:05 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 32개 키워드
+2025-08-20 21:40:05 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:05 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B8%B0&display=40&start=1&sort=sim HTTP/1.1" 200 3227
+2025-08-20 21:40:05 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:05 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 46094개 결과
+2025-08-20 21:40:05 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:05 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지간식오리고기
+2025-08-20 21:40:05 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지간식오리고기
+2025-08-20 21:40:05 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 슈퍼츄일킬로그램
+2025-08-20 21:40:05 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 슈퍼츄일킬로그램
+2025-08-20 21:40:06 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:06 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%8A%88%ED%8D%BC%EC%B8%84%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:06 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:06 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:40:06 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:06 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%8A%88%ED%8D%BC%EC%B8%84%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&display=40&start=1&sort=sim HTTP/1.1" 200 2247
+2025-08-20 21:40:06 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:06 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 542개 결과
+2025-08-20 21:40:06 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:06 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 슈퍼츄일킬로그램
+2025-08-20 21:40:06 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 슈퍼츄일킬로그램
+2025-08-20 21:40:32 - toolbox.text_utils - INFO - 텍스트에서 5개 키워드 파싱 완료
+2025-08-20 21:40:32 - toolbox.text_utils - INFO - 중복 제거 완료: 5 -> 5개 (건너뛴: 0개)
+2025-08-20 21:40:32 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지고구마
+2025-08-20 21:40:32 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지고구마
+2025-08-20 21:40:32 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:32 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:32 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:32 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 111개 키워드
+2025-08-20 21:40:32 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:32 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3302
+2025-08-20 21:40:32 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:32 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 96680개 결과
+2025-08-20 21:40:32 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:32 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지고구마
+2025-08-20 21:40:32 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지고구마
+2025-08-20 21:40:32 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지닭가슴살
+2025-08-20 21:40:32 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지닭가슴살
+2025-08-20 21:40:33 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:33 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:33 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:33 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 426개 키워드
+2025-08-20 21:40:33 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:33 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3139
+2025-08-20 21:40:33 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:33 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 62448개 결과
+2025-08-20 21:40:33 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:33 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지닭가슴살
+2025-08-20 21:40:33 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지닭가슴살
+2025-08-20 21:40:33 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지고구마간식
+2025-08-20 21:40:33 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지고구마간식
+2025-08-20 21:40:34 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:34 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:34 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:34 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 195개 키워드
+2025-08-20 21:40:34 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:34 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3251
+2025-08-20 21:40:34 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:34 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 86122개 결과
+2025-08-20 21:40:34 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:34 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지고구마간식
+2025-08-20 21:40:34 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지고구마간식
+2025-08-20 21:40:34 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지대용량간식
+2025-08-20 21:40:34 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지대용량간식
+2025-08-20 21:40:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:35 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:35 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 132개 키워드
+2025-08-20 21:40:35 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:35 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3372
+2025-08-20 21:40:35 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:35 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 91648개 결과
+2025-08-20 21:40:35 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:35 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지대용량간식
+2025-08-20 21:40:35 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지대용량간식
+2025-08-20 21:40:35 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지닭가슴살간식
+2025-08-20 21:40:35 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지닭가슴살간식
+2025-08-20 21:40:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:40:36 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:40:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:40:36 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 45개 키워드
+2025-08-20 21:40:36 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:40:36 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3046
+2025-08-20 21:40:36 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:40:36 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 59846개 결과
+2025-08-20 21:40:36 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:40:36 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지닭가슴살간식
+2025-08-20 21:40:36 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지닭가슴살간식
+2025-08-20 21:40:46 - toolbox.text_utils - INFO - 텍스트에서 5개 키워드 파싱 완료
+2025-08-20 21:40:46 - toolbox.text_utils - INFO - 중복 제거 완료: 5 -> 0개 (건너뛴: 5개)
+2025-08-20 21:42:11 - toolbox.text_utils - INFO - 텍스트에서 5개 키워드 파싱 완료
+2025-08-20 21:42:11 - toolbox.text_utils - INFO - 중복 제거 완료: 5 -> 5개 (건너뛴: 0개)
+2025-08-20 21:42:11 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지고구마
+2025-08-20 21:42:11 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지고구마
+2025-08-20 21:42:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:11 - urllib3.connectionpool - DEBUG - Resetting dropped connection: api.searchad.naver.com
+2025-08-20 21:42:12 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:12 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 111개 키워드
+2025-08-20 21:42:12 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:12 - urllib3.connectionpool - DEBUG - Resetting dropped connection: openapi.naver.com
+2025-08-20 21:42:12 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3302
+2025-08-20 21:42:12 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:12 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 96680개 결과
+2025-08-20 21:42:12 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:12 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지고구마
+2025-08-20 21:42:12 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지고구마
+2025-08-20 21:42:12 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지닭가슴살
+2025-08-20 21:42:12 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지닭가슴살
+2025-08-20 21:42:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:12 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:12 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 426개 키워드
+2025-08-20 21:42:13 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:13 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3141
+2025-08-20 21:42:13 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:13 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 62448개 결과
+2025-08-20 21:42:13 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:13 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지닭가슴살
+2025-08-20 21:42:13 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지닭가슴살
+2025-08-20 21:42:13 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지고구마간식
+2025-08-20 21:42:13 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지고구마간식
+2025-08-20 21:42:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:13 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:13 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 195개 키워드
+2025-08-20 21:42:14 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:14 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3251
+2025-08-20 21:42:14 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:14 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 86122개 결과
+2025-08-20 21:42:14 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:14 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지고구마간식
+2025-08-20 21:42:14 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지고구마간식
+2025-08-20 21:42:14 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지대용량간식
+2025-08-20 21:42:14 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지대용량간식
+2025-08-20 21:42:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:14 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:14 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 132개 키워드
+2025-08-20 21:42:15 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:15 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3372
+2025-08-20 21:42:15 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:15 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 91648개 결과
+2025-08-20 21:42:15 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:15 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지대용량간식
+2025-08-20 21:42:15 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지대용량간식
+2025-08-20 21:42:15 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지닭가슴살간식
+2025-08-20 21:42:15 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지닭가슴살간식
+2025-08-20 21:42:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:15 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 45개 키워드
+2025-08-20 21:42:16 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:16 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3046
+2025-08-20 21:42:16 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:16 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 59846개 결과
+2025-08-20 21:42:16 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:16 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지닭가슴살간식
+2025-08-20 21:42:16 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지닭가슴살간식
+2025-08-20 21:42:50 - toolbox.text_utils - INFO - 텍스트에서 6개 키워드 파싱 완료
+2025-08-20 21:42:50 - toolbox.text_utils - INFO - 중복 제거 완료: 6 -> 6개 (건너뛴: 0개)
+2025-08-20 21:42:50 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 애견고구마
+2025-08-20 21:42:50 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견고구마
+2025-08-20 21:42:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:50 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:50 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:42:50 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:50 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3303
+2025-08-20 21:42:50 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:50 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 96680개 결과
+2025-08-20 21:42:50 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:50 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 애견고구마
+2025-08-20 21:42:50 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 애견고구마
+2025-08-20 21:42:50 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지오리육포
+2025-08-20 21:42:50 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지오리육포
+2025-08-20 21:42:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:51 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EC%9C%A1%ED%8F%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:51 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 17개 키워드
+2025-08-20 21:42:51 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:51 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EC%9C%A1%ED%8F%AC&display=40&start=1&sort=sim HTTP/1.1" 200 3267
+2025-08-20 21:42:51 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:51 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 114549개 결과
+2025-08-20 21:42:51 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:51 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지오리육포
+2025-08-20 21:42:51 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지오리육포
+2025-08-20 21:42:51 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 일킬로그램
+2025-08-20 21:42:51 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 일킬로그램
+2025-08-20 21:42:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:52 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:52 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:42:52 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:52 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&display=40&start=1&sort=sim HTTP/1.1" 200 2586
+2025-08-20 21:42:52 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:52 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 772개 결과
+2025-08-20 21:42:52 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:52 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 일킬로그램
+2025-08-20 21:42:52 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 일킬로그램
+2025-08-20 21:42:52 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 애견고구마간식
+2025-08-20 21:42:52 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견고구마간식
+2025-08-20 21:42:53 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:53 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:53 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:53 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:42:53 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:53 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3251
+2025-08-20 21:42:53 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:53 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 86122개 결과
+2025-08-20 21:42:53 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:53 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 애견고구마간식
+2025-08-20 21:42:53 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 애견고구마간식
+2025-08-20 21:42:53 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지육포간식
+2025-08-20 21:42:53 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지육포간식
+2025-08-20 21:42:54 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:54 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%9C%A1%ED%8F%AC%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:54 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:54 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 25개 키워드
+2025-08-20 21:42:54 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:54 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%9C%A1%ED%8F%AC%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3561
+2025-08-20 21:42:54 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:54 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 524213개 결과
+2025-08-20 21:42:54 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:54 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지육포간식
+2025-08-20 21:42:54 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지육포간식
+2025-08-20 21:42:54 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 애견대용량간식
+2025-08-20 21:42:54 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견대용량간식
+2025-08-20 21:42:55 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:42:55 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:42:55 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:42:55 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 46개 키워드
+2025-08-20 21:42:55 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:42:55 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%A0%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3372
+2025-08-20 21:42:55 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:42:55 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 91648개 결과
+2025-08-20 21:42:55 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:42:55 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 애견대용량간식
+2025-08-20 21:42:55 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 애견대용량간식
+2025-08-20 21:43:54 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:43:54 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:43:54 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:43:54 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:43:54 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:43:54 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:43:54 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:43:54 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:43:54 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:43:54 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:43:54 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:43:54 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:43:54 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:43:54 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:43:54 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:43:54 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:43:54 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:43:55 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:43:55 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:43:55 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:43:55 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:43:55 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:43:55 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:43:55 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:43:55 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:43:57 - toolbox.text_utils - INFO - 텍스트에서 6개 키워드 파싱 완료
+2025-08-20 21:43:57 - toolbox.text_utils - INFO - 중복 제거 완료: 6 -> 6개 (건너뛴: 0개)
+2025-08-20 21:43:57 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 애견고구마
+2025-08-20 21:43:57 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견고구마
+2025-08-20 21:43:57 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:43:57 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-20 21:43:57 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:43:57 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:43:57 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:43:57 - vendors.naver.factory - DEBUG - 네이버 shop 클라이언트 생성됨
+2025-08-20 21:43:57 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:43:57 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): openapi.naver.com:443
+2025-08-20 21:43:57 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3302
+2025-08-20 21:43:57 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:43:57 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 96680개 결과
+2025-08-20 21:43:57 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:43:57 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 애견고구마
+2025-08-20 21:43:57 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 애견고구마
+2025-08-20 21:43:57 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지오리육포
+2025-08-20 21:43:57 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지오리육포
+2025-08-20 21:43:58 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:43:58 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EC%9C%A1%ED%8F%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:43:58 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:43:58 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 17개 키워드
+2025-08-20 21:43:58 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:43:58 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EC%9C%A1%ED%8F%AC&display=40&start=1&sort=sim HTTP/1.1" 200 3267
+2025-08-20 21:43:58 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:43:58 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 114549개 결과
+2025-08-20 21:43:58 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:43:58 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지오리육포
+2025-08-20 21:43:58 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지오리육포
+2025-08-20 21:43:58 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 일킬로그램
+2025-08-20 21:43:58 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 일킬로그램
+2025-08-20 21:43:59 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:43:59 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:43:59 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:43:59 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:43:59 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:43:59 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&display=40&start=1&sort=sim HTTP/1.1" 200 2585
+2025-08-20 21:43:59 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:43:59 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 772개 결과
+2025-08-20 21:43:59 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:43:59 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 일킬로그램
+2025-08-20 21:43:59 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 일킬로그램
+2025-08-20 21:43:59 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 애견고구마간식
+2025-08-20 21:43:59 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견고구마간식
+2025-08-20 21:44:00 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:00 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:00 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:00 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:44:00 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:00 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3251
+2025-08-20 21:44:00 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:00 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 86122개 결과
+2025-08-20 21:44:00 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:00 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 애견고구마간식
+2025-08-20 21:44:00 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 애견고구마간식
+2025-08-20 21:44:00 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지육포간식
+2025-08-20 21:44:00 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지육포간식
+2025-08-20 21:44:01 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:01 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%9C%A1%ED%8F%AC%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:01 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:01 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 25개 키워드
+2025-08-20 21:44:01 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:01 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%9C%A1%ED%8F%AC%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3561
+2025-08-20 21:44:01 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:01 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 524213개 결과
+2025-08-20 21:44:01 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:01 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지육포간식
+2025-08-20 21:44:01 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지육포간식
+2025-08-20 21:44:01 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 애견대용량간식
+2025-08-20 21:44:01 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견대용량간식
+2025-08-20 21:44:02 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:02 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:02 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:02 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 46개 키워드
+2025-08-20 21:44:02 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:02 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%A0%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3372
+2025-08-20 21:44:02 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:02 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 91648개 결과
+2025-08-20 21:44:02 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:02 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 애견대용량간식
+2025-08-20 21:44:02 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 애견대용량간식
+2025-08-20 21:44:10 - toolbox.text_utils - INFO - 텍스트에서 12개 키워드 파싱 완료
+2025-08-20 21:44:10 - toolbox.text_utils - INFO - 중복 제거 완료: 12 -> 6개 (건너뛴: 6개)
+2025-08-20 21:44:10 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지간식1kg
+2025-08-20 21:44:10 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지간식1KG
+2025-08-20 21:44:10 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:10 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D1KG&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:10 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:10 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:44:10 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:10 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D1kg&display=40&start=1&sort=sim HTTP/1.1" 200 2846
+2025-08-20 21:44:10 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:10 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 66108개 결과
+2025-08-20 21:44:10 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:10 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지간식1kg
+2025-08-20 21:44:10 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지간식1kg
+2025-08-20 21:44:10 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지닭가슴살육포
+2025-08-20 21:44:10 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지닭가슴살육포
+2025-08-20 21:44:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:11 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%EC%9C%A1%ED%8F%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:11 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:44:11 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:11 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4%EC%9C%A1%ED%8F%AC&display=40&start=1&sort=sim HTTP/1.1" 200 3052
+2025-08-20 21:44:11 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:11 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 32883개 결과
+2025-08-20 21:44:11 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:11 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지닭가슴살육포
+2025-08-20 21:44:11 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지닭가슴살육포
+2025-08-20 21:44:11 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 반려견닭가슴살
+2025-08-20 21:44:11 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견닭가슴살
+2025-08-20 21:44:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:12 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:12 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 14개 키워드
+2025-08-20 21:44:12 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:12 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%B0%98%EB%A0%A4%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3376
+2025-08-20 21:44:12 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:12 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 3876개 결과
+2025-08-20 21:44:12 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:12 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 반려견닭가슴살
+2025-08-20 21:44:12 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 반려견닭가슴살
+2025-08-20 21:44:12 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지오리가슴살
+2025-08-20 21:44:12 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지오리가슴살
+2025-08-20 21:44:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:13 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:13 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 63개 키워드
+2025-08-20 21:44:13 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:13 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3021
+2025-08-20 21:44:13 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:13 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 12062개 결과
+2025-08-20 21:44:13 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:13 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지오리가슴살
+2025-08-20 21:44:13 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지오리가슴살
+2025-08-20 21:44:13 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지간식오리
+2025-08-20 21:44:13 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지간식오리
+2025-08-20 21:44:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:14 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:14 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 52개 키워드
+2025-08-20 21:44:14 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:14 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC&display=40&start=1&sort=sim HTTP/1.1" 200 3290
+2025-08-20 21:44:14 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:14 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 219172개 결과
+2025-08-20 21:44:14 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:14 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지간식오리
+2025-08-20 21:44:14 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지간식오리
+2025-08-20 21:44:14 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 반려견고구마
+2025-08-20 21:44:14 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견고구마
+2025-08-20 21:44:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:15 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:44:15 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:15 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%B0%98%EB%A0%A4%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3093
+2025-08-20 21:44:15 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:15 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 6290개 결과
+2025-08-20 21:44:15 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 2개 카테고리
+2025-08-20 21:44:15 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 반려견고구마
+2025-08-20 21:44:15 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 반려견고구마
+2025-08-20 21:44:26 - toolbox.text_utils - INFO - 텍스트에서 4개 키워드 파싱 완료
+2025-08-20 21:44:26 - toolbox.text_utils - INFO - 중복 제거 완료: 4 -> 4개 (건너뛴: 0개)
+2025-08-20 21:44:26 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 대형견대용량간식
+2025-08-20 21:44:26 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 대형견대용량간식
+2025-08-20 21:44:26 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:26 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%8C%80%ED%98%95%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:26 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:26 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:44:26 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:26 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%8C%80%ED%98%95%EA%B2%AC%EB%8C%80%EC%9A%A9%EB%9F%89%EA%B0%84%EC%8B%9D&display=40&start=1&sort=sim HTTP/1.1" 200 3086
+2025-08-20 21:44:26 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:26 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 18027개 결과
+2025-08-20 21:44:26 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:26 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 대형견대용량간식
+2025-08-20 21:44:26 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 대형견대용량간식
+2025-08-20 21:44:26 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지오리고구마
+2025-08-20 21:44:26 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지오리고구마
+2025-08-20 21:44:27 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:27 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:27 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:27 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:44:27 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:27 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3087
+2025-08-20 21:44:27 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:27 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 16512개 결과
+2025-08-20 21:44:27 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:27 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지오리고구마
+2025-08-20 21:44:27 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지오리고구마
+2025-08-20 21:44:27 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지간식오리고기
+2025-08-20 21:44:27 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지간식오리고기
+2025-08-20 21:44:28 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:28 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B8%B0&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:28 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:28 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 32개 키워드
+2025-08-20 21:44:28 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:28 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC%EA%B3%A0%EA%B8%B0&display=40&start=1&sort=sim HTTP/1.1" 200 3226
+2025-08-20 21:44:28 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:28 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 46094개 결과
+2025-08-20 21:44:28 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:28 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지간식오리고기
+2025-08-20 21:44:28 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지간식오리고기
+2025-08-20 21:44:28 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 슈퍼츄일킬로그램
+2025-08-20 21:44:28 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 슈퍼츄일킬로그램
+2025-08-20 21:44:29 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:44:29 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%8A%88%ED%8D%BC%EC%B8%84%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:44:29 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:44:29 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:44:29 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:44:29 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%8A%88%ED%8D%BC%EC%B8%84%EC%9D%BC%ED%82%AC%EB%A1%9C%EA%B7%B8%EB%9E%A8&display=40&start=1&sort=sim HTTP/1.1" 200 2257
+2025-08-20 21:44:29 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:44:29 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 542개 결과
+2025-08-20 21:44:29 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:44:29 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 슈퍼츄일킬로그램
+2025-08-20 21:44:29 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 슈퍼츄일킬로그램
+2025-08-20 21:45:06 - features.keyword_analysis.service - INFO - 키워드 리스트 엑셀 내보내기 시작: C:/Users/wogud/Downloads/키워드_선택결과_20250820_2145.xlsx
+2025-08-20 21:45:06 - features.keyword_analysis.adapters - INFO - 키워드 분석 엑셀 파일 저장 완료: C:/Users/wogud/Downloads/키워드_선택결과_20250820_2145.xlsx
+2025-08-20 21:45:06 - features.keyword_analysis.service - INFO - 키워드 리스트 엑셀 내보내기 완료: 1개 키워드
+2025-08-20 21:45:15 - features.keyword_analysis.service - INFO - 키워드 리스트 엑셀 내보내기 시작: C:/Users/wogud/Downloads/키워드_검색결과_20250820_2145.xlsx
+2025-08-20 21:45:15 - features.keyword_analysis.adapters - INFO - 키워드 분석 엑셀 파일 저장 완료: C:/Users/wogud/Downloads/키워드_검색결과_20250820_2145.xlsx
+2025-08-20 21:45:15 - features.keyword_analysis.service - INFO - 키워드 리스트 엑셀 내보내기 완료: 16개 키워드
+2025-08-20 21:46:37 - main - INFO - 통합 관리 시스템 시작
+2025-08-20 21:46:37 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-20 21:46:37 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-20 21:46:37 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-20 21:46:37 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-20 21:46:37 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-20 21:46:38 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-20 21:46:38 - features.keyword_analysis.ui - DEBUG - API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.
+2025-08-20 21:46:38 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-20 21:46:38 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-20 21:46:38 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-20 21:46:38 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-20 21:46:38 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-20 21:46:38 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-20 21:46:38 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-20 21:46:38 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-20 21:46:38 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-20 21:46:38 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-20 21:46:38 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-20 21:46:38 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-20 21:46:38 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-20 21:46:38 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-20 21:46:38 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-20 21:46:38 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-20 21:46:38 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-20 21:46:43 - toolbox.text_utils - INFO - 텍스트에서 6개 키워드 파싱 완료
+2025-08-20 21:46:43 - toolbox.text_utils - INFO - 중복 제거 완료: 6 -> 6개 (건너뛴: 0개)
+2025-08-20 21:46:43 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 반려견닭가슴살
+2025-08-20 21:46:43 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견닭가슴살
+2025-08-20 21:46:43 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:46:43 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-20 21:46:44 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:46:44 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:46:44 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 14개 키워드
+2025-08-20 21:46:44 - vendors.naver.factory - DEBUG - 네이버 shop 클라이언트 생성됨
+2025-08-20 21:46:44 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:46:44 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): openapi.naver.com:443
+2025-08-20 21:46:44 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%B0%98%EB%A0%A4%EA%B2%AC%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3372
+2025-08-20 21:46:44 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:46:44 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 3876개 결과
+2025-08-20 21:46:44 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:46:44 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 반려견닭가슴살
+2025-08-20 21:46:44 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 반려견닭가슴살
+2025-08-20 21:46:44 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지오리가슴살
+2025-08-20 21:46:44 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지오리가슴살
+2025-08-20 21:46:44 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:46:44 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B0%80%EC%8A%B4%EC%82%B4&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:46:44 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:46:44 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 63개 키워드
+2025-08-20 21:46:45 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:46:45 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EA%B0%80%EC%8A%B4%EC%82%B4&display=40&start=1&sort=sim HTTP/1.1" 200 3021
+2025-08-20 21:46:45 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:46:45 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 12062개 결과
+2025-08-20 21:46:45 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:46:45 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지오리가슴살
+2025-08-20 21:46:45 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지오리가슴살
+2025-08-20 21:46:45 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지간식오리
+2025-08-20 21:46:45 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지간식오리
+2025-08-20 21:46:45 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:46:45 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:46:45 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:46:45 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 52개 키워드
+2025-08-20 21:46:46 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:46:46 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EA%B0%84%EC%8B%9D%EC%98%A4%EB%A6%AC&display=40&start=1&sort=sim HTTP/1.1" 200 3290
+2025-08-20 21:46:46 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:46:46 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 219169개 결과
+2025-08-20 21:46:46 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:46:46 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지간식오리
+2025-08-20 21:46:46 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지간식오리
+2025-08-20 21:46:46 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 반려견고구마
+2025-08-20 21:46:46 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견고구마
+2025-08-20 21:46:46 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:46:46 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:46:46 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:46:46 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:46:47 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:46:47 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EB%B0%98%EB%A0%A4%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3093
+2025-08-20 21:46:47 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:46:47 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 6290개 결과
+2025-08-20 21:46:47 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 2개 카테고리
+2025-08-20 21:46:47 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 반려견고구마
+2025-08-20 21:46:47 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 반려견고구마
+2025-08-20 21:46:47 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 애견고구마
+2025-08-20 21:46:47 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견고구마
+2025-08-20 21:46:47 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:46:47 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:46:47 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:46:47 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-20 21:46:48 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:46:48 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EC%95%A0%EA%B2%AC%EA%B3%A0%EA%B5%AC%EB%A7%88&display=40&start=1&sort=sim HTTP/1.1" 200 3302
+2025-08-20 21:46:48 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:46:48 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 96680개 결과
+2025-08-20 21:46:48 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:46:48 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 애견고구마
+2025-08-20 21:46:48 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 애견고구마
+2025-08-20 21:46:48 - features.keyword_analysis.service - INFO - 단일 키워드 분석: 강아지오리육포
+2025-08-20 21:46:48 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지오리육포
+2025-08-20 21:46:48 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-20 21:46:48 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EC%9C%A1%ED%8F%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-20 21:46:48 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-20 21:46:48 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 17개 키워드
+2025-08-20 21:46:49 - vendors.naver.search_shop - DEBUG - search_shop API 호출: https://openapi.naver.com/v1/search/shop.json
+2025-08-20 21:46:49 - urllib3.connectionpool - DEBUG - https://openapi.naver.com:443 "GET /v1/search/shop.json?query=%EA%B0%95%EC%95%84%EC%A7%80%EC%98%A4%EB%A6%AC%EC%9C%A1%ED%8F%AC&display=40&start=1&sort=sim HTTP/1.1" 200 3267
+2025-08-20 21:46:49 - vendors.naver.search_shop - DEBUG - search_shop API 성공
+2025-08-20 21:46:49 - vendors.naver.shopping - DEBUG - 네이버 쇼핑 API 성공: 114538개 결과
+2025-08-20 21:46:49 - features.keyword_analysis.adapters - DEBUG - 카테고리 분석 결과: 1개 카테고리
+2025-08-20 21:46:49 - features.keyword_analysis.adapters - DEBUG - 키워드 데이터 구성 완료: 강아지오리육포
+2025-08-20 21:46:49 - features.keyword_analysis.service - INFO - 단일 키워드 분석 완료: 강아지오리육포

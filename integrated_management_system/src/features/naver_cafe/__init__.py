@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 def register(app: "MainWindow") -> QWidget:
     """네이버 카페 추출기를 애플리케이션에 등록"""
-    from .ui import NaverCafeWidget
+    from .ui_main import NaverCafeWidget
     
     widget = NaverCafeWidget()
     app.add_feature_tab(widget, "네이버 카페DB추출")

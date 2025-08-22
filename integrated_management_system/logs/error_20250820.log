@@ -177,3 +177,328 @@ ModuleNotFoundError: No module named 'src.features.rank_tracking.ui'
 2025-08-20 17:46:31 - vendors.naver.shopping - ERROR - 키워드 '터키츄링' API 호출 3번 시도 모두 실패: NaverBaseClient._make_request() got multiple values for argument 'params'
 2025-08-20 17:46:31 - vendors.naver.shopping - ERROR - 키워드 '터키츄링' 상품 순위 검색 실패: NaverBaseClient._make_request() got multiple values for argument 'params'
 2025-08-20 17:46:31 - features.rank_tracking.adapters - ERROR - 순위 확인 실패: 터키츄링 -> 11649017893: NaverBaseClient._make_request() got multiple values for argument 'params'
+2025-08-20 20:16:03 - features.keyword_analysis.ui - ERROR - 서비스 시그널 연결 실패: 'KeywordAnalysisService' object has no attribute 'keyword_processed'
+2025-08-20 20:20:45 - features.keyword_analysis.ui - ERROR - 서비스 시그널 연결 실패: 'KeywordAnalysisService' object has no attribute 'keyword_processed'
+2025-08-20 20:30:26 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:26 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:26 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:26 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:26 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:30 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:30 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:30 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:30 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:30 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:32 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:32 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:32 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:32 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:32 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:45 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:45 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:45 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 619
+    self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")\n    \n    def _analyze_keywords_task(self, keywords, progress_callback=None, cancel_event=None):\n        \"\"\"\n        워커에서 실행될 실제 작업 함수.\n        - service.analyze_single_keyword() 반복 호출\n        - progress_callback으로 진행률 알림\n        - 마지막에 AnalysisResult 반환\n        \"\"\"\n        from datetime import datetime\n        start_time = datetime.now()\n        results = []\n        total = len(keywords)\n\n        for idx, kw in enumerate(keywords, start=1):\n            # 협조적 취소\n            if cancel_event is not None and getattr(cancel_event, \"is_set\", lambda: False)():\n                break\n            try:\n                data = self.service.analyze_single_keyword(kw)\n            except Exception:\n                data = KeywordData(keyword=kw)\n\n            results.append(data)\n\n            # 진행률 업데이
+                                                                  ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:30:45 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:30:45 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 619)
+2025-08-20 20:36:25 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:25 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:25 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 25
+    from src.toolbox import formatters\nfrom src.toolbox.progress import calc_percentage
+                                       ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:36:25 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:25 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - main - ERROR - 기능 모듈 로드 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 25
+    from src.toolbox import formatters\nfrom src.toolbox.progress import calc_percentage
+                                       ^
+SyntaxError: unexpected character after line continuation character
+
+2025-08-20 20:36:27 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:36:27 - main - ERROR - 애플리케이션 시작 실패: unexpected character after line continuation character (ui.py, line 25)
+2025-08-20 20:37:44 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:44 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:44 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:37:44 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:44 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:46 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:46 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:46 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:37:46 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:37:46 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:10 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:10 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:10 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:38:10 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:10 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:20 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:20 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:20 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:38:20 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:38:20 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:42:15 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:15 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:18 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:18 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:18 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:42:18 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:42:18 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:42 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:42 - main - ERROR - 기능 모듈 로드 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:42 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui.py", line 47, in __init__
+    self.check_api_status()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+
+2025-08-20 20:46:42 - desktop.app - ERROR - 애플리케이션 실행 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:46:42 - main - ERROR - 애플리케이션 시작 실패: 'KeywordAnalysisWidget' object has no attribute 'check_api_status'
+2025-08-20 20:55:30 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:30 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:30 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui'
+
+2025-08-20 20:55:30 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:30 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:36 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:36 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:36 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui'
+
+2025-08-20 20:55:36 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:55:36 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui'
+2025-08-20 20:56:45 - root - ERROR - BackgroundWorker 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 268, in _analyze_keywords_task
+    Q_ARG(object, data))
+    ~~~~~^^^^^^^^^^^^^^
+RuntimeError: qArgDataFromPyType: Unable to find a QMetaType for "object".
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\worker.py", line 101, in run
+    result = self._function(*self._args, **self._kwargs)
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 272, in _analyze_keywords_task
+    Q_ARG(object, data))
+    ~~~~~^^^^^^^^^^^^^^
+RuntimeError: qArgDataFromPyType: Unable to find a QMetaType for "object".
+
+2025-08-20 21:13:08 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:08 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:08 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui_main'
+
+2025-08-20 21:13:08 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:08 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+ModuleNotFoundError: No module named 'src.features.keyword_analysis.ui_main'
+
+2025-08-20 21:13:10 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:13:10 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.keyword_analysis.ui_main'
+2025-08-20 21:18:07 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:18:07 - main - ERROR - 기능 모듈 로드 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:18:07 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 19, in register
+    widget = KeywordAnalysisWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 39, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 53, in setup_ui
+    title_label.setStyleSheet(ModernStyle.TITLE)
+                              ^^^^^^^^^^^^^^^^^
+AttributeError: type object 'ModernStyle' has no attribute 'TITLE'
+
+2025-08-20 21:18:07 - desktop.app - ERROR - 애플리케이션 실행 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:18:07 - main - ERROR - 애플리케이션 시작 실패: type object 'ModernStyle' has no attribute 'TITLE'
+2025-08-20 21:28:23 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:23 - main - ERROR - 기능 모듈 로드 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:23 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 34, in <module>
+    class KeywordAnalysisWidget(QWidget):
+    ...<733 lines>...
+            self.add_log("🔄 API 설정이 업데이트되었습니다.", "info")
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 367, in KeywordAnalysisWidget
+    def update_progress(self, progress: AnalysisProgress):
+                                        ^^^^^^^^^^^^^^^^
+NameError: name 'AnalysisProgress' is not defined
+
+2025-08-20 21:28:23 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:23 - main - ERROR - 애플리케이션 시작 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:30 - features.keyword_analysis - ERROR - 키워드 분석 기능 등록 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:30 - main - ERROR - 기능 모듈 로드 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:30 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 24, in load_features
+    register_keyword_analysis(app)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\__init__.py", line 16, in register
+    from .ui_main import KeywordAnalysisWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 34, in <module>
+    class KeywordAnalysisWidget(QWidget):
+    ...<733 lines>...
+            self.add_log("🔄 API 설정이 업데이트되었습니다.", "info")
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 367, in KeywordAnalysisWidget
+    def update_progress(self, progress: AnalysisProgress):
+                                        ^^^^^^^^^^^^^^^^
+NameError: name 'AnalysisProgress' is not defined
+
+2025-08-20 21:28:30 - desktop.app - ERROR - 애플리케이션 실행 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:28:30 - main - ERROR - 애플리케이션 시작 실패: name 'AnalysisProgress' is not defined
+2025-08-20 21:39:09 - root - ERROR - BackgroundWorker 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\worker.py", line 101, in run
+    result = self._function(*self._args, **self._kwargs)
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\keyword_analysis\ui_main.py", line 562, in _analyze_keywords_task
+    Q_ARG(object, data)
+    ~~~~~^^^^^^^^^^^^^^
+RuntimeError: qArgDataFromPyType: Unable to find a QMetaType for "object".
+

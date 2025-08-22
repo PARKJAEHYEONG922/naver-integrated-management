@@ -1,0 +1,1591 @@
+2025-08-22 08:52:24 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 08:52:24 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 08:52:24 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 08:52:24 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 08:52:24 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 08:52:24 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 08:52:24 - main - INFO - API 상태 확인 완료
+2025-08-22 08:52:24 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 08:52:25 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 08:52:25 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 08:52:25 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 08:52:25 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 08:52:25 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 08:52:26 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 08:52:26 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 08:52:26 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 08:52:26 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 08:52:26 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 08:52:26 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 08:52:26 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 08:52:26 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 08:52:26 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 08:52:26 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 08:52:26 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 08:52:26 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 08:52:26 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 08:57:16 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 08:57:16 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 08:57:16 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 08:57:16 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 08:57:16 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 08:57:16 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 08:57:16 - main - INFO - API 상태 확인 완료
+2025-08-22 08:57:16 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 08:57:16 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 08:57:16 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 08:57:16 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 08:57:16 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 08:57:16 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 08:57:16 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 08:57:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 08:57:16 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 08:57:16 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 08:57:16 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 08:57:17 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 08:57:17 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 08:57:17 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 08:57:17 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 08:57:17 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 08:57:17 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 08:57:17 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 08:57:17 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 08:57:43 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지사료 외 4개 (5개 키워드)
+2025-08-22 08:58:15 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 43
+2025-08-22 08:58:15 - features.powerlink_analyzer.service - INFO - 히스토리 세션 삭제 완료: [43]
+2025-08-22 09:01:40 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:01:40 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:01:40 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:01:40 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:01:40 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:01:40 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:01:40 - main - INFO - API 상태 확인 완료
+2025-08-22 09:01:41 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:01:41 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:01:41 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:01:41 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:01:41 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:01:41 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:01:41 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:01:41 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:01:41 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:01:41 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:01:41 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:01:41 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:01:41 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:01:41 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:01:41 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:01:41 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:01:41 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:01:41 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:01:41 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:02:09 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지사료 외 3개 (4개 키워드)
+2025-08-22 09:02:34 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:02:34 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:02:34 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:02:34 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:02:34 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:02:34 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:02:34 - main - INFO - API 상태 확인 완료
+2025-08-22 09:02:35 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:02:35 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:02:35 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:02:35 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:02:35 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:02:35 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:02:35 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:02:35 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:02:35 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:02:35 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:02:35 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:02:35 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:02:35 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:02:35 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:02:35 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:02:35 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:02:35 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:02:35 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:02:35 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:03:05 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지사료 외 3개 (4개 키워드)
+2025-08-22 09:06:04 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:06:04 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:06:04 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:06:04 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:06:04 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:06:04 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:06:04 - main - INFO - API 상태 확인 완료
+2025-08-22 09:06:04 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:06:04 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:06:04 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:06:04 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:06:04 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:06:04 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:06:04 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:06:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:06:05 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:06:05 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:06:05 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:06:05 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:06:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:06:05 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:06:05 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:06:05 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:06:05 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:06:05 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:06:05 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:10:12 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:10:12 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:10:12 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:10:12 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:10:12 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:10:12 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:10:12 - main - INFO - API 상태 확인 완료
+2025-08-22 09:10:12 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:10:13 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:10:13 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:10:13 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:10:13 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:10:13 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:10:13 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:10:13 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:10:13 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:10:13 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:10:13 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:10:13 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:10:13 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:10:13 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:10:13 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:10:13 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:10:13 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:10:13 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:10:13 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:10:41 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:10:41 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:10:41 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:10:41 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:10:41 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:10:41 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:10:42 - main - INFO - API 상태 확인 완료
+2025-08-22 09:10:42 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:10:42 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:10:42 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:10:42 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:10:42 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:10:42 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:10:42 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:10:42 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:10:42 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:10:42 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:10:42 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:10:42 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:10:42 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:10:42 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:10:42 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:10:42 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:10:42 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:10:42 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:10:43 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:10:47 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 42
+2025-08-22 09:10:47 - features.powerlink_analyzer.service - INFO - 히스토리 세션 삭제 완료: [42]
+2025-08-22 09:10:51 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 40
+2025-08-22 09:10:51 - features.powerlink_analyzer.service - INFO - 히스토리 세션 삭제 완료: [40]
+2025-08-22 09:10:53 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:11:29 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:11:29 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:11:30 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:11:30 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:11:30 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:11:30 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:11:31 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:11:31 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:11:31 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:11:31 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:11:31 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:11:31 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 7개 키워드 수집: {'강아지닭가슴살', '강아지육포간식', '일킬로그램', '강아지오리육포', '애견고구마간식', '강아지고구마간식', '강아지고구마'}
+2025-08-22 09:11:31 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 7개, 정규화된 키워드: {'강아지닭가슴살', '강아지육포간식', '일킬로그램', '강아지오리육포', '애견고구마간식', '강아지고구마간식', '강아지고구마'}
+2025-08-22 09:11:31 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크사료']
+2025-08-22 09:11:31 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:11:31 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['오븐베이크사료']
+2025-08-22 09:11:31 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['오븐베이크사료']
+2025-08-22 09:11:31 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 09:11:31 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 09:11:34 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 09:11:34 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 09:11:35 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크사료
+2025-08-22 09:11:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 09:11:35 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 09:11:35 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 09:11:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:11:35 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 186개 키워드
+2025-08-22 09:11:35 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.65초 대기
+2025-08-22 09:11:36 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (PC)
+2025-08-22 09:11:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 09:11:36 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 09:11:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:11:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.97초 대기
+2025-08-22 09:11:37 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (MOBILE)
+2025-08-22 09:11:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 09:11:37 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 09:11:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:11:37 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:8
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크사료 -> (1, 8)
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:4
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크사료 -> (1, 4)
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 09:11:40 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 09:11:40 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 09:12:29 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-22 09:12:35 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (강아지닭가슴살 외 6개): C:/Users/wogud/Downloads/파워링크광고비분석_20250819_094655.xlsx
+2025-08-22 09:12:38 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-22 09:13:44 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:13:44 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:13:44 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:13:44 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:13:44 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:13:44 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:13:44 - main - INFO - API 상태 확인 완료
+2025-08-22 09:13:44 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:13:45 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:13:45 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:13:45 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:13:45 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:13:45 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:13:45 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:13:45 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:13:45 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:13:45 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:13:45 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:13:45 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:13:45 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:13:45 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:13:45 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:13:45 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:13:45 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:13:45 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:13:45 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:13:50 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살육포 외 10개 (11개 키워드)
+2025-08-22 09:15:33 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:15:33 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:15:33 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:15:33 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:15:33 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:15:33 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:15:33 - main - INFO - API 상태 확인 완료
+2025-08-22 09:15:33 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:15:33 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:15:33 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:15:33 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:15:33 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:15:33 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:15:34 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:15:34 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:15:34 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:15:34 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:15:34 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:15:34 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:15:34 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:15:34 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:15:34 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:15:34 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:15:34 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:15:34 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:15:34 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:15:38 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살육포 외 10개 (11개 키워드)
+2025-08-22 09:17:37 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:17:37 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:17:37 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:17:37 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:17:37 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:17:37 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:17:37 - main - INFO - API 상태 확인 완료
+2025-08-22 09:17:37 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:17:37 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:17:37 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:17:37 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:17:37 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:17:37 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:17:38 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:17:38 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:17:38 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:17:38 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:17:38 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:17:38 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:17:38 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:17:38 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:17:38 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:17:38 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:17:38 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:17:38 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:17:38 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:17:50 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살육포 외 10개 (11개 키워드)
+2025-08-22 09:18:22 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-22 09:19:09 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 41
+2025-08-22 09:19:09 - features.powerlink_analyzer.service - INFO - 히스토리 세션 삭제 완료: [41]
+2025-08-22 09:19:14 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 20
+2025-08-22 09:19:14 - features.powerlink_analyzer.service - INFO - 히스토리 세션 삭제 완료: [20]
+2025-08-22 09:19:19 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (강아지간식 외 21개): C:/Users/wogud/Downloads/파워링크광고비분석_20250816_150002.xlsx
+2025-08-22 09:19:31 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지간식 외 21개 (22개 키워드)
+2025-08-22 09:21:40 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:21:40 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:21:40 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:21:40 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:21:40 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:21:40 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:21:40 - main - INFO - API 상태 확인 완료
+2025-08-22 09:21:40 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:21:41 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:21:41 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:21:41 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:21:41 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:21:41 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:21:41 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:21:41 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:21:41 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:21:41 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:21:41 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:21:41 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:21:41 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:21:41 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:21:41 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:21:41 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:21:41 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:21:41 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:21:41 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:21:44 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:22:17 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:22:17 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:22:17 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:22:17 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:22:17 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:22:17 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:22:17 - main - INFO - API 상태 확인 완료
+2025-08-22 09:22:17 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:22:18 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:22:18 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:22:18 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:22:18 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:22:18 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:22:18 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:22:18 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:22:18 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:22:18 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:22:18 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:22:18 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:22:18 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:22:18 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:22:18 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:22:18 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:22:18 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:22:18 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:22:18 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:22:27 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:27:39 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:27:39 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:27:39 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:27:39 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:27:39 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:27:39 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:27:39 - main - INFO - API 상태 확인 완료
+2025-08-22 09:27:39 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:27:39 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:27:39 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:27:39 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:27:39 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:27:39 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:27:40 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:27:40 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:27:40 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:27:40 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:27:40 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:27:40 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:27:40 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:27:40 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:27:40 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:27:40 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:27:40 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:27:40 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:27:40 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:31:39 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:31:39 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:31:39 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:31:39 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:31:39 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:31:39 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:31:39 - main - INFO - API 상태 확인 완료
+2025-08-22 09:31:40 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:31:40 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:31:40 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:31:40 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:31:40 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:31:40 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:31:40 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:31:40 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:31:40 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:31:40 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:31:40 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:31:40 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:31:40 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:31:40 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:31:40 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:31:40 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:31:40 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:31:40 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:31:40 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:31:46 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:31:46 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:31:46 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:31:46 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:31:46 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:31:46 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:31:46 - main - INFO - API 상태 확인 완료
+2025-08-22 09:31:46 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:31:46 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:31:46 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:31:46 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:31:46 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:31:46 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:31:46 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:31:46 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:31:46 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:31:46 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:31:46 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:31:47 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:31:47 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:31:47 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:31:47 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:31:47 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:31:47 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:31:47 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:31:47 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:31:55 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:32:38 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:32:38 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:32:38 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:32:38 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:32:38 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:32:38 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:32:38 - main - INFO - API 상태 확인 완료
+2025-08-22 09:32:38 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:32:39 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:32:39 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:32:39 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:32:39 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:32:39 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:32:39 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:32:39 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:32:39 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:32:39 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:32:39 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:32:39 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:32:39 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:32:39 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:32:39 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:32:39 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:32:39 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:32:39 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:32:39 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:32:44 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:32:53 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:32:53 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:32:53 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:32:53 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:32:53 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:32:53 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:32:53 - main - INFO - API 상태 확인 완료
+2025-08-22 09:32:53 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:32:54 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:32:54 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:32:54 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:32:54 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:32:54 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:32:54 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:32:54 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:32:54 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:32:54 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:32:54 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:32:54 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:32:54 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:32:54 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:32:54 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:32:54 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:32:54 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:32:54 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:32:54 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:33:15 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:33:15 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:33:15 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:33:15 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:33:15 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:33:15 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:33:15 - main - INFO - API 상태 확인 완료
+2025-08-22 09:33:16 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:33:16 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:33:16 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:33:16 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:33:16 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:33:16 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:33:16 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:33:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:33:16 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:33:16 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:33:16 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:33:16 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:33:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:33:16 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:33:16 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:33:16 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:33:16 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:33:16 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:33:16 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:33:19 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:33:45 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:33:45 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:33:45 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:33:45 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:33:45 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:33:45 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:33:45 - main - INFO - API 상태 확인 완료
+2025-08-22 09:33:46 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:33:46 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:33:46 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:33:46 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:33:46 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:33:46 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:33:46 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:33:46 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:33:46 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:33:46 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:33:46 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:33:46 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:33:46 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:33:46 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:33:46 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:33:46 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:33:46 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:33:46 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:33:46 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:34:02 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:34:02 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:34:02 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:34:02 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:34:02 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:34:02 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:34:02 - main - INFO - API 상태 확인 완료
+2025-08-22 09:34:02 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:34:02 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:34:02 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:34:02 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:34:02 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:34:02 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:34:03 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:34:03 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:34:03 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:34:03 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:34:03 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:34:03 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:34:03 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:34:03 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:34:03 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:34:03 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:34:03 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:34:03 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:34:03 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:34:06 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:34:10 - features.powerlink_analyzer.results_widget - ERROR - 키워드 삭제 실패: type object 'ModernConfirmDialog' has no attribute 'Yes'
+2025-08-22 09:35:11 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:35:11 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:35:11 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:35:11 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:35:11 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:35:11 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:35:11 - main - INFO - API 상태 확인 완료
+2025-08-22 09:35:12 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:35:12 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:35:12 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:35:12 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:35:12 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:35:12 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:35:12 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:35:12 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:35:12 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:35:12 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:35:12 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:35:12 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:35:12 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:35:12 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:35:12 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:35:12 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:35:12 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:35:12 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:35:12 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:36:46 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:36:46 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:36:46 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:36:46 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:36:46 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:36:46 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:36:46 - main - INFO - API 상태 확인 완료
+2025-08-22 09:36:46 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:36:47 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:36:47 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:36:47 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:36:47 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:36:47 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:36:47 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:36:47 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:36:47 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:36:47 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:36:47 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:36:47 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:36:47 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:36:47 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:36:47 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:36:47 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:36:47 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:36:47 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:36:47 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:36:51 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:36:54 - features.powerlink_analyzer.results_widget - ERROR - 키워드 삭제 실패: type object 'ModernConfirmDialog' has no attribute 'Yes'
+2025-08-22 09:37:46 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:37:46 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:37:46 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:37:46 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:37:46 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:37:46 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:37:46 - main - INFO - API 상태 확인 완료
+2025-08-22 09:37:47 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:37:47 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:37:47 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:37:47 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:37:47 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:37:47 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:37:47 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:37:47 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:37:47 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:37:47 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:37:47 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:37:47 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:37:47 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:37:47 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:37:47 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:37:47 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:37:47 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:37:47 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:37:47 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:37:50 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:37:53 - features.powerlink_analyzer.results_widget - ERROR - 키워드 삭제 실패: type object 'ModernConfirmDialog' has no attribute 'Yes'
+2025-08-22 09:38:04 - features.powerlink_analyzer.results_widget - ERROR - 키워드 삭제 실패: type object 'ModernConfirmDialog' has no attribute 'Yes'
+2025-08-22 09:38:11 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-22 09:38:13 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-22 09:38:27 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:38:27 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:38:27 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:38:27 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:38:27 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:38:27 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:38:27 - main - INFO - API 상태 확인 완료
+2025-08-22 09:38:27 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:38:27 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:38:27 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:38:27 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:38:27 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:38:27 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:38:27 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:38:27 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:38:27 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:38:27 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:38:27 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:38:27 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:38:27 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:38:27 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:38:27 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:38:28 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:38:28 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:38:28 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:38:28 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:38:30 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:38:35 - features.powerlink_analyzer.results_widget - ERROR - 키워드 삭제 실패: type object 'ModernConfirmDialog' has no attribute 'Yes'
+2025-08-22 09:39:15 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:39:15 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:39:15 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:39:15 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:39:15 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:39:15 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:39:15 - main - INFO - API 상태 확인 완료
+2025-08-22 09:39:15 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:39:16 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:39:16 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:39:16 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:39:16 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:39:16 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:39:16 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:39:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:39:16 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:39:16 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:39:16 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:39:16 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:39:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:39:16 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:39:16 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:39:16 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:39:16 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:39:16 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:39:16 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:39:19 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:39:23 - features.powerlink_analyzer.results_widget - ERROR - 키워드 삭제 실패: type object 'ModernConfirmDialog' has no attribute 'Yes'
+2025-08-22 09:40:24 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:40:24 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:40:24 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:40:24 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:40:24 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:40:24 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:40:24 - main - INFO - API 상태 확인 완료
+2025-08-22 09:40:24 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:40:24 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:40:24 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:40:24 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:40:24 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:40:24 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:40:25 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:40:25 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:40:25 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:40:25 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:40:25 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:40:25 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:40:25 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:40:25 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:40:25 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:40:25 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:40:25 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:40:25 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:40:25 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:40:28 - features.powerlink_analyzer.results_widget - INFO - PowerLink 히스토리 로드 완료: 강아지닭가슴살 외 6개 (7개 키워드)
+2025-08-22 09:40:29 - features.powerlink_analyzer.results_widget - ERROR - 전체 데이터 삭제 실패: type object 'ModernConfirmDialog' has no attribute 'Yes'
+2025-08-22 09:43:57 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:43:57 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:43:57 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:43:57 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:43:57 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:43:57 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:43:57 - main - INFO - API 상태 확인 완료
+2025-08-22 09:43:57 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:43:57 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:43:57 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:43:57 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:43:57 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:43:57 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:43:57 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:43:57 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:43:57 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:43:57 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:43:57 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:43:58 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:43:58 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:43:58 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:43:58 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:43:58 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:43:58 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:43:58 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:43:58 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:44:06 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:44:06 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:44:06 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:44:06 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:44:06 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:44:06 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:44:06 - main - INFO - API 상태 확인 완료
+2025-08-22 09:44:07 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:44:07 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:44:07 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:44:07 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:44:07 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:44:07 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:44:07 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:44:07 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:44:07 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:44:07 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:44:07 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:44:07 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:44:07 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:44:07 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:44:07 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:44:07 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:44:07 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:44:07 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:44:07 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:44:25 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 38
+2025-08-22 09:44:25 - features.powerlink_analyzer.service - INFO - 히스토리 세션 삭제 완료: [38]
+2025-08-22 09:44:31 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:44:31 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:44:31 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:44:31 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:44:32 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:44:32 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:44:32 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:44:32 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 6개 키워드 수집: {'강아지고구마간식', '강아지오리육포', '강아지육포간식', '애견고구마간식', '강아지고구마', '일킬로그램'}
+2025-08-22 09:44:32 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 6개, 정규화된 키워드: {'강아지고구마간식', '강아지오리육포', '강아지육포간식', '애견고구마간식', '강아지고구마', '일킬로그램'}
+2025-08-22 09:44:32 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 09:44:32 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:44:32 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 09:44:32 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 09:44:32 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 09:44:32 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 09:44:32 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 09:44:32 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 09:44:33 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 09:44:33 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 09:44:33 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 09:44:34 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 09:44:34 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:44:34 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 09:44:34 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.65초 대기
+2025-08-22 09:44:34 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 09:44:34 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 09:44:35 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 09:44:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:44:35 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.96초 대기
+2025-08-22 09:44:35 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 09:44:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 09:44:36 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 09:44:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:44:36 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 09:44:38 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 09:44:38 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 09:44:38 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 09:44:39 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 09:44:39 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 09:44:39 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 09:44:39 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 09:44:39 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 09:44:39 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 09:44:39 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 7개 키워드
+2025-08-22 09:44:44 - features.powerlink_analyzer.results_widget - INFO - 메모리 DB 클리어: 7개 → 0개
+2025-08-22 09:44:44 - features.powerlink_analyzer.results_widget - INFO - 테이블 클리어: 모바일 7→0, PC 7→0
+2025-08-22 09:46:12 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:46:12 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:46:12 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:46:12 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:46:12 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:46:12 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:46:12 - main - INFO - API 상태 확인 완료
+2025-08-22 09:46:12 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:46:12 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:46:12 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:46:12 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:46:12 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:46:12 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:46:13 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:46:13 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:46:13 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:46:13 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:46:13 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:46:13 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:46:13 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:46:13 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:46:13 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:46:13 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:46:13 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:46:13 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:46:13 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:51:44 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:51:44 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:51:44 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:51:44 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:51:44 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:51:44 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:51:44 - main - INFO - API 상태 확인 완료
+2025-08-22 09:51:44 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:51:45 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:51:45 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:51:45 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:51:45 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:51:45 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:51:45 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:51:45 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:51:45 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:51:45 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:51:45 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:51:45 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:51:45 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:51:45 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:51:45 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:51:45 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:51:45 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:51:45 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:51:45 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:51:58 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:51:58 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:51:58 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:51:58 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:51:59 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:51:59 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:51:59 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 09:51:59 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 7개 키워드 수집: {'강아지오리가슴살', '강아지간식오리', '강아지육포간식', '강아지오리육포', '애견고구마간식', '일킬로그램', '강아지닭가슴살육포'}
+2025-08-22 09:51:59 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 7개, 정규화된 키워드: {'강아지오리가슴살', '강아지간식오리', '강아지육포간식', '강아지오리육포', '애견고구마간식', '일킬로그램', '강아지닭가슴살육포'}
+2025-08-22 09:51:59 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 09:51:59 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 09:51:59 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 09:51:59 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 09:51:59 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 09:51:59 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 09:52:00 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 09:52:00 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 09:52:01 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 09:52:01 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 09:52:01 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 09:52:01 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 09:52:01 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:52:01 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 09:52:01 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.72초 대기
+2025-08-22 09:52:02 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 09:52:02 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 09:52:02 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 09:52:02 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:52:02 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.95초 대기
+2025-08-22 09:52:03 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 09:52:03 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 09:52:03 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 09:52:03 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 09:52:03 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 09:52:05 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 09:52:05 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 09:52:05 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 09:52:06 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 09:52:06 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 09:52:06 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 09:52:06 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 09:52:06 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 09:52:06 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 09:52:06 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 8개 키워드
+2025-08-22 09:52:30 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 48
+2025-08-22 09:52:30 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_095230
+2025-08-22 09:52:46 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:52:46 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:52:46 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:52:46 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:52:46 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:52:46 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:52:47 - main - INFO - API 상태 확인 완료
+2025-08-22 09:52:47 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:52:47 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:52:47 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:52:47 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:52:47 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:52:47 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:52:47 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:52:47 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:52:47 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:52:47 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:52:47 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:52:47 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:52:47 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:52:47 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:52:47 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:52:47 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:52:47 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:52:47 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:52:48 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:53:57 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:53:57 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:53:57 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:53:57 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:53:57 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:53:57 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:53:57 - main - INFO - API 상태 확인 완료
+2025-08-22 09:53:57 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:53:58 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:53:58 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:53:58 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:53:58 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:53:58 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:53:58 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:53:58 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:53:58 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:53:58 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:53:58 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:53:58 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:53:58 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:53:58 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:53:58 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:53:58 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:53:58 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:53:58 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:53:58 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:57:22 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:57:22 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:57:22 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:57:22 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:57:22 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:57:22 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:57:22 - main - INFO - API 상태 확인 완료
+2025-08-22 09:57:23 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:57:23 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:57:23 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:57:23 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:57:23 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:57:23 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:57:23 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:57:23 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:57:23 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:57:23 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:57:23 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:57:23 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:57:23 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:57:23 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:57:23 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:57:23 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:57:23 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:57:23 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:57:23 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 09:57:36 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 09:57:36 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 09:57:36 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 09:57:36 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 09:57:36 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 09:57:36 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 09:57:36 - main - INFO - API 상태 확인 완료
+2025-08-22 09:57:36 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 09:57:36 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 09:57:36 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 09:57:36 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 09:57:36 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 09:57:36 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 09:57:37 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 09:57:37 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 09:57:37 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 09:57:37 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 09:57:37 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 09:57:37 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 09:57:37 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 09:57:37 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 09:57:37 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 09:57:37 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 09:57:37 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 09:57:37 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 09:57:37 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:00:55 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:00:55 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:00:55 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:00:55 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:00:55 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:00:55 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:00:55 - main - INFO - API 상태 확인 완료
+2025-08-22 10:00:55 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:00:56 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:00:56 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:00:56 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:00:56 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:00:56 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:00:56 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:00:56 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:00:56 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:00:56 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:00:56 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:00:56 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:00:56 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:00:56 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:00:56 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:00:56 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:00:56 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:00:56 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:00:56 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:01:10 - toolbox.text_utils - INFO - 텍스트에서 3개 키워드 파싱 완료
+2025-08-22 10:01:10 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 0개 키워드 수집: set()
+2025-08-22 10:01:10 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 0개, 정규화된 키워드: set()
+2025-08-22 10:01:10 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 3개: ['강아지쿠키', '강아지과자', '강아지시리얼']
+2025-08-22 10:01:10 - toolbox.text_utils - DEBUG - 중복 제거 완료: 3 -> 3개
+2025-08-22 10:01:10 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 3개: ['강아지쿠키', '강아지과자', '강아지시리얼']
+2025-08-22 10:01:10 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 3개 준비 완료: ['강아지쿠키', '강아지과자', '강아지시리얼']
+2025-08-22 10:01:10 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 3개 키워드 (최적화된 병렬처리)
+2025-08-22 10:01:10 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:01:11 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:01:11 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:01:11 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:01:11 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:01:12 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지쿠키
+2025-08-22 10:01:12 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:01:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:01:12 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 10:01:12 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.99초 대기
+2025-08-22 10:01:12 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%BF%A0%ED%82%A4&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:01:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:12 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 79개 키워드
+2025-08-22 10:01:12 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.73초 대기
+2025-08-22 10:01:13 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지과자
+2025-08-22 10:01:13 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지시리얼
+2025-08-22 10:01:13 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지쿠키 (PC)
+2025-08-22 10:01:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:01:13 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%8B%9C%EB%A6%AC%EC%96%BC&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:01:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:13 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 10:01:13 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.96초 대기
+2025-08-22 10:01:14 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지시리얼 (PC)
+2025-08-22 10:01:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:01:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:01:14 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): api.searchad.naver.com:443
+2025-08-22 10:01:14 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:01:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:14 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.87초 대기
+2025-08-22 10:01:14 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EA%B3%BC%EC%9E%90&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:01:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:14 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 150개 키워드
+2025-08-22 10:01:14 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.68초 대기
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지과자 (PC)
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지쿠키 (MOBILE)
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:01:15 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): api.searchad.naver.com:443
+2025-08-22 10:01:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:01:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.76초 대기
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.67초 대기
+2025-08-22 10:01:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:01:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:16 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지과자 (MOBILE)
+2025-08-22 10:01:16 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지시리얼 (MOBILE)
+2025-08-22 10:01:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:01:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:01:16 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:01:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:16 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:01:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:01:16 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 3/3개 성공
+2025-08-22 10:01:17 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지쿠키 -> 위치:1, 개수:8
+2025-08-22 10:01:17 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지쿠키 -> (1, 8)
+2025-08-22 10:01:18 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지쿠키 -> 위치:1, 개수:4
+2025-08-22 10:01:18 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지쿠키 -> (1, 4)
+2025-08-22 10:01:20 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지과자 -> 위치:1, 개수:8
+2025-08-22 10:01:20 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지과자 -> (1, 8)
+2025-08-22 10:01:21 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지과자 -> 위치:1, 개수:4
+2025-08-22 10:01:21 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지과자 -> (1, 4)
+2025-08-22 10:01:23 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지시리얼 -> 위치:2, 개수:3
+2025-08-22 10:01:23 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지시리얼 -> (2, 3)
+2025-08-22 10:01:23 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 3/3개 처리
+2025-08-22 10:01:24 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지시리얼 -> 위치:2, 개수:3
+2025-08-22 10:01:24 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지시리얼 -> (2, 3)
+2025-08-22 10:01:24 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 3/3개 처리
+2025-08-22 10:01:24 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:01:24 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 3/3개 성공
+2025-08-22 10:01:24 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:01:24 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 3개 키워드
+2025-08-22 10:06:16 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 17
+2025-08-22 10:06:16 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 16
+2025-08-22 10:06:16 - foundation.db - DEBUG - 파워링크 분석 세션 삭제: 15
+2025-08-22 10:06:16 - features.powerlink_analyzer.service - INFO - 히스토리 세션 삭제 완료: [17, 16, 15]
+2025-08-22 10:07:20 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:07:20 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:07:20 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:07:20 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:07:20 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:07:20 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:07:20 - main - INFO - API 상태 확인 완료
+2025-08-22 10:07:21 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:07:21 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:07:21 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:07:21 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:07:21 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:07:21 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:07:21 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:07:21 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:07:21 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:07:21 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:07:21 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:07:21 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:07:21 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:07:21 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:07:21 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:07:21 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:07:21 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:07:21 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:07:21 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:08:31 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:08:31 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:08:31 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:08:31 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:08:31 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:08:31 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:08:31 - main - INFO - API 상태 확인 완료
+2025-08-22 10:08:31 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:08:31 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:08:31 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:08:31 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:08:31 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:08:31 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:08:32 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:08:32 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:08:32 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:08:32 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:08:32 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:08:32 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:08:32 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:08:32 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:08:32 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:08:32 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:08:32 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:08:32 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:08:32 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:08:46 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:46 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:47 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:47 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:49 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:49 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:49 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:49 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:50 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:50 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:50 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:08:50 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 8개 키워드 수집: {'강아지닭가슴살육포', '강아지육포간식', '강아지오리육포', '일킬로그램', '강아지사료', '애견고구마간식', '강아지오리가슴살', '강아지간식오리'}
+2025-08-22 10:08:50 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 8개, 정규화된 키워드: {'강아지닭가슴살육포', '강아지육포간식', '강아지오리육포', '일킬로그램', '강아지사료', '애견고구마간식', '강아지오리가슴살', '강아지간식오리'}
+2025-08-22 10:08:50 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크']
+2025-08-22 10:08:50 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:08:50 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['오븐베이크']
+2025-08-22 10:08:50 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['오븐베이크']
+2025-08-22 10:08:50 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:08:50 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:08:50 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:08:50 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:08:51 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크
+2025-08-22 10:08:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:08:51 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 10:08:51 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:08:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:08:51 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 10:08:51 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.69초 대기
+2025-08-22 10:08:52 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (PC)
+2025-08-22 10:08:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:08:52 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:08:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:08:52 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.97초 대기
+2025-08-22 10:08:53 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (MOBILE)
+2025-08-22 10:08:53 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:08:53 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:08:53 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:08:53 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:08:53 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크 -> 위치:3, 개수:3
+2025-08-22 10:08:53 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크 -> (3, 3)
+2025-08-22 10:08:54 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:08:54 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크 -> 위치:2, 개수:3
+2025-08-22 10:08:54 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크 -> (2, 3)
+2025-08-22 10:08:54 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:08:54 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:08:54 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:08:54 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:08:54 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 9개 키워드
+2025-08-22 10:09:03 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 49
+2025-08-22 10:09:03 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_100903
+2025-08-22 10:09:11 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:09:11 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:09:11 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:09:11 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:09:11 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:09:11 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:09:11 - main - INFO - API 상태 확인 완료
+2025-08-22 10:09:11 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:09:12 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:09:12 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:09:12 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:09:12 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:09:12 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:09:12 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:09:12 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:09:12 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:09:12 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:09:12 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:09:12 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:09:12 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:09:12 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:09:12 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:09:12 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:09:12 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:09:12 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:09:12 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:09:31 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:09:31 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:09:31 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:09:31 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:09:31 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:09:31 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:09:31 - main - INFO - API 상태 확인 완료
+2025-08-22 10:09:32 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:09:32 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:09:32 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:09:32 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:09:32 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:09:32 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:09:32 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:09:32 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:09:32 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:09:32 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:09:32 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:09:32 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:09:32 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:09:32 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:09:32 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:09:32 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:09:32 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:09:32 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:09:32 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:11:42 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:11:42 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:11:42 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:11:42 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:11:42 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:11:42 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:11:42 - main - INFO - API 상태 확인 완료
+2025-08-22 10:11:42 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:11:43 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:11:43 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:11:43 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:11:43 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:11:43 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:11:43 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:11:43 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:11:43 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:11:43 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:11:43 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:11:43 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:11:43 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:11:43 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:11:43 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:11:43 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:11:43 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:11:43 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:11:43 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:12:52 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:12:52 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:12:52 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:12:52 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:12:52 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:12:52 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:12:52 - main - INFO - API 상태 확인 완료
+2025-08-22 10:12:52 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:12:52 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:12:52 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:12:52 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:12:52 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:12:52 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:12:53 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:12:53 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:12:53 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:12:53 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:12:53 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:12:53 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:12:53 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:12:53 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:12:53 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:12:53 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:12:53 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:12:53 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:12:53 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:13:28 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:13:28 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:13:28 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:13:28 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:13:28 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:13:28 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:13:28 - main - INFO - API 상태 확인 완료
+2025-08-22 10:13:28 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:13:29 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:13:29 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:13:29 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:13:29 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:13:29 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:13:29 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:13:29 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:13:29 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:13:29 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:13:29 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:13:29 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:13:29 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:13:29 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:13:29 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:13:29 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:13:29 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:13:29 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:13:29 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:13:32 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
+2025-08-22 10:13:34 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
+2025-08-22 10:13:45 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
+2025-08-22 10:14:45 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:14:45 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:14:45 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:14:45 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:14:45 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:14:45 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:14:45 - main - INFO - API 상태 확인 완료
+2025-08-22 10:14:45 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:14:45 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:14:45 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:14:45 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:14:45 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:14:45 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:14:46 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:14:46 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:14:46 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:14:46 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:14:46 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:14:46 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:14:46 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:14:46 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:14:46 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:14:46 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:14:46 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:14:46 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:14:46 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:15:13 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:15:13 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:15:13 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:15:13 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:15:13 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:15:13 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:15:13 - main - INFO - API 상태 확인 완료
+2025-08-22 10:15:13 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:15:13 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:15:13 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:15:13 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:15:13 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:15:13 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:15:14 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:15:14 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:15:14 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:15:14 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:15:14 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:15:14 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:15:14 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:15:14 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:15:14 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:15:14 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:15:14 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:15:14 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:15:14 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:17:56 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:17:56 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:17:56 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:17:56 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:17:56 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:17:56 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:17:56 - main - INFO - API 상태 확인 완료
+2025-08-22 10:17:57 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:17:57 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:17:57 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:17:57 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:17:57 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:17:57 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:17:57 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:17:57 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:17:57 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:17:57 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:17:57 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:17:57 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:17:57 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:17:57 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:17:57 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:17:57 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:17:57 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:17:57 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:17:57 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:18:32 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:18:32 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:18:34 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:18:34 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:18:34 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:18:34 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:18:35 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:18:35 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:18:35 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:18:35 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 8개 키워드 수집: {'강아지간식오리', '일킬로그램', '애견고구마간식', '오븐베이크', '강아지오리가슴살', '강아지닭가슴살육포', '강아지육포간식', '강아지오리육포'}
+2025-08-22 10:18:35 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 8개, 정규화된 키워드: {'강아지간식오리', '일킬로그램', '애견고구마간식', '오븐베이크', '강아지오리가슴살', '강아지닭가슴살육포', '강아지육포간식', '강아지오리육포'}
+2025-08-22 10:18:35 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 10:18:35 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:18:35 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 10:18:35 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 10:18:35 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:18:35 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:18:35 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:18:35 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:18:36 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 10:18:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:18:36 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 10:18:37 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:18:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:18:37 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 10:18:37 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.63초 대기
+2025-08-22 10:18:37 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 10:18:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:18:37 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:18:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:18:37 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.97초 대기
+2025-08-22 10:18:38 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 10:18:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:18:38 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:18:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:18:38 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:18:41 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 10:18:41 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 10:18:41 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:18:42 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 10:18:42 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 10:18:42 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:18:42 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:18:42 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:18:42 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:18:42 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 9개 키워드
+2025-08-22 10:18:44 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:18:44 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:18:45 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:18:45 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:18:45 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:45 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:46 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:46 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:46 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:46 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:47 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:47 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:47 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:47 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 9개 키워드 수집: {'강아지간식오리', '일킬로그램', '애견고구마간식', '강아지사료', '오븐베이크', '강아지오리가슴살', '강아지닭가슴살육포', '강아지육포간식', '강아지오리육포'}
+2025-08-22 10:18:47 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 9개, 정규화된 키워드: {'강아지간식오리', '일킬로그램', '애견고구마간식', '강아지사료', '오븐베이크', '강아지오리가슴살', '강아지닭가슴살육포', '강아지육포간식', '강아지오리육포'}
+2025-08-22 10:18:47 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 2개: ['강아지사료', '애견고구마간식']
+2025-08-22 10:18:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 0개
+2025-08-22 10:18:47 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 0개: []
+2025-08-22 10:18:48 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:48 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:49 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:49 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:49 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:49 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:50 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:50 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:50 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:50 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:50 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 50
+2025-08-22 10:18:50 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_101850
+2025-08-22 10:18:51 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:51 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:51 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:51 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:52 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:52 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:52 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:52 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:53 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:53 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:53 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:53 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:18:54 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:18:54 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개

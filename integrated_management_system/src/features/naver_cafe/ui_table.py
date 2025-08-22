@@ -3,16 +3,19 @@
 추출된 사용자, 추출 기록 탭으로 구성된 테이블 위젯
 """
 from datetime import datetime
+from pathlib import Path
 
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QTabWidget, QTableWidgetItem, 
-    QHeaderView, QApplication, QDialog, QPushButton
+    QHeaderView, QApplication, QDialog, QPushButton,
+    QFileDialog, QMessageBox
 )
 from PySide6.QtCore import Qt
 
 from src.toolbox.ui_kit import ModernStyle, ModernTableWidget
 from src.toolbox.ui_kit.components import ModernButton
+from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from .models import ExtractedUser, ExtractionTask
@@ -368,7 +371,7 @@ class NaverCafeResultsWidget(QWidget):
         # UI 레이어에서 다이얼로그 처리 후 service 호출 (CLAUDE.md: UI 분리)
         format_type = self.show_save_format_dialog(len(users_data))
         if format_type:
-            self.service.export_users_data(users_data, format_type, self)
+            self.export_users_data(users_data, format_type, self)
     
     def show_save_format_dialog(self, users_count: int) -> str:
         """저장 포맷 선택 다이얼로그 표시 - UI 레이어 책임"""
@@ -530,10 +533,10 @@ class NaverCafeResultsWidget(QWidget):
             ModernInfoDialog.warning(self, "데이터 없음", "선택된 기록에 다운로드할 사용자 데이터가 없습니다.")
             return
         
-        # UI 레이어에서 다이얼로그 처리 후 service 호출 (CLAUDE.md: UI 분리)
+        # UI 레이어에서 다이얼로그 처리 (CLAUDE.md: UI 분리)
         format_type = self.show_save_format_dialog(len(selected_data))
         if format_type:
-            success = self.service.export_users_data(selected_data, format_type, self)
+            success = self.export_users_data(selected_data, format_type, self)
             if success:
                 log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 다운로드 완료 (총 {len(selected_data)}명)", "success")
         
@@ -650,8 +653,8 @@ class NaverCafeResultsWidget(QWidget):
             ModernInfoDialog.warning(self, "데이터 없음", "선택된 기록에 내보낼 사용자 데이터가 없습니다.")
             return
         
-        # service 경유로 엑셀로 내보내기 (CLAUDE.md: UI 오케스트레이션은 service)
-        success = self.service.export_to_excel_with_dialog(selected_data, self)
+        # UI 다이얼로그로 엑셀 내보내기 (CLAUDE.md: UI 다이얼로그는 UI 레이어)
+        success = self.export_to_excel_with_dialog(selected_data, self)
         
         if success:
             log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 엑셀 내보내기 완료 (총 {len(selected_data)}명)", "success")
@@ -676,3 +679,137 @@ class NaverCafeResultsWidget(QWidget):
         except Exception as e:
             logger.error(f"추출 완료 후 기록 테이블 새로고침 실패: {e}")
     
+    # ==================== UI 내보내기 메서드들 (service에서 이동) ====================
+    
+    def export_users_data(self, users_data: list, format_type: str, parent_widget=None) -> bool:
+        """사용자 데이터 내보내기 - UI 레이어에서 처리"""
+        try:
+            # 선택된 형식으로 내보내기
+            if format_type == "excel":
+                return self.export_to_excel_with_dialog(users_data, parent_widget)
+            elif format_type == "meta_csv":
+                return self.export_to_meta_csv_with_dialog(users_data, parent_widget)
+            else:
+                logger.warning(f"지원하지 않는 내보내기 형식: {format_type}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"사용자 데이터 내보내기 오류: {e}")
+            return False
+    
+    def export_to_excel_with_dialog(self, users_data: list, parent_widget=None) -> bool:
+        """엑셀로 내보내기 - 파일 선택 다이얼로그 포함"""
+        try:
+            # 1. 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                parent_widget or self,
+                "엑셀 파일로 저장",
+                "네이버카페_사용자_목록.xlsx",
+                "Excel Files (*.xlsx);;All Files (*)"
+            )
+            
+            if not file_path:
+                return False
+            
+            # 2. 사용자 데이터를 ExtractedUser 객체로 변환
+            users = []
+            for row_data in users_data:
+                if len(row_data) >= 4:
+                    user = ExtractedUser(
+                        user_id=row_data[1],
+                        nickname=row_data[2],
+                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now()
+                    )
+                    users.append(user)
+            
+            # 3. service 경유로 실제 파일 저장
+            success = self.service.export_to_excel(file_path, users)
+            
+            if success:
+                # 4. 성공 다이얼로그 표시
+                filename = Path(file_path).name
+                user_count = len([row_data for row_data in users_data if len(row_data) >= 2])
+                self._show_save_completion_dialog(
+                    "엑셀 파일 저장 완료",
+                    f"엑셀 파일이 성공적으로 저장되었습니다.\n\n파일명: {filename}\n사용자 수: {user_count}명",
+                    file_path
+                )
+                logger.info(f"엑셀 파일 저장 완료: {filename} (사용자 {user_count}명)")
+            else:
+                QMessageBox.critical(parent_widget or self, "오류", "엑셀 저장 중 오류가 발생했습니다.")
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"엑셀 내보내기 (대화상자 포함) 실패: {e}")
+            QMessageBox.critical(parent_widget or self, "오류", f"엑셀 저장 중 오류가 발생했습니다.\n{str(e)}")
+            return False
+
+    def export_to_meta_csv_with_dialog(self, users_data: list, parent_widget=None) -> bool:
+        """Meta CSV로 내보내기 - 파일 선택 다이얼로그 포함"""
+        try:
+            # 1. 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                parent_widget or self,
+                "Meta CSV 파일로 저장",
+                "네이버카페_Meta광고용.csv",
+                "CSV Files (*.csv);;All Files (*)"
+            )
+            
+            if not file_path:
+                return False
+            
+            # 2. 사용자 데이터를 ExtractedUser 객체로 변환
+            users = []
+            for row_data in users_data:
+                if len(row_data) >= 4:
+                    user = ExtractedUser(
+                        user_id=row_data[1],
+                        nickname=row_data[2],
+                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now()
+                    )
+                    users.append(user)
+            
+            # 3. service 경유로 실제 파일 저장
+            success = self.service.export_to_meta_csv(file_path, users)
+            
+            if success:
+                # 4. 성공 다이얼로그 표시 (도메인 정보 동적 가져오기)
+                filename = Path(file_path).name
+                user_count = len([row_data for row_data in users_data if len(row_data) >= 2])
+                
+                # service에서 도메인 정보 가져오기 (하드코딩 방지)
+                domain_count = self.service.get_meta_csv_domain_count()
+                domains = self.service.get_meta_csv_domains()
+                domain_list = ", ".join(domains)
+                
+                self._show_save_completion_dialog(
+                    "Meta CSV 저장 완료",
+                    f"Meta 광고용 CSV 파일이 성공적으로 저장되었습니다.\n\n파일명: {filename}\n사용자 ID: {user_count}개\n생성된 이메일: {user_count*domain_count}개\n({domain_list})",
+                    file_path
+                )
+                logger.info(f"Meta CSV 파일 저장 완료: {filename} (사용자 {user_count}명)")
+            else:
+                QMessageBox.critical(parent_widget or self, "오류", "CSV 저장 중 오류가 발생했습니다.")
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"Meta CSV 내보내기 (대화상자 포함) 실패: {e}")
+            QMessageBox.critical(parent_widget or self, "오류", f"CSV 저장 중 오류가 발생했습니다.\n{str(e)}")
+            return False
+
+    def _show_save_completion_dialog(self, title: str, message: str, file_path: str):
+        """저장 완료 다이얼로그 표시"""
+        try:
+            # toolbox 공용 다이얼로그 사용
+            ModernSaveCompletionDialog.show_save_completion(
+                self, 
+                title, 
+                message, 
+                file_path
+            )
+        except Exception as e:
+            logger.warning(f"저장 완료 다이얼로그 표시 실패: {e}")
+            # 폴백: 일반 메시지박스
+            QMessageBox.information(self, title, message)

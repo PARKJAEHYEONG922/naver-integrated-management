@@ -125,3 +125,32 @@ class PowerLinkRepository:
     def check_duplicate_session_24h(self, keywords_data: dict) -> bool:
         """24시간 내 중복 세션 체크"""
         return self.db.check_powerlink_session_duplicate_24h(keywords_data)
+    
+    def get_analysis_sessions(self) -> List[dict]:
+        """분석 세션 목록 조회 (히스토리용)"""
+        try:
+            sessions = self.list_sessions()
+            # 히스토리 테이블에 맞는 형식으로 변환
+            formatted_sessions = []
+            for session in sessions:
+                # created_at을 ISO 문자열로 보장
+                raw_dt = session.get('created_at', '')
+                if isinstance(raw_dt, datetime):
+                    created_at = raw_dt.isoformat()
+                else:
+                    created_at = str(raw_dt) if raw_dt is not None else ''
+
+                formatted_sessions.append({
+                    'id': session.get('id'),                   # DB에서 반환하는 실제 키 사용
+                    'session_id': session.get('id'),           # 호환성을 위해 유지 (같은 값)
+                    'name': session.get('session_name', ''),   # UI가 기대하는 'name' 키 추가
+                    'session_name': session.get('session_name', ''),  # 호환성을 위해 유지
+                    'created_at': created_at,                  # ← UI가 읽는 표준 키
+                    'keyword_count': session.get('keyword_count', 0)
+                })
+            return formatted_sessions
+        except Exception as e:
+            from src.foundation.logging import get_logger
+            logger = get_logger("features.powerlink_analyzer.models")
+            logger.error(f"분석 세션 목록 조회 실패: {e}")
+            return []

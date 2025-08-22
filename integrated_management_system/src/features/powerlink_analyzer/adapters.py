@@ -6,7 +6,7 @@ import time
 import random
 import openpyxl
 from openpyxl.styles import Font, Alignment, NamedStyle
-from typing import List, Optional, Dict, Any, Tuple
+from typing import List, Optional, Dict, Tuple
 from playwright.sync_api import BrowserContext
 from datetime import datetime
 
@@ -21,7 +21,6 @@ POWERLINK_CONFIG = {
     "mobile_positions": 5,  # 모바일 입찰가 조회 위치 (1~5위)
     "max_retries": 2,  # 크롤링 최대 재시도 횟수
     "request_timeout": 10,  # API 요청 타임아웃(초)
-    "browser_page_limit": 5,  # 브라우저 컨텍스트당 최대 페이지 수
 }
 
 # 네이버 최소 입찰가
@@ -123,7 +122,7 @@ class PowerLinkDataAdapter:
     
     def __init__(self):
         """초기화"""
-        pass
+        self.playwright_helper = None
     
     def is_api_configured(self) -> bool:
         """API 설정 확인"""
@@ -136,12 +135,13 @@ class PowerLinkDataAdapter:
             logger.error(f"API 설정 확인 실패: {e}")
             return False
     
-    def get_keyword_basic_data(self, keyword: str) -> Optional[Tuple[int, float, float, float, float]]:
+    def get_keyword_basic_data(self, keyword: str) -> Optional[Tuple[int, int, float, float, float, float]]:
         """
-        기본 키워드 데이터 조회 (월검색량, 클릭수, 클릭률)
-        
+        기본 키워드 데이터 조회 (PC/모바일 검색량·클릭·CTR)
+
         Returns:
-            (월검색량, PC클릭수, PC클릭률, 모바일클릭수, 모바일클릭률) 또는 None
+            (pc_search_volume, mobile_search_volume, pc_clicks, pc_ctr, mobile_clicks, mobile_ctr)
+            또는 None
         """
         if not self.is_api_configured():
             logger.error("네이버 검색광고 API가 설정되지 않았습니다.")
@@ -289,119 +289,6 @@ class PowerLinkDataAdapter:
             logger.error(f"{device} 입찰가 조회 최종 실패: {e}")
             return []
     
-    def get_page_exposure_positions(self, keyword: str, device_type: str, browser_context: Optional[BrowserContext] = None) -> Optional[Tuple[int, int]]:
-        """
-        1페이지 노출 위치 크롤링
-        
-        Args:
-            keyword: 키워드
-            device_type: 'pc' 또는 'mobile'
-            browser_context: 기존 브라우저 컨텍스트 (필수 - worker에서 전달)
-            
-        Returns:
-            (파워링크 위치 인덱스, 파워링크 광고 개수) 또는 None
-        """
-        # browser_context가 없으면 기본값 반환
-        if not browser_context:
-            logger.warning(f"{device_type.upper()} 크롤링 - 브라우저 컨텍스트가 없어 기본값 사용")
-            return (8, 8) if device_type == 'pc' else (4, 4)
-        
-        max_retries = POWERLINK_CONFIG["max_retries"]
-        
-        for attempt in range(max_retries + 1):
-            try:
-                result = self._perform_search_with_context(keyword, device_type, browser_context)
-                
-                if result is not None:
-                    return result
-                
-                # 실패한 경우 재시도
-                if attempt < max_retries:
-                    wait_time = (attempt + 1) * 2  # 2초, 4초 대기
-                    logger.warning(f"{device_type.upper()} 크롤링 실패 - {wait_time}초 후 재시도 ({attempt + 1}/{max_retries})")
-                    time.sleep(wait_time)
-                    continue
-                else:
-                    logger.error(f"{device_type.upper()} 크롤링 최대 재시도 횟수 초과 - 기본값 사용")
-                    return (8, 8) if device_type == 'pc' else (4, 4)
-                    
-            except Exception as e:
-                logger.error(f"{device_type.upper()} 크롤링 재시도 중 오류: {str(e)}")
-                if attempt == max_retries:
-                    return (8, 8) if device_type == 'pc' else (4, 4)
-                continue
-        
-        # 모든 시도 실패 시 기본값
-        return (8, 8) if device_type == 'pc' else (4, 4)
-    
-    def _perform_search_with_context(self, keyword: str, device_type: str, browser_context: BrowserContext) -> Optional[Tuple[int, int]]:
-        """기존 브라우저 컨텍스트를 사용한 검색 크롤링"""
-        page = None
-        try:
-            # 기존 브라우저 컨텍스트에서 새 페이지 생성
-            page = browser_context.new_page()
-            
-            # URL 인코딩을 위한 키워드 처리
-            from urllib.parse import quote
-            encoded_keyword = quote(keyword)
-            
-            if device_type == 'pc':
-                search_url = f"https://search.naver.com/search.naver?query={encoded_keyword}"
-            else:  # mobile
-                search_url = f"https://m.search.naver.com/search.naver?query={encoded_keyword}"
-                
-            page.goto(search_url, wait_until='networkidle')
-            page.wait_for_timeout(3000)  # 3초 대기
-            
-            return self._extract_powerlink_info(page, keyword, device_type)
-            
-        except Exception as e:
-            logger.error(f"{device_type.upper()} 크롤링 오류 (브라우저 재사용): {str(e)}")
-            return None
-        finally:
-            if page:
-                try:
-                    page.close()
-                except:
-                    pass
-    
-    
-    def _extract_powerlink_info(self, page, keyword: str, device_type: str) -> Optional[Tuple[int, int]]:
-        """페이지에서 파워링크 정보 추출"""
-        try:
-            # 파워링크 위치 찾기
-            title_wrap_divs = page.query_selector_all(".title_wrap")
-            position_index = 0
-            
-            for idx, div in enumerate(title_wrap_divs, start=1):
-                try:
-                    h2_tag = div.query_selector("h2")
-                    if h2_tag:
-                        h2_text = h2_tag.inner_text()
-                        if device_type == 'pc':
-                            if "파워링크" in h2_text:
-                                position_index = idx
-                                break
-                        else:  # mobile
-                            if keyword in h2_text:
-                                position_index = idx
-                                break
-                except:
-                    continue
-            
-            # 파워링크 광고 개수 찾기
-            if device_type == 'pc':
-                power_link_elements = page.query_selector_all(".title_url_area")
-            else:  # mobile
-                power_link_elements = page.query_selector_all(".url_area")
-            
-            power_link_count = len(power_link_elements)
-            
-            return position_index, power_link_count
-            
-        except Exception as e:
-            logger.error(f"파워링크 정보 추출 오류: {str(e)}")
-            return None
     
     def calculate_min_exposure_bid(self, bid_positions: List[BidPosition], position: int) -> int:
         """
@@ -445,6 +332,53 @@ class PowerLinkDataAdapter:
         
         # 정상 경우는 해당 위치 가격 그대로 반환
         return last_position_price
+    
+    async def initialize_playwright_pages(self):
+        """
+        Playwright 브라우저 페이지 초기화 (vendors 호출 캡슐화)
+        
+        Returns:
+            (playwright_helper, pc_page, mobile_page)
+        """
+        try:
+            from src.vendors.web_automation.playwright_helper import create_playwright_helper, get_fast_browser_config
+            
+            # vendors의 최적화된 설정 활용
+            config = get_fast_browser_config(headless=True)
+            self.playwright_helper = await create_playwright_helper(config)
+            
+            # vendors 헬퍼의 context와 페이지 사용 (최적화 자동 적용됨)
+            async_context = self.playwright_helper.context
+            
+            # PC/Mobile 페이지 생성 (vendors 최적화 자동 적용)
+            pc_page = await async_context.new_page()
+            mobile_page = await async_context.new_page()
+            
+            logger.info("PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)")
+            return self.playwright_helper, pc_page, mobile_page
+            
+        except Exception as e:
+            logger.error(f"페이지 초기화 실패: {e}")
+            raise
+    
+    async def cleanup_playwright(self, playwright_helper, pc_page=None, mobile_page=None):
+        """
+        Playwright 리소스 정리 (vendors 호출 캡슐화)
+        """
+        try:
+            # 개별 페이지 정리
+            if pc_page:
+                await pc_page.close()
+            if mobile_page:
+                await mobile_page.close()
+            
+            # vendors 헬퍼 정리 (context, browser, playwright 모두 정리됨)
+            if playwright_helper:
+                await playwright_helper.cleanup()
+                
+            logger.info("페이지 정리 완료")
+        except Exception as e:
+            logger.warning(f"페이지 정리 중 오류: {e}")
 
 
 class PowerLinkExcelExporter:
@@ -734,16 +668,16 @@ class HistoryExportAdapter:
     def __init__(self):
         pass
     
-    def export_single_session_with_dialog(self, session_data: dict, parent_widget=None) -> tuple[bool, str]:
+    def choose_single_file_path(self, session_data: dict, parent_widget=None) -> tuple[bool, str]:
         """
-        단일 세션 엑셀 내보내기 (파일 다이얼로그 포함)
+        단일 세션 저장 경로 선택 (UI I/O 헬퍼)
         
         Args:
             session_data: {'id': int, 'name': str, 'created_at': str}
             parent_widget: 부모 위젯 (다이얼로그 표시용)
             
         Returns:
-            (성공 여부, 저장된 파일 경로 또는 에러 메시지)
+            (성공 여부, 선택된 파일 경로 또는 메시지)
         """
         try:
             from datetime import datetime
@@ -762,32 +696,21 @@ class HistoryExportAdapter:
                 "Excel files (*.xlsx);;All files (*.*)"
             )
             
-            if not file_path:
-                return False, "사용자가 취소했습니다."
-            
-            # service의 export_history_sessions 호출로 실제 저장
-            from .service import powerlink_service
-            success, _ = powerlink_service.export_history_sessions([session_data['id']], single_file_path=file_path)
-            
-            if success:
-                return True, file_path
-            else:
-                return False, "엑셀 파일 생성 실패"
+            return (bool(file_path), file_path or "사용자가 취소했습니다.")
                 
         except Exception as e:
-            logger.error(f"단일 세션 내보내기 실패: {e}")
+            logger.error(f"파일 경로 선택 실패: {e}")
             return False, str(e)
     
-    def export_multiple_sessions_with_dialog(self, sessions_data: list, parent_widget=None) -> tuple[bool, list]:
+    def choose_output_folder(self, parent_widget=None) -> tuple[bool, str]:
         """
-        다중 세션 엑셀 내보내기 (폴더 선택 다이얼로그 포함)
+        출력 폴더 선택 (UI I/O 헬퍼)
         
         Args:
-            sessions_data: [{'id': int, 'name': str, 'created_at': str}, ...]
             parent_widget: 부모 위젯 (다이얼로그 표시용)
             
         Returns:
-            (성공 여부, 저장된 파일 경로 리스트)
+            (성공 여부, 선택된 폴더 경로)
         """
         try:
             from PySide6.QtWidgets import QFileDialog
@@ -799,19 +722,11 @@ class HistoryExportAdapter:
                 ""
             )
             
-            if not folder_path:
-                return False, []
-            
-            # service의 export_history_sessions 호출로 실제 저장
-            from .service import powerlink_service
-            session_ids = [session['id'] for session in sessions_data]
-            success, saved_files = powerlink_service.export_history_sessions(session_ids, output_folder=folder_path)
-            
-            return success, saved_files
+            return (bool(folder_path), folder_path or "")
             
         except Exception as e:
-            logger.error(f"다중 세션 내보내기 실패: {e}")
-            return False, []
+            logger.error(f"폴더 선택 실패: {e}")
+            return False, ""
     
     def show_export_success_dialog(self, file_path: str, file_count: int = 1, parent_widget=None, reference_widget=None):
         """엑셀 내보내기 성공 다이얼로그 표시"""
@@ -832,10 +747,7 @@ class HistoryExportAdapter:
                 file_path=file_path
             )
             
-            # 참조 위젯 근처에 위치 설정
-            if reference_widget and hasattr(success_dialog, 'position_near_widget'):
-                success_dialog.position_near_widget(reference_widget)
-                
+            # 위치 지정 제거 - 중앙에 표시되도록 함
             success_dialog.exec()
             
         except Exception as e:

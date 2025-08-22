@@ -242,5 +242,3 @@ class CafeExtractionRepository:
     
 
 
-# 전역 데이터베이스 인스턴스
-cafe_extraction_db = CafeExtractionDatabase()

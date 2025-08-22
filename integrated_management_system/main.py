@@ -66,6 +66,11 @@ def main():
         app_config = config_manager.load_app_config()
         logger.info("설정 로드 완료 (SQLite3 기반)")
         
+        # 3단계: API 상태 확인 (모듈 로드 전에 수행)
+        from src.desktop.api_checker import check_api_status_on_startup
+        check_api_status_on_startup()
+        logger.info("API 상태 확인 완료")
+        
         # 4단계: 데스크톱 앱 실행
         from src.desktop.app import run_app
         run_app(load_features)

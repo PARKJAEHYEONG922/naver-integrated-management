@@ -2,7 +2,7 @@
 네이버 카페 DB 추출기 어댑터
 CLAUDE.md 구조 준수: vendors 호출, 정규화, 파일 I/O 담당
 """
-from typing import List, Optional
+from typing import List, Optional, Dict, Tuple
 import time
 import csv
 
@@ -28,7 +28,7 @@ class NaverCafeDataAdapter:
     async def search_cafes_by_name(self, query: str, browser_context=None) -> List[CafeInfo]:
         """카페명으로 카페 검색 - 원본과 동일"""
         try:
-            self.rate_limiter.wait()
+            await self.rate_limiter.wait_async()
             logger.info(f"카페 검색: {query}")
             
             # URL인지 확인
@@ -191,7 +191,7 @@ class NaverCafeDataAdapter:
     async def get_cafe_boards(self, cafe_info: CafeInfo, browser_context=None) -> List[BoardInfo]:
         """카페의 게시판 목록 조회 - 완전 비동기"""
         try:
-            self.rate_limiter.wait()
+            await self.rate_limiter.wait_async()
             logger.info(f"비동기 게시판 목록 조회: {cafe_info.name}")
             
             if browser_context:
@@ -365,69 +365,74 @@ class NaverCafeDataAdapter:
             return False
     
     def export_users_to_meta_csv(self, file_path: str, users: List[ExtractedUser]) -> bool:
-        """사용자 목록을 Meta CSV로 내보내기 - 원본 통합관리프로그램과 동일한 방식 (3컬럼 헤더)"""
+        """사용자 목록을 Meta CSV로 내보내기 - META_CSV_DOMAINS 기반 동적 생성"""
         try:
-            # 1. 사용자 ID 수집 및 정규화
+            # 1. 사용자 ID 정규화/중복제거
             all_user_ids = []
-            for user in users:
-                # 사용자 ID 정규화 (영문, 숫자만 허용하고 특수문자 제거)
-                clean_user_id = ''.join(c for c in user.user_id if c.isalnum()) if user.user_id else f"user{users.index(user)}"
-                
-                # 빈 문자열이면 기본값 사용
-                if not clean_user_id:
-                    clean_user_id = f"user{users.index(user)}"
-                
-                if clean_user_id and clean_user_id not in all_user_ids:
-                    all_user_ids.append(clean_user_id)
-            
-            # 중복 제거 및 정렬
-            all_user_ids = sorted(list(set(all_user_ids)))
-            
+            for idx, user in enumerate(users):
+                raw = (user.user_id or f"user{idx}")
+                clean = "".join(c for c in raw if c.isalnum()) or f"user{idx}"
+                if clean not in all_user_ids:
+                    all_user_ids.append(clean)
+            all_user_ids.sort()
+
             if not all_user_ids:
                 logger.warning("내보낼 사용자 ID가 없습니다")
                 return False
-            
-            # 2. 이메일 형태로 변환 (원본 방식)
-            email1 = [user_id + '@naver.com' for user_id in all_user_ids]
-            email2 = [user_id + '@gmail.com' for user_id in all_user_ids]
-            email3 = [user_id + '@daum.net' for user_id in all_user_ids]
-            
-            # 3. CSV 파일 생성 (원본과 동일한 3컬럼 방식)
+
+            # 2. 헤더/행을 META_CSV_DOMAINS 기반으로 동적 생성
             with open(file_path, 'w', newline='', encoding='utf-8-sig') as csvfile:
                 writer = csv.writer(csvfile)
-                
-                # 4. 헤더 작성 (email,email,email - 원본과 동일)
-                writer.writerow(['email', 'email', 'email'])
-                
-                # 5. 데이터 행들 (각 행에 3개 이메일)
-                for i in range(len(all_user_ids)):
-                    writer.writerow([email1[i], email2[i], email3[i]])
-            
-            total_emails = len(all_user_ids) * 3
-            logger.debug(f"Meta CSV 파일 저장 완료: {file_path} (사용자 {len(all_user_ids)}명 → 이메일 {total_emails}개, 3컬럼 방식)")
+                # 헤더
+                writer.writerow(['email'] * len(META_CSV_DOMAINS))
+                # 각 행: 도메인 개수만큼 이메일 컬럼
+                for uid in all_user_ids:
+                    row = [uid + domain for domain in META_CSV_DOMAINS]
+                    writer.writerow(row)
+
+            logger.debug(
+                f"Meta CSV 파일 저장 완료: {file_path} "
+                f"(사용자 {len(all_user_ids)}명 → 이메일 {len(all_user_ids)*len(META_CSV_DOMAINS)}개)"
+            )
             return True
-            
+
         except Exception as e:
             logger.error(f"Meta CSV 파일 저장 실패: {e}")
             return False
     
-    def get_board_total_pages(self, board_info: BoardInfo) -> int:
-        """게시판의 총 페이지 수 조회"""
+    async def fetch_sibling_articles(
+        self,
+        session,            # aiohttp.ClientSession 또는 동일 인터페이스
+        clubid: str,
+        articleid: str,
+        boardtype: str,
+        limit: int = 15,
+        page: int = 1,
+    ) -> Tuple[List[Dict], int]:
+        """
+        siblings API 호출 - CLAUDE.md: 벤더 API 호출은 adapters 담당
+        Returns: (articles_items, api_calls)
+        api_calls는 재시도/분할 호출 시 집계용으로 1 이상 반환 가능
+        """
+        await self.rate_limiter.wait_async()
+        
+        url = (
+            f"https://apis.naver.com/cafe-web/cafe-articleapi/cafes/{clubid}/"
+            f"articles/{articleid}/siblings?boardType={boardtype}&limit={limit}"
+            f"&fromAllArticleList=false&filterByHeadId=false&page={page}&requestFrom=A"
+        )
         try:
-            self.rate_limiter.wait()
-            
-            # TODO: 실제 페이지 수 크롤링 구현
-            logger.debug(f"총 페이지 수 조회: {board_info.name}")
-            
-            # 예시: 게시글 수를 기반으로 페이지 수 계산 (페이지당 20개 게시글 가정)
-            articles_per_page = 20
-            total_pages = max(1, (board_info.article_count + articles_per_page - 1) // articles_per_page)
-            
-            return total_pages
-            
+            async with session.get(url, timeout=15) as resp:
+                if resp.status != 200:
+                    logger.error(f"siblings API 응답코드: {resp.status} url={url}")
+                    return [], 0
+                data = await resp.json()
+                items = data.get('articles', {}).get('items', [])
+                logger.debug(f"siblings API 성공: {len(items)}개 아이템")
+                return items, 1
         except Exception as e:
-            logger.error(f"총 페이지 수 조회 실패: {e}")
-            return 1
+            logger.error(f"siblings API 호출 실패: {e}")
+            return [], 0
     
     def cleanup_pages(self):
         """사용하던 페이지들 정리 - 비동기 안전"""
@@ -506,16 +511,29 @@ class RateLimiter:
     def __init__(self, requests_per_minute: int = 30):
         self.requests_per_minute = requests_per_minute
         self.min_interval = 60.0 / requests_per_minute
-        self.last_request_time = 0
+        self.last_request_time = 0.0
     
     def wait(self):
-        """필요한 경우 대기"""
+        """동기 환경에서 사용 (블로킹)"""
         current_time = time.time()
         time_since_last = current_time - self.last_request_time
         
         if time_since_last < self.min_interval:
             wait_time = self.min_interval - time_since_last
-            logger.debug(f"Rate limiting: {wait_time:.2f}초 대기")
+            logger.debug(f"Rate limiting: {wait_time:.2f}초 대기 (동기)")
             time.sleep(wait_time)
+        
+        self.last_request_time = time.time()
+    
+    async def wait_async(self):
+        """비동기 환경에서 사용 (이벤트 루프 비블로킹)"""
+        import asyncio
+        current_time = time.time()
+        time_since_last = current_time - self.last_request_time
+        
+        if time_since_last < self.min_interval:
+            wait_time = self.min_interval - time_since_last
+            logger.debug(f"Rate limiting: {wait_time:.2f}초 대기 (비동기)")
+            await asyncio.sleep(wait_time)
         
         self.last_request_time = time.time()

@@ -183,7 +183,7 @@ class ModernTableWidget(QTableWidget):
                 border-right: 1px solid {ModernStyle.COLORS['border']};
                 border-bottom: 2px solid {ModernStyle.COLORS['border']};
                 font-weight: 600;
-                font-size: 13px;
+                font-size: 12px;
             }}
             
             {first_header_style}
@@ -744,6 +744,108 @@ class ModernTableWidget(QTableWidget):
                 item = SortableTableWidgetItem(str_value)
             
             self.setItem(row, column_index, item)
+    
+    def has_checked_items(self) -> bool:
+        """체크된 아이템이 있는지 확인"""
+        if not self.has_checkboxes:
+            return False
+            
+        for row in range(self.rowCount()):
+            checkbox_item = self.item(row, 0)
+            if checkbox_item and checkbox_item.checkState() == Qt.Checked:
+                return True
+        return False
+    
+    def is_row_checked(self, row: int) -> bool:
+        """특정 행이 체크되어 있는지 확인"""
+        if not self.has_checkboxes or row >= self.rowCount():
+            return False
+            
+        checkbox_item = self.item(row, 0)
+        return checkbox_item and checkbox_item.checkState() == Qt.Checked
+    
+    def get_checked_rows(self) -> List[int]:
+        """체크된 행의 인덱스 리스트 반환"""
+        checked_rows = []
+        if not self.has_checkboxes:
+            return checked_rows
+            
+        for row in range(self.rowCount()):
+            if self.is_row_checked(row):
+                checked_rows.append(row)
+                
+        return checked_rows
+    
+    def set_row_checked(self, row: int, checked: bool):
+        """특정 행의 체크 상태 설정"""
+        if not self.has_checkboxes or row >= self.rowCount():
+            return
+            
+        checkbox_item = self.item(row, 0)
+        if checkbox_item:
+            checkbox_item.setCheckState(Qt.Checked if checked else Qt.Unchecked)
+    
+    def check_all_rows(self, checked: bool):
+        """모든 행의 체크 상태 설정"""
+        if not self.has_checkboxes:
+            return
+            
+        for row in range(self.rowCount()):
+            self.set_row_checked(row, checked)
+
+
+class ModernTableContainer(QWidget):
+    """
+    ModernTableWidget를 포함하는 컨테이너
+    테이블 + 하단 버튼들을 포함하는 완전한 UI 블록
+    """
+    
+    def __init__(self, 
+                 title: str,
+                 columns: List[str],
+                 has_checkboxes: bool = True,
+                 has_header_checkbox: bool = True,
+                 parent=None):
+        """
+        ModernTableContainer 초기화
+        
+        Args:
+            title: 테이블 제목
+            columns: 컬럼 헤더 리스트
+            has_checkboxes: 체크박스 포함 여부
+            has_header_checkbox: 헤더 체크박스 포함 여부
+            parent: 부모 위젯
+        """
+        super().__init__(parent)
+        self.title = title
+        self.table = ModernTableWidget(columns, has_checkboxes, has_header_checkbox)
+        self.setup_ui()
+    
+    def setup_ui(self):
+        """UI 초기화"""
+        layout = QVBoxLayout(self)
+        layout.setSpacing(15)
+        
+        # 제목
+        if self.title:
+            title_label = QLabel(self.title)
+            title_label.setStyleSheet(f"""
+                QLabel {{
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: {ModernStyle.COLORS['text_primary']};
+                    padding: 5px 0;
+                }}
+            """)
+            layout.addWidget(title_label)
+        
+        # 테이블
+        layout.addWidget(self.table)
+        
+        # 하단 버튼 영역 (서브클래스에서 오버라이드)
+        button_layout = self.create_button_layout()
+        if button_layout:
+            layout.addLayout(button_layout)
 
 
 class ModernTableContainer(QWidget):

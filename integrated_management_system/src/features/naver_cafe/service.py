@@ -3,14 +3,9 @@
 비즈니스 로직과 오케스트레이션 담당
 CLAUDE.md 구조 준수: 오케스트레이션(흐름), adapters 경유, DB/엑셀 트리거
 """
-from typing import List, Dict
+from typing import List, Dict, Union
 from datetime import datetime
-from pathlib import Path
 
-# PySide6 imports
-from PySide6.QtWidgets import (
-    QFileDialog, QMessageBox
-)
 
 # Foundation imports
 from src.foundation.logging import get_logger
@@ -18,12 +13,11 @@ from src.foundation.db import get_db
 
 # Toolbox imports
 from src.toolbox.text_utils import validate_url
-from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
 
 # Local imports
 from .models import (
     CafeInfo, BoardInfo, ExtractedUser, ExtractionTask, ExtractionStatus,
-    CafeExtractionRepository, cafe_extraction_db
+    CafeExtractionRepository, CafeExtractionDatabase
 )
 from .adapters import NaverCafeDataAdapter
 
@@ -35,6 +29,7 @@ class NaverCafeExtractionService:
     
     def __init__(self):
         self.adapter = NaverCafeDataAdapter()
+        self._db = CafeExtractionDatabase()  # 서비스가 데이터베이스 인스턴스 소유
         # 추출 관련 변수는 worker.py에서 관리
         
     # set_callbacks 메서드 제거 - worker.py에서 직접 처리
@@ -109,7 +104,7 @@ class NaverCafeExtractionService:
     
     def get_extracted_users(self) -> List[ExtractedUser]:
         """추출된 사용자 목록 조회 - 메모리 기반"""
-        return cafe_extraction_db.get_all_users()
+        return self._db.get_all_users()
     
     def get_users_by_task_id(self, task_id: str) -> List[ExtractedUser]:
         """특정 작업 ID의 사용자 목록 조회 - Foundation DB 기반"""
@@ -140,7 +135,7 @@ class NaverCafeExtractionService:
         except Exception as e:
             logger.error(f"Task {task_id} 사용자 조회 실패: {e}")
             # 폴백: 메모리 기반 조회
-            return cafe_extraction_db.get_users_by_task_id(task_id)
+            return self._db.get_users_by_task_id(task_id)
     
     def save_extraction_task(self, task: ExtractionTask):
         """추출 작업 기록 저장 - DB 저장은 foundation/db 경유"""
@@ -169,11 +164,14 @@ class NaverCafeExtractionService:
     
     def clear_all_data(self):
         """모든 데이터 초기화 - 메모리만 초기화"""
-        cafe_extraction_db.clear_all()
+        self._db.clear_all()
         logger.info("모든 추출 데이터 초기화 완료 (메모리만)")
     
     def export_to_excel(self, file_path: str, users: List[ExtractedUser]) -> bool:
-        """엑셀로 내보내기 - service에서 오케스트레이션, 실제 파일 I/O는 adapters"""
+        """엑셀로 내보내기 - service에서 오케스트레이션, 실제 파일 I/O는 adapters
+        
+        Note: UI 다이얼로그(파일 선택, 완료 알림)는 UI 레이어에서 처리
+        """
         try:
             # 1. 입력 검증 (CLAUDE.md: service가 검증 담당)
             if not file_path or not file_path.strip():
@@ -198,7 +196,10 @@ class NaverCafeExtractionService:
             return False
     
     def export_to_meta_csv(self, file_path: str, users: List[ExtractedUser]) -> bool:
-        """Meta CSV로 내보내기 - service에서 오케스트레이션, 실제 파일 I/O는 adapters"""
+        """Meta CSV로 내보내기 - service에서 오케스트레이션, 실제 파일 I/O는 adapters
+        
+        Note: UI 다이얼로그(파일 선택, 완료 알림)는 UI 레이어에서 처리
+        """
         try:
             # 1. 입력 검증 (CLAUDE.md: service가 검증 담당)
             if not file_path or not file_path.strip():
@@ -226,12 +227,28 @@ class NaverCafeExtractionService:
     def add_extracted_user(self, user: ExtractedUser):
         """개별 사용자 추출 시 메모리 데이터베이스에 추가"""
         try:
-            cafe_extraction_db.add_user(user)
+            self._db.add_user(user)
             logger.debug(f"사용자 추가: {user.user_id}")
         except Exception as e:
             logger.error(f"사용자 추가 실패: {e}")
     
-    def save_extraction_result(self, result, unified_worker=None):
+    def clear_extracted_users(self):
+        """추출된 사용자 데이터 초기화"""
+        try:
+            self._db.clear_users()
+            logger.debug("사용자 데이터 초기화 완료")
+        except Exception as e:
+            logger.error(f"사용자 데이터 초기화 실패: {e}")
+    
+    def get_unique_user_count(self) -> int:
+        """고유 사용자 수 조회"""
+        try:
+            return self._db.get_unique_user_count()
+        except Exception as e:
+            logger.error(f"고유 사용자 수 조회 실패: {e}")
+            return 0
+    
+    def save_extraction_result(self, result, unified_worker=None) -> bool:
         """추출 완료 시 결과 저장 - foundation/db 경유"""
         try:
             
@@ -279,7 +296,41 @@ class NaverCafeExtractionService:
             logger.error(f"추출 기록 저장 실패: {e}")
             return False
     
-    def get_statistics(self) -> Dict:
+    def save_user_result(self, user: ExtractedUser, task_id: str) -> bool:
+        """사용자 결과를 DB에 저장 - CLAUDE.md: service가 foundation/db 경유"""
+        try:
+            db = get_db()
+            db.add_cafe_extraction_result({
+                'task_id': task_id,
+                'user_id': user.user_id,
+                'nickname': user.nickname,
+                'article_count': user.article_count,
+                'article_url': '',
+                'article_title': '',
+                'article_date': ''
+            })
+            logger.debug(f"사용자 DB 저장 완료: {user.user_id}")
+            return True
+        except Exception as e:
+            logger.error(f"사용자 DB 저장 실패: {e}")
+            return False
+
+    async def fetch_sibling_articles(
+        self, session, clubid: str, articleid: str, boardtype: str
+    ):
+        """siblings API 호출 - service에서 adapters로 위임"""
+        return await self.adapter.fetch_sibling_articles(session, clubid, articleid, boardtype)
+    
+    def get_meta_csv_domains(self) -> List[str]:
+        """Meta CSV 도메인 목록 반환 - UI 메시지 동기화용"""
+        from .adapters import META_CSV_DOMAINS
+        return META_CSV_DOMAINS
+    
+    def get_meta_csv_domain_count(self) -> int:
+        """Meta CSV 도메인 개수 반환 - UI 메시지 동기화용"""
+        return len(self.get_meta_csv_domains())
+
+    def get_statistics(self) -> Dict[str, Union[int, float]]:
         """추출 통계 조회"""
         history = self.get_extraction_history()
         users = self.get_extracted_users()
@@ -300,149 +351,3 @@ class NaverCafeExtractionService:
             "unique_users": unique_users
         }
     
-    def export_to_excel_with_dialog(self, users_data: List[List[str]], parent_widget=None) -> bool:
-        """파일 대화상자를 포함한 엑셀 내보내기 - UI 오케스트레이션"""
-        try:
-            
-            # 1. 입력 검증
-            if not users_data:
-                if parent_widget:
-                    QMessageBox.information(parent_widget, "정보", "내보낼 데이터가 없습니다.")
-                return False
-            
-            # 2. 파일 선택 대화상자
-            file_path, _ = QFileDialog.getSaveFileName(
-                parent_widget,
-                "저장할 파일명을 입력하세요",
-                f"네이버카페_추출결과_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
-                "Excel files (*.xlsx)"
-            )
-            
-            if not file_path:
-                return False
-            
-            # 3. 사용자 데이터를 ExtractedUser 객체로 변환
-            users = []
-            for row_data in users_data:
-                if len(row_data) >= 4:
-                    user = ExtractedUser(
-                        user_id=row_data[1],
-                        nickname=row_data[2],
-                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now()
-                    )
-                    users.append(user)
-            
-            # 4. adapters 경유로 실제 파일 저장
-            success = self.adapter.export_users_to_excel(file_path, users)
-            
-            if success:
-                # 5. 성공 다이얼로그 표시
-                filename = Path(file_path).name
-                self._show_save_completion_dialog(
-                    parent_widget,
-                    "저장 완료",
-                    f"카페 추출 데이터가 성공적으로 Excel 파일로 저장되었습니다.\n\n파일명: {filename}\n사용자 수: {len(users_data)}명",
-                    file_path
-                )
-                logger.info(f"Excel 파일 저장 완료: {filename}")
-            else:
-                if parent_widget:
-                    QMessageBox.critical(parent_widget, "오류", "엑셀 저장 중 오류가 발생했습니다.")
-            
-            return success
-            
-        except Exception as e:
-            logger.error(f"엑셀 내보내기 (대화상자 포함) 실패: {e}")
-            if parent_widget:
-                QMessageBox.critical(parent_widget, "오류", f"엑셀 저장 중 오류가 발생했습니다.\n{str(e)}")
-            return False
-    
-    def export_to_meta_csv_with_dialog(self, users_data: List[List[str]], parent_widget=None) -> bool:
-        """파일 대화상자를 포함한 Meta CSV 내보내기 - UI 오케스트레이션"""
-        try:
-            
-            # 1. 입력 검증
-            if not users_data:
-                if parent_widget:
-                    QMessageBox.information(parent_widget, "정보", "내보낼 데이터가 없습니다.")
-                return False
-            
-            # 2. 파일 선택 대화상자
-            file_path, _ = QFileDialog.getSaveFileName(
-                parent_widget,
-                "Meta CSV 파일 저장",
-                f"네이버카페_Meta_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
-                "CSV files (*.csv)"
-            )
-            
-            if not file_path:
-                return False
-            
-            # 3. 사용자 데이터를 ExtractedUser 객체로 변환
-            users = []
-            for row_data in users_data:
-                if len(row_data) >= 4:
-                    user = ExtractedUser(
-                        user_id=row_data[1],
-                        nickname=row_data[2],
-                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now()
-                    )
-                    users.append(user)
-            
-            # 4. adapters 경유로 실제 파일 저장
-            success = self.adapter.export_users_to_meta_csv(file_path, users)
-            
-            if success:
-                # 5. 성공 다이얼로그 표시
-                filename = Path(file_path).name
-                user_count = len([row_data for row_data in users_data if len(row_data) >= 2])
-                self._show_save_completion_dialog(
-                    parent_widget,
-                    "Meta CSV 저장 완료",
-                    f"Meta 광고용 CSV 파일이 성공적으로 저장되었습니다.\n\n파일명: {filename}\n사용자 ID: {user_count}개\n생성된 이메일: {user_count*3}개\n(@naver.com, @gmail.com, @daum.net)",
-                    file_path
-                )
-                logger.info(f"Meta CSV 파일 저장 완료: {filename} (사용자 {user_count}명)")
-            else:
-                if parent_widget:
-                    QMessageBox.critical(parent_widget, "오류", "CSV 저장 중 오류가 발생했습니다.")
-            
-            return success
-            
-        except Exception as e:
-            logger.error(f"Meta CSV 내보내기 (대화상자 포함) 실패: {e}")
-            if parent_widget:
-                QMessageBox.critical(parent_widget, "오류", f"CSV 저장 중 오류가 발생했습니다.\n{str(e)}")
-            return False
-    
-    def export_users_data(self, users_data: List[List[str]], format_type: str, parent_widget=None) -> bool:
-        """사용자 데이터 내보내기 - 비즈니스 로직만 담당 (CLAUDE.md: UI 분리)"""
-        try:
-            # 선택된 형식으로 내보내기
-            if format_type == "excel":
-                return self.export_to_excel_with_dialog(users_data, parent_widget)
-            elif format_type == "meta_csv":
-                return self.export_to_meta_csv_with_dialog(users_data, parent_widget)
-            else:
-                logger.warning(f"지원하지 않는 내보내기 형식: {format_type}")
-                return False
-                
-        except Exception as e:
-            logger.error(f"사용자 데이터 내보내기 오류: {e}")
-            return False
-    
-    def _show_save_completion_dialog(self, parent_widget, title: str, message: str, file_path: str):
-        """저장 완료 다이얼로그 표시 - toolbox 공용 컴포넌트 사용"""
-        try:
-            
-            # toolbox 공용 다이얼로그 사용
-            ModernSaveCompletionDialog.show_save_completion(
-                parent_widget, 
-                title, 
-                message, 
-                file_path
-            )
-        except Exception as e:
-            logger.warning(f"저장 완료 다이얼로그 표시 실패: {e}")
-            # 폴백: 일반 메시지박스
-            QMessageBox.information(parent_widget, title, message)

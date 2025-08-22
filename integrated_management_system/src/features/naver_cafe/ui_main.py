@@ -8,8 +8,8 @@ from PySide6.QtWidgets import (
 
 from src.toolbox.ui_kit import ModernStyle, ModernHelpButton
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-from .control_widget import NaverCafeControlWidget
-from .results_widget import NaverCafeResultsWidget
+from .ui_list import NaverCafeControlWidget
+from .ui_table import NaverCafeResultsWidget
 
 
 class NaverCafeWidget(QWidget):

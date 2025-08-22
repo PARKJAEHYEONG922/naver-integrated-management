@@ -234,6 +234,10 @@ def get_book_client() -> NaverBookClient:
     """도서 클라이언트 반환 (편의 함수)"""
     return NaverClientFactory.get_book_client()
 
+def get_keyword_client() -> NaverSearchAdClient:
+    """키워드 클라이언트 반환 (편의 함수) - 월 검색량 조회용 (별칭)"""
+    return NaverClientFactory.get_keyword_tool_client()
+
 def get_keyword_tool_client() -> NaverSearchAdClient:
     """키워드 도구 클라이언트 반환 (편의 함수) - 월 검색량 조회"""
     return NaverClientFactory.get_keyword_tool_client()

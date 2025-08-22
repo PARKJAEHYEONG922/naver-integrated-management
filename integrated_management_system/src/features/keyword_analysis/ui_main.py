@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QTreeWidget, QProgressBar, QMessageBox, QFileDialog,
     QFrame, QSizePolicy, QAbstractItemView
 )
-from PySide6.QtCore import Qt, QMetaObject, Q_ARG, Slot
+from PySide6.QtCore import Qt, QMetaObject, Q_ARG, Slot, Signal
 
 from src.toolbox.ui_kit import (
     ModernStyle, SortableTreeWidgetItem,
@@ -19,7 +19,8 @@ from src.desktop.common_log import log_manager
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDialog, ModernSaveCompletionDialog
 from .worker import BackgroundWorker
 from .service import analysis_manager
-from .models import KeywordData, AnalysisProgress
+from .models import KeywordData
+from src.toolbox import formatters
 from src.toolbox.text_utils import parse_keywords, filter_unique_keywords_with_skipped
 from src.foundation.logging import get_logger
 
@@ -33,16 +34,22 @@ logger = get_logger("features.keyword_analysis.ui")
 class KeywordAnalysisWidget(QWidget):
     """키워드 분석 메인 위젯 - 원본 키워드 검색기 UI 완전 복원"""
     
+    # 실시간 결과 추가를 위한 시그널
+    keyword_result_ready = Signal(object)
     
     def __init__(self):
         super().__init__()
         self.service = None
         self.worker: BackgroundWorker = None
         self.search_results = []  # 검색 결과 저장 (원본과 동일)
+        self.is_search_canceled = False  # 취소 상태 추적
         
         
         self.setup_ui()
         self.load_api_config()
+        
+        # 실시간 결과 추가 시그널 연결
+        self.keyword_result_ready.connect(self._safe_add_keyword_result)
     
     def setup_ui(self):
         """원본 키워드 검색기 UI 레이아웃 완전 복원"""
@@ -293,93 +300,26 @@ class KeywordAnalysisWidget(QWidget):
         layout.addLayout(button_layout)
     
     
-    def setup_service_connections(self):
-        """서비스 시그널 연결 (기존 방식 - 호환성 유지)"""
-        if self.service:
-            self.service.set_progress_callback(self.update_progress)
-            self.service.set_keyword_callback(self.add_keyword_result)
-    
-    def setup_service_signals(self):
-        """병렬 처리를 위한 Qt 시그널 연결"""
-        if self.service:
-            try:
-                # 개별 키워드 완료시 실시간 결과 표시
-                self.service.keyword_processed.connect(self._safe_add_keyword_result)
-                
-                # 진행률 업데이트
-                self.service.progress_updated.connect(self._on_service_progress)
-                
-                # 전체 작업 완료
-                self.service.processing_finished.connect(self._on_service_finished)
-                
-                # 오류 발생
-                self.service.error_occurred.connect(self._on_service_error)
-                
-                logger.debug("서비스 시그널 연결 완료")
-            except Exception as e:
-                logger.error(f"서비스 시그널 연결 실패: {e}")
-    
-    def _on_service_progress(self, current: int, total: int, message: str):
-        """서비스 진행률 업데이트 (실시간)"""
-        self._update_progress(current, total, message)
-    
-    def _on_service_finished(self, results):
-        """서비스 전체 작업 완료"""
-        # 병렬 처리에서는 개별 키워드가 이미 실시간으로 추가되었으므로
-        # 여기서는 UI 상태만 업데이트
-        self.on_search_finished()
-        self.add_log(f"✅ 병렬 키워드 분석 완료: {len(results)}개", "success")
-    
-    def _on_service_error(self, error_msg: str):
-        """서비스 오류 처리"""
-        self.show_error(error_msg)
-    
     def cancel_search(self):
         """검색 취소"""
+        # 취소 상태 설정 (진행률 업데이트 차단)
+        self.is_search_canceled = True
+        
         try:
-            # 서비스 취소
             if self.service:
-                self.service.stop_analysis()
-            
-            # 워커 안전 종료 (예외 처리)
+                self.service.stop_analysis()  # 협조적 취소
+
             if self.worker and self.worker.isRunning():
-                self.worker.stop()  # 워커의 자체 stop 메서드 호출
-                self.worker.quit()  # 이벤트 루프 종료
-                # wait() 호출하지 않아서 UI 블록킹 방지
-            
+                try:
+                    self.worker.cancel()  # 올바른 취소
+                except AttributeError:
+                    self.worker.requestInterruption()
+                    self.worker.quit()
         except Exception as e:
             print(f"워커 종료 중 오류: {e}")
         finally:
-            # UI 상태 복원 (항상 실행)
-            self.on_search_finished()
+            self.on_search_finished(canceled=True)
             self.add_log("⏹ 검색이 취소되었습니다.", "warning")
-    
-    def disconnect_service_signals(self):
-        """서비스 시그널 연결 해제 (중복 연결 방지)"""
-        if self.service and self.signals_connected:
-            # 각 시그널을 개별적으로 해제하여 경고 방지
-            try:
-                self.service.set_progress_callback(None)
-                self.service.set_keyword_callback(None)
-            except:
-                pass
-            self.signals_connected = False
-    
-    def update_progress(self, progress: AnalysisProgress):
-        """진행 상태 업데이트 - 스레드 안전"""
-        self.progress_update_signal.emit(progress)
-    
-    def _safe_update_progress(self, progress: AnalysisProgress):
-        """메인 스레드에서 실행되는 안전한 프로그레스 업데이트"""
-        completed = progress.completed_keywords + progress.failed_keywords
-        self.progress_bar.setValue(completed)
-        self.progress_bar.setMaximum(progress.total_keywords)
-        
-        status = f"검색 중... ({completed}/{progress.total_keywords})"
-        if progress.current_keyword:
-            status += f" - 현재: {progress.current_keyword}"
-        
-        self.progress_label.setText(status)
     
     def save_all_results(self):
         """모든 결과 저장"""
@@ -569,17 +509,8 @@ class KeywordAnalysisWidget(QWidget):
         # 중복 제거 및 건너뛴 키워드 추적
         unique_keywords, skipped_keywords = filter_unique_keywords_with_skipped(keywords, existing_keywords)
         
-        # 건너뛴 키워드가 있으면 로그에 표시
-        if skipped_keywords:
-            skipped_list = ", ".join(skipped_keywords)
-            self.add_log(f"⚠️ 이미 검색된 키워드 건너뜀: {skipped_list}", "warning")
-        
-        # 검색할 키워드가 없으면 입력창 지우고 종료
-        if not unique_keywords:
-            self.keyword_input.clear()
-            return
-        
         # UI 상태 변경
+        self.is_search_canceled = False  # 새 검색 시작 시 취소 상태 초기화
         self.search_button.setEnabled(False)
         self.search_button.setText("🔍 검색 중...")
         self.cancel_button.setEnabled(True)
@@ -592,18 +523,53 @@ class KeywordAnalysisWidget(QWidget):
         
         # 워커 시그널 연결
         self.worker.progress_updated.connect(self._on_worker_progress)
-        self.worker.finished.connect(self._on_worker_finished)
+        self.worker.processing_finished.connect(self._on_worker_finished)
         self.worker.error_occurred.connect(self._on_worker_error)
         self.worker.canceled.connect(self._on_worker_canceled)
         
         # 병렬 분석 함수 실행 (실시간 결과 표시)
         self.worker.execute_function(
-            self.service.analyze_keywords_parallel,  # 병렬 처리로 변경
-            unique_keywords,
-            progress_callback=self._create_progress_callback()
+            self._analyze_keywords_task,
+            list(unique_keywords),
+            progress_callback=self._create_progress_callback(),
+            result_callback=self._create_result_callback()
         )
         
         self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")
+    
+    def _analyze_keywords_task(self, keywords, progress_callback=None, result_callback=None, cancel_event=None):
+        """워커에서 실행할 실제 작업: analyze_single_keyword 반복 + 진행률 콜백"""
+        from datetime import datetime
+        start_time = datetime.now()
+        results = []
+        total = len(keywords)
+
+        for idx, kw in enumerate(keywords, start=1):
+            # 협조적 취소 (있으면)
+            if cancel_event is not None and getattr(cancel_event, "is_set", lambda: False)():
+                break
+            try:
+                data = self.service.analyze_single_keyword(kw)
+            except Exception:
+                data = KeywordData(keyword=kw)
+
+            results.append(data)
+            
+            # 실시간으로 결과 콜백 호출 (UI에 즉시 표시)
+            if result_callback:
+                result_callback(data)
+
+            if progress_callback:
+                progress_callback(idx, total, f"분석 중: {kw}")
+
+        end_time = datetime.now()
+        from src.features.keyword_analysis.models import AnalysisResult
+        return AnalysisResult(
+            keywords=results,
+            policy=self.service.get_analysis_policy(),
+            start_time=start_time,
+            end_time=end_time,
+        )
     
     def _create_progress_callback(self):
         """진행률 콜백 함수 생성"""
@@ -613,15 +579,30 @@ class KeywordAnalysisWidget(QWidget):
                                    Q_ARG(int, current), Q_ARG(int, total), Q_ARG(str, message))
         return callback
     
+    def _create_result_callback(self):
+        """실시간 결과 추가 콜백 함수 생성"""
+        def callback(keyword_data):
+            # Qt 시그널을 통해 실시간으로 UI에 결과 추가
+            self.keyword_result_ready.emit(keyword_data)
+        return callback
+    
     @Slot(int, int, str)
     def _update_progress(self, current: int, total: int, message: str):
         """메인 스레드에서 진행률 업데이트"""
+        # 취소 중이면 진행률 업데이트 무시
+        if self.is_search_canceled:
+            return
+            
         self.progress_bar.setMaximum(total)
         self.progress_bar.setValue(current)
         self.progress_label.setText(f"{message} ({current}/{total})")
     
     def _on_worker_progress(self, current: int, total: int, message: str):
         """워커 진행률 업데이트"""
+        # 취소 중이면 진행률 업데이트 무시
+        if self.is_search_canceled:
+            return
+            
         self._update_progress(current, total, message)
     
     def _on_worker_finished(self, result):
@@ -642,7 +623,7 @@ class KeywordAnalysisWidget(QWidget):
     
     def _on_worker_error(self, error_msg: str):
         """워커 오류 처리"""
-        self.on_search_finished()
+        self.on_search_finished(canceled=False)  # 에러는 취소가 아님
         self.add_log(f"❌ 키워드 분석 오류: {error_msg}", "error")
         try:
             ModernInfoDialog.error(self, "분석 오류", f"키워드 분석 중 오류가 발생했습니다:\n{error_msg}")
@@ -651,45 +632,45 @@ class KeywordAnalysisWidget(QWidget):
     
     def _on_worker_canceled(self):
         """워커 취소 처리"""
-        self.on_search_finished()
-        self.add_log("⏹ 키워드 분석이 취소되었습니다.", "warning")
+        self.on_search_finished(canceled=True)
+        # 로그는 cancel_search()에서 이미 출력했으므로 중복 방지
     
     def _safe_add_keyword_result(self, keyword_data: KeywordData):
         """메인 스레드에서 실행되는 안전한 키워드 결과 추가"""
         item = SortableTreeWidgetItem([
             keyword_data.keyword,
-            keyword_data.category,
-            keyword_data.formatted_volume,
-            keyword_data.formatted_products,
-            keyword_data.formatted_strength
+            (keyword_data.category or "-"),
+            formatters.format_int(keyword_data.search_volume),
+            formatters.format_int(keyword_data.total_products),
+            formatters.format_competition(keyword_data.competition_strength),
         ])
-        
-        # 정렬을 위해 숫자 값을 사용자 데이터로 저장
-        # 월검색량: None은 0으로 처리
-        search_vol = 0 if keyword_data.search_volume is None else keyword_data.search_volume
-        item.setData(2, Qt.UserRole, search_vol)
-        
-        # 전체상품수: None은 0으로 처리  
-        total_prod = 0 if keyword_data.total_products is None else keyword_data.total_products
-        item.setData(3, Qt.UserRole, total_prod)
-        
-        # 경쟁강도: None이나 inf는 그대로 저장 (정렬 로직에서 처리)
-        comp_strength = keyword_data.competition_strength
-        item.setData(4, Qt.UserRole, comp_strength)
-        
+
+        # 정렬용 원시값 저장
+        item.setData(2, Qt.UserRole, 0 if keyword_data.search_volume is None else keyword_data.search_volume)
+        item.setData(3, Qt.UserRole, 0 if keyword_data.total_products is None else keyword_data.total_products)
+        item.setData(4, Qt.UserRole, keyword_data.competition_strength)
+
         self.results_tree.addTopLevelItem(item)
         self.search_results.append(keyword_data)
-        
-        # 첫 번째 검색 결과가 추가되면 전체 클리어 버튼 활성화
+
         if len(self.search_results) == 1:
             self.clear_button.setEnabled(True)
     
-    def on_search_finished(self):
-        """검색 완료"""
+    def on_search_finished(self, canceled=False):
+        """검색 완료 또는 취소"""
         self.search_button.setEnabled(True)
         self.search_button.setText("🔍 검색")
         self.cancel_button.setEnabled(False)
-        self.progress_label.setText(f"완료! 총 {len(self.search_results)}개 키워드")
+        
+        # 진행률바 초기화
+        self.progress_bar.setValue(0)
+        
+        # 상태에 따른 메시지 설정
+        if canceled:
+            self.progress_label.setText("취소됨 - 대기 중...")
+        else:
+            self.progress_label.setText(f"완료! 총 {len(self.search_results)}개 키워드")
+        
         self.keyword_input.clear()
     
     def show_error(self, message: str):
@@ -703,23 +684,14 @@ class KeywordAnalysisWidget(QWidget):
     def load_api_config(self):
         """API 설정 로드"""
         try:
-            # API 설정이 있는지 확인
-            from src.foundation.config import config_manager
-            api_config = config_manager.load_api_config()
-            
-            if api_config and api_config.is_complete():
-                # 서비스 생성
+            # 앱 전역 진단 결과만 신뢰
+            from src.desktop.api_checker import APIChecker
+            if APIChecker.get_last_overall_ready():
                 self.service = analysis_manager.create_service()
-                
-                # 실시간 결과 표시를 위한 시그널 연결
-                self.setup_service_signals()
-                
-                # API 설정 완료 시에만 성공 메시지 출력 (중복 방지)
-                logger.debug("API 설정이 완료되어 키워드 분석 서비스가 준비되었습니다.")
+                logger.debug("서비스 준비 완료.")
             else:
                 self.service = None
-                # API 상태는 이미 API checker에서 출력하므로 여기서는 로그 생략
-                logger.debug("API 설정이 불완전하여 키워드 분석 서비스를 생성하지 않습니다.")
+                logger.debug("API 미설정으로 서비스 생성하지 않음.")
                 
         except Exception as e:
             self.add_log(f"❌ API 설정 로드 실패: {str(e)}", "error")

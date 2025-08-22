@@ -11,7 +11,8 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 
 from src.foundation.logging import get_logger
 from src.foundation.exceptions import FileError
-from .models import KeywordData, AnalysisResult
+from src.features.keyword_analysis.models import KeywordData, AnalysisResult
+from src.features.keyword_analysis.engine_local import calculate_competition_strength
 
 logger = get_logger("features.keyword_analysis.adapters")
 
@@ -133,28 +134,6 @@ class KeywordAnalysisAdapter:
             logger.warning(f"상품 수 추출 실패: {e}")
             return None
     
-    @staticmethod
-    def calculate_competition_strength(search_volume: Optional[int], 
-                                     total_products: Optional[int]) -> Optional[float]:
-        """
-        경쟁 강도 계산 (검색량/상품수)
-        
-        Args:
-            search_volume: 월간 검색량
-            total_products: 총 상품 수
-        
-        Returns:
-            Optional[float]: 경쟁 강도
-        """
-        try:
-            if not search_volume or not total_products or total_products == 0:
-                return float('inf')  # 무한대로 표시
-            
-            return total_products / search_volume
-            
-        except Exception as e:
-            logger.warning(f"경쟁 강도 계산 실패: {e}")
-            return None
     
     @staticmethod
     def build_keyword_data(keyword: str,
@@ -184,8 +163,8 @@ class KeywordAnalysisAdapter:
                 category = KeywordAnalysisAdapter.extract_category_for_keyword_analysis(shopping_data)
                 total_products = KeywordAnalysisAdapter.extract_total_products(shopping_data)
             
-            # 경쟁 강도 계산
-            competition_strength = KeywordAnalysisAdapter.calculate_competition_strength(
+            # 경쟁 강도 계산 (engine_local 사용)
+            competition_strength = calculate_competition_strength(
                 search_volume, total_products
             )
             
@@ -279,8 +258,23 @@ class KeywordExcelAdapter:
                 logger.warning("내보낼 데이터가 없습니다")
                 return False
             
+            # DataFrame 생성 전 Excel 안전화 (NaN/Inf 처리)
+            safe_data = []
+            for row in data:
+                safe_row = {}
+                for key, value in row.items():
+                    if isinstance(value, float):
+                        import math
+                        if math.isnan(value) or math.isinf(value):
+                            safe_row[key] = None  # Excel에서 빈 셀로 표시
+                        else:
+                            safe_row[key] = value
+                    else:
+                        safe_row[key] = value
+                safe_data.append(safe_row)
+            
             # DataFrame 생성
-            df = pd.DataFrame(data)
+            df = pd.DataFrame(safe_data)
             
             # 컬럼명 한글화
             column_mapping = {
@@ -328,19 +322,20 @@ class KeywordExcelAdapter:
             for row in worksheet.iter_rows(min_row=2):
                 for cell in row:
                     cell.font = self.default_font
-                    if cell.column == 1:  # 키워드 - 좌측 정렬
+                    col_idx = cell.col_idx  # 문자(A,B) 대신 숫자 인덱스 사용
+                    if col_idx == 1:  # 키워드 - 좌측 정렬
                         cell.alignment = Alignment(horizontal='left', vertical='center')
-                    elif cell.column == 2:  # 카테고리 - 줄바꿈 허용
+                    elif col_idx == 2:  # 카테고리 - 줄바꿈 허용
                         cell.alignment = Alignment(horizontal='left', vertical='top', wrap_text=True)
-                    elif cell.column == 3:  # 월간 검색량 - 천단위 콤마
+                    elif col_idx == 3:  # 월간 검색량 - 천단위 콤마
                         cell.alignment = Alignment(horizontal='right', vertical='center')
                         if cell.value and isinstance(cell.value, (int, float)):
                             cell.number_format = '#,##0'
-                    elif cell.column == 4:  # 상품 수 - 천단위 콤마
+                    elif col_idx == 4:  # 상품 수 - 천단위 콤마
                         cell.alignment = Alignment(horizontal='right', vertical='center')
                         if cell.value and isinstance(cell.value, (int, float)):
                             cell.number_format = '#,##0'
-                    elif cell.column == 5:  # 경쟁 강도 - 소수점 2자리
+                    elif col_idx == 5:  # 경쟁 강도 - 소수점 2자리
                         cell.alignment = Alignment(horizontal='right', vertical='center')
                         if cell.value and isinstance(cell.value, (int, float)):
                             cell.number_format = '0.00'
@@ -379,7 +374,7 @@ def export_keywords_to_excel(keywords: List[KeywordData], file_path: str) -> boo
         for kw in keywords:
             data.append({
                 'keyword': kw.keyword,
-                'category': kw.category,
+                'category': kw.category or '-',
                 'search_volume': kw.search_volume,
                 'total_products': kw.total_products,
                 'competition_strength': kw.competition_strength
@@ -391,6 +386,36 @@ def export_keywords_to_excel(keywords: List[KeywordData], file_path: str) -> boo
     except Exception as e:
         logger.error(f"키워드 엑셀 내보내기 실패: {e}")
         return False
+
+
+# TODO[adapters]: service.py에서 요청한 함수들 추가 필요
+def fetch_searchad_raw(keyword: str) -> Optional[Dict[str, Any]]:
+    """검색광고 API Raw 데이터 수집"""
+    try:
+        from src.vendors.naver.client_factory import get_keyword_client
+        client = get_keyword_client()
+        if client:
+            # vendors/naver/searchad/keyword_client.py 표준
+            return client.get_keyword_ideas([keyword])
+        return None
+    except Exception as e:
+        logger.warning(f"검색광고 데이터 수집 실패 - {keyword}: {e}")
+        return None
+
+def fetch_shopping_normalized(keyword: str) -> Optional[Dict[str, Any]]:
+    """쇼핑 API 정규화 데이터 수집"""
+    try:
+        from src.vendors.naver.client_factory import get_shopping_client
+        client = get_shopping_client()
+        if client:
+            # vendors/naver/developer/shopping_client.py 표준
+            raw = client.search_products(query=keyword, display=40, sort="sim")
+            from src.vendors.naver.normalizers import normalize_shopping_response
+            return normalize_shopping_response(raw)
+        return None
+    except Exception as e:
+        logger.warning(f"쇼핑 데이터 수집 실패 - {keyword}: {e}")
+        return None
 
 
 def export_analysis_result_to_excel(result: AnalysisResult, file_path: str) -> bool:

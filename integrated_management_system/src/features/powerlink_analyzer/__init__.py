@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 def register(app: "MainWindow") -> QWidget:
     """파워링크 광고비 분석기를 메인 앱에 등록"""
-    from .ui import PowerLinkAnalyzerWidget
+    from .ui_main import PowerLinkAnalyzerWidget
     
     widget = PowerLinkAnalyzerWidget()
     app.add_feature_tab(widget, "PowerLink 분석")

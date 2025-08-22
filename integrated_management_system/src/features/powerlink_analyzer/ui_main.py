@@ -3,16 +3,14 @@
 컨트롤 위젯과 결과 위젯을 조합하는 컨테이너 역할
 """
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel
 )
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle
 from src.toolbox.ui_kit.components import ModernHelpButton
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-from .control_widget import PowerLinkControlWidget
-from .results_widget import PowerLinkResultsWidget
+from .ui_list import PowerLinkControlWidget
+from .ui_table import PowerLinkResultsWidget
 
 
 class PowerLinkAnalyzerWidget(QWidget):
@@ -25,9 +23,12 @@ class PowerLinkAnalyzerWidget(QWidget):
         
     def closeEvent(self, event):
         """위젯 종료 시 리소스 정리"""
-        # 컨트롤 위젯의 리소스 정리 위임
-        if hasattr(self, 'control_widget'):
-            self.control_widget.closeEvent(event)
+        # 컨트롤 위젯의 리소스 정리
+        if getattr(self, 'control_widget', None):
+            try:
+                self.control_widget.close()  # Qt가 자동으로 closeEvent 전파하므로 close()만 호출
+            except Exception:
+                pass
         super().closeEvent(event)
         
     def setup_ui(self):
@@ -131,12 +132,15 @@ class PowerLinkAnalyzerWidget(QWidget):
         # 키워드 즉시 추가 시그널 연결 (제거 - 분석 완료 후에만 표시)
         # self.control_widget.keyword_added_immediately.connect(self.results_widget.add_keyword_immediately)
         
-        # 모든 순위 계산 완료 시그널 연결
-        self.control_widget.all_rankings_updated.connect(self.results_widget.update_all_tables)
+        # 모든 순위 계산 완료 시그널 연결 (방어적 가드)
+        if hasattr(self.results_widget, 'update_all_tables'):
+            self.control_widget.all_rankings_updated.connect(self.results_widget.update_all_tables)
         
         # 분석 상태 시그널 연결 (저장 버튼 제어용)
-        self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
-        self.control_widget.analysis_finished.connect(self.results_widget.on_analysis_finished)
+        if hasattr(self.results_widget, 'on_analysis_started'):
+            self.control_widget.analysis_started.connect(self.results_widget.on_analysis_started)
+        if hasattr(self.results_widget, 'on_analysis_finished'):
+            self.control_widget.analysis_finished.connect(self.results_widget.on_analysis_finished)
     
     def on_analysis_completed(self, results):
         """분석 완료 시 결과 위젯 업데이트"""
@@ -145,8 +149,7 @@ class PowerLinkAnalyzerWidget(QWidget):
     
     def on_analysis_error(self, error_msg):
         """분석 오류 처리"""
-        # 필요 시 추가 처리
-        pass
+        ModernConfirmDialog(self, "분석 오류", error_msg, confirm_text="확인", cancel_text=None, icon="❌").exec()
     
     def on_keywords_data_cleared(self):
         """키워드 데이터 클리어 시 결과 위젯 테이블 클리어"""
@@ -157,4 +160,8 @@ class PowerLinkAnalyzerWidget(QWidget):
             # Fallback: clear tables directly
             self.results_widget.mobile_table.setRowCount(0)
             self.results_widget.pc_table.setRowCount(0)
-            self.results_widget.update_save_button_state()
+            # 버튼 상태도 갱신(권장)
+            if hasattr(self.results_widget, 'update_save_button_state'):
+                self.results_widget.update_save_button_state()
+            if hasattr(self.results_widget, 'update_delete_button_state'):
+                self.results_widget.update_delete_button_state()

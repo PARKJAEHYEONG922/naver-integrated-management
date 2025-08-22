@@ -22,7 +22,15 @@
       "Bash(dir:*)",
       "Bash(sqlite3:*)",
       "Bash(awk:*)",
-      "Bash(ren:*)"
+      "Bash(ren:*)",
+      "Bash(move srcfeatureskeyword_analysisui.py srcfeatureskeyword_analysisui_main.py)",
+      "Bash(cp:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(move ui.py ui_main.py)",
+      "Bash(move control_widget.py ui_list.py)",
+      "Bash(move results_widget.py ui_table.py)",
+      "Bash(rg:*)"
     ],
     "deny": []
   }

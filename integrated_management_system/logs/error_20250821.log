@@ -1,0 +1,721 @@
+2025-08-21 10:26:50 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.naver_cafe.ui'
+2025-08-21 10:26:50 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+ModuleNotFoundError: No module named 'src.features.naver_cafe.ui'
+
+2025-08-21 10:26:50 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.naver_cafe.ui'
+2025-08-21 10:26:50 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.naver_cafe.ui'
+2025-08-21 10:26:51 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.naver_cafe.ui'
+2025-08-21 10:26:51 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 36, in load_features
+    register_naver_cafe(app)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\naver_cafe\__init__.py", line 13, in register
+    from .ui import NaverCafeWidget
+ModuleNotFoundError: No module named 'src.features.naver_cafe.ui'
+
+2025-08-21 10:26:51 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.naver_cafe.ui'
+2025-08-21 10:26:51 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.naver_cafe.ui'
+2025-08-21 14:50:14 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:14 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 393, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-21 14:50:14 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:14 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:19 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:19 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 393, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-21 14:50:19 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:19 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:41 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:41 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 393, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-21 14:50:41 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:41 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:49 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:49 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 393, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-21 14:50:49 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:50:49 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:52:08 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:52:08 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 393, in setup_connections
+    self.clear_button.clicked.connect(self.clear_all_analysis)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+
+2025-08-21 14:52:08 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:52:08 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:52:29 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'clear_all_analysis'
+2025-08-21 14:57:21 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:02:46 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:02:46 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 394, in setup_connections
+    self.save_analysis_button.clicked.connect(self.save_current_analysis)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+
+2025-08-21 15:02:46 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:02:46 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:02:48 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:02:48 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 394, in setup_connections
+    self.save_analysis_button.clicked.connect(self.save_current_analysis)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+
+2025-08-21 15:02:48 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:02:48 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:03:56 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:03:56 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 394, in setup_connections
+    self.save_analysis_button.clicked.connect(self.save_current_analysis)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+
+2025-08-21 15:03:56 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:03:56 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'save_current_analysis'
+2025-08-21 15:07:22 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'
+2025-08-21 15:07:22 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 401, in setup_connections
+    self.delete_history_button.clicked.connect(self.delete_selected_history)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'. Did you mean: 'delete_selected_keywords'?
+
+2025-08-21 15:07:22 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'
+2025-08-21 15:07:22 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'
+2025-08-21 15:08:33 - main - ERROR - 기능 모듈 로드 실패: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'
+2025-08-21 15:08:33 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 199, in __init__
+    self.setup_connections()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 401, in setup_connections
+    self.delete_history_button.clicked.connect(self.delete_selected_history)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'. Did you mean: 'delete_selected_keywords'?
+
+2025-08-21 15:08:33 - desktop.app - ERROR - 애플리케이션 실행 실패: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'
+2025-08-21 15:08:33 - main - ERROR - 애플리케이션 시작 실패: 'PowerLinkResultsWidget' object has no attribute 'delete_selected_history'
+2025-08-21 15:08:54 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:09:05 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:09:17 - features.powerlink_analyzer.results_widget - ERROR - 키워드 데이터 설정 실패: 'KeywordDatabase' object has no attribute 'add_or_update_keyword'
+2025-08-21 15:09:23 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:09:24 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:09:26 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:09:27 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:09:30 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:10 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:26 - features.powerlink_analyzer.results_widget - ERROR - 키워드 데이터 설정 실패: 'KeywordDatabase' object has no attribute 'add_or_update_keyword'
+2025-08-21 15:10:39 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:40 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:42 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:44 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:45 - features.powerlink_analyzer.results_widget - ERROR - 키워드 데이터 설정 실패: 'KeywordDatabase' object has no attribute 'add_or_update_keyword'
+2025-08-21 15:10:45 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:47 - features.powerlink_analyzer.results_widget - ERROR - 분석 결과 저장 실패: 'PowerLinkAnalysisService' object has no attribute 'save_current_analysis_with_dialog'
+2025-08-21 15:10:49 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:51 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:10:52 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:11:01 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:11:05 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:11:07 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:11:46 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:01 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:13 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:14 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:16 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:17 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:18 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:19 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:21 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:38 - features.powerlink_analyzer.results_widget - ERROR - 키워드 데이터 설정 실패: 'KeywordDatabase' object has no attribute 'add_or_update_keyword'
+2025-08-21 15:18:41 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:42 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:18:44 - features.powerlink_analyzer.results_widget - ERROR - 분석 결과 저장 실패: 'PowerLinkAnalysisService' object has no attribute 'save_current_analysis_with_dialog'
+2025-08-21 15:20:12 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 새로고침 실패: 'PowerLinkAnalysisService' object has no attribute 'get_analysis_sessions'
+2025-08-21 15:20:21 - features.powerlink_analyzer.results_widget - ERROR - 키워드 데이터 설정 실패: 'KeywordDatabase' object has no attribute 'add_or_update_keyword'
+2025-08-21 15:20:41 - features.powerlink_analyzer.results_widget - ERROR - 분석 결과 저장 실패: 'PowerLinkAnalysisService' object has no attribute 'save_current_analysis_with_dialog'
+2025-08-21 15:42:39 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:42:39 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1202, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1236, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1251, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:42:39 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:42:39 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:42:44 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:42:44 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1202, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1236, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1251, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:42:44 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:42:44 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:44:41 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:44:41 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1202, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1236, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1251, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:44:41 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:44:41 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:04 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:04 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 155, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 195, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 210, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:48:04 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:04 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:07 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:07 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 155, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 195, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 210, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:48:07 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:07 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:09 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:09 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 155, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 195, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 210, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:48:09 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:09 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:23 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:23 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1202, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1236, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1251, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:48:23 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:23 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:26 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:26 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1202, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1236, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1251, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:48:26 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:26 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:27 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:27 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1202, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1236, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1251, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:48:27 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:27 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:34 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:34 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1202, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1236, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1251, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:48:34 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:48:34 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:49:08 - main - ERROR - 기능 모듈 로드 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:49:08 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 14, in register
+    widget = PowerLinkAnalyzerWidget()
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 21, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 52, in setup_ui
+    self.results_widget = PowerLinkResultsWidget()
+                          ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1194, in __init__
+    self.setup_ui()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1228, in setup_ui
+    self.create_mobile_tab()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 1243, in create_mobile_tab
+    self.mobile_table = ModernTableWidget()
+                        ~~~~~~~~~~~~~~~~~^^
+TypeError: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+
+2025-08-21 15:49:08 - desktop.app - ERROR - 애플리케이션 실행 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 15:49:08 - main - ERROR - 애플리케이션 시작 실패: ModernTableWidget.__init__() missing 1 required positional argument: 'columns'
+2025-08-21 16:00:07 - features.powerlink_analyzer.results_widget - ERROR - PowerLink 분석 세션 저장 실패: 'PowerLinkSaveDialog' object has no attribute 'export_to_excel'
+2025-08-21 16:00:09 - features.powerlink_analyzer.results_widget - ERROR - PowerLink 분석 세션 저장 실패: 'PowerLinkSaveDialog' object has no attribute 'export_to_excel'
+2025-08-21 16:01:13 - features.powerlink_analyzer.adapters - ERROR - 성공 다이얼로그 표시 실패: ModernSaveCompletionDialog.show_save_completion() got an unexpected keyword argument 'filename'
+2025-08-21 16:01:18 - features.powerlink_analyzer.adapters - ERROR - 성공 다이얼로그 표시 실패: ModernSaveCompletionDialog.show_save_completion() got an unexpected keyword argument 'filename'
+2025-08-21 16:02:38 - features.powerlink_analyzer.adapters - ERROR - 성공 다이얼로그 표시 실패: ModernSaveCompletionDialog.show_save_completion() got an unexpected keyword argument 'filename'
+2025-08-21 16:15:04 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:04 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 20, in <module>
+    from .control_widget import ModernButton
+ModuleNotFoundError: No module named 'src.features.powerlink_analyzer.control_widget'
+
+2025-08-21 16:15:04 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:04 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:12 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:12 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 20, in <module>
+    from .control_widget import ModernButton
+ModuleNotFoundError: No module named 'src.features.powerlink_analyzer.control_widget'
+
+2025-08-21 16:15:12 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:12 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:46 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:46 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 20, in <module>
+    from .control_widget import ModernButton
+ModuleNotFoundError: No module named 'src.features.powerlink_analyzer.control_widget'
+
+2025-08-21 16:15:46 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:15:46 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:16:21 - main - ERROR - 기능 모듈 로드 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:16:21 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 20, in <module>
+    from .control_widget import ModernButton
+ModuleNotFoundError: No module named 'src.features.powerlink_analyzer.control_widget'
+
+2025-08-21 16:16:21 - desktop.app - ERROR - 애플리케이션 실행 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:16:21 - main - ERROR - 애플리케이션 시작 실패: No module named 'src.features.powerlink_analyzer.control_widget'
+2025-08-21 16:48:06 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 로드 실패: 'session_id'
+2025-08-21 16:49:40 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 로드 실패: 'session_id'
+2025-08-21 16:51:48 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 로드 실패: 'session_id'
+2025-08-21 16:54:44 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 목록 로드 실패: 'session_id'
+2025-08-21 17:06:08 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 로드 오류: 'id'
+2025-08-21 17:24:00 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 조회 오류: 'dict' object has no attribute 'keyword'
+2025-08-21 17:24:04 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 조회 오류: 'dict' object has no attribute 'keyword'
+2025-08-21 17:27:30 - features.powerlink_analyzer.results_widget - ERROR - PowerLink 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
+2025-08-21 17:43:51 - features.powerlink_analyzer.results_widget - ERROR - PowerLink 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
+2025-08-21 17:44:06 - features.powerlink_analyzer.results_widget - ERROR - PowerLink 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
+2025-08-21 18:19:12 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-21 18:19:18 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-21 18:28:37 - features.powerlink_analyzer.results_widget - ERROR - 분석 저장 오류: 'PowerLinkAnalysisService' object has no attribute 'save_analysis_session'
+2025-08-21 18:44:55 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 삭제 오류: cannot access local variable 'ModernConfirmDialog' where it is not associated with a value
+2025-08-21 18:44:57 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 삭제 오류: cannot access local variable 'ModernConfirmDialog' where it is not associated with a value
+2025-08-21 18:46:30 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 삭제 오류: cannot access local variable 'ModernConfirmDialog' where it is not associated with a value
+2025-08-21 18:46:32 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 삭제 오류: cannot access local variable 'ModernConfirmDialog' where it is not associated with a value
+2025-08-21 19:04:33 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:33 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 570
+    button_col = len(row_data)  # 체크박스(0) + 데이터들 = 마지막 컬럼
+IndentationError: unexpected indent
+
+2025-08-21 19:04:33 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:33 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:35 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:35 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 570
+    button_col = len(row_data)  # 체크박스(0) + 데이터들 = 마지막 컬럼
+IndentationError: unexpected indent
+
+2025-08-21 19:04:35 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:35 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:38 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:38 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 570
+    button_col = len(row_data)  # 체크박스(0) + 데이터들 = 마지막 컬럼
+IndentationError: unexpected indent
+
+2025-08-21 19:04:38 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:38 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:51 - main - ERROR - 기능 모듈 로드 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:51 - main - ERROR - 상세 오류: Traceback (most recent call last):
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\main.py", line 42, in load_features
+    register_powerlink(app)
+    ~~~~~~~~~~~~~~~~~~^^^^^
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\__init__.py", line 12, in register
+    from .ui_main import PowerLinkAnalyzerWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_main.py", line 13, in <module>
+    from .ui_table import PowerLinkResultsWidget
+  File "c:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\src\features\powerlink_analyzer\ui_table.py", line 570
+    button_col = len(row_data)  # 체크박스(0) + 데이터들 = 마지막 컬럼
+IndentationError: unexpected indent
+
+2025-08-21 19:04:51 - desktop.app - ERROR - 애플리케이션 실행 실패: unexpected indent (ui_table.py, line 570)
+2025-08-21 19:04:51 - main - ERROR - 애플리케이션 시작 실패: unexpected indent (ui_table.py, line 570)

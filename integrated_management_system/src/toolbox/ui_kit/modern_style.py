@@ -40,6 +40,104 @@ class ModernStyle:
     FONT_SIZE_NORMAL = 12
     BUTTON_HEIGHT = 36
     
+    # 텍스트 스타일 상수들 (키워드 분석기 UI 호환)
+    TITLE = f"""
+        QLabel {{
+            font-size: 18px;
+            font-weight: bold;
+            color: {COLORS['text_primary']};
+            font-family: '{DEFAULT_FONT}';
+            margin-bottom: 8px;
+        }}
+    """
+    
+    SUBTITLE = f"""
+        QLabel {{
+            font-size: 14px;
+            font-weight: 600;
+            color: {COLORS['text_secondary']};
+            font-family: '{DEFAULT_FONT}';
+            margin-bottom: 4px;
+        }}
+    """
+    
+    STATUS_LABEL = f"""
+        QLabel {{
+            font-size: 12px;
+            color: {COLORS['text_secondary']};
+            font-family: '{DEFAULT_FONT}';
+            padding: 4px 8px;
+        }}
+    """
+    
+    PROGRESS_BAR = f"""
+        QProgressBar {{
+            background-color: {COLORS['bg_input']};
+            border: 1px solid {COLORS['border']};
+            border-radius: 4px;
+            text-align: center;
+            font-family: '{DEFAULT_FONT}';
+            font-size: 11px;
+            height: 20px;
+        }}
+        QProgressBar::chunk {{
+            background-color: {COLORS['primary']};
+            border-radius: 3px;
+        }}
+    """
+    
+    TEXT_EDIT = f"""
+        QTextEdit {{
+            background-color: white;
+            border: 2px solid {COLORS['border']};
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 13px;
+            font-family: '{DEFAULT_FONT}';
+            color: {COLORS['text_primary']};
+        }}
+        QTextEdit:focus {{
+            border-color: {COLORS['primary']};
+        }}
+    """
+    
+    TREE_WIDGET = f"""
+        QTreeWidget {{
+            background-color: white;
+            border: 1px solid {COLORS['border']};
+            border-radius: 6px;
+            font-family: '{DEFAULT_FONT}';
+            font-size: 12px;
+            selection-background-color: {COLORS['primary']};
+            alternate-background-color: {COLORS['bg_secondary']};
+        }}
+        QTreeWidget::item {{
+            padding: 4px;
+            border-bottom: 1px solid {COLORS['border']};
+        }}
+        QTreeWidget::item:selected {{
+            background-color: {COLORS['primary']};
+            color: white;
+        }}
+        QHeaderView::section {{
+            background-color: {COLORS['bg_tertiary']};
+            color: {COLORS['text_primary']};
+            padding: 8px;
+            border: 1px solid {COLORS['border']};
+            font-weight: 600;
+        }}
+    """
+    
+    CARD = f"""
+        QFrame {{
+            background-color: {COLORS['bg_card']};
+            border: 1px solid {COLORS['border']};
+            border-radius: 8px;
+            padding: 16px;
+            margin: 4px;
+        }}
+    """
+    
     @classmethod
     def get_button_style(cls, button_type='primary'):
         """버튼 스타일 반환 - 키워드 분석기 스타일 기반으로 개선"""

@@ -414,76 +414,42 @@ class NaverCafeUnifiedWorker(QThread):
         return new_users, api_calls
     
     async def _process_api_call(self, clubid, articleid, boardtype, extracted_article_ids, extracted_user_ids, task_id):
-        """개별 API 호출 처리"""
-        api_url = (
-            f"https://apis.naver.com/cafe-web/cafe-articleapi/cafes/{clubid}/"
-            f"articles/{articleid}/siblings?boardType={boardtype}&limit=15"
-            "&fromAllArticleList=false&filterByHeadId=false&page=1&requestFrom=A"
-        )
-        
+        """개별 API 호출 처리 - CLAUDE.md: service → adapters 경유"""
         new_users = []
-        
         try:
-            async with self.playwright_helper.session.get(api_url, timeout=15) as response:
-                if response.status == 200:
-                    data = await response.json()
+            # HTTP 호출은 service → adapters로 위임
+            items, calls = await self.service.fetch_sibling_articles(
+                self.playwright_helper.session, clubid, articleid, boardtype
+            )
+            
+            for item in items:
+                article_id = str(item.get('id', ''))
+                writer_id = item.get('writerId', '')
+                writer_nick = item.get('writerNick', writer_id)
+
+                # 게시글 ID 처리
+                if article_id and article_id not in extracted_article_ids:
+                    extracted_article_ids.add(article_id)
+
+                # 사용자 정보 처리
+                if writer_id and writer_id not in extracted_user_ids:
+                    extracted_user_ids.add(writer_id)
                     
-                    if 'articles' in data and 'items' in data['articles']:
-                        items = data['articles']['items']
-                        
-                        for item in items:
-                            article_id = str(item.get('id', ''))
-                            writer_id = item.get('writerId', '')
-                            writer_nick = item.get('writerNick', writer_id)
-                            
-                            # 게시글 ID 처리
-                            if article_id and article_id not in extracted_article_ids:
-                                extracted_article_ids.add(article_id)
-                            
-                            # 사용자 정보 처리
-                            if writer_id and writer_id not in extracted_user_ids:
-                                extracted_user_ids.add(writer_id)
-                                
-                                user = ExtractedUser(
-                                    user_id=writer_id,
-                                    nickname=writer_nick,
-                                    article_count=1,
-                                    first_seen=datetime.now(),
-                                    last_seen=datetime.now()
-                                )
-                                
-                                new_users.append(user)
-                                self.user_extracted.emit(user)
-                                
-                                # Foundation DB에 저장
-                                self._save_user_to_db(user, task_id)
+                    user = ExtractedUser(
+                        user_id=writer_id,
+                        nickname=writer_nick,
+                        article_count=1,
+                        first_seen=datetime.now(),
+                        last_seen=datetime.now()
+                    )
                     
-                    return new_users, 1
-                else:
-                    logger.error(f"API 응답 상태 코드: {response.status}")
-                    return [], 0
-                    
+                    new_users.append(user)
+                    self.user_extracted.emit(user)
+                    # DB 저장은 service로 위임 (CLAUDE.md: worker는 UI/쓰레드, service가 DB 담당)
+                    self.service.save_user_result(user, task_id)
+
+            return new_users, calls
         except Exception as e:
-            logger.error(f"API 호출 실패: {e}")
+            logger.error(f"API 처리 실패: {e}")
             return [], 0
     
-    def _save_user_to_db(self, user, task_id):
-        """사용자 결과를 Foundation DB에 저장"""
-        try:
-            from src.foundation.db import get_db
-            
-            db = get_db()
-            user_data = {
-                'task_id': task_id,
-                'user_id': user.user_id,
-                'nickname': user.nickname,
-                'article_count': user.article_count,
-                'article_url': '',
-                'article_title': '',
-                'article_date': ''
-            }
-            
-            db.add_cafe_extraction_result(user_data)
-            
-        except Exception as e:
-            logger.error(f"사용자 DB 저장 실패: {e}")

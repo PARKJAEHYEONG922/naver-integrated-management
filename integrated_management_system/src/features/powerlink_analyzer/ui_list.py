@@ -2,21 +2,18 @@
 파워링크 광고비 분석기 컨트롤 위젯 (좌측 패널)
 진행상황, 키워드입력, 분석 제어 버튼들을 포함
 """
-from typing import List, Dict, Optional
-from datetime import datetime
-
 from PySide6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QGroupBox,
-    QLabel, QPushButton, QProgressBar, QTextEdit
+    QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QProgressBar, QTextEdit
 )
 from PySide6.QtCore import Qt, QTimer, Signal
 
 from src.toolbox.ui_kit import ModernStyle
-from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDialog
 from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, ModernDangerButton
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
-from .models import AnalysisProgress
+from src.toolbox.progress import throttle_ms
 from .service import keyword_database
 from .worker import PowerLinkAnalysisWorker
 from src.toolbox.text_utils import parse_keywords_from_text, process_keywords, TextProcessor
@@ -50,10 +47,11 @@ class PowerLinkControlWidget(QWidget):
         
         # 브라우저는 worker에서 관리
         
-        # 실시간 UI 업데이트를 위한 타이머
+        # 실시간 UI 업데이트를 위한 타이머 (throttle 적용)
         self.ui_update_timer = QTimer()
         self.ui_update_timer.timeout.connect(self.update_keyword_count_display)
-        self.ui_update_timer.setInterval(100)  # 100ms마다 업데이트
+        self.ui_update_timer.setInterval(500)  # 500ms 간격
+        self.last_update_time = 0  # throttle용 마지막 업데이트 시간
         
         self.setup_ui()
         self.setup_connections()
@@ -61,10 +59,18 @@ class PowerLinkControlWidget(QWidget):
     def closeEvent(self, event):
         """위젯 종료 시 리소스 정리"""
         # 분석 워커 정리 (워커에서 브라우저 정리 담당)
-        if hasattr(self, 'analysis_worker') and self.analysis_worker:
-            self.analysis_worker.stop()
-            self.analysis_worker.wait()  # 워커 종료 대기
-        
+        if getattr(self, 'analysis_worker', None):
+            try:
+                self.analysis_worker.stop()
+                if self.analysis_worker.isRunning():
+                    self.analysis_worker.wait()  # 워커 종료 대기
+            except Exception:
+                pass
+
+        # 🔧 UI 타이머 정리
+        if hasattr(self, 'ui_update_timer') and self.ui_update_timer.isActive():
+            self.ui_update_timer.stop()
+
         log_manager.add_log("🧹 PowerLink 리소스 정리 완료", "info")
         super().closeEvent(event)
     
@@ -243,24 +249,91 @@ class PowerLinkControlWidget(QWidget):
         if not self.ui_update_timer.isActive():
             self.ui_update_timer.start()
     
-    def update_keyword_count_display(self):
-        """키워드 개수 표시 업데이트 (타이머용)"""
-        text = self.keyword_input.toPlainText().strip()
-        if text:
-            keywords = parse_keywords_from_text(text)
-            processed = process_keywords(keywords)
-            count = len(processed)
+    def _restore_ui_state(self, mode="completed", message="", result_count=0):
+        """
+        UI 상태 복원 헬퍼 함수 (중복 로직 통합)
+        Args:
+            mode: "completed", "stopped", "error", "cleared"
+            message: 커스텀 상태 메시지 (빈 문자열이면 기본 메시지)
+            result_count: 결과 개수 (completed 모드에서 사용)
+        """
+        # 공통 UI 복원
+        self.analyze_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        self.progress_bar.setVisible(False)
+        
+        # 모드별 상태 메시지
+        if message:
+            status_text = message
         else:
-            count = 0
+            if mode == "completed":
+                status_text = f"분석 완료! {result_count}개 키워드 성공"
+            elif mode == "stopped":
+                status_text = "분석 중단됨"
+            elif mode == "error":
+                status_text = "분석 오류 발생"
+            elif mode == "cleared":
+                status_text = "분석 대기 중..."
+                self.progress_bar.setValue(0)
+                self.keyword_count_label.setText("등록된 키워드: 0개")
+            else:
+                status_text = "분석 대기 중..."
+        
+        self.status_label.setText(status_text)
+        
+        # 시그널 발송
+        self.analysis_finished.emit()
+        
+        # 키워드 카운트 갱신
+        if mode != "cleared":  # cleared에서는 별도로 설정
+            self.update_keyword_count_display()
+    
+    def update_keyword_count_display(self):
+        """
+        키워드 개수/진행 상태 레이블 업데이트 (throttle 적용)
+        - 분석 중: 무조건 진행상황 기준 '완료된 키워드: X/Y개'
+        - 대기/완료: 입력창 기준 '등록된 키워드: N개'
+        """
+        try:
+            # throttle 적용: 최소 간격 제한
+            import time
+            current_time = int(time.time() * 1000)  # ms 단위
+            if not throttle_ms(current_time, self.last_update_time, 300):  # 300ms 최소 간격
+                return
+            self.last_update_time = current_time
             
-        self.keyword_count_label.setText(f"등록된 키워드: {count}개")
+            # 분석 진행 상태 체크
+            is_analysis_running = (hasattr(self, 'analysis_worker') and 
+                                 self.analysis_worker and 
+                                 self.analysis_worker.isRunning())
+            
+            if is_analysis_running:
+                # 분석 중: 무조건 진행상황만 표시 (입력창 텍스트 무시)
+                completed_count = len(self.keywords_data)
+                total_count = getattr(self, 'current_analysis_total', completed_count)
+                self.keyword_count_label.setText(f"완료된 키워드: {completed_count}/{total_count}개")
+            else:
+                # 대기/완료 상태: 입력창 기준
+                text = self.keyword_input.toPlainText().strip()
+                if text:
+                    keywords = parse_keywords_from_text(text)
+                    processed = process_keywords(keywords)
+                    count = len(processed)
+                else:
+                    count = 0
+                self.keyword_count_label.setText(f"등록된 키워드: {count}개")
+        except Exception as e:
+            logger.warning(f"키워드 개수 표시 업데이트 실패: {e}")
             
     
     def start_analysis(self):
         """분석 시작"""
+        # 이중 클릭 방어 가드
+        if self.analysis_worker and self.analysis_worker.isRunning():
+            return
+            
         keywords_text = self.keyword_input.toPlainText().strip()
         if not keywords_text:
-            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
             dialog = ModernInfoDialog(
                 self,
                 "키워드 입력 필요",
@@ -294,7 +367,6 @@ class PowerLinkControlWidget(QWidget):
             log_manager.add_log(f"✅ 중복 키워드 없음: {processed_count}개 키워드 분석 시작", "info")
         
         if not processed_keywords:
-            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
             dialog = ModernInfoDialog(
                 self,
                 "키워드 없음",
@@ -390,28 +462,31 @@ class PowerLinkControlWidget(QWidget):
                 # 테이블 클리어 시그널 발송
                 self.keywords_data_cleared.emit()
             
-            # UI 상태 복원
-            self.analyze_button.setEnabled(True)
-            self.stop_button.setEnabled(False) 
-            self.progress_bar.setVisible(False)
-            
-            # 분석 완료 시그널 발송 (저장 버튼 활성화용)
-            self.analysis_finished.emit()
+            # UI 상태 복원 (헬퍼 사용)
+            if completed_keywords:
+                self._restore_ui_state("stopped", f"분석 중단됨 - {completed_count}개 완료, {removed_count}개 제거" if removed_count > 0 else f"분석 중단됨 - {completed_count}개 키워드 완료")
+            else:
+                self._restore_ui_state("stopped", "분석 중단됨 - 완료된 키워드 없음 (전체 클리어)")
             
         except Exception as e:
             logger.error(f"정지 후 정리 중 오류: {e}")
-            # 오류 발생 시에도 UI 복원
-            self.analyze_button.setEnabled(True)
-            self.stop_button.setEnabled(False)
-            self.progress_bar.setVisible(False)
-            self.status_label.setText("분석 중단됨")
-            self.analysis_finished.emit()
+            # 오류 발생 시에도 UI 복원 (헬퍼 사용)
+            self._restore_ui_state("stopped")
     
     def on_progress_updated(self, progress):
         """진행상황 업데이트"""
-        self.progress_bar.setValue(progress.percentage)
-        # 상세한 상태 메시지 표시
-        self.status_label.setText(progress.detailed_status)
+        try:
+            self.progress_bar.setValue(int(getattr(progress, 'percentage', 0)))
+            # 안전한 상태 문구 조립 (detailed_status가 없을 때 대비)
+            status = getattr(progress, 'status', '')
+            detail = getattr(progress, 'step_detail', '')
+            if status and detail:
+                text = f"{status} - {detail}"
+            else:
+                text = status or detail or "진행 중..."
+            self.status_label.setText(text)
+        except Exception as e:
+            logger.warning(f"진행상황 표시 업데이트 실패: {e}")
     
     def on_analysis_completed(self, results):
         """분석 완료 처리"""
@@ -421,6 +496,11 @@ class PowerLinkControlWidget(QWidget):
         for keyword, result in results.items():
             self.keywords_data[keyword] = result
             keyword_database.add_keyword(result)
+            
+        # 디버그: 분석 완료 후 키워드 데이터베이스 상태
+        total_in_db = len(keyword_database.keywords)
+        log_manager.add_log(f"🔍 분석 완료 후 keyword_database에 {total_in_db}개 키워드 저장됨", "info")
+        log_manager.add_log(f"🔍 저장된 키워드 목록: {list(keyword_database.keywords.keys())}", "info")
         
         # 분석 완료 후 순위 재계산 (모든 데이터가 완료된 후에만 실행)
         self.analysis_in_progress = False
@@ -429,14 +509,8 @@ class PowerLinkControlWidget(QWidget):
         # 모든 순위 계산 완료 시그널 발송
         self.all_rankings_updated.emit()
         
-        # UI 상태 복원
-        self.analyze_button.setEnabled(True)
-        self.stop_button.setEnabled(False)
-        self.progress_bar.setVisible(False)
-        self.status_label.setText(f"분석 완료! {len(results)}개 키워드 성공")
-        
-        # 분석 완료 시그널 발송
-        self.analysis_finished.emit()
+        # UI 상태 복원 (헬퍼 사용)
+        self._restore_ui_state("completed", result_count=len(results))
         
         # 상위 위젯에 결과 전달
         self.analysis_completed.emit(results)
@@ -453,11 +527,8 @@ class PowerLinkControlWidget(QWidget):
         # 분석 완료 시그널 발송 (오류로 인한 완료)
         self.analysis_finished.emit()
         
-        # UI 상태 복원
-        self.analyze_button.setEnabled(True)
-        self.stop_button.setEnabled(False)
-        self.progress_bar.setVisible(False)
-        self.status_label.setText("분석 오류 발생")
+        # UI 상태 복원 (헬퍼 사용)
+        self._restore_ui_state("error")
         
         # 상위 위젯에 오류 전달
         self.analysis_error.emit(error_msg)
@@ -500,13 +571,8 @@ class PowerLinkControlWidget(QWidget):
         self.keywords_data.clear()
         keyword_database.clear()
         
-        # UI 상태 완전 초기화
-        self.status_label.setText("분석 대기 중...")
-        self.keyword_count_label.setText("등록된 키워드: 0개")
-        self.analyze_button.setEnabled(True)
-        self.stop_button.setEnabled(False)
-        self.progress_bar.setVisible(False)
-        self.progress_bar.setValue(0)
+        # UI 상태 완전 초기화 (헬퍼 사용)
+        self._restore_ui_state("cleared")
         
         # 키워드 입력창도 클리어 (선택사항)
         # self.keyword_input.clear()
@@ -519,6 +585,10 @@ class PowerLinkControlWidget(QWidget):
         """테이블 위젯에 현재 표시된 키워드들을 정규화된 형태로 반환"""
         table_keywords = set()
         try:
+            # NPE 가드 강화
+            if not self.results_widget or not hasattr(self.results_widget, 'mobile_table'):
+                return set()
+                
             if self.results_widget:
                 # 모바일 테이블에서 키워드 수집 (모바일과 PC는 동일한 키워드 세트)
                 mobile_table = self.results_widget.mobile_table
@@ -538,19 +608,6 @@ class PowerLinkControlWidget(QWidget):
         
         return table_keywords
 
-    def update_keyword_count_display(self):
-        """키워드 개수 실시간 업데이트 (타이머용, 원본과 동일)"""
-        completed_count = len(self.keywords_data)
-        total_count = getattr(self, 'current_analysis_total', completed_count)
-        
-        if hasattr(self, 'analysis_worker') and self.analysis_worker and self.analysis_worker.isRunning():
-            # 분석 진행 중일 때
-            self.keyword_count_label.setText(f"완료된 키워드: {completed_count}/{total_count}개")
-        else:
-            # 분석 완료 또는 대기 중일 때
-            table_keywords = self.get_table_keywords()
-            table_count = len(table_keywords)
-            self.keyword_count_label.setText(f"테이블 키워드: {table_count}개")
     
     
     

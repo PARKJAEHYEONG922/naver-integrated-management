@@ -6,11 +6,25 @@ from src.foundation.config import config_manager
 from src.foundation.logging import get_logger
 from src.desktop.common_log import log_manager
 
-logger = get_logger("toolbox.ui_kit.api_checker")
+logger = get_logger("desktop.api_checker")
 
 
 class APIChecker:
     """API 연결 상태 확인"""
+    _last_check_result = None
+    _last_check_ts = 0
+    _last_overall_ready = False
+    AI_FEATURES_ENABLED = True  # AI API도 처음부터 확인
+    
+    @staticmethod
+    def get_last_overall_ready() -> bool:
+        return bool(APIChecker._last_overall_ready)
+    
+    @staticmethod
+    def invalidate_all_caches():
+        APIChecker._last_check_result = None
+        APIChecker._last_check_ts = 0
+        APIChecker._last_overall_ready = False
     
     @staticmethod
     def check_all_apis_on_startup():
@@ -24,9 +38,11 @@ class APIChecker:
             # 각 API 상태 확인
             naver_developer_status = APIChecker._check_naver_developer(api_config)
             naver_searchad_status = APIChecker._check_naver_searchad(api_config)
+            
+            # AI API도 확인
             ai_api_status = APIChecker._check_ai_apis(api_config)
             
-            # 결과 로그 출력 (둘 다 필수)
+            # 결과 로그 출력 (네이버 API는 필수, AI API는 선택)
             APIChecker._log_api_status("네이버 개발자 API", naver_developer_status, required=True)
             APIChecker._log_api_status("네이버 검색광고 API", naver_searchad_status, required=True)
             APIChecker._log_api_status("AI API", ai_api_status, required=False)
@@ -34,7 +50,9 @@ class APIChecker:
             # 전체 상태 요약
             APIChecker._log_summary(api_config)
             
-            return api_config.is_complete() and api_config.is_shopping_valid() and api_config.is_searchad_valid()
+            result = api_config.is_complete() and api_config.is_shopping_valid() and api_config.is_searchad_valid()
+            APIChecker._last_overall_ready = result
+            return result
             
         except Exception as e:
             logger.error(f"API 상태 확인 오류: {e}")

@@ -1378,6 +1378,20 @@ class CommonDB:
         """파워링크 세션 정보 조회 (UI 호환)"""
         return self.get_powerlink_session_info(session_id)
     
+    def delete_powerlink_sessions(self, session_ids: List[int]) -> bool:
+        """파워링크 다중 세션 삭제 (UI 호환)"""
+        try:
+            success_count = 0
+            for session_id in session_ids:
+                if self.delete_powerlink_analysis_session(session_id):
+                    success_count += 1
+            
+            # 모든 세션이 성공적으로 삭제되었으면 True
+            return success_count == len(session_ids)
+        except Exception as e:
+            logger.error(f"파워링크 다중 세션 삭제 실패: {e}")
+            return False
+    
     
     def list_cafe_extraction_tasks(self, limit: int = 50) -> List[Dict[str, Any]]:
         """카페 추출 작업 목록 조회"""
