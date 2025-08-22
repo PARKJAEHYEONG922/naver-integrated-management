@@ -83,24 +83,38 @@ def _to_dt(date_str: str):
 
 def get_rank_color(rank: int, color_type: str = "background") -> str:
     """순위에 따른 색상 반환"""
+    from src.foundation.logging import get_logger
+    logger = get_logger("rank_color_debug")
+    
+    # 디버깅: 200위밖 케이스 로깅
+    if rank > 200 or rank == 999:
+        logger.info(f"🔴 200위밖 감지! rank={rank}, type={type(rank)}, color_type={color_type}")
+    
     if color_type == "background":
         # 배경색 (연한 톤)
         if rank <= 10:
             return "#e8f5e8"  # 연한 초록
-        elif rank <= 50:
+        elif rank <= 40:
             return "#fff3cd"  # 연한 노랑
         else:
             return "#f8d7da"  # 연한 빨강
     else:  # foreground/text color
         # 텍스트 색상 (진한 톤)
         if rank == -1 or rank == 0:  # 검색량 없음/API 실패
+            logger.info(f"🔘 API 실패/검색량 없음: rank={rank} -> 회색")
             return "#6B7280"  # 회색
         elif rank <= 10:
+            logger.info(f"🟢 1-10위: rank={rank} -> 초록색")
             return "#059669"  # 초록색 (상위 10위)
-        elif rank <= 50:
-            return "#D97706"  # 주황색 (50위 이내)
+        elif rank <= 40:
+            logger.info(f"🟡 11-40위: rank={rank} -> 주황색")
+            return "#D97706"  # 주황색 (40위 이내)
+        elif rank > 200 or rank == 999:  # 200위밖 명시적 처리
+            logger.info(f"🔴 200위밖: rank={rank} -> 더 진한 빨간색 #B91C1C")
+            return "#B91C1C"  # 더 진한 빨간색 (200위밖)
         else:
-            return "#DC2626"  # 빨간색 (50위 초과)
+            logger.info(f"🔴 41-200위: rank={rank} -> 빨간색")
+            return "#DC2626"  # 빨간색 (41-200위)
 
 
 # 기존 format_monthly_volume은 삭제됨 - toolbox.formatters.format_monthly_volume 사용
@@ -970,9 +984,9 @@ class RankTrackingExcelExporter:
                     elif row_idx > 12 and col_idx > 3:  # 순위 컬럼들
                         try:
                             if isinstance(cell_value, str):
-                                if "200+" in cell_value:
-                                    cell = worksheet.cell(row=row_idx, column=col_idx, value=201)
-                                    cell.number_format = '"200+"'
+                                if "200+" in cell_value or "200위밖" in cell_value:
+                                    cell = worksheet.cell(row=row_idx, column=col_idx, value=999)  # 200위밖은 999로 저장
+                                    cell.number_format = '"200위밖"'
                                 elif "위" in cell_value:
                                     rank_num = int(cell_value.replace("위", ""))
                                     cell = worksheet.cell(row=row_idx, column=col_idx, value=rank_num)
@@ -1003,17 +1017,18 @@ class RankTrackingExcelExporter:
                             cell.alignment = Alignment(horizontal="left", vertical="center")
                         else:  # 순위 컬럼들
                             cell.alignment = Alignment(horizontal="center", vertical="center")
-                            # 순위에 따른 색상 적용
+                            # 순위에 따른 색상 적용 (UI와 동일한 기준)
                             if isinstance(cell.value, (int, float)):
                                 rank_num = int(cell.value)
                                 if rank_num <= 10:
-                                    cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")  # 연한 초록색
-                                elif rank_num <= 50:
-                                    cell.fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")  # 연한 노란색
+                                    cell.fill = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")  # 연한 초록색 (1-10위)
+                                elif rank_num <= 40:
+                                    cell.fill = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")  # 연한 노란색 (11-40위)
                                 elif rank_num <= 200:
-                                    cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")  # 연한 빨간색
-                                else:  # 200+
-                                    cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")  # 연한 빨간색
+                                    cell.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")  # 연한 빨간색 (41-200위)
+                                elif rank_num == 999 or rank_num > 200:  # 200위밖 (999 또는 201 이상)
+                                    cell.fill = PatternFill(start_color="D63384", end_color="D63384", fill_type="solid")  # 더 진한 빨간색 (200위밖)
+                                    cell.font = Font(color="FFFFFF")  # 흰색 텍스트로 가독성 향상
             
             # 컬럼 너비 설정
             for col_idx in range(1, worksheet.max_column + 1):

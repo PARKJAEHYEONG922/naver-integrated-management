@@ -639,7 +639,12 @@ class RankingTableWidget(QWidget):
                 # 순위 색상 적용
                 if rank_text != "-":
                     try:
-                        actual_rank = int(rank_text.replace("위", ""))
+                        if rank_text == "200위밖":
+                            # 200위밖은 999로 처리
+                            actual_rank = 999
+                        else:
+                            # 일반 순위 (예: "135위" -> 135)
+                            actual_rank = int(rank_text.replace("위", ""))
                         color = get_rank_color(actual_rank, "foreground")
                         rank_item.setForeground(QColor(color))
                     except:
