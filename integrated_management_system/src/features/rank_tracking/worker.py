@@ -50,14 +50,24 @@ class RankingCheckWorker(QThread):
             def process_single_keyword(keyword_obj):
                 """단일 키워드 처리 (worker 전용 - 딜레이와 시그널만)"""
                 try:
+                    # 중단 요청 체크 (간단하게)
+                    if not self.is_running:
+                        logger.info(f"키워드 {keyword_obj.keyword} 처리 중단됨")
+                        return rank_tracking_service.create_failed_ranking_result(keyword_obj.keyword, "사용자가 중단함"), False
+                    
                     # 적응형 딜레이 (요청 분산을 위한 jitter 포함)
                     base_delay = 0.5  # 기본 0.5초 딜레이
                     jitter = random.uniform(0.1, 0.3)  # 0.1~0.3초 랜덤 jitter
                     time.sleep(base_delay + jitter)
                     
+                    # 딜레이 후 중단 체크
+                    if not self.is_running:
+                        logger.info(f"키워드 {keyword_obj.keyword} 처리 중단됨 (딜레이 후)")
+                        return rank_tracking_service.create_failed_ranking_result(keyword_obj.keyword, "사용자가 중단함"), False
+                    
                     logger.info(f"키워드 처리 시작: {keyword_obj.keyword}")
                     
-                    # service에서 순위 확인 처리
+                    # service에서 순위 확인 처리 (원본 방식)
                     result, success = rank_tracking_service.process_single_keyword_ranking(keyword_obj, project.product_id)
                     
                     # 성공시 실시간 순위 업데이트 시그널 발출
@@ -142,17 +152,20 @@ class RankingCheckWorker(QThread):
             self.finished.emit(False, f"순위 확인 실패: {e}", [])
     
     def stop(self):
-        """워커 중단"""
+        """워커 중단 (부드러운 중단)"""
+        logger.info("RankingCheckWorker 중단 요청 받음")
         self.is_running = False
         rank_tracking_service.stop_processing()
         
-        # ThreadPoolExecutor 강제 종료
+        # ThreadPoolExecutor 중단 (부드럽게)
         if self.executor:
             try:
+                # 실행 중인 작업은 완료되도록 하되, 새로운 작업은 시작하지 않음
+                logger.info("실행 중인 작업들을 중단합니다...")
                 self.executor.shutdown(wait=False)
-                logger.info("ThreadPoolExecutor 강제 종료 완료")
+                logger.info("ThreadPoolExecutor 중단 요청 완료")
             except Exception as e:
-                logger.warning(f"ThreadPoolExecutor 종료 실패: {e}")
+                logger.warning(f"ThreadPoolExecutor 중단 실패: {e}")
 
 
 class KeywordInfoWorker(QThread):

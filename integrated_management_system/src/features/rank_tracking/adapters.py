@@ -657,8 +657,8 @@ class RankTrackingExcelExporter:
             # 키워드별 순위 데이터 구성
             keyword_ranking_data = []
             for keyword_obj in keywords:
-                keyword_data = keywords_data.get(keyword_obj.keyword, {})
-                rankings = keyword_data.get('rankings', {})
+                # keywords_data는 {keyword: {date: rank}} 구조
+                rankings = keywords_data.get(keyword_obj.keyword, {})
                 
                 logger.info(f"디버깅: 키워드 '{keyword_obj.keyword}' 순위 이력 수 = {len(rankings)}")
                 
@@ -666,7 +666,8 @@ class RankTrackingExcelExporter:
                 rank_by_date = {}
                 for date in all_dates:
                     if date in rankings:
-                        rank = rankings[date].get('rank', 999)
+                        # rankings[date]는 직접 rank 값 (정수)
+                        rank = rankings[date]
                         rank_by_date[date] = rank
                         logger.info(f"디버깅: 순위 데이터 - 키워드: {keyword_obj.keyword}, 날짜: {date}, 순위: {rank}")
                 
