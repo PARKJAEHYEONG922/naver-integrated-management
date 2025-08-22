@@ -154,3 +154,43 @@ class PowerLinkRepository:
             logger = get_logger("features.powerlink_analyzer.models")
             logger.error(f"분석 세션 목록 조회 실패: {e}")
             return []
+
+
+# 완료 판단 기준 - 단일 출처 (Single Source of Truth)
+MISSING_INT = -1      # 미수집/확정불가
+MISSING_FLOAT = -1.0  # 미수집/확정불가
+
+# 기본값 (크롤링 실패 시 사용하는 합리적 기본값)
+DEFAULT_PC_POSITIONS = 8
+DEFAULT_MOBILE_POSITIONS = 4
+
+
+def is_nonneg(v) -> bool:
+    """값이 0 이상인지 확인 (None과 음수는 False)"""
+    return v is not None and v >= 0
+
+
+def is_completed(result: "KeywordAnalysisResult") -> bool:
+    """
+    키워드 분석 완료 판단 기준을 한 곳에서 정의
+    
+    완성 기준:
+    - 기본 데이터(검색량/클릭/CTR)가 0 이상
+    - 1p 노출 포지션 수가 0 이상 (크롤 실패 시에도 기본값 8/4는 허용)
+    - 최소노출가/1등가가 '수집 실패'가 아닌 값(>=0)
+      (엑셀/랭킹에서 0도 합리적인 값으로 취급, 구분 필요시 MISSING_*로 -1 사용)
+    """
+    return all([
+        is_nonneg(result.pc_search_volume),
+        is_nonneg(result.mobile_search_volume),
+        is_nonneg(result.pc_clicks),
+        is_nonneg(result.pc_ctr),
+        is_nonneg(result.mobile_clicks),
+        is_nonneg(result.mobile_ctr),
+        is_nonneg(result.pc_first_page_positions),
+        is_nonneg(result.mobile_first_page_positions),
+        is_nonneg(result.pc_first_position_bid),
+        is_nonneg(result.pc_min_exposure_bid),
+        is_nonneg(result.mobile_first_position_bid),
+        is_nonneg(result.mobile_min_exposure_bid),
+    ])

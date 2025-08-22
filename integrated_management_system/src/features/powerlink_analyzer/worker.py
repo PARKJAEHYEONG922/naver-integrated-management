@@ -10,7 +10,7 @@ import asyncio
 
 from src.foundation.logging import get_logger
 from src.toolbox.progress import calc_percentage
-from .models import KeywordAnalysisResult, AnalysisProgress, BidPosition
+from .models import KeywordAnalysisResult, AnalysisProgress, BidPosition, MISSING_INT, DEFAULT_PC_POSITIONS, DEFAULT_MOBILE_POSITIONS
 from .adapters import PowerLinkDataAdapter, adaptive_rate_limiter, POWERLINK_CONFIG, NAVER_MIN_BID
 
 logger = get_logger("features.powerlink_analyzer.worker")
@@ -409,9 +409,9 @@ class PowerLinkAnalysisWorker(QThread):
                 if position_index > 0 or power_link_count > 0:
                     # 기본값 보장
                     if position_index == 0:
-                        position_index = 8
+                        position_index = DEFAULT_PC_POSITIONS
                     if power_link_count == 0:
-                        power_link_count = 8
+                        power_link_count = DEFAULT_PC_POSITIONS
                     
                     logger.debug(f"PC 파워링크 추출 성공: {keyword} -> 위치:{position_index}, 개수:{power_link_count}")
                     return (position_index, power_link_count)
@@ -424,17 +424,17 @@ class PowerLinkAnalysisWorker(QThread):
                     continue
                 else:
                     logger.warning(f"PC 크롤링 최대 재시도 초과 - 기본값 사용: {keyword}")
-                    return (8, 8)
+                    return (DEFAULT_PC_POSITIONS, DEFAULT_PC_POSITIONS)
                     
             except Exception as e:
                 logger.error(f"PC 크롤링 재시도 중 오류 ({attempt + 1}/{max_retries + 1}): {keyword}: {e}")
                 if attempt == max_retries:
-                    return (8, 8)
+                    return (DEFAULT_PC_POSITIONS, DEFAULT_PC_POSITIONS)
                 await asyncio.sleep(1)
                 continue
         
         # 모든 시도 실패
-        return (8, 8)
+        return (DEFAULT_PC_POSITIONS, DEFAULT_PC_POSITIONS)
     
     async def _extract_mobile_powerlink_async(self, page, keyword):
         """Mobile 파워링크 정보 비동기 추출 (재시도 로직 포함)"""
@@ -469,9 +469,9 @@ class PowerLinkAnalysisWorker(QThread):
                 if position_index > 0 or power_link_count > 0:
                     # 기본값 보장
                     if position_index == 0:
-                        position_index = 4
+                        position_index = DEFAULT_MOBILE_POSITIONS
                     if power_link_count == 0:
-                        power_link_count = 4
+                        power_link_count = DEFAULT_MOBILE_POSITIONS
                     
                     logger.debug(f"Mobile 파워링크 추출 성공: {keyword} -> 위치:{position_index}, 개수:{power_link_count}")
                     return (position_index, power_link_count)
@@ -484,17 +484,17 @@ class PowerLinkAnalysisWorker(QThread):
                     continue
                 else:
                     logger.warning(f"Mobile 크롤링 최대 재시도 초과 - 기본값 사용: {keyword}")
-                    return (4, 4)
+                    return (DEFAULT_MOBILE_POSITIONS, DEFAULT_MOBILE_POSITIONS)
                     
             except Exception as e:
                 logger.error(f"Mobile 크롤링 재시도 중 오류 ({attempt + 1}/{max_retries + 1}): {keyword}: {e}")
                 if attempt == max_retries:
-                    return (4, 4)
+                    return (DEFAULT_MOBILE_POSITIONS, DEFAULT_MOBILE_POSITIONS)
                 await asyncio.sleep(1)
                 continue
         
         # 모든 시도 실패
-        return (4, 4)
+        return (DEFAULT_MOBILE_POSITIONS, DEFAULT_MOBILE_POSITIONS)
     
     def _combine_all_results(self, api_results, pc_results, mobile_results):
         """🎯 모든 결과 조합"""
@@ -522,19 +522,25 @@ class PowerLinkAnalysisWorker(QThread):
                 # basic_data는 이제 (pc_search_volume, mobile_search_volume, pc_clicks, pc_ctr, mobile_clicks, mobile_ctr)
                 pc_search_volume, mobile_search_volume, pc_clicks, pc_ctr, mobile_clicks, mobile_ctr = basic_data
                 
-                # 크롤링 데이터
-                pc_exposure_info = pc_results.get(keyword, (8, 8))
-                mobile_exposure_info = mobile_results.get(keyword, (4, 4))
+                # 크롤링 데이터 (크롤링 실패 시 기본값 사용)
+                pc_exposure_info = pc_results.get(keyword, (DEFAULT_PC_POSITIONS, DEFAULT_PC_POSITIONS))
+                mobile_exposure_info = mobile_results.get(keyword, (DEFAULT_MOBILE_POSITIONS, DEFAULT_MOBILE_POSITIONS))
                 
-                pc_first_page_positions = pc_exposure_info[1] if pc_exposure_info else 8
-                mobile_first_page_positions = mobile_exposure_info[1] if mobile_exposure_info else 4
+                pc_first_page_positions = pc_exposure_info[1] if pc_exposure_info else DEFAULT_PC_POSITIONS
+                mobile_first_page_positions = mobile_exposure_info[1] if mobile_exposure_info else DEFAULT_MOBILE_POSITIONS
                 
-                # 입찰가 계산
-                pc_first_position_bid = pc_bids[0].bid_price if pc_bids else 0
-                pc_min_exposure_bid = self.adapter.calculate_min_exposure_bid(pc_bids, pc_first_page_positions)
+                # 입찰가 계산 (입찰가 리스트가 없으면 MISSING_INT로 명확히 구분)
+                pc_first_position_bid = pc_bids[0].bid_price if pc_bids else MISSING_INT
+                pc_min_exposure_bid = (
+                    self.adapter.calculate_min_exposure_bid(pc_bids, pc_first_page_positions)
+                    if pc_bids else MISSING_INT
+                )
                 
-                mobile_first_position_bid = mobile_bids[0].bid_price if mobile_bids else 0
-                mobile_min_exposure_bid = self.adapter.calculate_min_exposure_bid(mobile_bids, mobile_first_page_positions)
+                mobile_first_position_bid = mobile_bids[0].bid_price if mobile_bids else MISSING_INT
+                mobile_min_exposure_bid = (
+                    self.adapter.calculate_min_exposure_bid(mobile_bids, mobile_first_page_positions)
+                    if mobile_bids else MISSING_INT
+                )
                 
                 # 최종 결과 생성
                 analysis_result = KeywordAnalysisResult(

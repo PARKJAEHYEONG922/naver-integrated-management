@@ -450,7 +450,7 @@ class PowerLinkResultsWidget(QWidget):
                     background-color: #047857;
                 }
             """)
-            detail_button.clicked.connect(lambda checked=False, k=keyword, r=result, d='mobile': self.show_bid_details(k, r, d))
+            detail_button.clicked.connect(self._create_detail_handler(keyword, result, 'mobile'))
             self.mobile_table.setCellWidget(row, 9, detail_button)
             
     def update_pc_table(self):
@@ -512,9 +512,12 @@ class PowerLinkResultsWidget(QWidget):
                     background-color: #047857;
                 }
             """)
-            detail_button.clicked.connect(lambda checked=False, k=keyword, r=result, d='pc': self.show_bid_details(k, r, d))
+            detail_button.clicked.connect(self._create_detail_handler(keyword, result, 'pc'))
             self.pc_table.setCellWidget(row, 9, detail_button)
     
+    def _create_detail_handler(self, keyword: str, result, device_type: str):
+        """상세 버튼 핸들러 생성 (lambda late binding 문제 해결)"""
+        return lambda: self.show_bid_details(keyword, result, device_type)
     
     def update_keyword_row_in_table(self, table: QTableWidget, keyword: str, result, device_type: str):
         """특정 키워드의 테이블 행 업데이트"""
@@ -643,7 +646,7 @@ class PowerLinkResultsWidget(QWidget):
                     background-color: #047857;
                 }
             """)
-            detail_button.clicked.connect(lambda _=False, k=result.keyword, r=result, d=device_type: self.show_bid_details(k, r, d))
+            detail_button.clicked.connect(self._create_detail_handler(result.keyword, result, device_type))
             table.setCellWidget(row, 9, detail_button)
             
             # UI 업데이트 (rebuild 중에는 스킵)
@@ -1222,7 +1225,7 @@ class PowerLinkResultsWidget(QWidget):
                         background-color: #047857;
                     }
                 """)
-                mobile_detail_button.clicked.connect(lambda checked=False, k=result.keyword, r=result, d='mobile': self.show_bid_details(k, r, d))
+                mobile_detail_button.clicked.connect(self._create_detail_handler(result.keyword, result, 'mobile'))
                 self.mobile_table.setCellWidget(mobile_row, 9, mobile_detail_button)
                 
                 # PC 테이블에 추가
@@ -1274,7 +1277,7 @@ class PowerLinkResultsWidget(QWidget):
                         background-color: #047857;
                     }
                 """)
-                pc_detail_button.clicked.connect(lambda checked=False, k=result.keyword, r=result, d='pc': self.show_bid_details(k, r, d))
+                pc_detail_button.clicked.connect(self._create_detail_handler(result.keyword, result, 'pc'))
                 self.pc_table.setCellWidget(pc_row, 9, pc_detail_button)
             
             logger.info(f"테이블 새로고침 완료: {len(all_keywords)}개 키워드")
@@ -1484,13 +1487,11 @@ class PowerLinkResultsWidget(QWidget):
             table.setColumnCount(2)
             table.setHorizontalHeaderLabels(["순위", "입찰가"])
             
-            # 미니멀한 테이블 스타일
+            # 미니멀한 테이블 스타일 (아이템 색상 우선순위 허용)
             table.setStyleSheet(f"""
                 QTableWidget {{
                     gridline-color: {ModernStyle.COLORS['border']};
                     background-color: {ModernStyle.COLORS['bg_card']};
-                    selection-background-color: {ModernStyle.COLORS['primary']};
-                    selection-color: white;
                     border: 1px solid {ModernStyle.COLORS['border']};
                     border-radius: 6px;
                     font-size: 14px;
@@ -1499,10 +1500,6 @@ class PowerLinkResultsWidget(QWidget):
                     padding: 12px 10px;
                     border-bottom: 1px solid {ModernStyle.COLORS['border']};
                     color: {ModernStyle.COLORS['text_primary']};
-                }}
-                QTableWidget::item:selected {{
-                    background-color: {ModernStyle.COLORS['primary']};
-                    color: white;
                 }}
                 QHeaderView::section {{
                     background-color: {ModernStyle.COLORS['bg_secondary']};
@@ -1518,7 +1515,9 @@ class PowerLinkResultsWidget(QWidget):
             table.verticalHeader().setVisible(False)
             table.horizontalHeader().setStretchLastSection(True)
             table.setAlternatingRowColors(False)
-            table.setSelectionBehavior(QTableWidget.SelectRows)
+            table.setSelectionMode(QTableWidget.NoSelection)  # 선택 비활성화
+            table.setEditTriggers(QTableWidget.NoEditTriggers)  # 편집 비활성화
+            table.setFocusPolicy(Qt.NoFocus)  # 포커스 비활성화 (점선 테두리 제거)
             table.setShowGrid(False)
             
             # 컬럼 크기 설정
@@ -1527,17 +1526,68 @@ class PowerLinkResultsWidget(QWidget):
             header.setSectionResizeMode(1, QHeaderView.Stretch)
             header.resizeSection(0, 80)  # 순위 컬럼 너비
             
-            # 데이터 추가 (심플한 포맷)
+            # 최소노출가격 확인
+            if device_type == 'mobile':
+                min_exposure_bid = result.mobile_min_exposure_bid
+            else:
+                min_exposure_bid = result.pc_min_exposure_bid
+            
+            
+            # 최소노출가격과 일치하는 입찰가 중 가장 낮은 순위(가장 큰 position) 찾기
+            min_exposure_position = None
+            if min_exposure_bid >= 0:
+                matching_positions = [bp.position for bp in bid_positions if bp.bid_price == min_exposure_bid]
+                if matching_positions:
+                    min_exposure_position = max(matching_positions)  # 가장 낮은 순위 (큰 숫자)
+            
+            # 데이터 추가 (최소노출가격 표시 개선)
             for row, bid_pos in enumerate(bid_positions):
-                rank_item = QTableWidgetItem(f"{bid_pos.position}위")
-                rank_item.setTextAlignment(Qt.AlignCenter)
-                table.setItem(row, 0, rank_item)
+                # 최소노출가격에 해당하는 특정 순위인지 확인
+                is_min_exposure = (min_exposure_position is not None and bid_pos.position == min_exposure_position)
                 
-                price_item = QTableWidgetItem(format_price_krw(bid_pos.bid_price))
+                # 순위 표시 (최소노출가격이면 이모지 추가)
+                if is_min_exposure:
+                    rank_text = f"🎯 {bid_pos.position}위"
+                    rank_item = QTableWidgetItem(rank_text)
+                    rank_item.setToolTip("💰 최소노출가격 - 이 금액으로 입찰하면 광고가 노출됩니다!")
+                else:
+                    rank_item = QTableWidgetItem(f"{bid_pos.position}위")
+                rank_item.setTextAlignment(Qt.AlignCenter)
+                
+                # 가격 표시 (최소노출가격이면 강조 표시)
+                if is_min_exposure:
+                    price_text = f"⭐ {format_price_krw(bid_pos.bid_price)}"
+                    price_item = QTableWidgetItem(price_text)
+                    price_item.setToolTip("💰 최소노출가격 - 이 금액으로 입찰하면 광고가 노출됩니다!")
+                else:
+                    price_item = QTableWidgetItem(format_price_krw(bid_pos.bid_price))
                 price_item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                
+                
+                table.setItem(row, 0, rank_item)
                 table.setItem(row, 1, price_item)
             
             layout.addWidget(table)
+            
+            # 최소노출가격 정보 표시
+            if min_exposure_position is not None:
+                info_layout = QHBoxLayout()
+                info_layout.setContentsMargins(0, 8, 0, 0)
+                
+                info_label = QLabel(f"💡 최소노출가격: {format_price_krw(min_exposure_bid)} ({min_exposure_position}위)")
+                info_label.setStyleSheet(f"""
+                    QLabel {{
+                        background-color: #f0f9ff;
+                        color: #0369a1;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        border: 1px solid #bae6fd;
+                        font-size: 13px;
+                        font-weight: 500;
+                    }}
+                """)
+                info_layout.addWidget(info_label)
+                layout.addLayout(info_layout)
             
             # 확인 버튼 (미니멀하게)
             from src.toolbox.ui_kit.components import ModernButton

@@ -89,6 +89,14 @@ class ModernTableWidget(QTableWidget):
         self.setSelectionBehavior(QTableWidget.SelectRows)
         self.setSortingEnabled(True)
         
+        # 편집 비활성화 (공용 설정)
+        self.setEditTriggers(QTableWidget.NoEditTriggers)  # 편집 비활성화
+        
+        # 포커스 설정 (체크박스가 없으면 완전 비활성화)
+        if not self.has_checkboxes:
+            self.setFocusPolicy(Qt.NoFocus)  # 포커스 비활성화 (점선 테두리 제거)
+            self.setSelectionMode(QTableWidget.NoSelection)  # 선택도 비활성화
+        
         # 행 높이 35px로 설정
         self.verticalHeader().setDefaultSectionSize(35)
         
