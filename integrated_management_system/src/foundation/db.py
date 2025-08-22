@@ -39,6 +39,7 @@ class CommonDB:
         try:
             conn = sqlite3.connect(self.db_path)
             conn.row_factory = sqlite3.Row  # 딕셔너리 형태로 결과 반환
+            conn.execute("PRAGMA foreign_keys=ON;")  # SQLite 외래키 제약 활성화
             yield conn
         except Exception as e:
             if conn:

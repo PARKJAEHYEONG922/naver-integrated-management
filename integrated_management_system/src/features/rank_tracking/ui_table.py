@@ -5,7 +5,7 @@
 from typing import Optional
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QFrame, QTableWidgetItem, QDialog, QTextEdit, QPushButton
+    QFrame, QTableWidgetItem, QDialog, QTextEdit
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QColor
@@ -135,41 +135,11 @@ class AddKeywordsDialog(QDialog):
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         
-        self.cancel_button = QPushButton("취소")
-        self.cancel_button.setStyleSheet("""
-            QPushButton {
-                background-color: #6b7280;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #4b5563;
-            }
-        """)
+        self.cancel_button = ModernCancelButton("취소")
         self.cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(self.cancel_button)
         
-        self.ok_button = QPushButton("추가")
-        self.ok_button.setStyleSheet("""
-            QPushButton {
-                background-color: #2563eb;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                min-width: 80px;
-            }
-            QPushButton:hover {
-                background-color: #1d4ed8;
-            }
-        """)
+        self.ok_button = ModernPrimaryButton("추가")
         self.ok_button.clicked.connect(self.accept)
         button_layout.addWidget(self.ok_button)
         
@@ -1181,18 +1151,111 @@ class RankingTableWidget(QWidget):
         layout.addLayout(button_layout)
     
     def export_data(self):
-        """순위 이력 데이터 Excel로 내보내기 (service 계층 사용)"""
+        """순위 이력 데이터 Excel로 내보내기 (UI에서 다이얼로그 처리)"""
         try:
             # 선택된 프로젝트 확인
             if len(self.selected_projects) > 1:
                 # 다중 프로젝트 내보내기
-                rank_tracking_service.export_multiple_projects(self.selected_projects, self)
+                self.export_multiple_projects_dialog(self.selected_projects)
             elif self.current_project_id:
                 # 단일 프로젝트 내보내기
-                rank_tracking_service.export_single_project(self.current_project_id, self)
+                self.export_single_project_dialog(self.current_project_id)
             else:
                 log_manager.add_log("⚠️ 내보낼 프로젝트가 선택되지 않았습니다.", "warning")
         except Exception as e:
             logger.error(f"데이터 내보내기 오류: {e}")
             log_manager.add_log(f"❌ 데이터 내보내기 중 오류가 발생했습니다: {str(e)}", "error")
+    
+    def export_single_project_dialog(self, project_id: int) -> bool:
+        """단일 프로젝트 Excel 내보내기 다이얼로그 (UI 계층)"""
+        try:
+            from PySide6.QtWidgets import QFileDialog
+            from .adapters import rank_tracking_excel_exporter
+            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
+            from datetime import datetime
+            
+            # 기본 파일명 생성
+            default_filename = rank_tracking_excel_exporter.get_default_filename(project_id)
+            
+            # 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                self, 
+                "순위 이력 Excel 저장", 
+                default_filename,
+                "Excel 파일 (*.xlsx);;모든 파일 (*)"
+            )
+            
+            if file_path:
+                # adapters를 통한 엑셀 저장 (service 레이어 우회)
+                success = rank_tracking_excel_exporter.export_ranking_history_to_excel(
+                    project_id, file_path
+                )
+                if success:
+                    project = rank_tracking_service.get_project_by_id(project_id)
+                    project_name = project.current_name if project else f"프로젝트 {project_id}"
+                    
+                    log_manager.add_log(f"✅ 순위 이력 Excel 파일이 저장되었습니다: {file_path}", "success")
+                    
+                    # 공용 저장 완료 다이얼로그
+                    main_window = self.window()
+                    ModernSaveCompletionDialog.show_save_completion(
+                        main_window,
+                        "저장 완료",
+                        f"순위 이력이 성공적으로 저장되었습니다.\n\n프로젝트: {project_name}",
+                        file_path
+                    )
+                    return True
+                else:
+                    log_manager.add_log("❌ Excel 파일 저장에 실패했습니다.", "error")
+                    return False
+            return False
+            
+        except Exception as e:
+            logger.error(f"단일 프로젝트 내보내기 오류: {e}")
+            return False
+    
+    def export_multiple_projects_dialog(self, project_ids: list) -> bool:
+        """다중 프로젝트 Excel 내보내기 다이얼로그 (UI 계층)"""
+        try:
+            from PySide6.QtWidgets import QFileDialog
+            from .adapters import rank_tracking_excel_exporter
+            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
+            from datetime import datetime
+            
+            # 기본 파일명 생성 (다중 프로젝트)
+            default_filename = f"순위이력_다중프로젝트_{len(project_ids)}개_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+            
+            # 파일 저장 다이얼로그
+            file_path, _ = QFileDialog.getSaveFileName(
+                self,
+                "다중 프로젝트 순위 이력 Excel 저장",
+                default_filename,
+                "Excel 파일 (*.xlsx);;모든 파일 (*)"
+            )
+            
+            if file_path:
+                # adapters를 통한 다중 프로젝트 엑셀 저장 (service 레이어 우회)
+                success = rank_tracking_excel_exporter.export_multiple_projects_to_excel(
+                    project_ids, file_path
+                )
+                if success:
+                    log_manager.add_log(f"✅ 다중 프로젝트 순위 이력 Excel 파일이 저장되었습니다: {file_path}", "success")
+                    
+                    # 공용 저장 완료 다이얼로그
+                    main_window = self.window()
+                    ModernSaveCompletionDialog.show_save_completion(
+                        main_window,
+                        "저장 완료",
+                        f"다중 프로젝트 순위 이력이 성공적으로 저장되었습니다.\n\n프로젝트 개수: {len(project_ids)}개",
+                        file_path
+                    )
+                    return True
+                else:
+                    log_manager.add_log("❌ 다중 프로젝트 Excel 파일 저장에 실패했습니다.", "error")
+                    return False
+            return False
+            
+        except Exception as e:
+            logger.error(f"다중 프로젝트 내보내기 오류: {e}")
+            return False
 

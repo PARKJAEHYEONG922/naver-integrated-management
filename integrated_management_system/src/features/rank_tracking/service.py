@@ -7,15 +7,15 @@ from typing import List, Optional, Dict, Any, Tuple
 from datetime import datetime
 from PySide6.QtCore import QObject, Signal
 
-from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo
+from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo, rank_tracking_repository
 from .adapters import RankTrackingAdapter
 from .engine_local import rank_tracking_engine
-from src.foundation.db import get_db
 from src.foundation.exceptions import (
     RankTrackingError, ProductNotFoundError, InvalidProjectURLError, 
     RankCheckError, APIAuthenticationError
 )
 from src.foundation.logging import get_logger
+from src.foundation.db import get_db
 from src.toolbox.text_utils import clean_keyword, filter_unique_keywords
 
 logger = get_logger("features.rank_tracking.service")
@@ -53,32 +53,10 @@ def _dict_to_tracking_keyword(k_dict: Dict[str, Any]) -> TrackingKeyword:
 
 
 def smart_product_search(product_name: str, product_id: str) -> Optional[dict]:
-    """스마트 상품 검색 (원본과 동일)"""
+    """스마트 상품 검색 - adapters로 위임"""
     try:
-        logger.info(f"상품 검색 시작: {product_name} (ID: {product_id})")
-        
-        # vendors 모듈에서 네이버 API 연동 시도
-        try:
-            from src.vendors.naver.developer.shopping_client import shopping_client
-            
-            # 스마트 상품 검색 사용
-            logger.debug(f"스마트 상품 검색 시도: {product_name} ({product_id})")
-            product_info = shopping_client.smart_product_search(product_name, product_id)
-            if product_info:
-                logger.info("스마트 상품 검색으로 조회 성공")
-                logger.info(f"카테고리 정보: {product_info.get('category', '카테고리 없음')}")
-                return product_info
-                
-            logger.warning("네이버 API에서 상품 정보를 찾을 수 없습니다")
-            return None
-            
-        except ImportError as e:
-            logger.warning(f"네이버 API 모듈 로드 실패: {e}")
-            return None
-        except Exception as api_error:
-            logger.error(f"네이버 API 호출 오류: {api_error}")
-            return None
-        
+        from .adapters import rank_tracking_adapter
+        return rank_tracking_adapter.smart_product_search(product_name, product_id)
     except Exception as e:
         logger.error(f"상품 검색 실패: {e}")
         return None
@@ -106,8 +84,6 @@ class RankTrackingService(QObject):
     def create_project_from_url_and_name(self, product_url: str, product_name: str) -> TrackingProject:
         """URL과 상품명으로부터 새 추적 프로젝트 생성"""
         try:
-            db = get_db()
-            
             # 1. URL에서 상품 ID 추출
             adapter = RankTrackingAdapter()
             product_id = adapter.extract_product_id_from_url(product_url)
@@ -150,18 +126,8 @@ class RankTrackingService(QObject):
                 image_url=image_url
             )
             
-            # DB에 저장 (Dict 형태로 변환)
-            project_dict = {
-                'product_id': project.product_id,
-                'current_name': project.current_name,
-                'product_url': project.product_url,
-                'category': project.category,
-                'price': project.price,
-                'store_name': project.store_name,
-                'description': project.description,
-                'image_url': project.image_url
-            }
-            project_id = db.create_project(project_dict)
+            # repository를 통한 DB 저장
+            project_id = rank_tracking_repository.insert_project(project)
             project.id = project_id
             
             logger.info(f"프로젝트 생성 완료: {final_name} (ID: {project_id})")
@@ -178,8 +144,6 @@ class RankTrackingService(QObject):
     def create_project(self, project_url: str, product_name: str) -> TrackingProject:
         """새 프로젝트 생성 (원본 호환)"""
         try:
-            db = get_db()
-            
             # 1. URL에서 상품 ID 추출
             adapter = RankTrackingAdapter()
             product_id = adapter.extract_product_id_from_url(project_url)
@@ -242,18 +206,8 @@ class RankTrackingService(QObject):
                 image_url=image_url
             )
             
-            # DB에 저장 (Dict 형태로 변환)
-            project_dict = {
-                'product_id': project.product_id,
-                'current_name': project.current_name,
-                'product_url': project.product_url,
-                'category': project.category,
-                'price': project.price,
-                'store_name': project.store_name,
-                'description': project.description,
-                'image_url': project.image_url
-            }
-            project_id = db.create_project(project_dict)
+            # repository를 통한 DB 저장
+            project_id = rank_tracking_repository.insert_project(project)
             project.id = project_id
             
             logger.info(f"프로젝트 생성 완료: {final_name} (ID: {project_id})")
@@ -270,14 +224,12 @@ class RankTrackingService(QObject):
     def get_all_projects(self, active_only: bool = True) -> List[TrackingProject]:
         """모든 프로젝트 조회"""
         try:
-            db = get_db()
-            project_dicts = db.get_all_projects()
+            # repository 패턴 사용
+            is_active_filter = True if active_only else None
+            project_dicts = rank_tracking_repository.get_all_projects(is_active_filter)
             
             # Dict을 TrackingProject 객체로 변환
             projects = [_dict_to_tracking_project(p_dict) for p_dict in project_dicts]
-            
-            if active_only:
-                projects = [p for p in projects if p.is_active]
             
             return projects
         except Exception as e:
@@ -287,8 +239,7 @@ class RankTrackingService(QObject):
     def get_project_by_id(self, project_id: int) -> Optional[TrackingProject]:
         """ID로 프로젝트 조회"""
         try:
-            db = get_db()
-            p_dict = db.get_project_by_id(project_id)
+            p_dict = rank_tracking_repository.get_project_by_id(project_id)
             return _dict_to_tracking_project(p_dict) if p_dict else None
         except Exception as e:
             logger.error(f"프로젝트 조회 실패 (ID: {project_id}): {e}")
@@ -297,8 +248,7 @@ class RankTrackingService(QObject):
     def get_project_by_product_id(self, product_id: str) -> Optional[TrackingProject]:
         """상품 ID로 프로젝트 조회 (중복 확인용)"""
         try:
-            db = get_db()
-            p_dict = db.get_project_by_product_id(product_id)
+            p_dict = rank_tracking_repository.get_project_by_product_id(product_id)
             return _dict_to_tracking_project(p_dict) if p_dict else None
         except Exception as e:
             logger.error(f"프로젝트 조회 실패 (상품 ID: {product_id}): {e}")
@@ -356,8 +306,7 @@ class RankTrackingService(QObject):
     def get_project_keywords(self, project_id: int) -> List[TrackingKeyword]:
         """프로젝트의 키워드 목록 조회"""
         try:
-            db = get_db()
-            keyword_dicts = db.get_project_keywords(project_id)
+            keyword_dicts = rank_tracking_repository.get_project_keywords(project_id)
             return [_dict_to_tracking_keyword(k_dict) for k_dict in keyword_dicts]
         except Exception as e:
             logger.error(f"키워드 목록 조회 실패 (프로젝트 ID: {project_id}): {e}")
@@ -428,10 +377,6 @@ class RankTrackingService(QObject):
         except Exception as e:
             logger.error(f"순위 현황 조회 실패 (프로젝트 ID: {project_id}): {e}")
             return {'dates': [], 'keywords': {}}
-    
-    def get_project_overview(self, project_id: int) -> dict:
-        """프로젝트 개요 조회 (view_model에서 사용)"""
-        return self.get_ranking_overview(project_id)
     
     def get_keyword_management_history(self, project_id: int) -> List[Dict[str, Any]]:
         """키워드 관리 이력 조회"""
@@ -870,70 +815,26 @@ class RankTrackingService(QObject):
             logger.error(f"순위 결과 저장 실패 (프로젝트 {project_id}): {e}")
             return False
     
-    def start_ranking_check(self, project_id: int) -> bool:
-        """순위 확인 시작 (worker 매니저 호출)"""
-        try:
-            from .worker import ranking_worker_manager
-            return ranking_worker_manager.start_ranking_check(project_id)
-        except Exception as e:
-            logger.error(f"순위 확인 시작 실패 (프로젝트 {project_id}): {e}")
-            return False
     
-    def stop_ranking_check(self, project_id: int):
-        """순위 확인 정지 (worker 매니저 호출)"""
-        try:
-            from .worker import ranking_worker_manager
-            ranking_worker_manager.stop_ranking_check(project_id)
-        except Exception as e:
-            logger.error(f"순위 확인 정지 실패 (프로젝트 {project_id}): {e}")
     
-    def get_ranking_current_time(self, project_id: int) -> str:
-        """현재 순위 확인 시간 조회 (worker 매니저 호출)"""
-        try:
-            from .worker import ranking_worker_manager
-            return ranking_worker_manager.get_current_time(project_id)
-        except Exception as e:
-            logger.error(f"현재 순위 확인 시간 조회 실패 (프로젝트 {project_id}): {e}")
-            return ""
     
-    def get_ranking_progress(self, project_id: int) -> tuple:
-        """현재 순위 확인 진행률 조회 (worker 매니저 호출)"""
-        try:
-            from .worker import ranking_worker_manager
-            return ranking_worker_manager.get_current_progress(project_id)
-        except Exception as e:
-            logger.error(f"순위 확인 진행률 조회 실패 (프로젝트 {project_id}): {e}")
-            return (0, 0)
     
-    def is_ranking_in_progress(self, project_id: int) -> bool:
-        """순위 확인 진행 중인지 확인 (worker 매니저 호출)"""
-        try:
-            from .worker import ranking_worker_manager
-            return ranking_worker_manager.is_ranking_in_progress(project_id)
-        except Exception as e:
-            logger.error(f"순위 확인 진행 상태 조회 실패 (프로젝트 {project_id}): {e}")
-            return False
     
     def get_keyword_category_from_vendor(self, keyword: str) -> str:
-        """키워드 카테고리 조회 (worker에서 vendor 호출 분리)"""
+        """키워드 카테고리 조회 - adapters로 위임"""
         try:
-            from src.vendors.naver.developer.shopping_client import shopping_client as naver_shopping_client
-            category = naver_shopping_client.get_keyword_category(keyword, sample_size=40)
-            return category if category else "-"
+            from .adapters import rank_tracking_adapter
+            return rank_tracking_adapter.get_keyword_category(keyword, sample_size=40) or "-"
         except Exception as e:
             logger.warning(f"카테고리 조회 실패: {keyword}: {e}")
             return "-"
     
     def get_keyword_volume_from_vendor(self, keyword: str) -> int:
-        """키워드 월검색량 조회 (worker에서 vendor 호출 분리)"""
+        """키워드 월검색량 조회 - adapters로 위임"""
         try:
-            from src.vendors.naver.searchad.base_client import NaverKeywordToolClient
-            keyword_client = NaverKeywordToolClient()
-            volume_results = keyword_client.get_search_volume([keyword])
-            if volume_results and keyword in volume_results:
-                return volume_results[keyword].get('monthly_volume', 0)
-            else:
-                return -1  # API 호출 실패
+            from .adapters import rank_tracking_adapter
+            vol = rank_tracking_adapter.get_keyword_volume(keyword)
+            return vol if isinstance(vol, int) else -1
         except Exception as e:
             logger.warning(f"월검색량 조회 실패: {keyword}: {e}")
             return -1
@@ -1318,154 +1219,14 @@ class RankTrackingService(QObject):
                 'message': f'변경사항 조회 중 오류가 발생했습니다: {str(e)}'
             }
 
-    def get_basic_info_change_history(self, project_id: int) -> List[Dict[str, Any]]:
-        """기본정보 변경 이력 조회"""
-        try:
-            db = get_db()
-            return db.get_basic_info_change_history(project_id)
-        except Exception as e:
-            logger.error(f"Failed to get basic info change history: {e}")
-            return []
 
-    def get_keyword_management_history(self, project_id: int) -> List[Dict[str, Any]]:
-        """키워드 관리 이력 조회"""
-        try:
-            db = get_db()
-            return db.get_keyword_management_history(project_id)
-        except Exception as e:
-            logger.error(f"Failed to get keyword management history: {e}")
-            return []
 
-    def get_ranking_history_for_project(self, project_id: int) -> List[Dict[str, Any]]:
-        """프로젝트의 순위 이력 조회"""
-        try:
-            db = get_db()
-            return db.get_ranking_history_for_project(project_id)
-        except Exception as e:
-            logger.error(f"Failed to get ranking history for project: {e}")
-            return []
-
-    def get_keyword_ranking_history(self, project_id: int, keyword: str) -> List[Dict[str, Any]]:
-        """특정 키워드의 순위 이력 조회 (시간순 정렬)"""
-        try:
-            db = get_db()
-            # 키워드 ID 찾기
-            keywords = db.get_keywords(project_id)
-            keyword_id = None
-            for kw in keywords:
-                if kw['keyword'] == keyword:
-                    keyword_id = kw['id']
-                    break
-            
-            if not keyword_id:
-                logger.warning(f"키워드를 찾을 수 없음: {keyword}")
-                return []
-            
-            # 순위 이력 조회 (최신순)
-            ranking_history = db.get_keyword_rankings(keyword_id, limit=10)
-            return ranking_history
-            
-        except Exception as e:
-            logger.error(f"Failed to get keyword ranking history: {e}")
-            return []
 
 
 
     
     # ================ Excel 내보내기 메서드들 ================
-    
-    def export_single_project(self, project_id: int, parent_widget=None) -> bool:
-        """단일 프로젝트 Excel 내보내기 (adapters 위임)"""
-        try:
-            from PySide6.QtWidgets import QFileDialog
-            from .adapters import rank_tracking_excel_exporter
-            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
-            from src.desktop.common_log import log_manager
-            
-            # 기본 파일명 생성
-            default_filename = rank_tracking_excel_exporter.get_default_filename(project_id)
-            
-            # 파일 저장 다이얼로그
-            file_path, _ = QFileDialog.getSaveFileName(
-                parent_widget, 
-                "순위 이력 Excel 저장", 
-                default_filename,
-                "Excel 파일 (*.xlsx);;모든 파일 (*)"
-            )
-            
-            if file_path:
-                # 어댑터를 통한 엑셀 저장
-                success = rank_tracking_excel_exporter.export_ranking_history_to_excel(
-                    project_id, file_path
-                )
-                if success:
-                    project = self.get_project_by_id(project_id)
-                    project_name = project.current_name if project else f"프로젝트 {project_id}"
-                    
-                    log_manager.add_log(f"✅ 순위 이력 Excel 파일이 저장되었습니다: {file_path}", "success")
-                    
-                    # 공용 저장 완료 다이얼로그
-                    main_window = parent_widget.window() if parent_widget else None
-                    ModernSaveCompletionDialog.show_save_completion(
-                        main_window,
-                        "저장 완료",
-                        f"순위 이력이 성공적으로 저장되었습니다.\n\n프로젝트: {project_name}",
-                        file_path
-                    )
-                    return True
-                else:
-                    log_manager.add_log("❌ Excel 파일 저장에 실패했습니다.", "error")
-                    return False
-            return False
-            
-        except Exception as e:
-            logger.error(f"단일 프로젝트 내보내기 오류: {e}")
-            return False
-    
-    def export_multiple_projects(self, project_ids: List[int], parent_widget=None) -> bool:
-        """다중 프로젝트 Excel 내보내기 (adapters 위임)"""
-        try:
-            from PySide6.QtWidgets import QFileDialog
-            from .adapters import rank_tracking_excel_exporter
-            from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
-            from src.desktop.common_log import log_manager
-            
-            # 기본 파일명 생성 (다중 프로젝트)
-            default_filename = f"순위이력_다중프로젝트_{len(project_ids)}개_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-            
-            # 파일 저장 다이얼로그
-            file_path, _ = QFileDialog.getSaveFileName(
-                parent_widget,
-                "다중 프로젝트 순위 이력 Excel 저장",
-                default_filename,
-                "Excel 파일 (*.xlsx);;모든 파일 (*)"
-            )
-            
-            if file_path:
-                # 어댑터를 통한 다중 프로젝트 엑셀 저장
-                success = rank_tracking_excel_exporter.export_multiple_projects_to_excel(
-                    project_ids, file_path
-                )
-                if success:
-                    log_manager.add_log(f"✅ 다중 프로젝트 순위 이력 Excel 파일이 저장되었습니다: {file_path}", "success")
-                    
-                    # 공용 저장 완료 다이얼로그
-                    main_window = parent_widget.window() if parent_widget else None
-                    ModernSaveCompletionDialog.show_save_completion(
-                        main_window,
-                        "저장 완료",
-                        f"다중 프로젝트 순위 이력이 성공적으로 저장되었습니다.\n\n프로젝트 개수: {len(project_ids)}개",
-                        file_path
-                    )
-                    return True
-                else:
-                    log_manager.add_log("❌ 다중 프로젝트 Excel 파일 저장에 실패했습니다.", "error")
-                    return False
-            return False
-            
-        except Exception as e:
-            logger.error(f"다중 프로젝트 내보내기 오류: {e}")
-            return False
+    # Note: 다이얼로그는 ui_table.py로 이동됨. 필요시 adapters를 직접 사용.
     
     # ================ 순위 확인 관련 메서드들 ================
     
