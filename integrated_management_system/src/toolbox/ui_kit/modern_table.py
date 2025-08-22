@@ -211,6 +211,16 @@ class ModernTableWidget(QTableWidget):
         """헤더 체크박스 설정 (실제 체크박스 위젯 - 개별 체크박스와 완전 동일)"""
         if not self.has_checkboxes or not self.has_header_checkbox:
             return
+        
+        # 기존 헤더 체크박스 정리
+        if hasattr(self, 'header_checkbox') and self.header_checkbox:
+            self.header_checkbox.setParent(None)
+            self.header_checkbox.deleteLater()
+            self.header_checkbox = None
+        
+        # 시그널 중복 연결 방지
+        if not hasattr(self, '_header_signal_connected'):
+            self._header_signal_connected = False
             
         # 실제 체크박스 위젯 생성 (개별 체크박스와 동일한 스타일)
         self.header_checkbox = QCheckBox()
@@ -257,8 +267,10 @@ class ModernTableWidget(QTableWidget):
         
         # 헤더 클릭으로만 체크박스 제어 (직접 클릭 방지)
         
-        # 헤더 클릭 시 체크박스 토글
-        self.horizontalHeader().sectionClicked.connect(self.on_header_clicked)
+        # 헤더 클릭 시 체크박스 토글 (중복 연결 방지)
+        if not self._header_signal_connected:
+            self.horizontalHeader().sectionClicked.connect(self.on_header_clicked)
+            self._header_signal_connected = True
     
     def setup_signals(self):
         """시그널 연결"""

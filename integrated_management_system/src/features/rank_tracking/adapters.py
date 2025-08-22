@@ -10,7 +10,7 @@ from datetime import datetime
 from src.vendors.naver.developer.shopping_client import shopping_client as naver_shopping
 from src.vendors.naver.client_factory import get_keyword_tool_client
 from src.toolbox.text_utils import validate_naver_url, extract_product_id, validate_product_id
-from src.toolbox.formatters import format_monthly_volume, format_rank, format_datetime
+from src.toolbox.formatters import format_monthly_volume, format_rank, format_datetime, format_price_krw
 from src.foundation.logging import get_logger
 from .models import RANK_OUT_OF_RANGE
 
@@ -69,10 +69,14 @@ def _to_dt(date_str: str):
         return datetime.fromisoformat(date_str.replace('Z', '+00:00'))
     except:
         try:
-            # 'YYYY-MM-DD' 형식 (repository에서 반환)
-            return datetime.strptime(date_str, "%Y-%m-%d")
+            # 'YYYY-MM-DD HH:MM:SS' 형식 (worker에서 생성)
+            return datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
         except:
-            return None
+            try:
+                # 'YYYY-MM-DD' 형식 (repository에서 반환)
+                return datetime.strptime(date_str, "%Y-%m-%d")
+            except:
+                return None
 
 
 
@@ -704,7 +708,7 @@ class RankTrackingExcelExporter:
                 ["상품 ID", project.product_id, "", "", "", "", "", "", ""],
                 ["상품명", project.current_name, "", "", "", "", "", "", ""],
                 ["스토어명", project.store_name or "-", "", "", "", "", "", "", ""],
-                ["가격", f"{project.price:,}원" if project.price else "-", "", "", "", "", "", "", ""],
+                ["가격", format_price_krw(project.price), "", "", "", "", "", "", ""],
                 ["카테고리", project.category or "-", "", "", "", "", "", "", ""],
                 ["등록일", self._format_date(project.created_at) if project.created_at else "-", "", "", "", "", "", "", ""],
                 ["", "", "", "", "", "", "", "", ""],

@@ -1009,12 +1009,10 @@ class RankingTableWidget(QWidget):
                 
                 # 결과 처리 (로그는 service에서 이미 처리됨)
                 if result['success']:
-                    # 즉시 테이블 새로고침 (키워드는 "-" 값으로 표시됨)
-                    self.update_ranking_table(self.current_project_id)
-                    
-                    # 백그라운드 작업이 시작된 경우 진행률 표시
+                    # 즉시 테이블에 키워드 추가 (백그라운드 업데이트와 분리)
                     added_keywords = result.get('added_keywords', [])
                     if added_keywords:
+                        self.add_keywords_to_table_immediately(added_keywords)
                         # 즉시 진행률 표시 시작
                         self.show_progress(f"🔍 월검색량/카테고리 조회 준비 중... (0/{len(added_keywords)})", True)
                 else:

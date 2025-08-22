@@ -729,9 +729,9 @@ class RankTrackingRepository:
             with self.db.get_connection() as conn:
                 cursor = conn.cursor()
                 
-                # 최근 날짜들 조회
+                # 최근 날짜들 조회 (시간 포함)
                 cursor.execute("""
-                    SELECT DISTINCT DATE(r.search_date) as date
+                    SELECT DISTINCT r.search_date as date
                     FROM ranking_results r
                     JOIN keywords k ON r.keyword_id = k.id
                     WHERE k.project_id = ?
@@ -741,9 +741,9 @@ class RankTrackingRepository:
                 
                 dates = [row[0] for row in cursor.fetchall()]
                 
-                # 키워드별 순위 데이터 조회
+                # 키워드별 순위 데이터 조회 (시간 포함)
                 cursor.execute("""
-                    SELECT k.keyword, r.rank_position, DATE(r.search_date) as date
+                    SELECT k.keyword, r.rank_position, r.search_date as date
                     FROM ranking_results r
                     JOIN keywords k ON r.keyword_id = k.id
                     WHERE k.project_id = ?
@@ -981,7 +981,7 @@ class RankTrackingRepository:
                     DELETE FROM ranking_results 
                     WHERE keyword_id IN (
                         SELECT id FROM keywords WHERE project_id = ?
-                    ) AND DATE(search_date) = ?
+                    ) AND DATE(search_date) = DATE(?)
                 """, (project_id, date_str))
                 conn.commit()
             return True
