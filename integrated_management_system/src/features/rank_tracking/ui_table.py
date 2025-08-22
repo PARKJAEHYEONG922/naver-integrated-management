@@ -1002,15 +1002,21 @@ class RankingTableWidget(QWidget):
             # 키워드 가져오기
             keywords = dialog.get_keywords()
             if keywords:
-                # service 계층을 통한 키워드 배치 추가
+                # 키워드 배치 추가 (즉시 DB 추가 + 백그라운드 업데이트)
                 result = rank_tracking_service.add_keywords_batch_with_background_update(
                     self.current_project_id, keywords
                 )
                 
                 # 결과 처리 (로그는 service에서 이미 처리됨)
                 if result['success']:
-                    # 테이블 새로고침
+                    # 즉시 테이블 새로고침 (키워드는 "-" 값으로 표시됨)
                     self.update_ranking_table(self.current_project_id)
+                    
+                    # 백그라운드 작업이 시작된 경우 진행률 표시
+                    added_keywords = result.get('added_keywords', [])
+                    if added_keywords:
+                        # 즉시 진행률 표시 시작
+                        self.show_progress(f"🔍 월검색량/카테고리 조회 준비 중... (0/{len(added_keywords)})", True)
                 else:
                     log_manager.add_log("❌ 키워드 추가에 실패했습니다.", "error")
     

@@ -259,10 +259,12 @@ class RankTrackingEngine:
             # 순수 계산 로직 - 외부 import 없이 직접 구현
             def format_monthly_volume_local(vol):
                 if vol is None:
-                    return "N/A"
+                    return "-"
                 if vol < 0:
-                    return "미수집"
-                return f"{vol:,}" if vol > 0 else "0"
+                    return "-"
+                if vol == 0:
+                    return "0"
+                return f"{vol:,}"
             
             def format_rank_display_local(rank):
                 if not isinstance(rank, int):

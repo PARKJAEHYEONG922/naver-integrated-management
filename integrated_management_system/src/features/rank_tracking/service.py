@@ -1208,6 +1208,7 @@ class RankTrackingService(QObject):
     
     # ================ 키워드 추가 관련 메서드들 ================
     
+
     def add_keywords_batch_with_background_update(self, project_id: int, keywords: List[str]) -> Dict[str, Any]:
         """키워드 배치 추가 + 백그라운드 월검색량/카테고리 업데이트"""
         try:
@@ -1227,14 +1228,21 @@ class RankTrackingService(QObject):
             duplicate_keywords = []
             failed_keywords = []
             
-            # 1단계: DB에 키워드 추가
+            # 1단계: DB에 키워드만 즉시 추가 (API 분석 없이)
             for keyword in keywords:
                 try:
-                    keyword_obj = self.add_keyword(project_id, keyword)
-                    if keyword_obj:  # 성공적으로 추가된 경우
+                    # 전역 repository를 통해 키워드만 DB에 추가 (분석 없이)
+                    keyword_id = rank_tracking_repository.add_keyword(project_id, keyword)
+                    
+                    if keyword_id > 0:
                         added_keywords.append(keyword)
+                        # 키워드 관리 이력 추가
+                        rank_tracking_repository.add_keyword_management_history(
+                            project_id, keyword, 'add'
+                        )
                     else:
                         duplicate_keywords.append(keyword)
+                        
                 except Exception as e:
                     if "이미 등록되어 있습니다" in str(e):
                         duplicate_keywords.append(keyword)
@@ -1308,6 +1316,25 @@ class RankTrackingService(QObject):
         except Exception as e:
             logger.error(f"백그라운드 키워드 정보 업데이트 시작 실패: {e}")
             return False
+
+    def get_product_info(self, product_name: str, product_id: str) -> Optional[dict]:
+        """상품 정보 조회 (adapter 호출을 service에서 래핑)"""
+        try:
+            product_info = rank_tracking_adapter.get_product_info(product_name, product_id)
+            if not product_info:
+                return None
+            
+            # DTO를 dict로 변환하여 반환
+            return {
+                'name': product_info.name,
+                'price': product_info.price,
+                'store_name': product_info.store_name,
+                'category': product_info.category,
+                'image_url': product_info.image_url
+            }
+        except Exception as e:
+            logger.error(f"상품 정보 조회 실패: {e}")
+            return None
 
 # 전역 서비스 인스턴스
 rank_tracking_service = RankTrackingService()

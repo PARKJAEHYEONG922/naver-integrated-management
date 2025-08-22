@@ -188,13 +188,13 @@ def format_date(value: Optional[Union[datetime, date]],
         return default
 
 
-def format_datetime(value: Optional[datetime], 
+def format_datetime(value: Optional[Union[datetime, str]], 
                    format_str: str = "%Y-%m-%d %H:%M:%S", default: str = "N/A") -> str:
     """
-    날짜시간 포맷팅
+    날짜시간 포맷팅 (문자열 파싱 지원)
     
     Args:
-        value: 포맷할 날짜시간
+        value: 포맷할 날짜시간 (datetime 객체 또는 ISO 문자열)
         format_str: 날짜시간 포맷 문자열
         default: None일 때 반환할 기본값
     
@@ -206,10 +206,63 @@ def format_datetime(value: Optional[datetime],
         >>> dt = datetime(2024, 1, 15, 14, 30, 45)
         >>> format_datetime(dt)
         '2024-01-15 14:30:45'
+        >>> format_datetime("2024-01-15T14:30:45Z")
+        '2024-01-15 14:30:45'
         >>> format_datetime(None)
         'N/A'
     """
+    if value is None:
+        return default
+    
+    # 문자열인 경우 datetime으로 변환
+    if isinstance(value, str):
+        try:
+            value = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        except:
+            return str(value) if value else default
+    
+    # datetime 객체 포맷팅
     return format_date(value, format_str, default)
+
+
+def format_datetime_full(value: Optional[Union[datetime, str]], default: str = "") -> str:
+    """
+    날짜시간을 전체 포맷으로 변환 (YYYY-MM-DD HH:MM:SS)
+    
+    Args:
+        value: 포맷할 날짜시간 (datetime 객체 또는 ISO 문자열)
+        default: None/에러일 때 반환할 기본값
+    
+    Returns:
+        str: 포맷된 날짜시간 문자열
+        
+    Examples:
+        >>> format_datetime_full("2024-01-15T14:30:45Z")
+        '2024-01-15 14:30:45'
+        >>> format_datetime_full(None)
+        ''
+    """
+    return format_datetime(value, "%Y-%m-%d %H:%M:%S", default)
+
+
+def format_datetime_short(value: Optional[Union[datetime, str]], default: str = "") -> str:
+    """
+    날짜시간을 단축 포맷으로 변환 (MM/DD HH:MM)
+    
+    Args:
+        value: 포맷할 날짜시간 (datetime 객체 또는 ISO 문자열)
+        default: None/에러일 때 반환할 기본값
+    
+    Returns:
+        str: 포맷된 날짜시간 문자열
+        
+    Examples:
+        >>> format_datetime_short("2024-01-15T14:30:45Z")
+        '01/15 14:30'
+        >>> format_datetime_short(None)
+        ''
+    """
+    return format_datetime(value, "%m/%d %H:%M", default)
 
 
 def safe_str(value: any, default: str = "") -> str:
@@ -344,17 +397,17 @@ def format_monthly_volume(vol: Optional[int]) -> str:
         >>> format_monthly_volume(1234)
         '1,234'
         >>> format_monthly_volume(-1)
-        '미수집'
+        '-'
         >>> format_monthly_volume(None)
-        'N/A'
+        '-'
         >>> format_monthly_volume(0)
         '0'
     """
     if vol is None:
-        return "N/A"
+        return "-"
     if vol < 0:
-        return "미수집"
-    return format_int(vol, default="N/A", thousand_sep=True)
+        return "-"
+    return format_int(vol, default="-", thousand_sep=True)
 
 
 def format_rank(rank: Optional[int]) -> str:
