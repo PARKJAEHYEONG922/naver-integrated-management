@@ -1261,9 +1261,11 @@ class RankingTableWidget(QWidget):
             # 선택된 프로젝트 확인
             if len(self.selected_projects) > 1:
                 # 다중 프로젝트 내보내기
+                logger.info(f"다중 프로젝트 내보내기 시작: {len(self.selected_projects)}개 프로젝트")
                 self.export_multiple_projects_dialog(self.selected_projects)
             elif self.current_project_id:
                 # 단일 프로젝트 내보내기
+                logger.info(f"단일 프로젝트 내보내기 시작: ID={self.current_project_id}")
                 self.export_single_project_dialog(self.current_project_id)
             else:
                 log_manager.add_log("⚠️ 내보낼 프로젝트가 선택되지 않았습니다.", "warning")
@@ -1319,13 +1321,25 @@ class RankingTableWidget(QWidget):
             logger.error(f"단일 프로젝트 내보내기 오류: {e}")
             return False
     
-    def export_multiple_projects_dialog(self, project_ids: list) -> bool:
+    def export_multiple_projects_dialog(self, selected_projects: list) -> bool:
         """다중 프로젝트 Excel 내보내기 다이얼로그 (UI 계층)"""
         try:
             from PySide6.QtWidgets import QFileDialog
             from .adapters import rank_tracking_excel_exporter
             from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
             from datetime import datetime
+            
+            # TrackingProject 객체에서 ID만 추출
+            project_ids = []
+            for project in selected_projects:
+                if hasattr(project, 'id') and project.id:
+                    project_ids.append(project.id)
+            
+            if not project_ids:
+                log_manager.add_log("⚠️ 유효한 프로젝트 ID가 없습니다.", "warning")
+                return False
+            
+            logger.info(f"다중 프로젝트 ID 추출 완료: {project_ids}")
             
             # 기본 파일명 생성 (다중 프로젝트)
             default_filename = f"순위이력_다중프로젝트_{len(project_ids)}개_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"

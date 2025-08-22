@@ -747,8 +747,8 @@ class RankTrackingExcelExporter:
                 
                 excel_data.append(data_row)
             
-            # 엑셀 파일 생성
-            success = self._create_excel_file(file_path, excel_data)
+            # 엑셀 파일 생성 (통합된 방식 사용)
+            success = self._create_single_excel_file(file_path, excel_data)
             
             if success:
                 logger.info(f"순위 이력 엑셀 파일 생성 완료: {file_path}")
@@ -762,13 +762,19 @@ class RankTrackingExcelExporter:
             return False
     
     def export_multiple_projects_to_excel(self, project_ids: List[int], file_path: str) -> bool:
-        """여러 프로젝트를 엑셀로 저장 (단일 저장을 시트별로 분할)"""
+        """여러 프로젝트를 엑셀로 저장 (각 프로젝트별 완전한 스타일 적용)"""
         try:
+            logger.info(f"다중 프로젝트 엑셀 저장 시작: {len(project_ids)}개 프로젝트")
+            
+            if not project_ids:
+                logger.error("프로젝트 ID가 없습니다")
+                return False
+            
             import openpyxl
+            from .service import rank_tracking_service
             
-            # 워크북 생성
+            # 새 워크북 생성
             workbook = openpyxl.Workbook()
-            
             # 기본 시트 제거
             if 'Sheet' in workbook.sheetnames:
                 del workbook['Sheet']
@@ -776,157 +782,176 @@ class RankTrackingExcelExporter:
             # 각 프로젝트별로 시트 생성
             for i, project_id in enumerate(project_ids, 1):
                 try:
-                    logger.info(f"다중 프로젝트 내보내기: 프로젝트 {project_id} 처리 시작")
+                    logger.info(f"프로젝트 {project_id} 처리 중... ({i}/{len(project_ids)})")
                     
-                    # 임시 파일에 단일 프로젝트 저장 (temp 폴더 사용)
-                    import tempfile
-                    import os
-                    temp_dir = tempfile.gettempdir()
-                    temp_file = os.path.join(temp_dir, f"temp_project_{project_id}.xlsx")
-                    success = self.export_ranking_history_to_excel(project_id, temp_file)
+                    # 프로젝트 정보 조회
+                    project = rank_tracking_service.get_project_by_id(project_id)
+                    if not project:
+                        logger.warning(f"프로젝트 {project_id}를 찾을 수 없음")
+                        continue
                     
-                    if success:
-                        logger.info(f"프로젝트 {project_id} 임시 파일 생성 성공: {temp_file}")
-                        
-                        # 임시 파일을 워크북에 시트로 추가
-                        temp_workbook = openpyxl.load_workbook(temp_file)
-                        source_sheet = temp_workbook.active
-                        
-                        # 새 시트 생성
-                        target_sheet = workbook.create_sheet(title=f"Sheet{i}")
-                        
-                        # 데이터와 스타일 안전한 복사
-                        for row in source_sheet.iter_rows():
-                            for cell in row:
-                                new_cell = target_sheet.cell(row=cell.row, column=cell.column, value=cell.value)
-                                
-                                # 스타일 안전한 복사 (StyleProxy 오류 방지)
-                                try:
-                                    if cell.font:
-                                        from openpyxl.styles import Font
-                                        new_cell.font = Font(
-                                            name=cell.font.name,
-                                            size=cell.font.size,
-                                            bold=cell.font.bold,
-                                            italic=cell.font.italic,
-                                            color=cell.font.color
-                                        )
-                                except:
-                                    pass
-                                    
-                                try:
-                                    if cell.fill:
-                                        from openpyxl.styles import PatternFill
-                                        new_cell.fill = PatternFill(
-                                            start_color=cell.fill.start_color,
-                                            end_color=cell.fill.end_color,
-                                            fill_type=cell.fill.fill_type
-                                        )
-                                except:
-                                    pass
-                                    
-                                try:
-                                    if cell.alignment:
-                                        from openpyxl.styles import Alignment
-                                        new_cell.alignment = Alignment(
-                                            horizontal=cell.alignment.horizontal,
-                                            vertical=cell.alignment.vertical
-                                        )
-                                except:
-                                    pass
-                                    
-                                try:
-                                    if cell.number_format:
-                                        new_cell.number_format = cell.number_format
-                                except:
-                                    pass
-                        
-                        # 컬럼 너비 복사
-                        for col_letter, dimension in source_sheet.column_dimensions.items():
-                            target_sheet.column_dimensions[col_letter].width = dimension.width
-                        
-                        # 임시 워크북 완전히 닫기
-                        temp_workbook.close()
-                        
-                        # 파일 잠금 해제를 위한 대기
-                        import time
-                        time.sleep(0.3)
-                        
-                        # 임시 파일 안전하게 삭제 (조용히)
-                        import os
-                        try:
-                            if os.path.exists(temp_file):
-                                os.remove(temp_file)
-                                logger.debug(f"임시 파일 삭제 성공: {temp_file}")
-                        except:
-                            # 삭제 실패는 로그 출력하지 않음 (시스템이 알아서 정리함)
-                            pass
-                        
-                        logger.info(f"프로젝트 {project_id} 시트 생성 완료")
-                    else:
-                        logger.error(f"프로젝트 {project_id} 단일 저장 실패")
-                        
+                    # 프로젝트별 엑셀 데이터 생성 (기존 로직 재사용)
+                    excel_data = self._generate_project_excel_data(project_id)
+                    if not excel_data:
+                        logger.warning(f"프로젝트 {project_id} 데이터 생성 실패")
+                        continue
+                    
+                    # 시트 이름을 상품명으로 설정 (엑셀 시트명 제한 고려)
+                    sheet_name = project.current_name[:31] if project.current_name else f"프로젝트{i}"
+                    # 엑셀 시트명에 사용할 수 없는 문자 제거
+                    invalid_chars = ['\\', '/', '*', '?', ':', '[', ']']
+                    for char in invalid_chars:
+                        sheet_name = sheet_name.replace(char, '_')
+                    
+                    # 새 시트 생성
+                    new_sheet = workbook.create_sheet(title=sheet_name)
+                    
+                    # 완전한 스타일이 적용된 데이터 입력 (기존 _create_excel_file 로직 사용)
+                    self._apply_excel_data_to_sheet(new_sheet, excel_data)
+                    
+                    logger.info(f"프로젝트 {project_id} 시트 '{sheet_name}' 생성 완료")
+                    
                 except Exception as e:
-                    logger.error(f"프로젝트 {project_id} 처리 중 오류: {e}")
+                    logger.error(f"프로젝트 {project_id} 처리 실패: {e}")
                     continue
             
             if len(workbook.sheetnames) == 0:
-                logger.error("저장할 프로젝트 데이터가 없습니다")
-                workbook.close()
+                logger.error("생성된 시트가 없습니다")
                 return False
             
             # 파일 저장
             workbook.save(file_path)
             workbook.close()
             
-            logger.info(f"다중 프로젝트 엑셀 파일 생성 완료: {file_path}")
+            logger.info(f"다중 프로젝트 엑셀 저장 완료: 총 {len(workbook.sheetnames)}개 시트")
             return True
             
         except Exception as e:
-            logger.error(f"다중 프로젝트 엑셀 저장 중 오류: {e}")
+            logger.error(f"다중 프로젝트 엑셀 저장 중 치명적 오류: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
             return False
     
-    def _format_date(self, date_value):
-        """날짜 형식을 안전하게 변환"""
+    def _generate_project_excel_data(self, project_id: int) -> list:
+        """프로젝트별 엑셀 데이터 생성 (기존 export_ranking_history_to_excel 로직 재사용)"""
         try:
-            if isinstance(date_value, str):
-                # 문자열인 경우 datetime으로 변환
-                dt = _to_dt(date_value)
-                return dt.strftime("%Y-%m-%d") if dt else str(date_value)
-            elif hasattr(date_value, 'strftime'):
-                # datetime 객체인 경우
-                return date_value.strftime("%Y-%m-%d")
-            else:
-                # 기타 경우는 문자열로 변환
-                return str(date_value)
+            from .service import rank_tracking_service
+            
+            # 프로젝트 정보 조회
+            project = rank_tracking_service.get_project_by_id(project_id)
+            if not project:
+                logger.error(f"프로젝트를 찾을 수 없습니다: {project_id}")
+                return []
+            
+            # 키워드 정보 조회
+            keywords = rank_tracking_service.get_project_keywords(project_id)
+            if not keywords:
+                logger.error("키워드가 없습니다")
+                return []
+            
+            # 프로젝트 순위 개요 데이터 사용
+            overview = rank_tracking_service.get_project_overview(project_id)
+            all_dates = overview.get('dates', [])[:10]  # 최대 10개 날짜
+            keywords_data = overview.get('keywords', {})
+            
+            # 키워드별 순위 데이터 구성
+            keyword_ranking_data = []
+            for keyword_obj in keywords:
+                rankings = keywords_data.get(keyword_obj.keyword, {})
+                rank_by_date = {}
+                for date in all_dates:
+                    if date in rankings:
+                        rank = rankings[date]
+                        rank_by_date[date] = rank
+                
+                keyword_ranking_data.append({
+                    'keyword': keyword_obj.keyword,
+                    'category': keyword_obj.category or '-',
+                    'monthly_volume': keyword_obj.monthly_volume if keyword_obj.monthly_volume is not None else -1,
+                    'rank_by_date': rank_by_date
+                })
+            
+            # 날짜 정렬 및 형식 변환
+            sorted_dates = []
+            formatted_dates = []
+            for date in all_dates:
+                try:
+                    if isinstance(date, str):
+                        dt = _to_dt(date)
+                        if dt:
+                            formatted_date = dt.strftime("%m/%d %H:%M")
+                            sorted_dates.append(date)
+                            formatted_dates.append(formatted_date)
+                except Exception as e:
+                    continue
+            
+            # 엑셀 데이터 구성
+            excel_data = []
+            
+            # 1. 기본정보 섹션
+            excel_data.extend([
+                [f"📊 {project.current_name}", "", "", "", "", "", "", "", ""],
+                ["", "", "", "", "", "", "", "", ""],
+                ["상품 ID", project.product_id, "", "", "", "", "", "", ""],
+                ["상품명", project.current_name, "", "", "", "", "", "", ""],
+                ["스토어명", project.store_name or "-", "", "", "", "", "", "", ""],
+                ["가격", format_price_krw(project.price), "", "", "", "", "", "", ""],
+                ["카테고리", project.category or "-", "", "", "", "", "", "", ""],
+                ["등록일", self._format_date(project.created_at) if project.created_at else "-", "", "", "", "", "", "", ""],
+                ["", "", "", "", "", "", "", "", ""],
+                ["", "", "", "", "", "", "", "", ""],
+                ["🔍 키워드 순위 현황", "", "", "", "", "", "", "", ""]
+            ])
+            
+            # 2. 키워드 순위 테이블 헤더
+            header_row = ["키워드", "카테고리", "월검색량"]
+            header_row.extend(formatted_dates)
+            excel_data.append(header_row)
+            
+            # 3. 키워드별 순위 데이터
+            for kw_data in keyword_ranking_data:
+                volume_display = format_monthly_volume(kw_data['monthly_volume'])
+                
+                data_row = [
+                    kw_data['keyword'],
+                    kw_data['category'],
+                    volume_display
+                ]
+                
+                # 각 날짜별 순위 추가
+                for date in sorted_dates:
+                    rank = kw_data['rank_by_date'].get(date, "")
+                    if rank:
+                        if rank == 999 or rank > 200:
+                            data_row.append("200+")
+                        else:
+                            data_row.append(f"{rank}위")
+                    else:
+                        data_row.append("")
+                
+                excel_data.append(data_row)
+            
+            return excel_data
+            
         except Exception as e:
-            logger.warning(f"날짜 형식 변환 실패: {e}")
-            return str(date_value) if date_value else "-"
+            logger.error(f"프로젝트 엑셀 데이터 생성 중 오류: {e}")
+            return []
     
-    def _create_excel_file(self, file_path: str, excel_data: list) -> bool:
-        """엑셀 파일 생성"""
+    def _apply_excel_data_to_sheet(self, worksheet, excel_data: list):
+        """워크시트에 엑셀 데이터와 스타일 적용 (기존 _create_excel_file 로직 재사용)"""
         try:
-            import openpyxl
             from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
             
-            # 워크북 생성
-            workbook = openpyxl.Workbook()
-            worksheet = workbook.active
-            worksheet.title = "순위이력"
-            
-            # 데이터 입력 및 정렬 가능하도록 처리
+            # 데이터 입력 및 스타일 적용
             for row_idx, row_data in enumerate(excel_data, 1):
                 for col_idx, cell_value in enumerate(row_data, 1):
                     # 월검색량과 순위 컬럼은 숫자로 저장하여 정렬 가능하게 함
                     if row_idx > 12 and col_idx == 3:  # 월검색량 컬럼
-                        # 새로운 포맷터 기반 처리
                         try:
                             if isinstance(cell_value, str):
                                 if cell_value == "미수집" or cell_value == "N/A":
-                                    # 미수집/N/A는 문자열로 저장
                                     cell = worksheet.cell(row=row_idx, column=col_idx, value=cell_value)
                                 elif cell_value == "0":
-                                    # 검색량 0일 때는 숫자 0으로 저장
                                     cell = worksheet.cell(row=row_idx, column=col_idx, value=0)
                                     cell.number_format = '#,##0'
                                 elif cell_value.replace(',', '').isdigit():
@@ -943,17 +968,14 @@ class RankTrackingExcelExporter:
                         except:
                             cell = worksheet.cell(row=row_idx, column=col_idx, value=cell_value)
                     elif row_idx > 12 and col_idx > 3:  # 순위 컬럼들
-                        # 순위를 숫자로 변환하여 정렬 가능하게 함
                         try:
                             if isinstance(cell_value, str):
                                 if "200+" in cell_value:
-                                    cell = worksheet.cell(row=row_idx, column=col_idx, value=201)  # 정렬용
-                                    # 200+ 표시를 위한 number format 설정
+                                    cell = worksheet.cell(row=row_idx, column=col_idx, value=201)
                                     cell.number_format = '"200+"'
                                 elif "위" in cell_value:
                                     rank_num = int(cell_value.replace("위", ""))
                                     cell = worksheet.cell(row=row_idx, column=col_idx, value=rank_num)
-                                    # N위 표시를 위한 number format 설정
                                     cell.number_format = '0"위"'
                                 else:
                                     cell = worksheet.cell(row=row_idx, column=col_idx, value=cell_value)
@@ -969,19 +991,19 @@ class RankTrackingExcelExporter:
                         cell.font = Font(size=14, bold=True)
                         cell.fill = PatternFill(start_color="4F81BD", end_color="4F81BD", fill_type="solid")
                         cell.font = Font(color="FFFFFF", size=14, bold=True)
-                    elif row_idx == 11:  # 키워드 순위 현황 헤더 (11번째 행)
+                    elif row_idx == 11:  # 키워드 순위 현황 헤더
                         cell.font = Font(size=12, bold=True)
                         cell.fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
-                    elif row_idx == 12:  # 테이블 헤더 (12번째 행이 실제 헤더)
+                    elif row_idx == 12:  # 테이블 헤더
                         cell.font = Font(color="FFFFFF", bold=True)
                         cell.fill = PatternFill(start_color="70AD47", end_color="70AD47", fill_type="solid")
                         cell.alignment = Alignment(horizontal="center", vertical="center")
-                    elif row_idx > 12:  # 데이터 행 (12번째 행 이후)
+                    elif row_idx > 12:  # 데이터 행
                         if col_idx <= 3:  # 키워드, 카테고리, 월검색량 컬럼
                             cell.alignment = Alignment(horizontal="left", vertical="center")
                         else:  # 순위 컬럼들
                             cell.alignment = Alignment(horizontal="center", vertical="center")
-                            # 순위에 따른 색상 적용 (숫자 값 기준)
+                            # 순위에 따른 색상 적용
                             if isinstance(cell.value, (int, float)):
                                 rank_num = int(cell.value)
                                 if rank_num <= 10:
@@ -1003,8 +1025,42 @@ class RankTrackingExcelExporter:
                     worksheet.column_dimensions[column_letter].width = 30
                 elif col_idx == 3:  # 월검색량 컬럼
                     worksheet.column_dimensions[column_letter].width = 12
-                else:  # 순위 컬럼들 (기존 대비 1.5배)
-                    worksheet.column_dimensions[column_letter].width = 15  # 기본 10 → 15로 1.5배
+                else:  # 순위 컬럼들
+                    worksheet.column_dimensions[column_letter].width = 15
+                    
+        except Exception as e:
+            logger.error(f"워크시트 스타일 적용 중 오류: {e}")
+
+    def _format_date(self, date_value):
+        """날짜 형식을 안전하게 변환"""
+        try:
+            if isinstance(date_value, str):
+                # 문자열인 경우 datetime으로 변환
+                dt = _to_dt(date_value)
+                return dt.strftime("%Y-%m-%d") if dt else str(date_value)
+            elif hasattr(date_value, 'strftime'):
+                # datetime 객체인 경우
+                return date_value.strftime("%Y-%m-%d")
+            else:
+                # 기타 경우는 문자열로 변환
+                return str(date_value)
+        except Exception as e:
+            logger.warning(f"날짜 형식 변환 실패: {e}")
+            return str(date_value) if date_value else "-"
+    
+    
+    def _create_single_excel_file(self, file_path: str, excel_data: list) -> bool:
+        """단일 엑셀 파일 생성 (통합된 방식 사용)"""
+        try:
+            import openpyxl
+            
+            # 워크북 생성
+            workbook = openpyxl.Workbook()
+            worksheet = workbook.active
+            worksheet.title = "순위이력"
+            
+            # 스타일 적용 (공용 메서드 사용)
+            self._apply_excel_data_to_sheet(worksheet, excel_data)
             
             # 파일 저장
             workbook.save(file_path)
