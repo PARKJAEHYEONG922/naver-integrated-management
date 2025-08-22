@@ -879,22 +879,26 @@ class RankingTableWidget(QWidget):
                         logger.info(f"키워드 찾음! 업데이트할 컬럼: {ranking_column}")
                         
                         rank_item = self.ranking_table.item(row, ranking_column)
-                        if rank_item:
-                            # 순위 표시
-                            rank_display = format_rank_display(rank)
-                            rank_item.setText(rank_display)
-                            logger.info(f"순위 텍스트 설정 완료: {rank_display}")
-                            
-                            # 순위에 따른 색상 설정
-                            color = get_rank_color(rank, "foreground")
-                            rank_item.setForeground(QColor(color))
-                            
-                            # 정렬용 데이터 설정 (통일된 방식 사용)
-                            from src.toolbox.ui_kit.sortable_items import set_rank_sort_data
-                            set_rank_sort_data(rank_item, ranking_column, rank_display)
-                            logger.info(f"키워드 {keyword} 실시간 업데이트 완료")
-                        else:
-                            logger.warning(f"행 {row}, 컬럼 {ranking_column}에 아이템이 없음")
+                        if not rank_item:
+                            # 아이템이 없으면 새로 생성
+                            from PySide6.QtWidgets import QTableWidgetItem
+                            rank_item = QTableWidgetItem("")
+                            self.ranking_table.setItem(row, ranking_column, rank_item)
+                            logger.info(f"행 {row}, 컬럼 {ranking_column}에 새 아이템 생성")
+                        
+                        # 순위 표시
+                        rank_display = format_rank_display(rank)
+                        rank_item.setText(rank_display)
+                        logger.info(f"순위 텍스트 설정 완료: {rank_display}")
+                        
+                        # 순위에 따른 색상 설정
+                        color = get_rank_color(rank, "foreground")
+                        rank_item.setForeground(QColor(color))
+                        
+                        # 정렬용 데이터 설정 (통일된 방식 사용)
+                        from src.toolbox.ui_kit.sortable_items import set_rank_sort_data
+                        set_rank_sort_data(rank_item, ranking_column, rank_display)
+                        logger.info(f"키워드 {keyword} 실시간 업데이트 완료")
                         break
             
             if not found:
