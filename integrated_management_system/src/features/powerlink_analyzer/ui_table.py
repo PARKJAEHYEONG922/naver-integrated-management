@@ -870,8 +870,11 @@ class PowerLinkResultsWidget(QWidget):
             self.is_loaded_from_history = True
             self.loaded_session_id = selected_session_id
             
-            # 테이블 갱신 (직접 호출로 확실히 업데이트)
-            self.update_all_tables()
+            # 데이터 동기화를 위한 지연 처리
+            from PySide6.QtCore import QTimer
+            QTimer.singleShot(100, self._delayed_table_refresh)
+            
+            # 즉시 버튼 상태만 업데이트
             self.update_save_button_state()
             
             # 모바일 분석 탭으로 자동 이동
@@ -889,6 +892,41 @@ class PowerLinkResultsWidget(QWidget):
                 
         except Exception as e:
             log_manager.add_log(f"PowerLink 히스토리 보기 실패: {e}", "error")
+    
+    def _delayed_table_refresh(self):
+        """지연된 테이블 갱신 (데이터 동기화 보장)"""
+        try:
+            # 서비스에서 데이터가 정상적으로 설정되었는지 확인
+            service_keywords = powerlink_service.get_all_keywords()
+            local_keywords = self.keywords_data if hasattr(self, 'keywords_data') else {}
+            
+            logger.info(f"지연된 테이블 갱신: 서비스 {len(service_keywords)}개, 로컬 {len(local_keywords)}개 키워드")
+            
+            if not service_keywords:
+                logger.warning("서비스에 키워드 데이터가 없음 - 로컬 데이터로 재설정 시도")
+                if local_keywords:
+                    powerlink_service.set_keywords_data(local_keywords)
+                    service_keywords = powerlink_service.get_all_keywords()
+                    logger.info(f"로컬 데이터 재설정 후: {len(service_keywords)}개 키워드")
+            
+            # 테이블 갱신 (확실히 업데이트)
+            self.update_all_tables()
+            
+            # 최종 확인 로그
+            mobile_rows = self.mobile_table.rowCount()
+            pc_rows = self.pc_table.rowCount()
+            logger.info(f"지연된 테이블 갱신 완료: 모바일 {mobile_rows}행, PC {pc_rows}행")
+            
+        except Exception as e:
+            logger.error(f"지연된 테이블 갱신 실패: {e}")
+            # 실패 시 강제 데이터 재로드 시도
+            try:
+                if hasattr(self, 'keywords_data') and self.keywords_data:
+                    powerlink_service.set_keywords_data(self.keywords_data)
+                    self.update_all_tables()
+                    logger.info("강제 데이터 재로드 완료")
+            except Exception as retry_error:
+                logger.error(f"강제 데이터 재로드도 실패: {retry_error}")
     
     def export_selected_history(self):
         """선택된 히스토리 엑셀 내보내기 (UI 로직만)"""
@@ -1171,8 +1209,11 @@ class PowerLinkResultsWidget(QWidget):
             self.mobile_table.clear_table()
             self.pc_table.clear_table()
             
-            # 서비스를 통해 모든 키워드 가져오기
-            all_keywords = list(powerlink_service.get_all_keywords().values())
+            # 서비스를 통해 모든 키워드 가져오기 (안전성 강화)
+            service_keywords_dict = powerlink_service.get_all_keywords()
+            all_keywords = list(service_keywords_dict.values()) if service_keywords_dict else []
+            
+            logger.info(f"refresh_tables_from_database: {len(all_keywords)}개 키워드 로드")
             
             # 테이블에 재추가 (update_mobile_table/update_pc_table과 동일한 방식)
             for result in all_keywords:
@@ -1609,4 +1650,37 @@ class PowerLinkResultsWidget(QWidget):
             # 에러 다이얼로그 표시
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
             ModernInfoDialog.error(self, "오류", f"상세 정보를 표시할 수 없습니다: {e}")
+    
+    def update_all_tables(self):
+        """모든 테이블 업데이트 (모바일 + PC)"""
+        try:
+            logger.info("모든 테이블 업데이트 시작")
+            
+            # 데이터 존재 확인
+            service_keywords = powerlink_service.get_all_keywords()
+            logger.info(f"서비스에서 {len(service_keywords)}개 키워드 확인")
+            
+            if not service_keywords:
+                logger.warning("서비스에 키워드 데이터가 없음 - 빈 테이블로 설정")
+                self.mobile_table.clear_table()
+                self.pc_table.clear_table()
+                return
+            
+            # 각 테이블 개별 업데이트
+            self.update_mobile_table()
+            self.update_pc_table()
+            
+            # 업데이트 결과 로깅
+            mobile_rows = self.mobile_table.rowCount()
+            pc_rows = self.pc_table.rowCount()
+            logger.info(f"테이블 업데이트 완료: 모바일 {mobile_rows}행, PC {pc_rows}행")
+            
+        except Exception as e:
+            logger.error(f"테이블 업데이트 실패: {e}")
+            # 실패 시 refresh_tables_from_database로 대체 시도
+            try:
+                logger.info("대체 방법으로 테이블 새로고침 시도")
+                self.refresh_tables_from_database()
+            except Exception as fallback_error:
+                logger.error(f"대체 테이블 새로고침도 실패: {fallback_error}")
     
