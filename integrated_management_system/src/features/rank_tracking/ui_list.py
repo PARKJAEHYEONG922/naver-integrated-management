@@ -2,16 +2,14 @@
 프로젝트 목록 위젯 - 순위추적 프로젝트 관리
 기존 UI와 완전 동일한 스타일 및 기능
 """
-from typing import Optional
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
-    QTreeWidget, QTreeWidgetItem, QDialog, QMessageBox,
-    QAbstractItemView, QFrame, QGridLayout
+    QTreeWidget, QTreeWidgetItem, QAbstractItemView
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
-from src.toolbox.ui_kit import ModernStyle, ModernConfirmDialog, ModernTextInputDialog, ModernInfoDialog
+from src.toolbox.ui_kit import ModernStyle, ModernConfirmDialog, ModernInfoDialog
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton
 from src.desktop.common_log import log_manager
 # Import removed to avoid circular import - will import locally when needed
@@ -26,7 +24,7 @@ class ProjectListWidget(QWidget):
     """프로젝트 목록 위젯 - 기존과 완전 동일"""
     
     project_selected = Signal(object)  # 프로젝트 선택 시그널
-    project_deleted = Signal(int)      # 프로젝트 삭제 시그널
+    project_deleted = Signal(int)      # 프로젝트 삭제 시그널 (project_id 전달)
     projects_selection_changed = Signal(list)  # 다중 프로젝트 선택 변경 시그널
     
     def __init__(self):
@@ -142,13 +140,13 @@ class ProjectListWidget(QWidget):
     
     def create_project_from_data(self, url: str, product_name: str):
         """URL과 상품명으로부터 프로젝트 생성 - 기존 원본과 완전 동일"""
-        from .adapters import rank_tracking_adapter
         
         log_manager.add_log(f"🚀 새 프로젝트 생성 시작: {url}", "info")
         log_manager.add_log(f"📝 입력된 상품명: {product_name}", "info")
         
         # 1. URL에서 product ID 추출
         try:
+            from .adapters import rank_tracking_adapter
             product_id = rank_tracking_adapter.extract_product_id_from_url(url)
         except ValueError as e:
             log_manager.add_log("❌ URL에서 상품 ID를 추출할 수 없습니다.", "error")
@@ -195,60 +193,8 @@ class ProjectListWidget(QWidget):
         except Exception as e:
             log_manager.add_log(f"❌ 중복 확인 오류: {str(e)}", "error")
         
-        # 3. 네이버 쇼핑 API로 상품 정보 조회
-        log_manager.add_log("🔍 네이버 쇼핑 API로 상품 정보 조회 중...", "info")
-        
-        api_product_info = rank_tracking_adapter.get_product_info(product_name, product_id)
-        
-        if not api_product_info:
-            # API 정보를 찾지 못한 경우 - 기존과 동일하게 중단
-            log_manager.add_log("❌ 상품 정보 조회 실패", "error")
-            log_manager.add_log("💡 검색될 수 있는 키워드 또는 상품명을 입력해 주세요", "warning")
-            log_manager.add_log(f"   • URL: {url}", "info")
-            log_manager.add_log(f"   • 상품명: {product_name}", "info")
-            
-            from src.toolbox.ui_kit import ModernInfoDialog
-            ModernInfoDialog.warning(
-                self, 
-                "상품 정보 조회 실패", 
-                f"네이버 쇼핑 API에서 상품 정보를 찾을 수 없습니다.\n\n"
-                f"다음 사항을 확인해주세요:\n"
-                f"• URL이 올바른 네이버 쇼핑 URL인지 확인\n"
-                f"• 상품명이 정확한지 확인\n"
-                f"• 해당 상품이 현재 판매중인지 확인\n\n"
-                f"URL: {url}\n"
-                f"상품명: {product_name}"
-            )
-            return
-        
-        # 4. 프로젝트 생성 데이터 준비
-        project_data = {
-            'product_id': product_id,
-            'product_url': url,
-            'current_name': product_name,  # 기본값
-            'store_name': '',
-            'price': 0,
-            'category': '',
-            'image_url': '',
-        }
-        
-        if api_product_info:
-            # API에서 가져온 정보로 업데이트
-            project_data.update({
-                'current_name': api_product_info.get('name') or product_name,
-                'store_name': api_product_info.get('store_name') or '',
-                'price': api_product_info.get('price') or 0,
-                'category': api_product_info.get('category') or '',
-                'image_url': api_product_info.get('image_url') or '',
-            })
-            
-            log_manager.add_log("✅ API 상품 정보 조회 성공:", "success")
-            log_manager.add_log(f"   📝 실제 상품명: {project_data['current_name']}", "info")
-            log_manager.add_log(f"   📂 카테고리: {project_data['category']}", "info")
-            log_manager.add_log(f"   🏪 스토어명: {project_data['store_name']}", "info") 
-            log_manager.add_log(f"   💰 가격: {project_data['price']:,}원", "info")
-        
-        # 5. 프로젝트 저장
+        # 3. 프로젝트 생성 (서비스에서 API 호출 및 모든 로직 처리)
+        # 프로젝트 저장
         try:
             project = rank_tracking_service.create_project(url, product_name)
             log_manager.add_log(f"✅ 프로젝트 생성 완료 (ID: {project.id})", "success")
@@ -279,40 +225,6 @@ class ProjectListWidget(QWidget):
         from src.toolbox.ui_kit import ModernInfoDialog
         ModernInfoDialog.success(self, "생성 완료", f"프로젝트가 성공적으로 생성되었습니다.\n\n상품명: {project.current_name}\n\n키워드를 추가하려면 '➕ 키워드 추가' 버튼을 클릭하세요.")
     
-    def handle_duplicate_project(self, error: 'DuplicateProjectError', product_name: str):
-        """중복 프로젝트 처리 - 원본 로직과 동일"""
-        from src.toolbox.ui_kit import ModernConfirmDialog
-        
-        existing_project = error.existing_project
-        log_manager.add_log("⚠️ 이미 등록된 상품입니다.", "warning")
-        log_manager.add_log(f"📂 기존 프로젝트: {existing_project.current_name}", "info")
-        
-        # 사용자에게 확인 요청
-        result = ModernConfirmDialog.question(
-            self, 
-            "중복 상품 발견", 
-            f"이미 등록된 상품입니다.\n\n상품명: {product_name}\n기존 프로젝트: {existing_project.current_name}\n\n기존 프로젝트로 이동하시겠습니까?",
-            "이동",
-            "취소"
-        )
-        
-        if result:
-            # 기존 프로젝트를 선택하고 UI 새로고침
-            self.load_projects()
-            
-            # 해당 프로젝트를 찾아서 선택
-            for i in range(self.project_tree.topLevelItemCount()):
-                item = self.project_tree.topLevelItem(i)
-                item_project = item.data(0, Qt.UserRole)
-                if item_project and hasattr(item_project, 'id') and item_project.id == existing_project.id:
-                    self.project_tree.setCurrentItem(item)
-                    item.setSelected(True)
-                    # 자동 선택 시에는 selection changed 이벤트가 자동으로 발생함
-                    break
-            
-            log_manager.add_log("✅ 기존 프로젝트로 이동했습니다.", "success")
-        else:
-            log_manager.add_log("❌ 프로젝트 생성이 취소되었습니다.", "info")
     
     def delete_selected_project(self):
         """선택된 프로젝트들 삭제 (다중 선택 지원)"""
@@ -351,11 +263,18 @@ class ProjectListWidget(QWidget):
         
         if reply:
             success_count = 0
+            first_deleted_project_id = None
+            
             for project in projects_to_delete:
                 try:
                     rank_tracking_service.delete_project(project.id)
                     success_count += 1
                     log_manager.add_log(f"프로젝트 '{project.current_name}' 삭제 완료", "success")
+                    
+                    # 첫 번째로 성공적으로 삭제된 프로젝트 ID 저장
+                    if first_deleted_project_id is None:
+                        first_deleted_project_id = project.id
+                        
                 except Exception as e:
                     log_manager.add_log(f"프로젝트 '{project.current_name}' 삭제 실패: {e}", "error")
             
@@ -366,7 +285,10 @@ class ProjectListWidget(QWidget):
             self.delete_button.setEnabled(False)
             self.delete_button.setText("🗑️ 프로젝트 삭제")
             self.load_projects()  # 목록 새로고침
-            self.project_deleted.emit(0)  # 프로젝트 삭제 시그널 발송
+            
+            # 프로젝트 삭제 시그널 발송 (첫 번째 삭제된 프로젝트 ID 전달)
+            if first_deleted_project_id is not None:
+                self.project_deleted.emit(first_deleted_project_id)
     
 
     def load_projects(self):
@@ -420,7 +342,7 @@ class ProjectListWidget(QWidget):
                 log_manager.add_log(f"🎯 {project.current_name} 프로젝트를 선택했습니다.", "info")
         else:
             self.delete_button.setEnabled(True)
-            self.delete_button.setText(f"🗑️ 프로젝트 삭제 ({count}개)")
+            self.delete_button.setText(f"프로젝트 삭제 ({count}개)")
             # 다중 선택 시 기본정보는 메인 UI에서 처리
             log_manager.add_log(f"🎯 {count}개 프로젝트를 선택했습니다.", "info")
     

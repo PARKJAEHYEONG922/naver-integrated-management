@@ -6,8 +6,8 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSplitter,
-    QDialog, QTextEdit, QFrame, QTabWidget, QTableWidget, QTableWidgetItem, 
-    QHeaderView, QLineEdit, QApplication, QDialogButtonBox, QMessageBox, QGridLayout
+    QDialog, QFrame, QTabWidget, QTableWidget, QTableWidgetItem, 
+    QHeaderView, QLineEdit, QApplication, QGridLayout
 )
 from PySide6.QtCore import Qt, Signal, QPoint
 from PySide6.QtGui import QFont, QBrush, QColor
@@ -15,8 +15,8 @@ from PySide6.QtGui import QFont, QBrush, QColor
 from src.toolbox.ui_kit.modern_style import ModernStyle
 from src.toolbox.ui_kit.modern_dialog import ModernHelpDialog, ModernInfoDialog
 from src.toolbox.ui_kit.sortable_items import SortableTableWidgetItem
-from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernSuccessButton, ModernHelpButton
-from src.toolbox.text_utils import parse_keywords_from_text, filter_unique_keywords
+from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernHelpButton
+from src.toolbox.formatters import format_price_krw, format_datetime, format_datetime_full, format_datetime_short
 from src.foundation.logging import get_logger
 from src.desktop.common_log import log_manager
 
@@ -216,30 +216,22 @@ class NewProjectDialog(QDialog):
     
     def position_dialog(self):
         """버튼 위치 근처에 다이얼로그 표시"""
-        if self.button_pos and self.parent():
-            # 버튼의 전역 좌표 계산
-            button_global_pos = self.parent().mapToGlobal(self.button_pos)
-            
-            # 화면 크기 가져오기
+        if self.button_pos:
+            # self.button_pos는 이미 글로벌 좌표
             screen = QApplication.primaryScreen()
             screen_rect = screen.availableGeometry()
             
             # 다이얼로그 크기
-            dialog_width = self.width() if self.width() > 0 else 400
-            dialog_height = self.height() if self.height() > 0 else 300
+            dialog_width = max(self.width(), 400)
+            dialog_height = max(self.height(), 300)
             
             # 버튼 위쪽에 다이얼로그 배치 (100px 간격)
-            x = button_global_pos.x() - dialog_width // 2
-            y = button_global_pos.y() - dialog_height - 100
+            x = self.button_pos.x() - dialog_width // 2
+            y = self.button_pos.y() - dialog_height - 100
             
             # 화면 경계 체크 및 조정
-            if x < screen_rect.left():
-                x = screen_rect.left() + 10
-            elif x + dialog_width > screen_rect.right():
-                x = screen_rect.right() - dialog_width - 10
-                
-            if y < screen_rect.top():
-                y = screen_rect.top() + 10
+            x = max(screen_rect.left() + 10, min(x, screen_rect.right() - dialog_width - 10))
+            y = max(screen_rect.top() + 10, y)
             
             self.move(x, y)
         else:
@@ -354,9 +346,8 @@ class NewProjectDialog(QDialog):
         """프로젝트 데이터 입력 다이얼로그 표시"""
         button_pos = None
         if button_widget:
-            # 버튼의 중앙 위치 계산
-            button_rect = button_widget.geometry()
-            button_pos = button_rect.center()
+            # 버튼의 글로벌 중앙 위치 계산 (이미 글로벌 좌표로 변환)
+            button_pos = button_widget.mapToGlobal(button_widget.rect().center())
         
         dialog = cls(parent, button_pos)
         dialog.exec()
@@ -752,7 +743,7 @@ class ProjectHistoryDialog(QDialog):
             
             for row, record in enumerate(history_data):
                 # 변경 일시 (기존 통합관리프로그램과 동일한 포맷)
-                change_time = self.format_datetime_full(record.get('change_time'))
+                change_time = format_datetime_full(record.get('change_time'))
                 self.basic_info_table.setItem(row, 0, QTableWidgetItem(change_time))
                 
                 # 변경 필드
@@ -796,7 +787,7 @@ class ProjectHistoryDialog(QDialog):
                 
                 for row, record in enumerate(history_data):
                     # 날짜 (MM-DD HH:MM 형태)
-                    action_time = self.format_datetime(record.get('action_time'))
+                    action_time = format_datetime_short(record.get('action_time'))
                     self.keyword_history_table.setItem(row, 0, QTableWidgetItem(action_time))
                     
                     # 키워드
@@ -843,7 +834,7 @@ class ProjectHistoryDialog(QDialog):
                 
                 for row, keyword_obj in enumerate(current_keywords):
                     # 날짜 (키워드 추가된 날짜) - 기본 색상
-                    created_at = self.format_datetime(keyword_obj.created_at) if hasattr(keyword_obj, 'created_at') and keyword_obj.created_at else "-"
+                    created_at = format_datetime_short(keyword_obj.created_at) if hasattr(keyword_obj, 'created_at') and keyword_obj.created_at else "-"
                     date_item = QTableWidgetItem(created_at)
                     self.current_keywords_table.setItem(row, 0, date_item)
                     
@@ -956,31 +947,19 @@ class ProjectHistoryDialog(QDialog):
         # 빈 테이블 상태에서는 기본 스타일만 유지
         self.setup_table_style(table)
     
-    def format_datetime(self, dt) -> str:
-        """날짜시간 포맷팅 (간단 버전)"""
-        if isinstance(dt, str):
-            try:
-                dt = datetime.fromisoformat(dt.replace('Z', '+00:00'))
-            except:
-                return dt
-        
-        if isinstance(dt, datetime):
-            return dt.strftime("%m/%d %H:%M")
-        
-        return str(dt) if dt else "-"
     
     def format_field_value(self, field_name: str, value: str) -> str:
         """필드값 포맷팅 (기존 통합관리프로그램과 동일)"""
         if not value or value == '':
             return '-'
         
-        # 가격 필드인 경우 천 단위 콤마와 "원" 추가
+        # 가격 필드인 경우 format_price_krw 사용
         if field_name == 'price':
             try:
                 price_value = int(float(value))
-                return f"{price_value:,}원"
+                return format_price_krw(price_value)
             except (ValueError, TypeError):
-                return str(value)
+                return format_price_krw(None)
         
         return str(value)
     
@@ -1004,125 +983,8 @@ class ProjectHistoryDialog(QDialog):
         }
         return action_map.get(action, action)
     
-    def format_datetime_full(self, datetime_str: str) -> str:
-        """날짜시간을 전체 포맷으로 변환 (YYYY-MM-DD HH:MM:SS)"""
-        if not datetime_str:
-            return ""
-        
-        try:
-            # 문자열을 datetime 객체로 변환
-            if isinstance(datetime_str, str):
-                dt = datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
-            else:
-                dt = datetime_str
-                
-            return dt.strftime("%Y-%m-%d %H:%M:%S")
-        except Exception:
-            return str(datetime_str)
-    
-    def format_datetime_short(self, datetime_str: str) -> str:
-        """날짜시간을 단축 포맷으로 변환 (MM/DD HH:MM)"""
-        if not datetime_str:
-            return ""
-        
-        try:
-            # 문자열을 datetime 객체로 변환
-            if isinstance(datetime_str, str):
-                dt = datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
-            else:
-                dt = datetime_str
-                
-            return dt.strftime("%m/%d %H:%M")
-        except Exception:
-            return ""
 
 
-# === 메인 위젯 클래스 ===
-
-class RankTrackingWidget(QWidget):
-    """순위 추적 메인 위젯 - 기존과 완전 동일"""
-    
-    def __init__(self):
-        super().__init__()
-        self.setup_ui()
-    
-    def setup_ui(self):
-        """UI 설정 - 기존과 동일"""
-        main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(10)
-        
-        # 헤더 (제목 + 사용법 툴팁)
-        self.setup_header(main_layout)
-        
-        # 메인 콘텐츠 영역
-        content_layout = QHBoxLayout()
-        content_layout.setContentsMargins(0, 0, 0, 0)
-        content_layout.setSpacing(10)
-        
-        # 스플리터로 좌우 분할
-        splitter = QSplitter(Qt.Horizontal)
-        
-        # 좌측: 프로젝트 목록 (300px 고정)
-        self.project_list = ProjectListWidget()
-        self.project_list.setMinimumWidth(300)
-        self.project_list.setMaximumWidth(300)
-        self.project_list.project_selected.connect(self.on_project_selected)
-        self.project_list.project_deleted.connect(self.on_project_deleted)
-        self.project_list.projects_selection_changed.connect(self.on_projects_selection_changed)
-        splitter.addWidget(self.project_list)
-        
-        # 우측: 기본정보 + 순위 테이블 (상하 분할)
-        right_widget = QWidget()
-        right_layout = QVBoxLayout()
-        right_layout.setContentsMargins(0, 0, 0, 0)
-        right_layout.setSpacing(10)
-        
-        # 기본정보 영역 생성
-        self.product_info_widget = self.create_product_info_widget()
-        right_layout.addWidget(self.product_info_widget)
-        
-        # 순위 테이블 (기본정보 제거된 버전)
-        self.ranking_table = RankingTableWidget()
-        # 신호 연결: 프로젝트 정보 업데이트 시 목록 새로고침
-        self.ranking_table.project_updated.connect(self.project_list.load_projects)
-        right_layout.addWidget(self.ranking_table)
-        
-        right_widget.setLayout(right_layout)
-        splitter.addWidget(right_widget)
-        
-        # 스플리터 비율 설정
-        splitter.setStretchFactor(0, 0)  # 좌측 고정
-        splitter.setStretchFactor(1, 1)  # 우측 확장
-        
-        content_layout.addWidget(splitter)
-        main_layout.addLayout(content_layout)
-        self.setLayout(main_layout)
-    
-    def setup_header(self, layout):
-        """헤더 섹션 - 기존과 동일한 제목"""
-        header_layout = QHBoxLayout()
-        
-        # 제목 - 기존과 정확히 동일
-        title_label = QLabel("📈 상품 순위추적")
-        title_label.setStyleSheet(f"""
-            QLabel {{
-                font-size: 24px;
-                font-weight: 700;
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-        """)
-        header_layout.addWidget(title_label)
-        
-        # 사용법 다이얼로그 버튼
-        self.help_button = ModernHelpButton("❓ 사용법")
-        self.help_button.clicked.connect(self.show_help_dialog)
-        
-        header_layout.addWidget(self.help_button)
-        header_layout.addStretch()  # 오른쪽 여백
-        
-        layout.addLayout(header_layout)
-    
 # === 메인 위젯 ===
 
 class RankTrackingWidget(QWidget):
@@ -1172,6 +1034,10 @@ class RankTrackingWidget(QWidget):
         self.ranking_table = RankingTableWidget()
         # 신호 연결: 프로젝트 정보 업데이트 시 목록 새로고침
         self.ranking_table.project_updated.connect(self.project_list.load_projects)
+        # 신호 연결: 마지막 확인 시간 업데이트
+        self.ranking_table.last_check_time_changed.connect(
+            lambda s: self.last_check_label.setText(f"마지막 확인: {s or '-'}")
+        )
         right_layout.addWidget(self.ranking_table)
         
         # 기본정보와 테이블의 비율 설정 (1:4)
@@ -1214,8 +1080,6 @@ class RankTrackingWidget(QWidget):
     
     def create_product_info_widget(self):
         """기본정보 위젯 생성 - 원본과 동일한 레이아웃"""
-        from PySide6.QtWidgets import QFrame
-        
         widget = QFrame()
         widget.setStyleSheet(f"""
             QFrame {{
@@ -1465,7 +1329,7 @@ class RankTrackingWidget(QWidget):
         except Exception as e:
             logger.error(f"다중 프로젝트 선택 처리 오류: {e}")
     
-    def on_project_deleted(self, project_id):
+    def on_project_deleted(self, project_id: int):
         """프로젝트 삭제 처리"""
         self.project_list.load_projects()
         self.ranking_table.clear_project()
@@ -1490,22 +1354,16 @@ class RankTrackingWidget(QWidget):
         self.product_name_label.setText(project.current_name if project.current_name else "-")
         self.store_name_label.setText(project.store_name if hasattr(project, 'store_name') and project.store_name else "-")
         
-        # 가격 포맷팅
+        # 가격 포맷팅 (toolbox.formatters 사용)
         if hasattr(project, 'price') and project.price:
-            formatted_price = f"{project.price:,}원"
-            self.price_label.setText(formatted_price)
+            self.price_label.setText(format_price_krw(project.price))
         else:
             self.price_label.setText("-")
         
         self.category_label.setText(project.category if hasattr(project, 'category') and project.category else "-")
         
-        # 마지막 확인 시간 업데이트
+        # 프로젝트 ID 저장 (마지막 확인 시간은 시그널을 통해 업데이트됨)
         self.current_project_id = project.id
-        latest_time = self.get_latest_check_time()
-        if latest_time:
-            self.last_check_label.setText(f"마지막 확인: {latest_time}")
-        else:
-            self.last_check_label.setText("마지막 확인: -")
     
     def refresh_product_info(self):
         """상품 정보 새로고침 - 프로젝트 정보 + 키워드 월검색량/카테고리 업데이트"""
@@ -1534,7 +1392,7 @@ class RankTrackingWidget(QWidget):
                     log_manager.add_log(f"🔍 {len(keyword_names)}개 키워드의 월검색량/카테고리 업데이트를 시작합니다.", "info")
                     
                     # 키워드 정보 백그라운드 업데이트 시작
-                    rank_tracking_service.start_keyword_info_update(self.current_project.id, keyword_names, updated_project)
+                    rank_tracking_service.start_background_keyword_info_update(self.current_project.id, keyword_names, updated_project)
                 else:
                     log_manager.add_log("📝 새로고침할 키워드가 없습니다.", "info")
                 
@@ -1565,42 +1423,3 @@ class RankTrackingWidget(QWidget):
         )
         dialog.exec()
     
-    def get_latest_check_time(self):
-        """DB에서 가장 최근 순위 확인 시간 가져오기"""
-        try:
-            if not hasattr(self, 'current_project_id') or not self.current_project_id:
-                return None
-            
-            # Foundation DB를 통해 가장 최근 순위 확인 시간 조회
-            from src.foundation.db import get_db
-            
-            db = get_db()
-            latest_rankings = db.get_latest_rankings(self.current_project_id)
-            
-            if latest_rankings:
-                # search_date가 있는 결과들 중에서 가장 최근 날짜 찾기
-                latest_date = None
-                for ranking in latest_rankings:
-                    search_date = ranking.get('search_date')
-                    if search_date:
-                        if latest_date is None or search_date > latest_date:
-                            latest_date = search_date
-                
-                if latest_date:
-                    # 날짜 포맷팅 - "2025-08-15 22:17:32" 형태로 반환
-                    if isinstance(latest_date, str):
-                        try:
-                            dt = datetime.fromisoformat(latest_date.replace('Z', '+00:00'))
-                            return dt.strftime("%Y-%m-%d %H:%M:%S")
-                        except:
-                            return str(latest_date)
-                    elif isinstance(latest_date, datetime):
-                        return latest_date.strftime("%Y-%m-%d %H:%M:%S")
-                    else:
-                        return str(latest_date)
-            
-            return None
-            
-        except Exception as e:
-            logger.error(f"최신 확인 시간 조회 실패: {e}")
-            return None

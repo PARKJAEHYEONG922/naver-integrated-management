@@ -5,7 +5,7 @@
 from typing import Optional
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QFrame, QTableWidgetItem, QDialog, QTextEdit
+    QFrame, QDialog, QTextEdit
 )
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QColor
@@ -16,7 +16,7 @@ from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 
 from .worker import ranking_worker_manager, keyword_info_worker_manager
-from .adapters import format_date, format_rank_display, get_rank_color, get_category_match_color
+from .adapters import format_rank_display, get_rank_color, get_category_match_color, format_date
 from src.toolbox.formatters import format_monthly_volume, format_rank
 from .service import rank_tracking_service
 # view_model은 service로 통합됨
@@ -138,10 +138,16 @@ class AddKeywordsDialog(QDialog):
         
         self.cancel_button = ModernCancelButton("취소")
         self.cancel_button.clicked.connect(self.reject)
+        self.cancel_button.setFixedWidth(80)
+        # 강제로 동일한 크기 적용
+        self.cancel_button.setStyleSheet(self.cancel_button.styleSheet() + "QPushButton { width: 80px; min-width: 80px; max-width: 80px; }")
         button_layout.addWidget(self.cancel_button)
         
         self.ok_button = ModernPrimaryButton("추가")
         self.ok_button.clicked.connect(self.accept)
+        self.ok_button.setFixedWidth(80)
+        # 강제로 동일한 크기 적용
+        self.ok_button.setStyleSheet(self.ok_button.styleSheet() + "QPushButton { width: 80px; min-width: 80px; max-width: 80px; }")
         button_layout.addWidget(self.ok_button)
         
         main_layout.addLayout(button_layout)
@@ -197,6 +203,7 @@ class RankingTableWidget(QWidget):
     """순위 테이블 위젯 - 기존과 완전 동일"""
     
     project_updated = Signal()  # 프로젝트 업데이트 시그널
+    last_check_time_changed = Signal(str)  # 마지막 확인 시간 변경 시그널
     
     def __init__(self):
         super().__init__()
@@ -389,13 +396,16 @@ class RankingTableWidget(QWidget):
                         self.ranking_table.repaint()
                     else:
                         log_manager.add_log(f"❌ {date_text} 날짜의 순위 데이터 삭제에 실패했습니다.", "error")
-                        QMessageBox.information(self, "삭제 실패", "데이터베이스에서 해당 날짜의 데이터를 찾을 수 없거나 삭제에 실패했습니다.")
+                        from src.toolbox.ui_kit import ModernInfoDialog
+                        ModernInfoDialog.error(self, "삭제 실패", "데이터베이스에서 해당 날짜의 데이터를 찾을 수 없거나 삭제에 실패했습니다.")
                 else:
-                    QMessageBox.information(self, "오류", "날짜 데이터를 찾을 수 없습니다.")
+                    from src.toolbox.ui_kit import ModernInfoDialog
+                    ModernInfoDialog.error(self, "오류", "날짜 데이터를 찾을 수 없습니다.")
                     
             except Exception as e:
                 log_manager.add_log(f"❌ 날짜 데이터 삭제 중 오류: {str(e)}", "error")
-                QMessageBox.information(self, "오류", f"날짜 데이터 삭제 중 오류가 발생했습니다: {str(e)}")
+                from src.toolbox.ui_kit import ModernInfoDialog
+                ModernInfoDialog.error(self, "오류", f"날짜 데이터 삭제 중 오류가 발생했습니다: {str(e)}")
     
     
     def set_project(self, project):
@@ -421,16 +431,25 @@ class RankingTableWidget(QWidget):
             self.save_button.setEnabled(True)
         
         # 순위 확인 버튼 상태는 해당 프로젝트의 실행 상태에 따라 결정
-        self.update_button_state_from_project_status(project.id)
+        self.refresh_button_state(project.id)
         
         # 진행률 표시 상태도 프로젝트에 따라 업데이트
         self.update_progress_display_from_project_status(project.id)
     
-    def update_button_state_from_project_status(self, project_id):
-        """프로젝트 상태에 따른 버튼 상태 업데이트"""
+    def refresh_button_state(self, project_id: int):
+        """프로젝트 상태를 조회해서 버튼 상태 업데이트"""
         if hasattr(self, 'check_button') and hasattr(self, 'stop_button'):
             is_running = rank_tracking_service.is_ranking_in_progress(project_id)
-            self.update_button_state_for_current_project(running=is_running)
+            
+            if is_running:
+                self.check_button.setEnabled(False)
+                self.check_button.setText("⏳ 확인 중...")
+                self.stop_button.setEnabled(True)
+            else:
+                self.check_button.setEnabled(True)
+                self.check_button.setText("🏆 순위 확인")
+                self.stop_button.setEnabled(False)
+                
             logger.info(f"프로젝트 {project_id} 버튼 상태 복원: 순위 확인 {'진행중' if is_running else '대기중'}")
     
     def update_progress_display_from_project_status(self, project_id):
@@ -535,9 +554,8 @@ class RankingTableWidget(QWidget):
                     for date in all_dates:
                         headers.append(format_date(date))
             
-            # 마지막 확인 시간 표시
-            if hasattr(self, 'last_check_label'):
-                self.last_check_label.setText(table_data["last_check_time"])
+            # 마지막 확인 시간 변경 시그널 발송 (메인 UI 업데이트용)
+            self.last_check_time_changed.emit(table_data["last_check_time"])
             
             # 테이블 초기화 및 기본 컬럼 설정
             self._reset_table_columns()
@@ -905,7 +923,8 @@ class RankingTableWidget(QWidget):
             
             if success:
                 # UI 상태 업데이트
-                self.update_button_state_for_current_project(running=True)
+                if hasattr(self, 'current_project_id'):
+                    self.refresh_button_state(self.current_project_id)
                 
                 # 현재 저장된 시간으로 컬럼 추가
                 current_time = rank_tracking_service.get_ranking_current_time(project_id)
@@ -927,16 +946,6 @@ class RankingTableWidget(QWidget):
             from src.desktop.common_log import log_manager
             log_manager.add_log(f"❌ 순위 확인 중 오류: {str(e)}", "error")
     
-    def update_button_state_for_current_project(self, running=False):
-        """현재 프로젝트의 버튼 상태 업데이트"""
-        if running:
-            self.check_button.setEnabled(False)
-            self.check_button.setText("⏳ 확인 중...")
-            self.stop_button.setEnabled(True)
-        else:
-            self.check_button.setEnabled(True)
-            self.check_button.setText("🏆 순위 확인")
-            self.stop_button.setEnabled(False)
     
 
     def on_ranking_finished(self, project_id, success, message, results):
@@ -952,7 +961,7 @@ class RankingTableWidget(QWidget):
             
         # 현재 프로젝트인 경우 UI 업데이트
         if project_id == self.current_project_id:
-            self.update_button_state_for_current_project(running=False)
+            self.refresh_button_state(project_id)
             self.hide_progress()
             # 테이블 새로고침하여 완료된 순위 결과 표시
             self.update_ranking_table(project_id)
@@ -971,7 +980,7 @@ class RankingTableWidget(QWidget):
         rank_tracking_service.stop_ranking_check(project_id)
         
         # 즉시 UI 상태 업데이트
-        self.update_button_state_for_current_project(running=False)
+        self.refresh_button_state(project_id)
         self.hide_progress()
     
     def add_keyword(self):
@@ -1094,7 +1103,6 @@ class RankingTableWidget(QWidget):
             volume_item = self.ranking_table.item(row, 3)  # 월검색량 컬럼
             if volume_item:
                 if volume >= 0:
-                    from .adapters import format_monthly_volume
                     volume_text = format_monthly_volume(volume)
                     volume_item.setText(volume_text)
                     volume_item.setData(Qt.UserRole, volume)
