@@ -212,15 +212,22 @@ class ModernTableWidget(QTableWidget):
         if not self.has_checkboxes or not self.has_header_checkbox:
             return
         
-        # 기존 헤더 체크박스 정리
+        # 🔧 FIX: 기존 헤더 체크박스 완전 정리 (원본 방식)
         if hasattr(self, 'header_checkbox') and self.header_checkbox:
-            self.header_checkbox.setParent(None)
-            self.header_checkbox.deleteLater()
-            self.header_checkbox = None
+            try:
+                self.header_checkbox.setParent(None)
+                self.header_checkbox.deleteLater()
+                self.header_checkbox = None
+            except:
+                pass
         
-        # 시그널 중복 연결 방지
-        if not hasattr(self, '_header_signal_connected'):
-            self._header_signal_connected = False
+        # 🔧 FIX: 시그널 연결 상태 초기화 (원본 방식)
+        if hasattr(self, '_header_signal_connected') and self._header_signal_connected:
+            try:
+                self.horizontalHeader().sectionClicked.disconnect(self.on_header_clicked)
+            except:
+                pass
+        self._header_signal_connected = False
             
         # 실제 체크박스 위젯 생성 (개별 체크박스와 동일한 스타일)
         self.header_checkbox = QCheckBox()

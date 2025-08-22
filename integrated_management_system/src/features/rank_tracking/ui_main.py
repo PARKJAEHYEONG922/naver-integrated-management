@@ -591,11 +591,6 @@ class ProjectHistoryDialog(QDialog):
         title_label.setStyleSheet(f"color: {ModernStyle.COLORS['text_primary']}; padding: 5px;")
         title_layout.addWidget(title_label)
         
-        # 마지막 순위확인 정보 (프로젝트에서 가져오기)
-        self.last_rank_check_label = QLabel("(최신 확인: 2025-08-15 22:17)")
-        self.last_rank_check_label.setFont(QFont("맑은 고딕", 10))
-        self.last_rank_check_label.setStyleSheet(f"color: {ModernStyle.COLORS['text_secondary']}; padding: 5px;")
-        title_layout.addWidget(self.last_rank_check_label)
         
         title_layout.addStretch()
         main_layout.addLayout(title_layout)

@@ -227,17 +227,17 @@ class RankTrackingEngine:
             for date in all_dates:
                 headers.append(format_date(date))
             
-            # 마지막 확인 시간
+            # 마지막 확인 시간 (시간만 반환, UI에서 "마지막 확인:" 텍스트 추가)
             last_check_time = ""
             if dates:
-                last_check_time = f"마지막 확인: {format_date_with_time(dates[0])}"
+                last_check_time = format_date_with_time(dates[0])
             else:
-                last_check_time = "마지막 확인: -"
+                last_check_time = "-"
             
-            # 프로젝트 카테고리 기본 형태 (색상 매칭용)
+            # 프로젝트 카테고리 전체 (색상 매칭용) - 전체 경로 보존
             project_category_base = ""
             if hasattr(project, 'category') and project.category:
-                project_category_base = project.category.split(' > ')[-1] if ' > ' in project.category else project.category
+                project_category_base = project.category
             
             return {
                 "success": True,
@@ -281,9 +281,22 @@ class RankTrackingEngine:
             # 기본 행 데이터 (체크박스 제외)
             row_data = [keyword]  # 키워드
             
-            # 카테고리 추가
-            category = keyword_data.get('category', '') or '-'
-            row_data.append(category)
+            # 카테고리 추가 (표시용으로는 마지막 부분만)
+            category_full = keyword_data.get('category', '') or '-'
+            if category_full and category_full != '-':
+                # 괄호 앞 부분에서 마지막 세그먼트만 추출
+                category_clean = category_full.split('(')[0].strip()
+                if ' > ' in category_clean:
+                    category_display = category_clean.split(' > ')[-1]
+                    # 비율 정보가 있으면 마지막에 추가
+                    if '(' in category_full:
+                        percentage_part = category_full.split('(')[-1]
+                        category_display = f"{category_display}({percentage_part}"
+                else:
+                    category_display = category_full
+            else:
+                category_display = '-'
+            row_data.append(category_display)
             
             # 월검색량
             search_vol = keyword_data.get('search_volume')

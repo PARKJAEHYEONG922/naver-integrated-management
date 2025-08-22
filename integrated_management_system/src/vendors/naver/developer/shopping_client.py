@@ -190,9 +190,8 @@ class NaverShoppingClient(NaverSearchClient):
                 cat, count = most_common[0]
                 percentage = int((count / total) * 100)
                 
-                # 마지막 카테고리만 추출 (원본에서 요구한 형식)
-                last_category = cat.split(' > ')[-1] if ' > ' in cat else cat
-                result = f"{last_category}({percentage}%)"
+                # 전체 경로에 비율 정보 추가해서 반환
+                result = f"{cat}({percentage}%)"
                 logger.debug(f"키워드 카테고리 분석 완료: {keyword} -> {result}")
                 return result
             
@@ -317,9 +316,9 @@ class NaverShoppingClient(NaverSearchClient):
                         break  # 빈 카테고리가 나오면 중단
                 
                 if categories:
-                    # 마지막 카테고리만 사용 (순위 추적용)
-                    last_category = categories[-1]
-                    all_categories.append(last_category)
+                    # 전체 카테고리 경로 사용 (프로젝트 카테고리와 매칭을 위해)
+                    full_category_path = ' > '.join(categories)
+                    all_categories.append(full_category_path)
             
             if not all_categories:
                 return None
@@ -332,6 +331,7 @@ class NaverShoppingClient(NaverSearchClient):
             if most_common:
                 cat, count = most_common[0]
                 percentage = int((count / total) * 100)
+                # 전체 경로에 비율 정보 추가해서 반환
                 result = f"{cat}({percentage}%)"
                 return result
             

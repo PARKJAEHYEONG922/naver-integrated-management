@@ -557,7 +557,7 @@ class RankingTableWidget(QWidget):
             # 마지막 확인 시간 변경 시그널 발송 (메인 UI 업데이트용)
             self.last_check_time_changed.emit(table_data["last_check_time"])
             
-            # 테이블 초기화 및 기본 컬럼 설정
+            # 테이블 초기화 및 기본 컬럼 설정 (헤더 체크박스 설정하지 않음)
             self._reset_table_columns()
             
             # 동적 날짜 컬럼 추가
@@ -570,20 +570,35 @@ class RankingTableWidget(QWidget):
                 self._populate_keyword_rows(keywords_data, all_dates, project_id, project_category_base)
                 # 월검색량 기준 정렬
                 self.ranking_table.sortByColumn(3, Qt.DescendingOrder)
+            
+            # 🔧 FIX: 테이블 구성 완료 후 헤더 체크박스 설정 (원본 방식)
+            self.ranking_table.setup_header_checkbox()
+            
+            # 🔧 FIX: 삭제 버튼 상태 업데이트 (원본 방식)
+            self.on_selection_changed()
                 
         except Exception as e:
             logger.error(f"순위 테이블 업데이트 실패: {e}")
     
     def _reset_table_columns(self):
-        """테이블 컬럼 초기화 (중복 제거)"""
+        """테이블 컬럼 초기화 (헤더 체크박스 설정 제외) - 원본 방식"""
         self.ranking_table.clear_table()
         self.ranking_table.setColumnCount(0)
         
-        # 기본 4개 컬럼 설정
+        # 🔧 FIX: 기존 헤더 체크박스 명시적 제거 (원본 방식)
+        if hasattr(self.ranking_table, 'header_checkbox') and self.ranking_table.header_checkbox:
+            try:
+                self.ranking_table.header_checkbox.setParent(None)
+                self.ranking_table.header_checkbox.deleteLater()
+                self.ranking_table.header_checkbox = None
+            except:
+                pass
+        
+        # 기본 4개 컬럼 설정 (헤더 체크박스 설정 제외)
         base_columns = ["", "키워드", "카테고리", "월검색량"]
         self.ranking_table.setColumnCount(len(base_columns))
         self.ranking_table.setHorizontalHeaderLabels(base_columns)
-        self.ranking_table.setup_header_checkbox()
+        # setup_header_checkbox() 호출하지 않음 - 나중에 호출
         
         # 컬럼 너비 설정
         self.ranking_table.setColumnWidth(0, 50)   # 체크박스
@@ -630,7 +645,7 @@ class RankingTableWidget(QWidget):
                     except:
                         pass
         
-        # 카테고리 색상 적용
+        # 카테고리 색상 적용 (전체 카테고리 경로로 비교)
         category = keyword_data.get('category', '-')
         if project_category_base and category != '-':
             category_item = self.ranking_table.item(row, 2)
@@ -829,6 +844,28 @@ class RankingTableWidget(QWidget):
         try:
             logger.info(f"실시간 순위 업데이트 요청: 키워드ID={keyword_id}, 키워드={keyword}, 순위={rank}")
             
+            # 🔧 FIX: 현재 진행 중인 순위 확인 시간으로 컬럼 찾기
+            current_time = rank_tracking_service.get_ranking_current_time(self.current_project_id)
+            if not current_time:
+                logger.warning("현재 진행 중인 순위 확인 시간을 찾을 수 없음")
+                return
+            
+            formatted_time = format_date(current_time)
+            logger.info(f"찾을 컬럼 헤더: '{formatted_time}'")
+            
+            # 헤더에서 해당 시간의 컬럼 인덱스 찾기
+            ranking_column = None
+            for col in range(self.ranking_table.columnCount()):
+                header_item = self.ranking_table.horizontalHeaderItem(col)
+                if header_item and header_item.text() == formatted_time:
+                    ranking_column = col
+                    logger.info(f"순위 업데이트 컬럼 찾음: {col}번째 ('{formatted_time}')")
+                    break
+            
+            if ranking_column is None:
+                logger.warning(f"순위 컬럼을 찾을 수 없음: '{formatted_time}'")
+                return
+            
             # 테이블에서 해당 키워드 찾기 (ModernTableWidget 사용)
             found = False
             for row in range(self.ranking_table.rowCount()):
@@ -839,9 +876,7 @@ class RankingTableWidget(QWidget):
                     
                     if stored_keyword_id == keyword_id:
                         found = True
-                        # 새로 생성한 순위 컬럼(4번째)에 순위 업데이트
-                        ranking_column = 4  # 월검색량(3) 다음 위치
-                        logger.info(f"키워드 찾음! 업데이트할 컬럼: {ranking_column} (4번째 컬럼)")
+                        logger.info(f"키워드 찾음! 업데이트할 컬럼: {ranking_column}")
                         
                         rank_item = self.ranking_table.item(row, ranking_column)
                         if rank_item:
@@ -858,6 +893,8 @@ class RankingTableWidget(QWidget):
                             from src.toolbox.ui_kit.sortable_items import set_rank_sort_data
                             set_rank_sort_data(rank_item, ranking_column, rank_display)
                             logger.info(f"키워드 {keyword} 실시간 업데이트 완료")
+                        else:
+                            logger.warning(f"행 {row}, 컬럼 {ranking_column}에 아이템이 없음")
                         break
             
             if not found:
@@ -865,6 +902,8 @@ class RankingTableWidget(QWidget):
                     
         except Exception as e:
             logger.error(f"키워드 순위 실시간 업데이트 실패: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
     
     
     def _find_keyword_item(self, keyword: str):
@@ -1009,10 +1048,12 @@ class RankingTableWidget(QWidget):
                 
                 # 결과 처리 (로그는 service에서 이미 처리됨)
                 if result['success']:
-                    # 즉시 테이블에 키워드 추가 (백그라운드 업데이트와 분리)
+                    # 전체 테이블 다시 로드 (프로젝트 선택과 동일한 방식)
+                    self.update_ranking_table(self.current_project_id)
+                    
+                    # 백그라운드 작업이 시작된 경우 진행률 표시
                     added_keywords = result.get('added_keywords', [])
                     if added_keywords:
-                        self.add_keywords_to_table_immediately(added_keywords)
                         # 즉시 진행률 표시 시작
                         self.show_progress(f"🔍 월검색량/카테고리 조회 준비 중... (0/{len(added_keywords)})", True)
                 else:
@@ -1069,10 +1110,23 @@ class RankingTableWidget(QWidget):
             if row is None:
                 return
             
-            # 카테고리 업데이트
+            # 카테고리 업데이트 (표시용으로는 마지막 부분만)
             category_item = self.ranking_table.item(row, 2)  # 카테고리 컬럼
             if category_item:
-                category_item.setText(category or '-')
+                if category and category != '-':
+                    # 괄호 앞 부분에서 마지막 세그먼트만 추출
+                    category_clean = category.split('(')[0].strip()
+                    if ' > ' in category_clean:
+                        category_display = category_clean.split(' > ')[-1]
+                        # 비율 정보가 있으면 마지막에 추가
+                        if '(' in category:
+                            percentage_part = category.split('(')[-1]
+                            category_display = f"{category_display}({percentage_part}"
+                    else:
+                        category_display = category
+                else:
+                    category_display = '-'
+                category_item.setText(category_display)
             
             # 카테고리 색상 즉시 적용 (키워드 추가 시 바로 색상 표시)
             if category != '-' and self.current_project:
@@ -1081,14 +1135,12 @@ class RankingTableWidget(QWidget):
                 if project_category and project_category != "-":
                     from .adapters import get_category_match_color
                     from PySide6.QtGui import QColor
-                    # 키워드 카테고리에서 괄호 앞 부분만 추출
+                    # 전체 카테고리 경로로 비교 (괄호 부분만 제거)
                     keyword_category_clean = category.split('(')[0].strip()
-                    # 프로젝트 카테고리에서 마지막 부분만 추출 (> 표시 제거)
-                    project_category_base = project_category.split(' > ')[-1] if ' > ' in project_category else project_category
-                    color = get_category_match_color(project_category_base, keyword_category_clean)
+                    color = get_category_match_color(project_category, keyword_category_clean)
                     if category_item:
                         category_item.setForeground(QColor(color))
-                        logger.info(f"🎨 키워드 '{keyword}' 카테고리 색상 즉시 적용: {color} (프로젝트: {project_category_base}, 키워드: {keyword_category_clean})")
+                        logger.info(f"🎨 키워드 '{keyword}' 카테고리 색상 즉시 적용: {color} (프로젝트: {project_category}, 키워드: {keyword_category_clean})")
             
             # 테이블 즉시 새로고침
             self.ranking_table.viewport().update()

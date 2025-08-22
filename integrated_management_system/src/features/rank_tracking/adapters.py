@@ -111,14 +111,15 @@ def get_category_match_color(project_category: str, keyword_category: str) -> st
     if not project_category or not keyword_category:
         return "#6B7280"  # 회색 (데이터 없음)
     
-    # 카테고리 비교를 위한 기본 형태로 변환
-    project_base = project_category.split(' > ')[-1] if ' > ' in project_category else project_category
-    keyword_base = keyword_category.split(' > ')[-1] if ' > ' in keyword_category else keyword_category
+    # 전체 카테고리 경로 비교 - 괄호 부분 제거 후 전체 비교
+    project_clean = project_category.split('(')[0].strip() if '(' in project_category else project_category
+    keyword_clean = keyword_category.split('(')[0].strip() if '(' in keyword_category else keyword_category
     
-    if project_base == keyword_base:
-        return "#059669"  # 초록색 (일치)
+    # 완전 일치만 초록색 (전체 경로가 완전히 동일해야 함)
+    if project_clean == keyword_clean:
+        return "#059669"  # 초록색 (완전 일치)
     else:
-        return "#DC2626"  # 빨간색 (불일치)
+        return "#DC2626"  # 빨간색 (불일치 - 부분일치 포함)
 
 
 def clean_product_name(name: str) -> str:
