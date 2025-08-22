@@ -697,25 +697,25 @@ class PowerLinkResultsWidget(QWidget):
     
     def update_history_button_state(self):
         """히스토리 버튼 상태 업데이트 (ModernTableWidget API 사용)"""
-        selected_count = self.history_table.get_selected_count()
-        
-        # 삭제 및 내보내기 버튼: 1개 이상 선택시 활성화
-        has_selection = selected_count > 0
+        # ✅ 체크박스 기준으로 변경
+        checked_rows = self.history_table.get_checked_rows()
+        checked_count = len(checked_rows)
+
+        has_selection = checked_count > 0
         self.delete_history_button.setEnabled(has_selection)
         self.export_selected_history_button.setEnabled(has_selection)
-        
-        # 보기 버튼: 정확히 1개만 선택시 활성화
-        self.view_history_button.setEnabled(selected_count == 1)
-        
+
+        # 보기 버튼: 정확히 1개 체크 시 활성화
+        self.view_history_button.setEnabled(checked_count == 1)
+
         # 버튼 텍스트 업데이트
-        if selected_count > 0:
-            self.delete_history_button.setText(f"🗑️ 선택 삭제 ({selected_count})")
-            self.export_selected_history_button.setText(f"💾 선택 저장 ({selected_count})")
+        if checked_count > 0:
+            self.delete_history_button.setText(f"🗑️ 선택 삭제 ({checked_count})")
+            self.export_selected_history_button.setText(f"💾 선택 저장 ({checked_count})")
         else:
             self.delete_history_button.setText("🗑️ 선택 삭제")
             self.export_selected_history_button.setText("💾 선택 저장")
-        
-        # 보기 버튼은 항상 기본 텍스트
+
         self.view_history_button.setText("👀 보기")
 
     def update_status_display(self):
@@ -776,12 +776,9 @@ class PowerLinkResultsWidget(QWidget):
         """선택된 히스토리 삭제"""
         try:
             # 선택된 세션 ID 목록 가져오기 (ModernTableWidget API 사용)
-            selected_sessions = []
-            for row in self.history_table.get_checked_rows():
-                session_name = self.history_table.item(row, 1).text()
-                selected_sessions.append((row, session_name))
+            checked_rows = self.history_table.get_checked_rows()
             
-            if not selected_sessions:
+            if not checked_rows:
                 return
             
             # 모던 다이얼로그로 확인 (선택삭제 버튼 근처에 표시)
@@ -789,7 +786,7 @@ class PowerLinkResultsWidget(QWidget):
             dialog = ModernConfirmDialog(
                 self, 
                 "히스토리 삭제 확인", 
-                f"선택된 {len(selected_sessions)}개의 분석 기록을 삭제하시겠습니까?\n\n"
+                f"선택된 {len(checked_rows)}개의 분석 기록을 삭제하시겠습니까?\n\n"
                 f"이 작업은 되돌릴 수 없습니다.", 
                 confirm_text="삭제", 
                 cancel_text="취소", 
@@ -800,11 +797,11 @@ class PowerLinkResultsWidget(QWidget):
                 # 선택된 세션들의 session_id 추출
                 session_ids_to_delete = []
                 
-                for row, session_name in selected_sessions:
+                for row in checked_rows:
                     # 테이블에서 session_id 가져오기 (UserRole로 저장된 데이터)
-                    date_item = self.history_table.item(row, 1)  # 날짜 열
-                    if date_item:
-                        session_id = date_item.data(Qt.UserRole)
+                    session_name_item = self.history_table.item(row, 1)  # 세션명 열
+                    if session_name_item:
+                        session_id = session_name_item.data(Qt.UserRole)
                         if session_id:
                             session_ids_to_delete.append(session_id)
                 
@@ -1288,8 +1285,9 @@ class PowerLinkResultsWidget(QWidget):
     def clear_all_tables(self):
         """모든 테이블 클리어 (전체 클리어 시 사용)"""
         try:
-            self.mobile_table.setRowCount(0)
-            self.pc_table.setRowCount(0)
+            # ✅ ModernTableWidget API로 통일
+            self.mobile_table.clear_table()
+            self.pc_table.clear_table()
             powerlink_service.clear_all_keywords()
             self.update_save_button_state()
             logger.info("모든 테이블 클리어 완료")
@@ -1353,6 +1351,11 @@ class PowerLinkResultsWidget(QWidget):
             if dialog.exec() == ModernConfirmDialog.Accepted:
                 # 서비스를 통해 선택된 키워드 삭제
                 powerlink_service.remove_keywords(selected_keywords)
+                
+                # 데이터 변경 시 히스토리 플래그 초기화 (저장 가능하도록)
+                self.is_loaded_from_history = False
+                if hasattr(self, 'loaded_session_id'):
+                    delattr(self, 'loaded_session_id')
                 
                 # 테이블 전체 재구성 (남은 키워드들로)
                 self.update_all_tables()

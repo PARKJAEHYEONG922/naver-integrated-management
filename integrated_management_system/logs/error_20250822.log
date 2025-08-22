@@ -13,3 +13,4 @@
 2025-08-22 10:13:32 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
 2025-08-22 10:13:34 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
 2025-08-22 10:13:45 - features.powerlink_analyzer.results_widget - ERROR - 히스토리 보기 실패: 'dict' object has no attribute 'keyword'
+2025-08-22 11:20:32 - features.powerlink_analyzer.adapters - ERROR - 성공 다이얼로그 표시 실패: ModernSaveCompletionDialog.show_save_completion() got an unexpected keyword argument 'filename'

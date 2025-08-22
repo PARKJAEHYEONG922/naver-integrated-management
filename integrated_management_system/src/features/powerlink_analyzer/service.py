@@ -93,7 +93,7 @@ class KeywordDatabase:
             sessions = repository.get_analysis_sessions()
             target_session = None
             for session in sessions:
-                if session.get('name') == session_name or session.get('session_name') == session_name:
+                if session.get('session_name') == session_name:
                     target_session = session
                     break
 
@@ -151,7 +151,8 @@ class PowerLinkAnalysisService:
 
     def analyze_keywords(self, keywords: List[str], progress_callback=None) -> Dict[str, KeywordAnalysisResult]:
         """
-        키워드 분석 실행 (service에서 오케스트레이션만, 실제 분석은 worker에서)
+        키워드 분석 실행 (service에서 오케스트레이션만)
+        주의: 실제 분석 로직은 worker.py에서 수행됨
         """
         try:
             if progress_callback:
@@ -306,21 +307,17 @@ class PowerLinkAnalysisService:
             return False, 0, "", False
 
     def export_results_to_excel(self, results: List[KeywordAnalysisResult], device_type: str) -> bool:
-        """UI에서 호출하는 엑셀 내보내기(현재 결과)"""
+        """UI에서 호출하는 엑셀 내보내기(현재 결과) - adapters로 위임"""
         try:
             if not results:
                 return False
             keywords_data = {result.keyword: result for result in results}
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            default_name = f"파워링크분석_{device_type}_{timestamp}.xlsx"
-            from PySide6.QtWidgets import QFileDialog
-            file_path, _ = QFileDialog.getSaveFileName(None, f"{device_type.upper()} 분석 결과 저장", default_name, "Excel Files (*.xlsx)")
-            if not file_path:
-                return False
-            success = self.save_to_excel(keywords_data, file_path, f"{device_type.upper()} 분석")
-            if success:
-                log_manager.add_log(f"{device_type.upper()} 분석 결과를 엑셀로 저장했습니다: {file_path}", "success")
-            return success
+            from .adapters import current_analysis_export_adapter
+            return current_analysis_export_adapter.export_current_analysis_with_dialog(
+                keywords_data=keywords_data, 
+                session_name=f"{device_type.upper()} 분석",
+                parent_widget=None
+            )
         except Exception as e:
             logger.error(f"엑셀 내보내기 실패: {e}")
             log_manager.add_log(f"엑셀 내보내기 실패: {str(e)}", "error")
@@ -582,8 +579,8 @@ class PowerLinkAnalysisService:
                 repo = PowerLinkRepository()
                 sessions = repo.get_analysis_sessions()
                 for session in sessions:
-                    if session['session_name'] == session_name:
-                        return True, {'session_id': session['session_id'], 'session_name': session_name, 'keyword_count': len(keywords_data)}
+                    if session.get('session_name') == session_name:
+                        return True, {'session_id': session.get('id'), 'session_name': session_name, 'keyword_count': len(keywords_data)}
                 return True, {'session_id': -1, 'session_name': session_name, 'keyword_count': len(keywords_data)}
             except Exception as e:
                 logger.warning(f"저장된 세션 정보 조회 실패: {e}")
@@ -629,33 +626,6 @@ class PowerLinkAnalysisService:
     def load_session_by_name(self, session_name: str) -> Optional[Dict[str, KeywordAnalysisResult]]:
         """세션명으로 세션 데이터 로드"""
         return keyword_database.load_session(session_name)
-    
-    def load_and_set_session_data(self, session_id: int) -> bool:
-        """세션 데이터를 로드하고 전역 keyword_database에 설정 (CLAUDE.md 준수)"""
-        try:
-            # 히스토리 세션 데이터 로드
-            loaded_keywords_data = self.load_history_session_data(session_id)
-            if not loaded_keywords_data:
-                log_manager.add_log("히스토리 세션 데이터 로드 실패", "error")
-                return False
-            
-            # 기존 데이터 초기화 및 새 데이터 설정
-            keyword_database.clear()
-            for keyword, result in loaded_keywords_data.items():
-                keyword_database.add_keyword(result)
-            
-            # 순위 재계산
-            keyword_database.recalculate_all_rankings()
-            
-            log_manager.add_log(f"히스토리 세션 데이터 설정 완료: {len(loaded_keywords_data)}개 키워드", "success")
-            return True
-            
-        except Exception as e:
-            error_msg = f"히스토리 세션 데이터 설정 실패: {str(e)}"
-            logger.error(error_msg)
-            log_manager.add_log(error_msg, "error")
-            return False
-    
     
     def set_keywords_data(self, keywords_data: Dict[str, KeywordAnalysisResult]) -> bool:
         """키워드 데이터를 전역 keyword_database에 설정 (CLAUDE.md 준수) - 덮어쓰기 방식"""
@@ -763,15 +733,19 @@ class PowerLinkAnalysisService:
             # 세션 데이터 로드
             loaded_data = self.load_history_session_data(session_id)
             if not loaded_data:
+                log_manager.add_log("히스토리 세션 데이터 로드 실패", "error")
                 return None
             
             # keyword_database에 설정
             if self.set_keywords_data(loaded_data):
+                log_manager.add_log(f"히스토리 세션 데이터 설정 완료: {len(loaded_data)}개 키워드", "success")
                 return loaded_data
             return None
             
         except Exception as e:
-            logger.error(f"세션 로드 및 설정 실패: {e}")
+            error_msg = f"히스토리 세션 데이터 설정 실패: {str(e)}"
+            logger.error(error_msg)
+            log_manager.add_log(error_msg, "error")
             return None
     
     def recalculate_rankings(self) -> bool:

@@ -14,7 +14,7 @@ from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, Moder
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from src.toolbox.progress import throttle_ms
-from .service import keyword_database, powerlink_service
+from .service import powerlink_service
 from .worker import PowerLinkAnalysisWorker
 from src.toolbox.text_utils import parse_keywords_from_text, process_keywords, TextProcessor
 
@@ -448,8 +448,11 @@ class PowerLinkControlWidget(QWidget):
                 self.keywords_data_cleared.emit()
             
             # UI 상태 복원 (헬퍼 사용)
-            if completed_keywords:
-                self._restore_ui_state("stopped", f"분석 중단됨 - {completed_count}개 완료, {removed_count}개 제거" if removed_count > 0 else f"분석 중단됨 - {completed_count}개 키워드 완료")
+            if completed_count > 0:
+                msg = (f"분석 중단됨 - {completed_count}개 완료, {removed_count}개 제거"
+                       if removed_count > 0 else
+                       f"분석 중단됨 - {completed_count}개 키워드 완료")
+                self._restore_ui_state("stopped", msg)
             else:
                 self._restore_ui_state("stopped", "분석 중단됨 - 완료된 키워드 없음 (전체 클리어)")
             

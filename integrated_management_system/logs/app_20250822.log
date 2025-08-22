@@ -1589,3 +1589,1957 @@
 2025-08-22 10:18:53 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
 2025-08-22 10:18:54 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
 2025-08-22 10:18:54 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:20:12 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:20:12 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:20:12 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:20:12 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:20:12 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:20:12 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:20:12 - main - INFO - API 상태 확인 완료
+2025-08-22 10:20:12 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:20:12 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:20:12 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:20:12 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:20:12 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:20:12 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:20:12 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:20:12 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:20:12 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:20:12 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:20:12 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:20:13 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:20:13 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:20:13 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:20:13 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:20:13 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:20:13 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:20:13 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:20:13 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:48:29 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:48:29 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:48:29 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:48:29 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:48:29 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:48:29 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:48:29 - main - INFO - API 상태 확인 완료
+2025-08-22 10:48:29 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:48:29 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:48:29 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:48:29 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:48:29 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:48:29 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:48:29 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:48:30 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:48:30 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:48:30 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:48:30 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:48:30 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:48:30 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:48:30 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:48:30 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:48:30 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:48:30 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:48:30 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:48:30 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:49:11 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:11 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:11 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:11 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:12 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:12 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:12 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:12 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:13 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:13 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:13 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:13 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 9개 키워드 수집: {'오븐베이크', '일킬로그램', '강아지육포간식', '애견고구마간식', '강아지간식오리', '강아지오리가슴살', '강아지사료', '강아지오리육포', '강아지닭가슴살육포'}
+2025-08-22 10:49:13 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 9개, 정규화된 키워드: {'오븐베이크', '일킬로그램', '강아지육포간식', '애견고구마간식', '강아지간식오리', '강아지오리가슴살', '강아지사료', '강아지오리육포', '강아지닭가슴살육포'}
+2025-08-22 10:49:13 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크사료']
+2025-08-22 10:49:13 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:13 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['오븐베이크사료']
+2025-08-22 10:49:13 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['오븐베이크사료']
+2025-08-22 10:49:13 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:49:13 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:49:13 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:49:13 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:49:14 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크사료
+2025-08-22 10:49:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:49:14 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 10:49:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:49:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:49:15 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 186개 키워드
+2025-08-22 10:49:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.71초 대기
+2025-08-22 10:49:15 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (PC)
+2025-08-22 10:49:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:49:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:49:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:49:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.98초 대기
+2025-08-22 10:49:16 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (MOBILE)
+2025-08-22 10:49:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:49:16 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:49:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:49:16 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:49:19 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:8
+2025-08-22 10:49:19 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크사료 -> (1, 8)
+2025-08-22 10:49:19 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:49:19 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:4
+2025-08-22 10:49:19 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크사료 -> (1, 4)
+2025-08-22 10:49:20 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:49:20 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:49:20 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:49:20 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:49:20 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 1개 키워드
+2025-08-22 10:49:31 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:31 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:31 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:31 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:32 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:32 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:32 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:32 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:33 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:33 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:33 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:33 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:34 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:49:34 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 1개 키워드 수집: {'오븐베이크사료'}
+2025-08-22 10:49:34 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 1개, 정규화된 키워드: {'오븐베이크사료'}
+2025-08-22 10:49:34 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크']
+2025-08-22 10:49:34 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:49:34 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['오븐베이크']
+2025-08-22 10:49:34 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['오븐베이크']
+2025-08-22 10:49:34 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:49:34 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:49:34 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:49:34 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 10:49:35 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크
+2025-08-22 10:49:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:49:35 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:49:35 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:49:35 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 10:49:35 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.75초 대기
+2025-08-22 10:49:36 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (PC)
+2025-08-22 10:49:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:49:36 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:49:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:49:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.69초 대기
+2025-08-22 10:49:37 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (MOBILE)
+2025-08-22 10:49:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:49:37 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:49:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:49:37 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:49:37 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크 -> 위치:3, 개수:3
+2025-08-22 10:49:37 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크 -> (3, 3)
+2025-08-22 10:49:37 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:49:38 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크 -> 위치:2, 개수:3
+2025-08-22 10:49:38 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크 -> (2, 3)
+2025-08-22 10:49:38 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:49:38 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:49:38 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:49:38 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:49:38 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 1개 키워드
+2025-08-22 10:52:50 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:52:50 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:52:50 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:52:50 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:52:50 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:52:50 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:52:51 - main - INFO - API 상태 확인 완료
+2025-08-22 10:52:51 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:52:51 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:52:51 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:52:51 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:52:51 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:52:51 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:52:51 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:52:51 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:52:51 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:52:51 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:52:51 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:52:51 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:52:51 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:52:51 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:52:51 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:52:51 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:52:51 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:52:51 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:52:51 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:53:03 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:03 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:04 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:04 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:04 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:04 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:04 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:04 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 9개 키워드 수집: {'강아지사료', '강아지육포간식', '일킬로그램', '강아지닭가슴살육포', '오븐베이크', '애견고구마간식', '강아지간식오리', '강아지오리가슴살', '강아지오리육포'}
+2025-08-22 10:53:04 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 9개, 정규화된 키워드: {'강아지사료', '강아지육포간식', '일킬로그램', '강아지닭가슴살육포', '오븐베이크', '애견고구마간식', '강아지간식오리', '강아지오리가슴살', '강아지오리육포'}
+2025-08-22 10:53:04 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크']
+2025-08-22 10:53:04 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 0개
+2025-08-22 10:53:04 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 0개: []
+2025-08-22 10:53:05 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:05 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:05 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:05 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:06 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:06 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:06 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:06 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:07 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:07 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:07 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:07 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:08 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:08 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:08 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:08 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:53:09 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 9개 키워드 수집: {'강아지사료', '강아지육포간식', '일킬로그램', '강아지닭가슴살육포', '오븐베이크', '애견고구마간식', '강아지간식오리', '강아지오리가슴살', '강아지오리육포'}
+2025-08-22 10:53:09 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 9개, 정규화된 키워드: {'강아지사료', '강아지육포간식', '일킬로그램', '강아지닭가슴살육포', '오븐베이크', '애견고구마간식', '강아지간식오리', '강아지오리가슴살', '강아지오리육포'}
+2025-08-22 10:53:09 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크사료']
+2025-08-22 10:53:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:53:09 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['오븐베이크사료']
+2025-08-22 10:53:09 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['오븐베이크사료']
+2025-08-22 10:53:09 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:53:09 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:53:09 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:53:09 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:53:10 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크사료
+2025-08-22 10:53:10 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:53:10 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 10:53:11 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:53:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:53:11 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 186개 키워드
+2025-08-22 10:53:11 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.74초 대기
+2025-08-22 10:53:11 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (PC)
+2025-08-22 10:53:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:53:12 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:53:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:53:12 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.98초 대기
+2025-08-22 10:53:12 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (MOBILE)
+2025-08-22 10:53:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:53:13 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:53:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:8
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크사료 -> (1, 8)
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:4
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크사료 -> (1, 4)
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:53:13 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:53:13 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:53:13 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 1개 키워드
+2025-08-22 10:53:24 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 51
+2025-08-22 10:53:24 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_105324
+2025-08-22 10:56:04 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:56:04 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:56:04 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:56:04 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:56:04 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:56:04 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:56:04 - main - INFO - API 상태 확인 완료
+2025-08-22 10:56:04 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:56:05 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:56:05 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:56:05 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:56:05 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:56:05 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:56:05 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:56:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:56:05 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:56:05 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:56:05 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:56:05 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:56:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:56:05 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:56:05 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:56:05 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:56:05 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:56:05 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:56:05 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:56:07 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:07 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:08 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:08 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:08 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:08 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:09 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 0개 키워드 수집: set()
+2025-08-22 10:56:09 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 0개, 정규화된 키워드: set()
+2025-08-22 10:56:09 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 10:56:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:09 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 10:56:09 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 10:56:09 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:56:09 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:56:09 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:56:09 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:56:10 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 10:56:10 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:56:10 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 10:56:11 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:56:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:56:11 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 10:56:11 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.68초 대기
+2025-08-22 10:56:11 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 10:56:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:56:12 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:56:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:56:12 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.96초 대기
+2025-08-22 10:56:12 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 10:56:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:56:13 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:56:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:56:13 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:56:13 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 10:56:13 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 10:56:13 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:56:13 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 10:56:13 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 10:56:14 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:56:14 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:56:14 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:56:14 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:56:14 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 1개 키워드
+2025-08-22 10:56:18 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:18 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:18 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:18 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:19 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:19 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:19 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:56:19 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 1개 키워드 수집: {'강아지사료'}
+2025-08-22 10:56:19 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 1개, 정규화된 키워드: {'강아지사료'}
+2025-08-22 10:56:19 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크']
+2025-08-22 10:56:19 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:56:19 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['오븐베이크']
+2025-08-22 10:56:19 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['오븐베이크']
+2025-08-22 10:56:19 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:56:19 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:56:20 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:56:20 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 10:56:21 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크
+2025-08-22 10:56:21 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:56:21 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:56:21 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:56:21 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 10:56:21 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.86초 대기
+2025-08-22 10:56:22 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (PC)
+2025-08-22 10:56:22 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:56:22 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:56:22 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:56:22 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.68초 대기
+2025-08-22 10:56:22 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (MOBILE)
+2025-08-22 10:56:23 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:56:23 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:56:23 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:56:23 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:56:23 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크 -> 위치:3, 개수:3
+2025-08-22 10:56:23 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크 -> (3, 3)
+2025-08-22 10:56:23 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:56:24 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크 -> 위치:2, 개수:3
+2025-08-22 10:56:24 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크 -> (2, 3)
+2025-08-22 10:56:24 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:56:24 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:56:24 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:56:24 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:56:24 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 1개 키워드
+2025-08-22 10:57:15 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 10:57:15 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 10:57:15 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 10:57:15 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 10:57:15 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 10:57:15 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 10:57:15 - main - INFO - API 상태 확인 완료
+2025-08-22 10:57:15 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 10:57:16 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 10:57:16 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 10:57:16 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 10:57:16 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 10:57:16 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 10:57:16 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 10:57:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 10:57:16 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 10:57:16 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 10:57:16 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 10:57:16 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 10:57:16 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 10:57:16 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 10:57:16 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 10:57:16 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 10:57:16 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 10:57:16 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 10:57:16 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 10:57:19 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:19 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:20 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:20 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:20 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:20 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:21 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:21 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:21 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:21 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:22 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:22 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:22 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:22 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:23 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:23 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:23 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:23 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:24 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:24 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:24 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:24 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:25 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:25 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:25 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:25 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 1개 키워드 수집: {'오븐베이크사료'}
+2025-08-22 10:57:25 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 1개, 정규화된 키워드: {'오븐베이크사료'}
+2025-08-22 10:57:25 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크']
+2025-08-22 10:57:25 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:25 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['오븐베이크']
+2025-08-22 10:57:25 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['오븐베이크']
+2025-08-22 10:57:25 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:57:25 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:57:26 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:57:26 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 10:57:27 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크
+2025-08-22 10:57:27 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:57:27 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 10:57:27 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:57:27 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:27 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 10:57:27 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.73초 대기
+2025-08-22 10:57:28 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (PC)
+2025-08-22 10:57:28 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:28 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:28 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:28 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.97초 대기
+2025-08-22 10:57:29 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (MOBILE)
+2025-08-22 10:57:29 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:29 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:29 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:29 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:57:29 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크 -> 위치:3, 개수:3
+2025-08-22 10:57:29 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크 -> (3, 3)
+2025-08-22 10:57:29 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:57:29 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크 -> 위치:2, 개수:3
+2025-08-22 10:57:29 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크 -> (2, 3)
+2025-08-22 10:57:30 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:57:30 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:57:30 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:57:30 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:57:30 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 2개 키워드
+2025-08-22 10:57:34 - features.powerlink_analyzer.results_widget - INFO - 메모리 DB 클리어: 2개 → 0개
+2025-08-22 10:57:34 - features.powerlink_analyzer.results_widget - INFO - 테이블 클리어: 모바일 2→0, PC 2→0
+2025-08-22 10:57:36 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:36 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:36 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:36 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 0개 키워드 수집: set()
+2025-08-22 10:57:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 0개, 정규화된 키워드: set()
+2025-08-22 10:57:37 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 10:57:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:37 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 10:57:37 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 10:57:37 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:57:37 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:57:37 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:57:37 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 10:57:38 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 10:57:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:57:38 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:57:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:38 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 10:57:38 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.78초 대기
+2025-08-22 10:57:39 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 10:57:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:39 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.68초 대기
+2025-08-22 10:57:40 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 10:57:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:40 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:40 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:57:40 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 10:57:40 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 10:57:41 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:57:41 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 10:57:41 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 10:57:41 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:57:41 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:57:41 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:57:41 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:57:41 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 1개 키워드
+2025-08-22 10:57:45 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:45 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:45 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:45 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:46 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:57:46 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:57:46 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:57:46 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:57:47 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:57:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:57:47 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:57:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:57:48 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:57:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:57:48 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 10:57:48 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 1개 키워드 수집: {'강아지사료'}
+2025-08-22 10:57:48 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 1개, 정규화된 키워드: {'강아지사료'}
+2025-08-22 10:57:48 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 2개: ['오븐베이크사료', '오븐베이크']
+2025-08-22 10:57:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 10:57:48 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 2개: ['오븐베이크사료', '오븐베이크']
+2025-08-22 10:57:48 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 2개 준비 완료: ['오븐베이크사료', '오븐베이크']
+2025-08-22 10:57:48 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 2개 키워드 (최적화된 병렬처리)
+2025-08-22 10:57:48 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:57:48 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:57:48 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.81초 대기
+2025-08-22 10:57:48 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.81초 대기
+2025-08-22 10:57:49 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크사료
+2025-08-22 10:57:49 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.81초 대기
+2025-08-22 10:57:49 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:57:49 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:57:49 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:49 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 186개 키워드
+2025-08-22 10:57:49 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.67초 대기
+2025-08-22 10:57:50 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (PC)
+2025-08-22 10:57:50 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 오븐베이크
+2025-08-22 10:57:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:57:50 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): api.searchad.naver.com:443
+2025-08-22 10:57:50 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:50 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.51초 대기
+2025-08-22 10:57:50 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%98%A4%EB%B8%90%EB%B2%A0%EC%9D%B4%ED%81%AC&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:57:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:50 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 10:57:50 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.32초 대기
+2025-08-22 10:57:51 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크사료 (MOBILE)
+2025-08-22 10:57:51 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (PC)
+2025-08-22 10:57:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:51 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:51 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.16초 대기
+2025-08-22 10:57:51 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:51 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 오븐베이크 (MOBILE)
+2025-08-22 10:57:52 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:8
+2025-08-22 10:57:52 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크사료 -> (1, 8)
+2025-08-22 10:57:52 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크사료 -> 위치:1, 개수:4
+2025-08-22 10:57:52 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크사료 -> (1, 4)
+2025-08-22 10:57:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:57:52 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:57:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:57:52 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 2/2개 성공
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 오븐베이크 -> 위치:3, 개수:3
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 오븐베이크 -> (3, 3)
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 2/2개 처리
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 오븐베이크 -> 위치:2, 개수:3
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 오븐베이크 -> (2, 3)
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 2/2개 처리
+2025-08-22 10:57:55 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 2/2개 성공
+2025-08-22 10:57:55 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:57:55 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 3개 키워드
+2025-08-22 10:57:57 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 52
+2025-08-22 10:57:57 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_105757
+2025-08-22 10:58:08 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:58:08 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:58:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:58:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:58:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:58:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:58:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 10:58:09 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 3개 키워드 수집: {'오븐베이크사료', '오븐베이크', '강아지사료'}
+2025-08-22 10:58:09 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 3개, 정규화된 키워드: {'오븐베이크사료', '오븐베이크', '강아지사료'}
+2025-08-22 10:58:09 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['베니즈']
+2025-08-22 10:58:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 10:58:09 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['베니즈']
+2025-08-22 10:58:09 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['베니즈']
+2025-08-22 10:58:09 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 10:58:09 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 10:58:10 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 10:58:10 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.59초 대기
+2025-08-22 10:58:10 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 베니즈
+2025-08-22 10:58:10 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 10:58:11 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B2%A0%EB%8B%88%EC%A6%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 10:58:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:58:11 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 128개 키워드
+2025-08-22 10:58:11 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.51초 대기
+2025-08-22 10:58:11 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 베니즈 (PC)
+2025-08-22 10:58:11 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:58:12 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:58:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:58:12 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.09초 대기
+2025-08-22 10:58:12 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 베니즈 (MOBILE)
+2025-08-22 10:58:12 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 10:58:13 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 10:58:13 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 베니즈 -> 위치:1, 개수:8
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 베니즈 -> (1, 8)
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 베니즈 -> 위치:1, 개수:4
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 베니즈 -> (1, 4)
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 10:58:13 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 10:58:13 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 10:58:13 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 4개 키워드
+2025-08-22 11:06:25 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:06:25 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:06:25 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:06:25 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:06:25 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:06:25 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:06:25 - main - INFO - API 상태 확인 완료
+2025-08-22 11:06:25 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:06:26 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:06:26 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:06:26 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:06:26 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:06:26 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:06:26 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:06:26 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:06:26 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:06:26 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:06:26 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:06:26 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:06:26 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:06:26 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:06:26 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:06:26 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:06:26 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:06:26 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:06:26 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:06:36 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:06:36 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:06:36 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:06:36 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:06:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:06:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:06:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:06:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 3개 키워드 수집: {'오븐베이크', '강아지사료', '오븐베이크사료'}
+2025-08-22 11:06:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 3개, 정규화된 키워드: {'오븐베이크', '강아지사료', '오븐베이크사료'}
+2025-08-22 11:06:37 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['베니즈']
+2025-08-22 11:06:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:06:37 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['베니즈']
+2025-08-22 11:06:37 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['베니즈']
+2025-08-22 11:06:37 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:06:37 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:06:37 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:06:37 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:06:38 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 베니즈
+2025-08-22 11:06:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:06:38 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:06:38 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B2%A0%EB%8B%88%EC%A6%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:06:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:06:38 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 128개 키워드
+2025-08-22 11:06:38 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.72초 대기
+2025-08-22 11:06:39 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 베니즈 (PC)
+2025-08-22 11:06:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:06:39 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:06:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:06:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.98초 대기
+2025-08-22 11:06:40 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 베니즈 (MOBILE)
+2025-08-22 11:06:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:06:40 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:06:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:06:40 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 베니즈 -> 위치:1, 개수:8
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 베니즈 -> (1, 8)
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 베니즈 -> 위치:1, 개수:4
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 베니즈 -> (1, 4)
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:06:43 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:06:43 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:06:43 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 4개 키워드
+2025-08-22 11:06:47 - features.powerlink_analyzer.results_widget - INFO - 메모리 DB 클리어: 4개 → 0개
+2025-08-22 11:06:47 - features.powerlink_analyzer.results_widget - INFO - 테이블 클리어: 모바일 4→0, PC 4→0
+2025-08-22 11:07:03 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:03 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:03 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:03 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:04 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:04 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:05 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:05 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:05 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:05 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:06 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:06 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:06 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:06 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:07 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:07 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:07 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:07 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:07 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:07 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 2개 키워드 수집: {'오븐베이크', '오븐베이크사료'}
+2025-08-22 11:07:07 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 2개, 정규화된 키워드: {'오븐베이크', '오븐베이크사료'}
+2025-08-22 11:07:07 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['오븐베이크사료']
+2025-08-22 11:07:07 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 0개
+2025-08-22 11:07:07 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 0개: []
+2025-08-22 11:07:08 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:08 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:08 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:08 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:09 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:09 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:10 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:10 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:10 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:10 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:11 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:11 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:11 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:11 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:12 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:12 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:12 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:12 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:13 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:13 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:13 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:13 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:14 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:14 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:14 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:14 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:15 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:15 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:16 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:16 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:16 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:16 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:17 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:17 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:17 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:17 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:17 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:07:17 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 2개 키워드 수집: {'오븐베이크', '오븐베이크사료'}
+2025-08-22 11:07:17 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 2개, 정규화된 키워드: {'오븐베이크', '오븐베이크사료'}
+2025-08-22 11:07:17 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['눈물사료']
+2025-08-22 11:07:17 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:07:17 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['눈물사료']
+2025-08-22 11:07:17 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['눈물사료']
+2025-08-22 11:07:17 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:07:17 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:07:18 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:07:18 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 11:07:19 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 눈물사료
+2025-08-22 11:07:19 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:07:19 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%88%88%EB%AC%BC%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:07:19 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:07:19 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 347개 키워드
+2025-08-22 11:07:19 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.83초 대기
+2025-08-22 11:07:20 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 눈물사료 (PC)
+2025-08-22 11:07:20 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:07:20 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:07:20 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:07:20 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.69초 대기
+2025-08-22 11:07:20 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 눈물사료 (MOBILE)
+2025-08-22 11:07:21 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:07:21 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:07:21 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:07:21 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:07:21 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 눈물사료 -> 위치:1, 개수:8
+2025-08-22 11:07:21 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 눈물사료 -> (1, 8)
+2025-08-22 11:07:21 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 눈물사료 -> 위치:1, 개수:4
+2025-08-22 11:07:21 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 눈물사료 -> (1, 4)
+2025-08-22 11:07:21 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:07:21 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:07:22 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:07:22 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:07:22 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:07:22 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 3개 키워드
+2025-08-22 11:07:28 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 53
+2025-08-22 11:07:28 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_110728
+2025-08-22 11:09:58 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:09:58 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:09:58 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:09:58 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:09:58 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:09:58 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:09:58 - main - INFO - API 상태 확인 완료
+2025-08-22 11:09:59 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:09:59 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:09:59 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:09:59 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:09:59 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:09:59 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:09:59 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:09:59 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:09:59 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:09:59 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:09:59 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:09:59 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:09:59 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:09:59 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:09:59 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:09:59 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:09:59 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:09:59 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:09:59 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:10:05 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:10:05 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 0개 키워드 수집: set()
+2025-08-22 11:10:05 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 0개, 정규화된 키워드: set()
+2025-08-22 11:10:05 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지비스켓']
+2025-08-22 11:10:05 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:10:05 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지비스켓']
+2025-08-22 11:10:05 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지비스켓']
+2025-08-22 11:10:05 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:10:05 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:10:06 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:10:06 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:10:07 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지비스켓
+2025-08-22 11:10:07 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:10:07 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:10:07 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%B9%84%EC%8A%A4%EC%BC%93&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:10:07 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:07 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 26개 키워드
+2025-08-22 11:10:07 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.75초 대기
+2025-08-22 11:10:08 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지비스켓 (PC)
+2025-08-22 11:10:08 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:08 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:08 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:08 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.97초 대기
+2025-08-22 11:10:09 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지비스켓 (MOBILE)
+2025-08-22 11:10:09 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:09 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:09 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지비스켓 -> 위치:1, 개수:10
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지비스켓 -> (1, 10)
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지비스켓 -> 위치:1, 개수:4
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지비스켓 -> (1, 4)
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:10:09 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:10:09 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:10:09 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 1개 키워드
+2025-08-22 11:10:14 - toolbox.text_utils - INFO - 텍스트에서 3개 키워드 파싱 완료
+2025-08-22 11:10:14 - toolbox.text_utils - DEBUG - 중복 제거 완료: 3 -> 3개
+2025-08-22 11:10:14 - toolbox.text_utils - INFO - 텍스트에서 3개 키워드 파싱 완료
+2025-08-22 11:10:14 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 1개 키워드 수집: {'강아지비스켓'}
+2025-08-22 11:10:14 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 1개, 정규화된 키워드: {'강아지비스켓'}
+2025-08-22 11:10:14 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 3개: ['반려견쿠키', '강아지크런치', '애견과자']
+2025-08-22 11:10:14 - toolbox.text_utils - DEBUG - 중복 제거 완료: 3 -> 3개
+2025-08-22 11:10:14 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 3개: ['반려견쿠키', '강아지크런치', '애견과자']
+2025-08-22 11:10:14 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 3개 준비 완료: ['반려견쿠키', '강아지크런치', '애견과자']
+2025-08-22 11:10:14 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 3개 키워드 (최적화된 병렬처리)
+2025-08-22 11:10:14 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:10:15 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:10:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 11:10:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 11:10:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 11:10:16 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견쿠키
+2025-08-22 11:10:16 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 11:10:16 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 11:10:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:10:16 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EC%BF%A0%ED%82%A4&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:10:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:16 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:10:16 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.85초 대기
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지크런치
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견과자
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견쿠키 (PC)
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:17 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): api.searchad.naver.com:443
+2025-08-22 11:10:17 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): api.searchad.naver.com:443
+2025-08-22 11:10:17 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%ED%81%AC%EB%9F%B0%EC%B9%98&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:17 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:10:17 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:10:17 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EA%B3%BC%EC%9E%90&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:17 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:10:17 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.47초 대기
+2025-08-22 11:10:17 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:17 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.47초 대기
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견쿠키 (MOBILE)
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지크런치 (PC)
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 애견과자 (PC)
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:18 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:18 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:18 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.41초 대기
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:18 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:18 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.33초 대기
+2025-08-22 11:10:18 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 반려견쿠키 -> 위치:1, 개수:3
+2025-08-22 11:10:18 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 반려견쿠키 -> (1, 3)
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 애견과자 (MOBILE)
+2025-08-22 11:10:18 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지크런치 (MOBILE)
+2025-08-22 11:10:18 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 반려견쿠키 -> 위치:1, 개수:4
+2025-08-22 11:10:18 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 반려견쿠키 -> (1, 4)
+2025-08-22 11:10:19 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:19 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:10:19 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:19 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:10:19 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:19 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:10:19 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 3/3개 성공
+2025-08-22 11:10:21 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지크런치 -> 위치:1, 개수:3
+2025-08-22 11:10:21 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지크런치 -> (1, 3)
+2025-08-22 11:10:21 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지크런치 -> 위치:2, 개수:4
+2025-08-22 11:10:21 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지크런치 -> (2, 4)
+2025-08-22 11:10:24 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 애견과자 -> 위치:1, 개수:3
+2025-08-22 11:10:24 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 애견과자 -> (1, 3)
+2025-08-22 11:10:24 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 3/3개 처리
+2025-08-22 11:10:24 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 애견과자 -> 위치:1, 개수:4
+2025-08-22 11:10:24 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 애견과자 -> (1, 4)
+2025-08-22 11:10:25 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 3/3개 처리
+2025-08-22 11:10:25 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:10:25 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 3/3개 성공
+2025-08-22 11:10:25 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:10:25 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 4개 키워드
+2025-08-22 11:11:25 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:11:25 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:11:25 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:11:25 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:11:25 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:11:25 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:11:25 - main - INFO - API 상태 확인 완료
+2025-08-22 11:11:25 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:11:25 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:11:25 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:11:25 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:11:25 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:11:25 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:11:26 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:11:26 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:11:26 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:11:26 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:11:26 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:11:26 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:11:26 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:11:26 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:11:26 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:11:26 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:11:26 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:11:26 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:11:26 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:11:34 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:34 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:34 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:34 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:35 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:35 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:36 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:36 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:36 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:36 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 3개 키워드 수집: {'오븐베이크', '오븐베이크사료', '눈물사료'}
+2025-08-22 11:11:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 3개, 정규화된 키워드: {'오븐베이크', '오븐베이크사료', '눈물사료'}
+2025-08-22 11:11:37 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 11:11:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:37 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 11:11:37 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 11:11:37 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:11:37 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:11:38 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:11:38 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:11:39 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 11:11:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:11:39 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:11:39 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:11:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:11:39 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 11:11:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.70초 대기
+2025-08-22 11:11:40 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 11:11:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:11:40 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:11:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:11:40 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.97초 대기
+2025-08-22 11:11:41 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 11:11:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:11:41 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:11:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:11:41 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:11:41 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 11:11:41 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 11:11:41 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:11:41 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 11:11:41 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 11:11:42 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:11:42 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:11:42 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:11:42 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:11:42 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 4개 키워드
+2025-08-22 11:11:47 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:47 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:11:48 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 3개 키워드 수집: {'오븐베이크', '오븐베이크사료', '눈물사료'}
+2025-08-22 11:11:48 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 3개, 정규화된 키워드: {'오븐베이크', '오븐베이크사료', '눈물사료'}
+2025-08-22 11:11:48 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 11:11:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:11:48 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 11:11:48 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 11:11:48 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:11:48 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:11:49 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:11:49 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.90초 대기
+2025-08-22 11:11:50 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 11:11:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:11:50 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:11:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:11:50 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 11:11:50 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.80초 대기
+2025-08-22 11:11:51 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 11:11:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:11:51 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:11:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:11:51 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:11:51 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 11:11:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:11:52 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:11:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:11:52 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:11:52 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 11:11:52 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 11:11:52 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:11:53 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 11:11:53 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 11:11:53 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:11:53 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:11:53 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:11:53 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:11:53 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 4개 키워드
+2025-08-22 11:19:14 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:19:14 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:19:14 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:19:14 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:19:14 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:19:14 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:19:14 - main - INFO - API 상태 확인 완료
+2025-08-22 11:19:14 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:19:15 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:19:15 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:19:15 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:19:15 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:19:15 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:19:15 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:19:15 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:19:15 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:19:15 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:19:15 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:19:15 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:19:15 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:19:15 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:19:15 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:19:15 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:19:15 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:19:15 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:19:15 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:19:33 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (눈물사료 외 2개): C:/Users/wogud/Downloads/파워링크광고비분석_20250822_110728.xlsx
+2025-08-22 11:19:43 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (눈물사료 외 2개): C:/Users/wogud/Downloads\파워링크광고비분석_20250822_020728.xlsx
+2025-08-22 11:19:43 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (강아지사료 외 2개): C:/Users/wogud/Downloads\파워링크광고비분석_20250822_015757.xlsx
+2025-08-22 11:20:17 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:20:17 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:20:17 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:20:17 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:20:18 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:20:18 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:20:18 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:20:18 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 3개 키워드 수집: {'오븐베이크', '오븐베이크사료', '눈물사료'}
+2025-08-22 11:20:18 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 3개, 정규화된 키워드: {'오븐베이크', '오븐베이크사료', '눈물사료'}
+2025-08-22 11:20:18 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 11:20:18 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:20:18 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지사료']
+2025-08-22 11:20:18 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지사료']
+2025-08-22 11:20:18 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:20:18 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:20:19 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:20:19 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:20:20 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지사료
+2025-08-22 11:20:20 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:20:20 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:20:20 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:20:20 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:20:20 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 608개 키워드
+2025-08-22 11:20:20 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.63초 대기
+2025-08-22 11:20:21 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (PC)
+2025-08-22 11:20:21 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:20:21 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:20:21 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:20:21 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.97초 대기
+2025-08-22 11:20:22 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지사료 (MOBILE)
+2025-08-22 11:20:22 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:20:22 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:20:22 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:20:22 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:20:22 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:8
+2025-08-22 11:20:22 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지사료 -> (1, 8)
+2025-08-22 11:20:22 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:20:23 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지사료 -> 위치:1, 개수:4
+2025-08-22 11:20:23 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지사료 -> (1, 4)
+2025-08-22 11:20:23 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:20:23 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:20:23 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:20:23 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:20:23 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 4개 키워드
+2025-08-22 11:20:28 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 54
+2025-08-22 11:20:28 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_112028
+2025-08-22 11:20:32 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (PowerLink분석_20250822_112028): C:/Users/wogud/Downloads/파워링크광고비분석_20250822_112029.xlsx
+2025-08-22 11:20:32 - features.powerlink_analyzer.adapters - ERROR - 성공 다이얼로그 표시 실패: ModernSaveCompletionDialog.show_save_completion() got an unexpected keyword argument 'filename'
+2025-08-22 11:25:04 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:25:04 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:25:04 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:25:04 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:25:04 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:25:04 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:25:04 - main - INFO - API 상태 확인 완료
+2025-08-22 11:25:05 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:25:05 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:25:05 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:25:05 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:25:05 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:25:05 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:25:05 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:25:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:25:05 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:25:05 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:25:05 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:25:05 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:25:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:25:05 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:25:05 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:25:05 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:25:05 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:25:05 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:25:05 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:25:35 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:25:35 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:25:35 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:25:35 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:25:35 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:25:35 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:25:35 - main - INFO - API 상태 확인 완료
+2025-08-22 11:25:36 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:25:36 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:25:36 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:25:36 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:25:36 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:25:36 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:25:36 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:25:36 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:25:36 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:25:36 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:25:36 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:25:36 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:25:36 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:25:36 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:25:36 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:25:36 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:25:36 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:25:36 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:25:36 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:25:47 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:49 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:49 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:49 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:49 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:50 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:50 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 4개 키워드 수집: {'강아지사료', '눈물사료', '오븐베이크', '오븐베이크사료'}
+2025-08-22 11:25:50 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 4개, 정규화된 키워드: {'강아지사료', '눈물사료', '오븐베이크', '오븐베이크사료'}
+2025-08-22 11:25:50 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 11:25:50 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 0개
+2025-08-22 11:25:50 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 0개: []
+2025-08-22 11:25:50 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:50 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:50 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:50 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:51 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:51 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:51 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:51 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:52 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:52 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:52 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:52 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:53 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:53 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:53 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:53 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:54 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:54 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:54 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:54 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:55 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:25:55 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 4개 키워드 수집: {'강아지사료', '눈물사료', '오븐베이크', '오븐베이크사료'}
+2025-08-22 11:25:55 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 4개, 정규화된 키워드: {'강아지사료', '눈물사료', '오븐베이크', '오븐베이크사료'}
+2025-08-22 11:25:55 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['베니즈']
+2025-08-22 11:25:55 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:25:55 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['베니즈']
+2025-08-22 11:25:55 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['베니즈']
+2025-08-22 11:25:55 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:25:55 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:25:55 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:25:55 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:25:56 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 베니즈
+2025-08-22 11:25:56 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:25:56 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:25:56 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B2%A0%EB%8B%88%EC%A6%88&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:25:56 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:25:56 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 128개 키워드
+2025-08-22 11:25:56 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.71초 대기
+2025-08-22 11:25:57 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 베니즈 (PC)
+2025-08-22 11:25:57 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:25:57 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:25:57 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:25:57 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.98초 대기
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 베니즈 -> 위치:1, 개수:9
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 베니즈 -> (1, 9)
+2025-08-22 11:25:58 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 베니즈 (MOBILE)
+2025-08-22 11:25:58 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:25:58 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:25:58 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 베니즈 -> 위치:1, 개수:4
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 베니즈 -> (1, 4)
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:25:58 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:25:58 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:25:58 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 5개 키워드
+2025-08-22 11:26:06 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:26:06 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:26:06 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:26:06 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:26:06 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:26:06 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:26:07 - main - INFO - API 상태 확인 완료
+2025-08-22 11:26:07 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:26:07 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:26:07 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:26:07 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:26:07 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:26:07 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:26:07 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:26:07 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:26:07 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:26:07 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:26:07 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:26:07 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:26:07 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:26:07 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:26:07 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:26:07 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:26:07 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:26:07 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:26:07 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:26:13 - toolbox.text_utils - INFO - 텍스트에서 3개 키워드 파싱 완료
+2025-08-22 11:26:13 - toolbox.text_utils - DEBUG - 중복 제거 완료: 3 -> 3개
+2025-08-22 11:26:13 - toolbox.text_utils - INFO - 텍스트에서 3개 키워드 파싱 완료
+2025-08-22 11:26:13 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 0개 키워드 수집: set()
+2025-08-22 11:26:13 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 0개, 정규화된 키워드: set()
+2025-08-22 11:26:13 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 3개: ['강아지시리얼', '강아지비스켓', '강아지치즈과자']
+2025-08-22 11:26:13 - toolbox.text_utils - DEBUG - 중복 제거 완료: 3 -> 3개
+2025-08-22 11:26:13 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 3개: ['강아지시리얼', '강아지비스켓', '강아지치즈과자']
+2025-08-22 11:26:13 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 3개 준비 완료: ['강아지시리얼', '강아지비스켓', '강아지치즈과자']
+2025-08-22 11:26:13 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 3개 키워드 (최적화된 병렬처리)
+2025-08-22 11:26:13 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:26:13 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:26:13 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:26:13 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:26:13 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:26:14 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지시리얼
+2025-08-22 11:26:14 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:26:14 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:26:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:14 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:26:14 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%8B%9C%EB%A6%AC%EC%96%BC&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:14 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:14 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:26:14 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.75초 대기
+2025-08-22 11:26:15 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지비스켓
+2025-08-22 11:26:15 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지치즈과자
+2025-08-22 11:26:15 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지시리얼 (PC)
+2025-08-22 11:26:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:15 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%B9%84%EC%8A%A4%EC%BC%93&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:15 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:15 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 26개 키워드
+2025-08-22 11:26:15 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.96초 대기
+2025-08-22 11:26:16 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지비스켓 (PC)
+2025-08-22 11:26:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:16 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): api.searchad.naver.com:443
+2025-08-22 11:26:16 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (3): api.searchad.naver.com:443
+2025-08-22 11:26:16 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:16 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.88초 대기
+2025-08-22 11:26:16 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지시리얼 -> 위치:2, 개수:3
+2025-08-22 11:26:16 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지시리얼 -> (2, 3)
+2025-08-22 11:26:16 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%B9%98%EC%A6%88%EA%B3%BC%EC%9E%90&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:16 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:16 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:16 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:26:16 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:26:16 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:26:17 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지시리얼 -> 위치:2, 개수:3
+2025-08-22 11:26:17 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지시리얼 -> (2, 3)
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지시리얼 (MOBILE)
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지치즈과자 (PC)
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지비스켓 (MOBILE)
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:17 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:17 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:17 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:17 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:17 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.69초 대기
+2025-08-22 11:26:18 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지치즈과자 (MOBILE)
+2025-08-22 11:26:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:18 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:18 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:18 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 3/3개 성공
+2025-08-22 11:26:19 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지비스켓 -> 위치:1, 개수:10
+2025-08-22 11:26:19 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지비스켓 -> (1, 10)
+2025-08-22 11:26:20 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지비스켓 -> 위치:1, 개수:4
+2025-08-22 11:26:20 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지비스켓 -> (1, 4)
+2025-08-22 11:26:22 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지치즈과자 -> 위치:1, 개수:3
+2025-08-22 11:26:22 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지치즈과자 -> (1, 3)
+2025-08-22 11:26:22 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 3/3개 처리
+2025-08-22 11:26:23 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지치즈과자 -> 위치:2, 개수:3
+2025-08-22 11:26:23 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지치즈과자 -> (2, 3)
+2025-08-22 11:26:23 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 3/3개 처리
+2025-08-22 11:26:23 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:26:23 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 3/3개 성공
+2025-08-22 11:26:23 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:26:23 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 3개 키워드
+2025-08-22 11:26:35 - toolbox.text_utils - INFO - 텍스트에서 8개 키워드 파싱 완료
+2025-08-22 11:26:35 - toolbox.text_utils - DEBUG - 중복 제거 완료: 8 -> 8개
+2025-08-22 11:26:35 - toolbox.text_utils - INFO - 텍스트에서 8개 키워드 파싱 완료
+2025-08-22 11:26:35 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 3개 키워드 수집: {'강아지시리얼', '강아지치즈과자', '강아지비스켓'}
+2025-08-22 11:26:35 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 3개, 정규화된 키워드: {'강아지시리얼', '강아지치즈과자', '강아지비스켓'}
+2025-08-22 11:26:35 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 8개: ['강아지치즈과자', '반려견칩', '애견쿠키', '강아지비스킷', '강아지크래커', '반려견쿠키', '강아지크런치', '애견과자']
+2025-08-22 11:26:35 - toolbox.text_utils - DEBUG - 중복 제거 완료: 8 -> 7개
+2025-08-22 11:26:35 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 7개: ['반려견칩', '애견쿠키', '강아지비스킷', '강아지크래커', '반려견쿠키', '강아지크런치', '애견과자']
+2025-08-22 11:26:35 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 7개 준비 완료: ['반려견칩', '애견쿠키', '강아지비스킷', '강아지크래커', '반려견쿠키', '강아지크런치', '애견과자']
+2025-08-22 11:26:35 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 7개 키워드 (최적화된 병렬처리)
+2025-08-22 11:26:35 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:26:36 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:26:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:26:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:26:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.65초 대기
+2025-08-22 11:26:36 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견칩
+2025-08-22 11:26:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:26:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.66초 대기
+2025-08-22 11:26:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:36 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EC%B9%A9&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:36 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:36 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 40개 키워드
+2025-08-22 11:26:36 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.60초 대기
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지비스킷
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견쿠키
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견칩 (PC)
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:37 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:37 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.29초 대기
+2025-08-22 11:26:37 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EC%BF%A0%ED%82%A4&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:37 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%B9%84%EC%8A%A4%ED%82%B7&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:37 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:37 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 21개 키워드
+2025-08-22 11:26:37 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:26:37 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.19초 대기
+2025-08-22 11:26:37 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.19초 대기
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 애견쿠키 (PC)
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지비스킷 (PC)
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견칩 (MOBILE)
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:38 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:38 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:38 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지비스킷 (MOBILE)
+2025-08-22 11:26:38 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:38 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.53초 대기
+2025-08-22 11:26:38 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.53초 대기
+2025-08-22 11:26:39 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 반려견칩 -> 위치:1, 개수:3
+2025-08-22 11:26:39 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 반려견칩 -> (1, 3)
+2025-08-22 11:26:39 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 애견쿠키 (MOBILE)
+2025-08-22 11:26:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.53초 대기
+2025-08-22 11:26:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:39 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.04초 대기
+2025-08-22 11:26:39 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.03초 대기
+2025-08-22 11:26:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.50초 대기
+2025-08-22 11:26:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.50초 대기
+2025-08-22 11:26:39 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지크래커
+2025-08-22 11:26:40 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 반려견칩 -> 위치:2, 개수:4
+2025-08-22 11:26:40 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 반려견칩 -> (2, 4)
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견쿠키
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지크런치
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:40 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EC%BF%A0%ED%82%A4&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:40 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%ED%81%AC%EB%9E%98%EC%BB%A4&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:40 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:26:40 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:26:40 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.02초 대기
+2025-08-22 11:26:40 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.02초 대기
+2025-08-22 11:26:40 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%ED%81%AC%EB%9F%B0%EC%B9%98&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:40 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:26:40 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.01초 대기
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지크런치 (PC)
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견쿠키 (PC)
+2025-08-22 11:26:40 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지크래커 (PC)
+2025-08-22 11:26:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:41 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:41 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:41 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지크런치 (MOBILE)
+2025-08-22 11:26:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:41 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.50초 대기
+2025-08-22 11:26:41 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:41 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.50초 대기
+2025-08-22 11:26:42 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 애견쿠키 -> 위치:1, 개수:8
+2025-08-22 11:26:42 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 애견쿠키 -> (1, 8)
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지크래커 (MOBILE)
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견쿠키 (MOBILE)
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:42 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:42 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:42 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.00초 대기
+2025-08-22 11:26:42 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.50초 대기
+2025-08-22 11:26:42 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:43 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 애견쿠키 -> 위치:1, 개수:4
+2025-08-22 11:26:43 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 애견쿠키 -> (1, 4)
+2025-08-22 11:26:43 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 애견과자
+2025-08-22 11:26:43 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:26:43 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EC%95%A0%EA%B2%AC%EA%B3%BC%EC%9E%90&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:26:43 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:43 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:26:43 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 애견과자 (PC)
+2025-08-22 11:26:44 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지비스킷 -> 위치:2, 개수:3
+2025-08-22 11:26:44 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지비스킷 -> (2, 3)
+2025-08-22 11:26:44 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:44 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:44 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:44 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 애견과자 (MOBILE)
+2025-08-22 11:26:45 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:26:45 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:26:45 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:26:45 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 7/7개 성공
+2025-08-22 11:26:46 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지비스킷 -> 위치:2, 개수:3
+2025-08-22 11:26:46 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지비스킷 -> (2, 3)
+2025-08-22 11:26:47 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지크래커 -> 위치:1, 개수:3
+2025-08-22 11:26:47 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지크래커 -> (1, 3)
+2025-08-22 11:26:49 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지크래커 -> 위치:1, 개수:2
+2025-08-22 11:26:49 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지크래커 -> (1, 2)
+2025-08-22 11:26:50 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 반려견쿠키 -> 위치:1, 개수:3
+2025-08-22 11:26:50 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 반려견쿠키 -> (1, 3)
+2025-08-22 11:26:51 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 반려견쿠키 -> 위치:1, 개수:4
+2025-08-22 11:26:51 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 반려견쿠키 -> (1, 4)
+2025-08-22 11:26:53 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지크런치 -> 위치:1, 개수:3
+2025-08-22 11:26:53 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지크런치 -> (1, 3)
+2025-08-22 11:26:54 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지크런치 -> 위치:2, 개수:4
+2025-08-22 11:26:54 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지크런치 -> (2, 4)
+2025-08-22 11:26:56 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 애견과자 -> 위치:1, 개수:3
+2025-08-22 11:26:56 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 애견과자 -> (1, 3)
+2025-08-22 11:26:56 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 7/7개 처리
+2025-08-22 11:26:57 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 애견과자 -> 위치:1, 개수:4
+2025-08-22 11:26:57 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 애견과자 -> (1, 4)
+2025-08-22 11:26:57 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 7/7개 처리
+2025-08-22 11:26:57 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:26:57 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 7/7개 성공
+2025-08-22 11:26:57 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:26:57 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 10개 키워드
+2025-08-22 11:29:28 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:29:28 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:29:28 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:29:28 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:29:28 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:29:28 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:29:28 - main - INFO - API 상태 확인 완료
+2025-08-22 11:29:28 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:29:28 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:29:28 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:29:28 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:29:28 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:29:28 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:29:28 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:29:28 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:29:28 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:29:28 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:29:28 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:29:29 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:29:29 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:29:29 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:29:29 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:29:29 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:29:29 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:29:29 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:29:29 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:29:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:37 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:38 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:38 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:38 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:38 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:38 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:38 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 4개 키워드 수집: {'오븐베이크', '눈물사료', '강아지사료', '오븐베이크사료'}
+2025-08-22 11:29:38 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 4개, 정규화된 키워드: {'오븐베이크', '눈물사료', '강아지사료', '오븐베이크사료'}
+2025-08-22 11:29:38 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지사료']
+2025-08-22 11:29:38 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 0개
+2025-08-22 11:29:38 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 0개: []
+2025-08-22 11:29:39 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:39 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:39 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:39 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:40 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:40 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:40 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:40 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:41 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:41 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:42 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:42 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:42 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:42 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:43 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:43 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:43 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:43 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:44 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:44 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:45 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:45 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:45 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:45 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:46 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:46 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:46 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:46 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:47 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:47 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:47 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:48 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:48 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:49 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:29:49 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 4개 키워드 수집: {'오븐베이크', '눈물사료', '강아지사료', '오븐베이크사료'}
+2025-08-22 11:29:49 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 4개, 정규화된 키워드: {'오븐베이크', '눈물사료', '강아지사료', '오븐베이크사료'}
+2025-08-22 11:29:49 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['비숑사료']
+2025-08-22 11:29:49 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:29:49 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['비숑사료']
+2025-08-22 11:29:49 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['비숑사료']
+2025-08-22 11:29:49 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:29:49 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:29:49 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:29:49 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:29:50 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 비숑사료
+2025-08-22 11:29:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:29:50 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:29:50 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B9%84%EC%88%91%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:29:50 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:29:50 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 196개 키워드
+2025-08-22 11:29:50 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.67초 대기
+2025-08-22 11:29:51 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 비숑사료 (PC)
+2025-08-22 11:29:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:29:51 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:29:51 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:29:51 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.98초 대기
+2025-08-22 11:29:52 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 비숑사료 -> 위치:1, 개수:8
+2025-08-22 11:29:52 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 비숑사료 -> (1, 8)
+2025-08-22 11:29:52 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 비숑사료 (MOBILE)
+2025-08-22 11:29:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:29:52 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:29:52 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:29:52 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:29:52 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:29:53 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 비숑사료 -> 위치:1, 개수:4
+2025-08-22 11:29:53 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 비숑사료 -> (1, 4)
+2025-08-22 11:29:53 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:29:53 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:29:53 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:29:53 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:29:53 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 5개 키워드
+2025-08-22 11:29:55 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 55
+2025-08-22 11:29:55 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_112955
+2025-08-22 11:29:57 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (PowerLink분석_20250822_112955): C:/Users/wogud/Downloads/파워링크광고비분석_20250822_112955.xlsx
+2025-08-22 11:30:59 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:30:59 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:30:59 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:30:59 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:30:59 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:30:59 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:30:59 - main - INFO - API 상태 확인 완료
+2025-08-22 11:30:59 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:30:59 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:30:59 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:30:59 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:30:59 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:30:59 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:31:00 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:31:00 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:31:00 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:31:00 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:31:00 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:31:00 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:31:00 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:31:00 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:31:00 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:31:00 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:31:00 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:31:00 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:31:00 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:32:31 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:32:31 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:32:31 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:32:31 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:32:31 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:32:31 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:32:31 - main - INFO - API 상태 확인 완료
+2025-08-22 11:32:31 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:32:31 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:32:31 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:32:31 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:32:31 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:32:31 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:32:31 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:32:31 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:32:31 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:32:31 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:32:31 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:32:31 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:32:31 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:32:31 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:32:31 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:32:32 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:32:32 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:32:32 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:32:32 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:32:59 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:32:59 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:32:59 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:32:59 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:33:00 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:33:00 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:33:00 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:33:00 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:33:01 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:33:01 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:33:01 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:33:01 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:33:02 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:33:02 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:33:02 - toolbox.text_utils - INFO - 텍스트에서 1개 키워드 파싱 완료
+2025-08-22 11:33:02 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 6개 키워드 수집: {'중형견겨울옷', '강아지의류', '개옷', '오븐베이크', '강아지패딩옷', '강아지사료'}
+2025-08-22 11:33:02 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 6개, 정규화된 키워드: {'중형견겨울옷', '강아지의류', '개옷', '오븐베이크', '강아지패딩옷', '강아지사료'}
+2025-08-22 11:33:02 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 1개: ['강아지눈물사료']
+2025-08-22 11:33:02 - toolbox.text_utils - DEBUG - 중복 제거 완료: 1 -> 1개
+2025-08-22 11:33:02 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 1개: ['강아지눈물사료']
+2025-08-22 11:33:02 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 1개 준비 완료: ['강아지눈물사료']
+2025-08-22 11:33:02 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 1개 키워드 (최적화된 병렬처리)
+2025-08-22 11:33:02 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:33:02 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:33:02 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:33:03 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지눈물사료
+2025-08-22 11:33:03 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:33:03 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:33:03 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EB%88%88%EB%AC%BC%EC%82%AC%EB%A3%8C&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:33:03 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:33:03 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 494개 키워드
+2025-08-22 11:33:03 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.71초 대기
+2025-08-22 11:33:04 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지눈물사료 (PC)
+2025-08-22 11:33:04 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:33:04 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:33:04 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:33:04 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.98초 대기
+2025-08-22 11:33:05 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지눈물사료 (MOBILE)
+2025-08-22 11:33:05 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:33:05 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지눈물사료 -> 위치:1, 개수:8
+2025-08-22 11:33:05 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지눈물사료 -> (1, 8)
+2025-08-22 11:33:05 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:33:05 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:33:05 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 1/1개 성공
+2025-08-22 11:33:05 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 1/1개 처리
+2025-08-22 11:33:06 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지눈물사료 -> 위치:1, 개수:4
+2025-08-22 11:33:06 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지눈물사료 -> (1, 4)
+2025-08-22 11:33:06 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 1/1개 처리
+2025-08-22 11:33:06 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:33:06 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 1/1개 성공
+2025-08-22 11:33:06 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:33:06 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 7개 키워드
+2025-08-22 11:33:14 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 56
+2025-08-22 11:33:14 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_113314
+2025-08-22 11:33:17 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (PowerLink분석_20250822_113314): C:/Users/wogud/Downloads/파워링크광고비분석_20250822_113315.xlsx
+2025-08-22 11:34:04 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:34:04 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:34:04 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:34:04 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:34:04 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:34:04 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:34:05 - main - INFO - API 상태 확인 완료
+2025-08-22 11:34:05 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:34:05 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:34:05 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:34:05 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:34:05 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:34:05 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:34:05 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:34:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:34:05 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:34:05 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:34:05 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:34:05 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:34:05 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:34:05 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:34:05 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:34:06 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:34:06 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:34:06 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:34:06 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:38:34 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:38:34 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:38:34 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:38:34 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:38:34 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:38:34 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:38:34 - main - INFO - API 상태 확인 완료
+2025-08-22 11:38:34 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:38:34 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:38:34 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:38:34 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:38:34 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:38:34 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:38:34 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:38:34 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:38:34 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:38:34 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:38:34 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:38:35 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:38:35 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:38:35 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:38:35 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:38:35 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:38:35 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:38:35 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:38:35 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:39:13 - features.powerlink_analyzer.results_widget - INFO - 메모리 DB 클리어: 7개 → 0개
+2025-08-22 11:39:13 - features.powerlink_analyzer.results_widget - INFO - 테이블 클리어: 모바일 7→0, PC 7→0
+2025-08-22 11:39:19 - features.powerlink_analyzer.results_widget - INFO - 메모리 DB 클리어: 5개 → 0개
+2025-08-22 11:39:19 - features.powerlink_analyzer.results_widget - INFO - 테이블 클리어: 모바일 5→0, PC 5→0
+2025-08-22 11:39:37 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 11:39:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 11:39:37 - toolbox.text_utils - INFO - 텍스트에서 2개 키워드 파싱 완료
+2025-08-22 11:39:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블에서 8개 키워드 수집: {'일킬로그램', '강아지오리육포', '강아지오리가슴살', '강아지사료', '강아지간식오리', '애견고구마간식', '강아지닭가슴살육포', '강아지육포간식'}
+2025-08-22 11:39:37 - features.powerlink_analyzer.control_widget - DEBUG - 테이블 키워드 8개, 정규화된 키워드: {'일킬로그램', '강아지오리육포', '강아지오리가슴살', '강아지사료', '강아지간식오리', '애견고구마간식', '강아지닭가슴살육포', '강아지육포간식'}
+2025-08-22 11:39:37 - features.powerlink_analyzer.control_widget - DEBUG - 입력된 키워드 2개: ['강아지치즈과자', '반려견칩']
+2025-08-22 11:39:37 - toolbox.text_utils - DEBUG - 중복 제거 완료: 2 -> 2개
+2025-08-22 11:39:37 - features.powerlink_analyzer.control_widget - DEBUG - 중복 제거 후 키워드 2개: ['강아지치즈과자', '반려견칩']
+2025-08-22 11:39:37 - features.powerlink_analyzer.control_widget - INFO - 분석 대상 키워드 2개 준비 완료: ['강아지치즈과자', '반려견칩']
+2025-08-22 11:39:37 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 시작: 2개 키워드 (최적화된 병렬처리)
+2025-08-22 11:39:37 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-08-22 11:39:38 - features.powerlink_analyzer.adapters - INFO - PC/Mobile 페이지 초기화 완료 (vendors 헬퍼 활용)
+2025-08-22 11:39:38 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:39:38 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:39:39 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 강아지치즈과자
+2025-08-22 11:39:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 1.00초 대기
+2025-08-22 11:39:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:39:39 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.searchad.naver.com:443
+2025-08-22 11:39:39 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EA%B0%95%EC%95%84%EC%A7%80%EC%B9%98%EC%A6%88%EA%B3%BC%EC%9E%90&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:39:39 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:39:39 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 1개 키워드
+2025-08-22 11:39:39 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.68초 대기
+2025-08-22 11:39:40 - vendors.naver.searchad.keyword_tool - DEBUG - 키워드 아이디어 조회: 반려견칩
+2025-08-22 11:39:40 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지치즈과자 (PC)
+2025-08-22 11:39:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: GET /keywordstool
+2025-08-22 11:39:40 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "GET /keywordstool?hintKeywords=%EB%B0%98%EB%A0%A4%EA%B2%AC%EC%B9%A9&showDetail=1 HTTP/1.1" 200 None
+2025-08-22 11:39:40 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:39:40 - vendors.naver.searchad - DEBUG - 네이버 검색광고 API 성공: 40개 키워드
+2025-08-22 11:39:40 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.95초 대기
+2025-08-22 11:39:41 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견칩 (PC)
+2025-08-22 11:39:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:39:41 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:39:41 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:39:41 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.86초 대기
+2025-08-22 11:39:42 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 강아지치즈과자 (MOBILE)
+2025-08-22 11:39:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:39:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:39:42 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (2): api.searchad.naver.com:443
+2025-08-22 11:39:42 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:39:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:39:42 - features.powerlink_analyzer.adapters - DEBUG - 적응형 Rate Limit: 0.77초 대기
+2025-08-22 11:39:42 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:39:42 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:39:42 - vendors.naver.searchad.keyword_tool - DEBUG - 입찰가 추정 조회: 반려견칩 (MOBILE)
+2025-08-22 11:39:43 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 호출: POST /estimate/average-position-bid/keyword
+2025-08-22 11:39:43 - urllib3.connectionpool - DEBUG - https://api.searchad.naver.com:443 "POST /estimate/average-position-bid/keyword HTTP/1.1" 200 None
+2025-08-22 11:39:43 - vendors.naver.searchad.keyword_tool - DEBUG - keyword_tool API 성공
+2025-08-22 11:39:43 - features.powerlink_analyzer.worker - INFO - API 호출 완료: 2/2개 성공
+2025-08-22 11:39:44 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 강아지치즈과자 -> 위치:1, 개수:3
+2025-08-22 11:39:44 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 강아지치즈과자 -> (1, 3)
+2025-08-22 11:39:44 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 강아지치즈과자 -> 위치:2, 개수:3
+2025-08-22 11:39:44 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 강아지치즈과자 -> (2, 3)
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - DEBUG - PC 파워링크 추출 성공: 반려견칩 -> 위치:1, 개수:3
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - DEBUG - PC 크롤링 성공: 반려견칩 -> (1, 3)
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - INFO - PC 크롤링 완료: 2/2개 처리
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - DEBUG - Mobile 파워링크 추출 성공: 반려견칩 -> 위치:2, 개수:4
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - DEBUG - Mobile 크롤링 성공: 반려견칩 -> (2, 4)
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - INFO - Mobile 크롤링 완료: 2/2개 처리
+2025-08-22 11:39:47 - features.powerlink_analyzer.adapters - INFO - 페이지 정리 완료
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 완료: 2/2개 성공
+2025-08-22 11:39:47 - features.powerlink_analyzer.worker - INFO - 파워링크 분석 워커 종료
+2025-08-22 11:39:47 - features.powerlink_analyzer.results_widget - INFO - 테이블 새로고침 완료: 10개 키워드
+2025-08-22 11:42:08 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:42:08 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:42:08 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:42:08 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:42:08 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:42:08 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:42:08 - main - INFO - API 상태 확인 완료
+2025-08-22 11:42:08 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:42:08 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:42:08 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:42:08 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:42:08 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:42:08 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:42:09 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:42:09 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:42:09 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:42:09 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:42:09 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:42:09 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:42:09 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:42:09 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:42:09 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:42:09 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:42:09 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:42:09 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:42:09 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:42:16 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 57
+2025-08-22 11:42:16 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_114216
+2025-08-22 11:42:31 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 58
+2025-08-22 11:42:31 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_114231
+2025-08-22 11:44:52 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:44:52 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:44:52 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:44:52 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:44:52 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:44:52 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:44:53 - main - INFO - API 상태 확인 완료
+2025-08-22 11:44:53 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:44:53 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:44:53 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:44:53 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:44:53 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:44:53 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:44:53 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:44:53 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:44:53 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:44:53 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:44:53 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:44:53 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:44:53 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:44:53 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:44:53 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:44:53 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:44:53 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:44:53 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:44:53 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:51:34 - main - INFO - 통합 관리 시스템 시작
+2025-08-22 11:51:34 - foundation.db - DEBUG - 데이터베이스 테이블 및 인덱스 초기화 완료
+2025-08-22 11:51:34 - foundation.db - INFO - 공용 DB 초기화 완료: C:\Users\wogud\OneDrive\Desktop\클로드코드\integrated_management_system\data\app.db
+2025-08-22 11:51:34 - foundation.db - INFO - 공용 DB 초기화 완료
+2025-08-22 11:51:34 - main - INFO - 공용 데이터베이스 초기화 완료
+2025-08-22 11:51:34 - main - INFO - 설정 로드 완료 (SQLite3 기반)
+2025-08-22 11:51:34 - main - INFO - API 상태 확인 완료
+2025-08-22 11:51:35 - main - INFO - 키워드 분석 모듈 로드 시작
+2025-08-22 11:51:35 - features.keyword_analysis.ui - DEBUG - 서비스 준비 완료.
+2025-08-22 11:51:35 - desktop.app - INFO - 기능 탭 추가됨: 키워드 검색기 (page_id: keyword_analysis)
+2025-08-22 11:51:35 - features.keyword_analysis - INFO - 키워드 분석 기능이 등록되었습니다
+2025-08-22 11:51:35 - main - INFO - 키워드 분석 모듈 로드 완료
+2025-08-22 11:51:35 - main - INFO - 순위추적 모듈 로드 시작
+2025-08-22 11:51:35 - vendors.naver.factory - DEBUG - 네이버 검색광고 keywordstool 클라이언트 생성됨
+2025-08-22 11:51:35 - desktop.app - INFO - 기능 탭 추가됨: 네이버상품 순위추적 (page_id: rank_tracking)
+2025-08-22 11:51:35 - features.rank_tracking - INFO - 네이버상품 순위추적 피처 등록 완료
+2025-08-22 11:51:35 - main - INFO - 순위추적 모듈 로드 완료
+2025-08-22 11:51:35 - main - INFO - 네이버 카페 모듈 로드 시작
+2025-08-22 11:51:35 - features.naver_cafe.results_widget - INFO - 초기 데이터 로드 완료
+2025-08-22 11:51:35 - desktop.app - INFO - 기능 탭 추가됨: 네이버 카페DB추출 (page_id: naver_cafe)
+2025-08-22 11:51:35 - main - INFO - 네이버 카페 모듈 로드 완료
+2025-08-22 11:51:35 - main - INFO - PowerLink 분석기 모듈 로드 시작
+2025-08-22 11:51:35 - desktop.app - INFO - 기능 탭 추가됨: PowerLink 분석 (page_id: powerlink_analyzer)
+2025-08-22 11:51:35 - main - INFO - PowerLink 분석기 모듈 로드 완료
+2025-08-22 11:51:35 - main - INFO - 모든 기능 모듈 로드 및 등록 완료
+2025-08-22 11:51:35 - desktop.app - INFO - 데스크톱 애플리케이션 시작됨
+2025-08-22 11:51:45 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (강아지눈물사료 외 4개): C:/Users/wogud/Downloads/파워링크광고비분석_20250822_114231.xlsx
+2025-08-22 11:52:25 - foundation.db - DEBUG - 파워링크 분석 세션 저장: 59
+2025-08-22 11:52:25 - features.powerlink_analyzer.service - INFO - 분석 세션 DB 저장 완료: PowerLink분석_20250822_115225
+2025-08-22 11:52:28 - features.powerlink_analyzer.adapters - INFO - PowerLink 엑셀 파일 생성 완료 (PowerLink분석_20250822_115225): C:/Users/wogud/Downloads/파워링크광고비분석_20250822_115225.xlsx
