@@ -636,6 +636,81 @@ class RankTrackingRepository:
             logger.error(f"랭킹 점검 완료 로그 실패: {e}")
             return False
 
+    def get_all_projects(self, is_active: Optional[bool] = None) -> List[Dict[str, Any]]:
+        """모든 프로젝트 조회 (기존 foundation.db 방식과 호환)"""
+        try:
+            where_clauses = []
+            params = []
+            
+            if is_active is not None:
+                where_clauses.append("is_active = ?")
+                params.append(1 if is_active else 0)
+            
+            where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
+            
+            result = self.db.execute_query(f"""
+                SELECT id, product_id, current_name, product_url, is_active, category, price,
+                       store_name, description, image_url, created_at
+                FROM projects
+                {where_sql}
+                ORDER BY created_at DESC
+            """, tuple(params))
+            
+            if result:
+                rows = result.fetchall()
+                return [
+                    {
+                        "id": row[0],
+                        "product_id": row[1], 
+                        "current_name": row[2],
+                        "product_url": row[3],
+                        "is_active": row[4],
+                        "category": row[5],
+                        "price": row[6],
+                        "store_name": row[7],
+                        "description": row[8],
+                        "image_url": row[9],
+                        "created_at": row[10]
+                    }
+                    for row in rows
+                ]
+            return []
+        except Exception as e:
+            logger.error(f"모든 프로젝트 조회 실패: {e}")
+            return []
+
+    def get_project_by_product_id(self, product_id: str) -> Optional[Dict[str, Any]]:
+        """상품 ID로 프로젝트 조회 (기존 foundation.db 방식과 호환)"""
+        try:
+            result = self.db.execute_query("""
+                SELECT id, product_id, current_name, product_url, is_active, category, price,
+                       store_name, description, image_url, created_at
+                FROM projects
+                WHERE product_id = ?
+                LIMIT 1
+            """, (product_id,))
+            
+            if result:
+                row = result.fetchone()
+                if row:
+                    return {
+                        "id": row[0],
+                        "product_id": row[1],
+                        "current_name": row[2], 
+                        "product_url": row[3],
+                        "is_active": row[4],
+                        "category": row[5],
+                        "price": row[6],
+                        "store_name": row[7],
+                        "description": row[8],
+                        "image_url": row[9],
+                        "created_at": row[10]
+                    }
+            return None
+        except Exception as e:
+            logger.error(f"상품 ID로 프로젝트 조회 실패: {e}")
+            return None
+
 
 # 전역 레포지토리 인스턴스
 rank_tracking_repository = RankTrackingRepository()

@@ -8,7 +8,7 @@ from datetime import datetime
 from PySide6.QtCore import QObject, Signal
 
 from .models import TrackingProject, TrackingKeyword, RankingResult, ProductInfo, rank_tracking_repository
-from .adapters import RankTrackingAdapter
+from .adapters import RankTrackingAdapter, smart_product_search
 from .engine_local import rank_tracking_engine
 from src.foundation.exceptions import (
     RankTrackingError, ProductNotFoundError, InvalidProjectURLError, 
@@ -49,18 +49,6 @@ def _dict_to_tracking_keyword(k_dict: Dict[str, Any]) -> TrackingKeyword:
         category=k_dict.get('category', ''),
         created_at=k_dict.get('created_at')
     )
-
-
-
-def smart_product_search(product_name: str, product_id: str) -> Optional[dict]:
-    """스마트 상품 검색 - adapters로 위임"""
-    try:
-        from .adapters import rank_tracking_adapter
-        return rank_tracking_adapter.smart_product_search(product_name, product_id)
-    except Exception as e:
-        logger.error(f"상품 검색 실패: {e}")
-        return None
-
 
 
 
