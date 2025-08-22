@@ -656,31 +656,11 @@ class PowerLinkAnalysisService:
             log_manager.add_log(error_msg, "error")
             return False
     
-    def remove_keywords(self, keywords: List[str]) -> bool:
-        """키워드들을 전역 keyword_database에서 제거 (CLAUDE.md 준수)"""
-        try:
-            removed_count = 0
-            for keyword in keywords:
-                if keyword in keyword_database.keywords:
-                    keyword_database.remove_keyword(keyword)
-                    removed_count += 1
-            
-            # 순위 재계산
-            keyword_database.recalculate_all_rankings()
-            
-            log_manager.add_log(f"키워드 {removed_count}개 삭제 완료", "success")
-            return True
-            
-        except Exception as e:
-            error_msg = f"키워드 삭제 실패: {str(e)}"
-            logger.error(error_msg)
-            log_manager.add_log(error_msg, "error")
-            return False
     
     def set_keywords_data(self, keywords_data: Dict[str, KeywordAnalysisResult]) -> bool:
-        """키워드 데이터를 전역 keyword_database에 설정 (CLAUDE.md 준수)"""
+        """키워드 데이터를 전역 keyword_database에 설정 (CLAUDE.md 준수) - 덮어쓰기 방식"""
         try:
-            # 기존 데이터 클리어 후 새 데이터 설정
+            # 기존 데이터 클리어 후 새 데이터 설정 (히스토리 로드용)
             keyword_database.clear()
             for keyword, result in keywords_data.items():
                 keyword_database.add_keyword(result)
@@ -688,7 +668,7 @@ class PowerLinkAnalysisService:
             # 순위 재계산
             keyword_database.recalculate_all_rankings()
             
-            log_manager.add_log(f"키워드 데이터 설정 완료: {len(keywords_data)}개", "success")
+            log_manager.add_log(f"키워드 데이터 설정 완룼: {len(keywords_data)}개", "success")
             return True
             
         except Exception as e:
@@ -696,6 +676,103 @@ class PowerLinkAnalysisService:
             logger.error(error_msg)
             log_manager.add_log(error_msg, "error")
             return False
+    
+    def add_keywords_data(self, keywords_data: Dict[str, KeywordAnalysisResult]) -> bool:
+        """키워드 데이터를 전역 keyword_database에 추가 (CLAUDE.md 준수) - 누적 방식"""
+        try:
+            # 기존 데이터에 새 데이터 추가 (누적)
+            for keyword, result in keywords_data.items():
+                keyword_database.add_keyword(result)  # add_keyword는 덮어쓰기 동작
+            
+            # 순위 재계산
+            keyword_database.recalculate_all_rankings()
+            
+            log_manager.add_log(f"키워드 데이터 추가 완룼: {len(keywords_data)}개 (전체: {len(keyword_database.keywords)}개)", "success")
+            return True
+            
+        except Exception as e:
+            error_msg = f"키워드 데이터 추가 실패: {str(e)}"
+            logger.error(error_msg)
+            log_manager.add_log(error_msg, "error")
+            return False
+
+    # ---------------- UI 지원 메서드들 (Repository 패턴) ----------------
+    
+    def get_all_keywords(self) -> Dict[str, KeywordAnalysisResult]:
+        """모든 키워드 데이터 반환"""
+        return keyword_database.keywords.copy()
+    
+    def get_keyword_count(self) -> int:
+        """키워드 개수 반환"""
+        return len(keyword_database.keywords)
+    
+    def has_keywords(self) -> bool:
+        """키워드 데이터 존재 여부"""
+        return len(keyword_database.keywords) > 0
+    
+    def clear_all_keywords(self) -> bool:
+        """모든 키워드 데이터 삭제"""
+        try:
+            keyword_database.clear()
+            log_manager.add_log("모든 키워드 데이터 삭제 완료", "info")
+            return True
+        except Exception as e:
+            logger.error(f"키워드 데이터 삭제 실패: {e}")
+            return False
+    
+    def remove_keywords(self, keywords: List[str]) -> bool:
+        """여러 키워드 삭제"""
+        try:
+            removed_count = 0
+            for keyword in keywords:
+                if keyword in keyword_database.keywords:
+                    keyword_database.remove_keyword(keyword)
+                    removed_count += 1
+            keyword_database.recalculate_all_rankings()
+            log_manager.add_log(f"{removed_count}개 키워드 삭제 완룼", "info")
+            return True
+        except Exception as e:
+            logger.error(f"키워드 삭제 실패: {e}")
+            return False
+    
+    def add_keyword_result(self, result: KeywordAnalysisResult) -> bool:
+        """키워드 결과 추가"""
+        try:
+            keyword_database.add_keyword(result)
+            keyword_database.recalculate_all_rankings()
+            return True
+        except Exception as e:
+            logger.error(f"키워드 추가 실패: {e}")
+            return False
+    
+    def get_keyword_result(self, keyword: str) -> Optional[KeywordAnalysisResult]:
+        """특정 키워드 결과 반환"""
+        return keyword_database.get_keyword(keyword)
+    
+    def get_mobile_rankings(self) -> List[KeywordAnalysisResult]:
+        """모바일 순위 계산 결과 반환"""
+        return keyword_database.calculate_mobile_rankings()
+    
+    def get_pc_rankings(self) -> List[KeywordAnalysisResult]:
+        """PC 순위 계산 결과 반환"""
+        return keyword_database.calculate_pc_rankings()
+    
+    def load_and_set_session_data(self, session_id: int) -> Optional[Dict[str, KeywordAnalysisResult]]:
+        """세션 데이터를 로드하여 keyword_database에 설정"""
+        try:
+            # 세션 데이터 로드
+            loaded_data = self.load_history_session_data(session_id)
+            if not loaded_data:
+                return None
+            
+            # keyword_database에 설정
+            if self.set_keywords_data(loaded_data):
+                return loaded_data
+            return None
+            
+        except Exception as e:
+            logger.error(f"세션 로드 및 설정 실패: {e}")
+            return None
 
 
 # 전역 인스턴스 (UI에서 import)

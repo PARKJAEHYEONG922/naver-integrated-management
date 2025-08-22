@@ -144,8 +144,8 @@ class PowerLinkAnalyzerWidget(QWidget):
     
     def on_analysis_completed(self, results):
         """분석 완료 시 결과 위젯 업데이트"""
-        # 결과 위젯에 키워드 데이터 전달하여 테이블 업데이트
-        self.results_widget.set_keywords_data(results)
+        # 결과 위젯에 키워드 데이터 추가 (누적 방식)
+        self.results_widget.add_keywords_data(results)
     
     def on_analysis_error(self, error_msg):
         """분석 오류 처리"""

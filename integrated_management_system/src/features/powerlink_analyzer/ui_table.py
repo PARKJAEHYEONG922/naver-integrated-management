@@ -20,7 +20,6 @@ from src.toolbox.formatters import format_int, format_float, format_price_krw
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from .models import KeywordAnalysisResult
-from .service import keyword_database
 from .service import powerlink_service
 
 logger = get_logger("features.powerlink_analyzer.results_widget")
@@ -139,7 +138,7 @@ class PowerLinkSaveDialog(QDialog):
         """엑셀 내보내기 실행 (UI 로직만)"""
         try:
             # 현재 분석 결과 가져오기
-            keywords_data = keyword_database.keywords
+            keywords_data = powerlink_service.get_all_keywords()
             
             # service에 위임 (오케스트레이션 + adapters 파일 I/O)
             success = powerlink_service.export_current_analysis_with_dialog(
@@ -389,11 +388,6 @@ class PowerLinkResultsWidget(QWidget):
         # 탭 변경 시그널 연결 (이전기록 탭에서 저장 버튼 비활성화)
         self.tab_widget.currentChanged.connect(self.on_tab_changed)
     
-    def set_keywords_data(self, keywords_data):
-        """키워드 데이터 설정"""
-        self.keywords_data = keywords_data
-        self.update_all_tables()
-        self.update_button_states()
     
     def update_all_tables(self):
         """모든 테이블 업데이트"""
@@ -402,7 +396,7 @@ class PowerLinkResultsWidget(QWidget):
         
     def update_mobile_table(self):
         """모바일 테이블 업데이트 (ModernTableWidget API 사용)"""
-        mobile_sorted = keyword_database.calculate_mobile_rankings()
+        mobile_sorted = powerlink_service.get_mobile_rankings()
         
         # 테이블 클리어
         self.mobile_table.clear_table()
@@ -465,7 +459,7 @@ class PowerLinkResultsWidget(QWidget):
             
     def update_pc_table(self):
         """PC 테이블 업데이트 (ModernTableWidget API 사용)"""
-        pc_sorted = keyword_database.calculate_pc_rankings()
+        pc_sorted = powerlink_service.get_pc_rankings()
         
         # 테이블 클리어
         self.pc_table.clear_table()
@@ -525,23 +519,6 @@ class PowerLinkResultsWidget(QWidget):
             detail_button.clicked.connect(lambda checked, k=keyword, r=result: self.show_bid_details(k, r, 'pc'))
             self.pc_table.setCellWidget(row, 9, detail_button)
     
-    def update_keyword_data(self, keyword: str, result):
-        """키워드 데이터 실시간 업데이트"""
-        try:
-            # 데이터 업데이트 (기존/신규 상관없이)
-            self.keywords_data[keyword] = result
-            
-            # 테이블에서 해당 키워드 행 찾아서 업데이트
-            self.update_keyword_row_in_table(self.mobile_table, keyword, result, 'mobile')
-            self.update_keyword_row_in_table(self.pc_table, keyword, result, 'pc')
-            
-            # 저장 버튼 상태 업데이트
-            self.update_save_button_state()
-            
-            logger.debug(f"실시간 키워드 데이터 업데이트 완료: {keyword}")
-            
-        except Exception as e:
-            logger.error(f"실시간 키워드 데이터 업데이트 실패: {keyword}: {e}")
     
     def update_keyword_row_in_table(self, table: QTableWidget, keyword: str, result, device_type: str):
         """특정 키워드의 테이블 행 업데이트"""
@@ -551,6 +528,30 @@ class PowerLinkResultsWidget(QWidget):
                 # 해당 행의 데이터 업데이트
                 self.update_table_row_data(table, row, result, device_type)
                 break
+    
+    def update_table_row_data(self, table: QTableWidget, row: int, result, device_type: str):
+        """테이블의 특정 행 데이터 업데이트"""
+        try:
+            if device_type == 'mobile':
+                # 모바일 데이터 업데이트
+                table.item(row, 2).setText(format_int(result.mobile_search_volume) if result.mobile_search_volume >= 0 else "-")  # 월검색량
+                table.item(row, 3).setText(format_float(result.mobile_clicks, precision=1) if result.mobile_clicks >= 0 else "-")  # 클릭수
+                table.item(row, 4).setText(f"{format_float(result.mobile_ctr, precision=2)}%" if result.mobile_ctr >= 0 else "-")  # 클릭률
+                table.item(row, 5).setText(f"{format_int(result.mobile_first_page_positions)}위까지" if result.mobile_first_page_positions >= 0 else "-")  # 1p노출위치
+                table.item(row, 6).setText(format_price_krw(result.mobile_first_position_bid) if result.mobile_first_position_bid >= 0 else "-")  # 1등광고비
+                table.item(row, 7).setText(format_price_krw(result.mobile_min_exposure_bid) if result.mobile_min_exposure_bid >= 0 else "-")  # 최소노출가격
+                table.item(row, 8).setText(f"{result.mobile_recommendation_rank}위" if result.mobile_recommendation_rank > 0 else "-")  # 추천순위
+            else:  # PC
+                # PC 데이터 업데이트
+                table.item(row, 2).setText(format_int(result.pc_search_volume) if result.pc_search_volume >= 0 else "-")  # 월검색량
+                table.item(row, 3).setText(format_float(result.pc_clicks, precision=1) if result.pc_clicks >= 0 else "-")  # 클릭수
+                table.item(row, 4).setText(f"{format_float(result.pc_ctr, precision=2)}%" if result.pc_ctr >= 0 else "-")  # 클릭률
+                table.item(row, 5).setText(f"{format_int(result.pc_first_page_positions)}위까지" if result.pc_first_page_positions >= 0 else "-")  # 1p노출위치
+                table.item(row, 6).setText(format_price_krw(result.pc_first_position_bid) if result.pc_first_position_bid >= 0 else "-")  # 1등광고비
+                table.item(row, 7).setText(format_price_krw(result.pc_min_exposure_bid) if result.pc_min_exposure_bid >= 0 else "-")  # 최소노출가격
+                table.item(row, 8).setText(f"{result.pc_recommendation_rank}위" if result.pc_recommendation_rank > 0 else "-")  # 추천순위
+        except Exception as e:
+            logger.error(f"테이블 행 {row} 업데이트 실패 ({device_type}): {e}")
 
     def add_keyword_to_table(self, table: ModernTableWidget, result, device_type: str, update_ui: bool = True):
         """테이블에 키워드 분석 결과 추가 (ModernTableWidget 완전 사용)"""
@@ -718,53 +719,6 @@ class PowerLinkResultsWidget(QWidget):
         # 키워드 개수 업데이트 로직 (필요시 구현)
         pass
 
-    def delete_selected_keywords(self, table_type):
-        """선택된 키워드 삭제"""
-        table = self.mobile_table if table_type == 'mobile' else self.pc_table
-        
-        # 선택된 행 찾기 (ModernTableWidget API 사용)
-        selected_keywords = []
-        for row in table.get_checked_rows():
-            keyword_item = table.item(row, 1)
-            if keyword_item:
-                selected_keywords.append(keyword_item.text())
-        
-        if not selected_keywords:
-            from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-            dialog = ModernInfoDialog(
-                self,
-                "키워드 선택 필요",
-                "삭제할 키워드를 선택해주세요.",
-                icon="⚠️"
-            )
-            dialog.exec()
-            return
-        
-        from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-        dialog = ModernConfirmDialog(
-            self,
-            "키워드 삭제 확인",
-            f"{len(selected_keywords)}개 키워드를 삭제하시겠습니까?",
-            confirm_text="삭제",
-            cancel_text="취소",
-            icon="🗑️"
-        )
-        
-        if dialog.exec():
-            # 키워드 삭제
-            for keyword in selected_keywords:
-                if keyword in self.keywords_data:
-                    del self.keywords_data[keyword]
-                keyword_database.remove_keyword(keyword)
-            
-            # 순위 재계산
-            keyword_database.recalculate_all_rankings()
-            
-            # 테이블 업데이트
-            self.update_all_tables()
-            self.update_button_states()
-            
-            log_manager.add_log(f"{len(selected_keywords)}개 키워드 삭제 완료", "success")
     
     
     
@@ -894,23 +848,17 @@ class PowerLinkResultsWidget(QWidget):
                 log_manager.add_log(f"PowerLink 히스토리 로드 실패: 키워드 데이터 없음 - {selected_session_name}", "error")
                 return
             
-            # 기존 데이터 초기화
+            # 기존 데이터 초기화 및 새 데이터 설정 (서비스 통해)
             self.keywords_data.clear()
-            keyword_database.clear()
+            powerlink_service.clear_all_keywords()
             
             # 새 데이터 설정
             self.keywords_data = loaded_keywords_data
-            
-            # keyword_database에도 데이터 추가
-            for keyword, result in loaded_keywords_data.items():
-                keyword_database.add_keyword(result)
+            powerlink_service.set_keywords_data(loaded_keywords_data)
             
             # 히스토리에서 로드된 데이터임을 표시 (중복 저장 방지)
             self.is_loaded_from_history = True
             self.loaded_session_id = selected_session_id
-            
-            # 순위 재계산
-            keyword_database.recalculate_all_rankings()
             
             # 테이블 갱신 (직접 호출로 확실히 업데이트)
             self.update_all_tables()
@@ -1027,10 +975,10 @@ class PowerLinkResultsWidget(QWidget):
     def update_save_button_state(self):
         """저장 버튼 상태 업데이트"""
         try:
-            # self.keywords_data와 keyword_database.keywords 둘 다 확인
+            # self.keywords_data와 서비스 키워드 둘 다 확인
             local_count = len(self.keywords_data) if hasattr(self, 'keywords_data') else 0
-            db_count = len(keyword_database.keywords)
-            has_data = max(local_count, db_count) > 0
+            service_count = len(powerlink_service.get_all_keywords())
+            has_data = max(local_count, service_count) > 0
             
             self.save_analysis_button.setEnabled(has_data)
             self.clear_button.setEnabled(has_data)
@@ -1093,7 +1041,7 @@ class PowerLinkResultsWidget(QWidget):
                 return
             
             # 키워드 개수 가져오기
-            keyword_count = len(keyword_database.keywords)
+            keyword_count = len(powerlink_service.get_all_keywords())
             
             # 저장 다이얼로그 표시
             save_dialog = PowerLinkSaveDialog(
@@ -1117,7 +1065,7 @@ class PowerLinkResultsWidget(QWidget):
         """전체 분석 결과 클리어"""
         try:
             # 데이터가 있는지 확인
-            if not keyword_database.keywords:
+            if not powerlink_service.get_all_keywords():
                 return
             
             # 모던 확인 다이얼로그 (키워드분석기와 동일한 방식)
@@ -1149,9 +1097,9 @@ class PowerLinkResultsWidget(QWidget):
                     delattr(self, 'loaded_session_id')
                 
                 # 메모리 데이터베이스 클리어 (안전한 클리어)
-                keywords_before = len(keyword_database.keywords)
-                keyword_database.clear()
-                keywords_after = len(keyword_database.keywords)
+                keywords_before = len(powerlink_service.get_all_keywords())
+                powerlink_service.clear_all_keywords()
+                keywords_after = len(powerlink_service.get_all_keywords())
                 logger.info(f"메모리 DB 클리어: {keywords_before}개 → {keywords_after}개")
                 
                 # 테이블 클리어 (ModernTableWidget API 사용)
@@ -1209,13 +1157,21 @@ class PowerLinkResultsWidget(QWidget):
         return -1
     
     def set_keywords_data(self, keywords_data):
-        """키워드 데이터 설정"""
-        # 새로운 키워드 데이터를 기존 데이터에 추가/업데이트
-        for keyword, result in keywords_data.items():
-            keyword_database.add_keyword(result)
+        """키워드 데이터 설정 (교체 방식 - 히스토리 로드용)"""
+        # 서비스를 통해 키워드 데이터 설정 (기존 데이터 교체)
+        powerlink_service.set_keywords_data(keywords_data)
         
-        # 순위 재계산
-        keyword_database.recalculate_all_rankings()
+        # 테이블 새로고침
+        self.refresh_tables_from_database()
+        
+        # 버튼 상태 업데이트
+        self.update_save_button_state()
+        self.update_delete_button_state()
+    
+    def add_keywords_data(self, keywords_data):
+        """키워드 데이터 추가 (누적 방식 - 새로운 분석용)"""
+        # 서비스를 통해 키워드 데이터 추가 (기존 데이터 유지)
+        powerlink_service.add_keywords_data(keywords_data)
         
         # 테이블 새로고침
         self.refresh_tables_from_database()
@@ -1231,8 +1187,8 @@ class PowerLinkResultsWidget(QWidget):
             self.mobile_table.clear_table()
             self.pc_table.clear_table()
             
-            # 데이터베이스에서 모든 키워드 가져오기
-            all_keywords = keyword_database.get_all_keywords()
+            # 서비스를 통해 모든 키워드 가져오기
+            all_keywords = list(powerlink_service.get_all_keywords().values())
             
             # 테이블에 재추가 (update_mobile_table/update_pc_table과 동일한 방식)
             for result in all_keywords:
@@ -1285,7 +1241,7 @@ class PowerLinkResultsWidget(QWidget):
                         background-color: #047857;
                     }
                 """)
-                mobile_detail_button.clicked.connect(lambda checked, r=result: self.show_bid_details(result.keyword, r, 'mobile'))
+                mobile_detail_button.clicked.connect(lambda checked, k=result.keyword, r=result: self.show_bid_details(k, r, 'mobile'))
                 self.mobile_table.setCellWidget(mobile_row, 9, mobile_detail_button)
                 
                 # PC 테이블에 추가
@@ -1337,7 +1293,7 @@ class PowerLinkResultsWidget(QWidget):
                         background-color: #047857;
                     }
                 """)
-                pc_detail_button.clicked.connect(lambda checked, r=result: self.show_bid_details(result.keyword, r, 'pc'))
+                pc_detail_button.clicked.connect(lambda checked, k=result.keyword, r=result: self.show_bid_details(k, r, 'pc'))
                 self.pc_table.setCellWidget(pc_row, 9, pc_detail_button)
             
             logger.info(f"테이블 새로고침 완료: {len(all_keywords)}개 키워드")
@@ -1350,9 +1306,9 @@ class PowerLinkResultsWidget(QWidget):
         try:
             self.mobile_table.setRowCount(0)
             self.pc_table.setRowCount(0)
-            keyword_database.clear()
+            powerlink_service.clear_all_keywords()
             self.update_save_button_state()
-            logger.info("모든 테이블 클리어 완료")
+            logger.info("모든 테이블 클리어 완룼")
         except Exception as e:
             logger.error(f"테이블 클리어 실패: {e}")
     
@@ -1360,24 +1316,41 @@ class PowerLinkResultsWidget(QWidget):
     def delete_selected_keywords(self, device_type: str):
         """선택된 키워드만 삭제 (실제 선택삭제)"""
         try:
+            # 디바이스 타입에 따른 테이블 선택
+            if device_type == 'mobile':
+                table = self.mobile_table
+            elif device_type == 'pc':
+                table = self.pc_table
+            else:
+                # device_type이 지정되지 않은 경우 모든 테이블에서 수집
+                table = None
+            
             # 선택된 키워드 수집
             selected_keywords = []
             
-            # 모바일 테이블에서 체크된 키워드 수집
-            for row in self.mobile_table.get_checked_rows():
-                keyword_item = self.mobile_table.item(row, 1)  # 키워드는 1번 컬럼
-                if keyword_item:
-                    keyword = keyword_item.text()
-                    if keyword not in selected_keywords:
-                        selected_keywords.append(keyword)
-            
-            # PC 테이블에서도 체크된 키워드 수집 (중복 방지)
-            for row in self.pc_table.get_checked_rows():
-                keyword_item = self.pc_table.item(row, 1)  # 키워드는 1번 컬럼  
-                if keyword_item:
-                    keyword = keyword_item.text()
-                    if keyword not in selected_keywords:
-                        selected_keywords.append(keyword)
+            if table is not None:
+                # 특정 테이블에서만 수집
+                for row in table.get_checked_rows():
+                    keyword_item = table.item(row, 1)  # 키워드는 1번 컬럼
+                    if keyword_item:
+                        keyword = keyword_item.text()
+                        if keyword not in selected_keywords:
+                            selected_keywords.append(keyword)
+            else:
+                # 모든 테이블에서 수집 (하위 호환성)
+                for row in self.mobile_table.get_checked_rows():
+                    keyword_item = self.mobile_table.item(row, 1)
+                    if keyword_item:
+                        keyword = keyword_item.text()
+                        if keyword not in selected_keywords:
+                            selected_keywords.append(keyword)
+                
+                for row in self.pc_table.get_checked_rows():
+                    keyword_item = self.pc_table.item(row, 1)
+                    if keyword_item:
+                        keyword = keyword_item.text()
+                        if keyword not in selected_keywords:
+                            selected_keywords.append(keyword)
             
             if not selected_keywords:
                 return
@@ -1394,12 +1367,8 @@ class PowerLinkResultsWidget(QWidget):
             )
             
             if dialog.exec() == ModernConfirmDialog.Accepted:
-                # 선택된 키워드만 메모리 데이터베이스에서 제거
-                for keyword in selected_keywords:
-                    keyword_database.remove_keyword(keyword)
-                
-                # 순위 재계산
-                keyword_database.recalculate_all_rankings()
+                # 서비스를 통해 선택된 키워드 삭제
+                powerlink_service.remove_keywords(selected_keywords)
                 
                 # 테이블 전체 재구성 (남은 키워드들로)
                 self.update_all_tables()
@@ -1424,7 +1393,7 @@ class PowerLinkResultsWidget(QWidget):
                 keyword_item = self.mobile_table.item(row, 1)  # 키워드는 1번 컬럼
                 if keyword_item:
                     keyword = keyword_item.text()
-                    result = keyword_database.get_keyword(keyword)
+                    result = powerlink_service.get_all_keywords().get(keyword)
                     if result:
                         # 추천순위 업데이트 (8번 컬럼)
                         rank_text = f"{result.mobile_recommendation_rank}위" if result.mobile_recommendation_rank > 0 else "-"
@@ -1437,7 +1406,7 @@ class PowerLinkResultsWidget(QWidget):
                 keyword_item = self.pc_table.item(row, 1)  # 키워드는 1번 컬럼
                 if keyword_item:
                     keyword = keyword_item.text()
-                    result = keyword_database.get_keyword(keyword)
+                    result = powerlink_service.get_all_keywords().get(keyword)
                     if result:
                         # 추천순위 업데이트 (8번 컬럼)
                         rank_text = f"{result.pc_recommendation_rank}위" if result.pc_recommendation_rank > 0 else "-"
