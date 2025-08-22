@@ -1336,5 +1336,162 @@ class RankTrackingService(QObject):
             logger.error(f"상품 정보 조회 실패: {e}")
             return None
 
+    # ================ 워커에서 사용하는 누락된 메서드들 ================
+    
+    def process_ranking_check_for_project(self, project_id: int) -> Dict[str, Any]:
+        """프로젝트의 순위 확인 준비"""
+        try:
+            # 프로젝트 조회
+            project = self.get_project_by_id(project_id)
+            if not project:
+                return {
+                    'success': False,
+                    'message': '프로젝트를 찾을 수 없습니다.'
+                }
+            
+            # 키워드 조회
+            keywords = self.get_project_keywords(project_id)
+            if not keywords:
+                return {
+                    'success': False,
+                    'message': '등록된 키워드가 없습니다.'
+                }
+            
+            logger.info(f"순위 확인 준비 완료: {project.current_name}, {len(keywords)}개 키워드")
+            
+            return {
+                'success': True,
+                'message': '순위 확인 준비 완료',
+                'data': {
+                    'project': project,
+                    'keywords': keywords
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"순위 확인 준비 실패: {e}")
+            return {
+                'success': False,
+                'message': f'순위 확인 준비 실패: {str(e)}'
+            }
+    
+    def process_single_keyword_ranking(self, keyword_obj, product_id: str) -> tuple:
+        """단일 키워드 순위 확인"""
+        try:
+            # adapters를 통한 순위 확인
+            result = self.check_keyword_ranking(keyword_obj.keyword, product_id)
+            
+            success = result.success and result.rank > 0
+            logger.info(f"키워드 '{keyword_obj.keyword}' 순위 확인: {result.rank} (성공: {success})")
+            
+            return result, success
+            
+        except Exception as e:
+            logger.error(f"키워드 '{keyword_obj.keyword}' 순위 확인 실패: {e}")
+            failed_result = self.create_failed_ranking_result(keyword_obj.keyword, str(e))
+            return failed_result, False
+    
+    def create_failed_ranking_result(self, keyword: str, error_message: str) -> RankingResult:
+        """실패한 순위 결과 생성"""
+        return RankingResult(
+            keyword=keyword,
+            product_id="",
+            rank=0,
+            total_results=0,
+            success=False,
+            error_message=error_message
+        )
+    
+    def save_ranking_results_for_project(self, project_id: int, results: List[RankingResult]) -> bool:
+        """프로젝트의 순위 결과 저장"""
+        try:
+            return self.save_ranking_results(project_id, results)
+        except Exception as e:
+            logger.error(f"순위 결과 저장 실패: {e}")
+            return False
+    
+    # ================ UI 테이블에서 사용하는 누락된 메서드들 ================
+    
+    def prepare_table_data(self, project_id: int) -> Dict[str, Any]:
+        """테이블 데이터 준비"""
+        try:
+            # 프로젝트 정보
+            project = self.get_project_by_id(project_id)
+            if not project:
+                return {"success": False, "message": "프로젝트를 찾을 수 없습니다."}
+            
+            # 키워드 목록
+            keywords = self.get_project_keywords(project_id)
+            
+            # 기본 헤더
+            headers = ["", "키워드", "카테고리", "월검색량"]
+            
+            # 순위 날짜들 (실제 DB에서 가져와야 하지만 지금은 빈 배열)
+            dates = []
+            
+            # 프로젝트 카테고리 기본값
+            project_category_base = ""
+            if hasattr(project, 'category') and project.category:
+                project_category_base = project.category.split('>')[-1].strip() if '>' in project.category else project.category.strip()
+            
+            # overview 데이터 (실제로는 DB에서 순위 데이터를 가져와야 함)
+            overview = {"keywords": {}}
+            
+            return {
+                "success": True,
+                "headers": headers,
+                "dates": dates,
+                "project_category_base": project_category_base,
+                "keywords": keywords,
+                "overview": overview,
+                "last_check_time": "-"
+            }
+            
+        except Exception as e:
+            logger.error(f"테이블 데이터 준비 실패: {e}")
+            return {"success": False, "message": f"테이블 데이터 준비 실패: {str(e)}"}
+    
+    def prepare_table_row_data(self, project_id: int, keyword_data: dict, all_dates: list, project_category_base: str) -> list:
+        """테이블 행 데이터 준비"""
+        try:
+            row_data = [
+                keyword_data['keyword'],  # 키워드
+                keyword_data.get('category', '-'),  # 카테고리  
+                self._format_monthly_volume(keyword_data.get('monthly_volume', -1))  # 월검색량
+            ]
+            
+            # 날짜별 순위 데이터 추가
+            for date in all_dates:
+                rankings = keyword_data.get('rankings', {})
+                rank = rankings.get(date, '-')
+                if isinstance(rank, int) and rank > 0:
+                    row_data.append(f"{rank}위")
+                else:
+                    row_data.append("-")
+            
+            return row_data
+            
+        except Exception as e:
+            logger.error(f"행 데이터 준비 실패: {e}")
+            return []
+    
+    def should_show_date_columns(self, project_id: int) -> bool:
+        """날짜 컬럼 표시 여부 결정"""
+        try:
+            keywords = self.get_project_keywords(project_id)
+            return len(keywords) > 0
+        except Exception as e:
+            logger.error(f"날짜 컬럼 표시 여부 확인 실패: {e}")
+            return False
+    
+    def _format_monthly_volume(self, volume: int) -> str:
+        """월검색량 포맷팅"""
+        if volume is None or volume < 0:
+            return "-"
+        elif volume == 0:
+            return "0"
+        else:
+            return f"{volume:,}"
+
 # 전역 서비스 인스턴스
 rank_tracking_service = RankTrackingService()
