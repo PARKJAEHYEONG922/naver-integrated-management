@@ -460,12 +460,13 @@ class AIAnalysisDialog(QDialog):
         # 탭 위젯
         self.tab_widget = QTabWidget()
         
-        # 5개 탭 생성
+        # 6개 탭 생성 (2단계 프로세스)
         self.create_prompt_tab()        # 1번 탭: 입력 프롬프트
         self.create_ai_output_tab()     # 2번 탭: AI 출력
-        self.create_search_volume_tab() # 3번 탭: 월검색량 조회
-        self.create_filtered_tab()      # 4번 탭: 필터링된 키워드 (100 이상)
-        self.create_final_keywords_tab() # 5번 탭: 최종 키워드
+        self.create_step1_volume_tab()  # 3번 탭: 1단계 - 월검색량 조회
+        self.create_volume_filtered_tab() # 4번 탭: 월검색량 100+ 필터링
+        self.create_step2_category_tab()  # 5번 탭: 2단계 - 카테고리 조회
+        self.create_final_keywords_tab() # 6번 탭: 최종 키워드
         
         layout.addWidget(self.tab_widget)
         
@@ -522,52 +523,71 @@ class AIAnalysisDialog(QDialog):
         
         self.tab_widget.addTab(tab, "🤖 AI 출력")
     
-    def create_search_volume_tab(self):
-        """3번 탭: 월검색량 조회"""
+    def create_step1_volume_tab(self):
+        """3번 탭: 1단계 - 월검색량 조회"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
         layout.setContentsMargins(15, 15, 15, 15)
         
         # 설명
-        desc_label = QLabel("AI가 추출한 키워드들의 네이버 월검색량 조회 결과입니다.")
+        desc_label = QLabel("1단계: AI가 추출한 키워드들의 네이버 월검색량 조회 결과입니다. (카테고리는 아직 조회하지 않음)")
         desc_label.setObjectName("tab_desc")
         layout.addWidget(desc_label)
         
         # 테이블
-        self.search_volume_table = QTableWidget()
-        self.search_volume_table.setColumnCount(3)
-        self.search_volume_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
-        layout.addWidget(self.search_volume_table)
+        self.step1_volume_table = QTableWidget()
+        self.step1_volume_table.setColumnCount(2)
+        self.step1_volume_table.setHorizontalHeaderLabels(["키워드", "월검색량"])
+        layout.addWidget(self.step1_volume_table)
         
-        self.tab_widget.addTab(tab, "📊 월검색량 조회")
+        self.tab_widget.addTab(tab, "🔍 1단계: 월검색량")
     
-    def create_filtered_tab(self):
-        """4번 탭: 필터링된 키워드 (100 이상)"""
+    def create_volume_filtered_tab(self):
+        """4번 탭: 월검색량 100+ 필터링"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
         layout.setContentsMargins(15, 15, 15, 15)
         
         # 설명
-        desc_label = QLabel("월검색량 100 이상인 키워드들입니다.")
+        desc_label = QLabel("월검색량 100 이상으로 필터링된 키워드들입니다. 이 키워드들만 2단계 카테고리 조회를 진행합니다.")
         desc_label.setObjectName("tab_desc")
         layout.addWidget(desc_label)
         
         # 테이블
-        self.filtered_table = QTableWidget()
-        self.filtered_table.setColumnCount(3)
-        self.filtered_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
-        layout.addWidget(self.filtered_table)
+        self.volume_filtered_table = QTableWidget()
+        self.volume_filtered_table.setColumnCount(2)
+        self.volume_filtered_table.setHorizontalHeaderLabels(["키워드", "월검색량"])
+        layout.addWidget(self.volume_filtered_table)
         
-        self.tab_widget.addTab(tab, "✅ 필터링된 키워드")
+        self.tab_widget.addTab(tab, "✅ 월검색량 100+ 필터링")
+    
+    def create_step2_category_tab(self):
+        """5번 탭: 2단계 - 카테고리 조회"""
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+        layout.setContentsMargins(15, 15, 15, 15)
+        
+        # 설명
+        desc_label = QLabel("2단계: 월검색량 100 이상 키워드들의 카테고리 조회 결과입니다.")
+        desc_label.setObjectName("tab_desc")
+        layout.addWidget(desc_label)
+        
+        # 테이블
+        self.step2_category_table = QTableWidget()
+        self.step2_category_table.setColumnCount(3)
+        self.step2_category_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
+        layout.addWidget(self.step2_category_table)
+        
+        self.tab_widget.addTab(tab, "🏷️ 2단계: 카테고리")
     
     def create_final_keywords_tab(self):
-        """5번 탭: 최종 키워드"""
+        """6번 탭: 최종 키워드"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
         layout.setContentsMargins(15, 15, 15, 15)
         
         # 설명
-        desc_label = QLabel("최종적으로 선별된 키워드 목록입니다.")
+        desc_label = QLabel("최종적으로 선별된 키워드 목록입니다. (월검색량 100+ 및 카테고리 정보 포함)")
         desc_label.setObjectName("tab_desc")
         layout.addWidget(desc_label)
         
@@ -594,16 +614,41 @@ class AIAnalysisDialog(QDialog):
     
     def populate_tables(self):
         """테이블에 데이터 채우기"""
-        # 3번 탭: 전체 키워드 (월검색량 포함)
-        analyzed_keywords = self.analysis_data.get('analyzed_keywords', [])
-        self.populate_keyword_table(self.search_volume_table, analyzed_keywords)
+        # 3번 탭: 1단계 - 월검색량 조회 결과 (카테고리 없음)
+        volume_analyzed = self.analysis_data.get('volume_analyzed', [])
+        self.populate_volume_only_table(self.step1_volume_table, volume_analyzed)
         
-        # 4번 탭: 필터링된 키워드 (100 이상)
-        filtered_keywords = self.analysis_data.get('filtered_keywords', [])
-        self.populate_keyword_table(self.filtered_table, filtered_keywords)
+        # 4번 탭: 월검색량 100+ 필터링 결과 (카테고리 없음)
+        volume_filtered = self.analysis_data.get('volume_filtered', [])
+        self.populate_volume_only_table(self.volume_filtered_table, volume_filtered)
         
-        # 5번 탭: 최종 키워드 (동일)
-        self.populate_keyword_table(self.final_table, filtered_keywords)
+        # 5번 탭: 2단계 - 카테고리 조회 결과 (카테고리 포함)
+        final_keywords = self.analysis_data.get('final_keywords', [])
+        self.populate_keyword_table(self.step2_category_table, final_keywords)
+        
+        # 6번 탭: 최종 키워드 (동일)
+        self.populate_keyword_table(self.final_table, final_keywords)
+    
+    def populate_volume_only_table(self, table, keywords):
+        """월검색량만 있는 키워드 테이블 채우기 (카테고리 없음)"""
+        table.setRowCount(len(keywords))
+        
+        for row, keyword_data in enumerate(keywords):
+            if hasattr(keyword_data, 'keyword'):
+                # KeywordBasicData 객체인 경우
+                table.setItem(row, 0, QTableWidgetItem(keyword_data.keyword))
+                table.setItem(row, 1, QTableWidgetItem(str(keyword_data.search_volume)))
+            elif isinstance(keyword_data, dict):
+                # dict인 경우
+                table.setItem(row, 0, QTableWidgetItem(keyword_data.get('keyword', '')))
+                table.setItem(row, 1, QTableWidgetItem(str(keyword_data.get('search_volume', 0))))
+            else:
+                # 문자열인 경우
+                table.setItem(row, 0, QTableWidgetItem(str(keyword_data)))
+                table.setItem(row, 1, QTableWidgetItem("조회 중"))
+        
+        # 테이블 크기 조정
+        table.resizeColumnsToContents()
     
     def populate_keyword_table(self, table, keywords):
         """키워드 테이블 채우기"""
@@ -628,6 +673,20 @@ class AIAnalysisDialog(QDialog):
         
         # 테이블 크기 조정
         table.resizeColumnsToContents()
+    
+    def update_analysis_data(self, new_data):
+        """분석 데이터 실시간 업데이트"""
+        self.analysis_data.update(new_data)
+        
+        # 프롬프트와 AI 응답 업데이트
+        if 'input_prompt' in new_data:
+            self.prompt_text.setPlainText(new_data['input_prompt'])
+        
+        if 'ai_response' in new_data:
+            self.ai_response_text.setPlainText(new_data['ai_response'])
+        
+        # 테이블 업데이트
+        self.populate_tables()
     
     def apply_styles(self):
         """스타일 적용"""

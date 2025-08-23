@@ -223,7 +223,92 @@ def filter_keywords_by_search_volume(keywords: List[KeywordBasicData], min_volum
     Returns:
         List[KeywordBasicData]: 필터링된 키워드 리스트
     """
-    return [kw for kw in keywords if kw.search_volume >= min_volume]
+    filtered = [kw for kw in keywords if kw.search_volume >= min_volume]
+    
+    # 검색량 내림차순으로 정렬
+    filtered.sort(key=lambda x: x.search_volume, reverse=True)
+    
+    return filtered
+
+
+def filter_keywords_by_category(keywords: List[KeywordBasicData], target_category: str) -> List[KeywordBasicData]:
+    """
+    카테고리 기준으로 키워드 필터링 (1단계에서 선택한 카테고리와 매칭)
+    
+    Args:
+        keywords: 필터링할 키워드 리스트
+        target_category: 1단계에서 사용자가 선택한 카테고리
+        
+    Returns:
+        List[KeywordBasicData]: 매칭되는 카테고리의 키워드 리스트
+    """
+    if not keywords or not target_category:
+        return keywords
+    
+    # 카테고리 정규화 (공백 제거, 소문자 변환)
+    def normalize_category(category: str) -> str:
+        return category.strip().lower().replace(" ", "")
+    
+    target_normalized = normalize_category(target_category)
+    
+    filtered = []
+    for kw in keywords:
+        if not kw.category:
+            continue
+            
+        kw_normalized = normalize_category(kw.category)
+        
+        # 카테고리 매칭 로직 (부분 일치)
+        if is_category_match(target_normalized, kw_normalized):
+            filtered.append(kw)
+    
+    # 검색량 내림차순으로 정렬
+    filtered.sort(key=lambda x: x.search_volume, reverse=True)
+    
+    return filtered
+
+
+def is_category_match(target_category: str, keyword_category: str) -> bool:
+    """
+    두 카테고리가 매칭되는지 확인
+    
+    Args:
+        target_category: 1단계 선택 카테고리 (정규화됨)
+        keyword_category: 키워드의 카테고리 (정규화됨)
+        
+    Returns:
+        bool: 매칭 여부
+    """
+    if not target_category or not keyword_category:
+        return False
+    
+    # 정확히 같은 경우
+    if target_category == keyword_category:
+        return True
+    
+    # 카테고리 경로 분리 (> 또는 - 기준)
+    target_parts = [part.strip() for part in target_category.replace('>', '|').replace('-', '|').split('|') if part.strip()]
+    keyword_parts = [part.strip() for part in keyword_category.replace('>', '|').replace('-', '|').split('|') if part.strip()]
+    
+    if not target_parts or not keyword_parts:
+        return False
+    
+    # 최상위 카테고리가 같은지 확인
+    if target_parts[0] == keyword_parts[0]:
+        return True
+    
+    # 하위 카테고리 중 하나라도 같은지 확인
+    for target_part in target_parts:
+        if target_part in keyword_parts:
+            return True
+    
+    # 부분 문자열 포함 확인
+    for target_part in target_parts:
+        for keyword_part in keyword_parts:
+            if target_part in keyword_part or keyword_part in target_part:
+                return True
+    
+    return False
 
 
 def normalize_keyword_for_comparison(keyword: str) -> str:

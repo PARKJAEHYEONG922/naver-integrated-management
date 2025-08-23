@@ -17,9 +17,9 @@ from src.desktop.common_log import log_manager
 from .ui_steps import (
     Step1ResultWidget,
     Step2BasicAnalysisWidget, 
-    Step3AdvancedAnalysisWidget,
     Step4ResultWidget
 )
+from .ui_ai_selection import Step3AIKeywordSelectionWidget
 from .service import product_title_service
 
 
@@ -254,8 +254,8 @@ class RightPanel(QWidget):
         self.step2_widget = Step2BasicAnalysisWidget()
         self.content_stack.addWidget(self.step2_widget)
         
-        # 3단계: 심화 분석 결과
-        self.step3_widget = Step3AdvancedAnalysisWidget()
+        # 3단계: AI 키워드 선택 
+        self.step3_widget = Step3AIKeywordSelectionWidget()
         self.content_stack.addWidget(self.step3_widget)
         
         # 4단계: 최종 결과
@@ -486,9 +486,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 2단계 프롬프트 선택 시그널
         self.right_panel.step2_widget.prompt_selected.connect(self.on_prompt_selected)
         
-        # 3단계 AI 분석 시그널
-        self.right_panel.step3_widget.ai_analysis_started.connect(self.start_ai_analysis)
-        self.right_panel.step3_widget.analysis_stopped.connect(self.stop_ai_analysis)
+        # 3단계 AI 키워드 선택 시그널
+        self.right_panel.step3_widget.keywords_selected.connect(self.on_ai_keywords_selected)
         
         # API 설정 변경 시그널 연결 (부모 윈도우에서 받기)
         self.connect_to_api_dialog()
@@ -793,12 +792,9 @@ class NaverProductTitleGeneratorWidget(QWidget):
     
     def on_analysis_data_updated(self, data: dict):
         """AI 분석 데이터 실시간 업데이트"""
-        # 3단계 위젯의 analysis_data 업데이트
-        for key, value in data.items():
-            self.right_panel.step3_widget.analysis_data[key] = value
-        
-        # 3단계 위젯의 UI도 실시간 업데이트
-        self.right_panel.step3_widget.update_analysis_data(data)
+        # 새로운 체크박스 UI는 실시간 분석 데이터 업데이트가 필요 없음
+        # 최종 결과만 load_keywords()로 표시
+        pass
     
     def on_ai_analysis_completed(self, keywords):
         """AI 분석 완료 처리"""
@@ -807,11 +803,22 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 진행상황 업데이트
         self.left_panel.update_progress(3, "AI 분석 완료", 100)
         
-        # 3단계 UI 업데이트
-        self.right_panel.step3_widget.on_analysis_completed(keywords)
+        # 3단계 체크박스 UI에 키워드 로드
+        self.right_panel.step3_widget.load_keywords(keywords)
         
         # 다음 단계 활성화
         self.right_panel.set_next_enabled(True)
+    
+    def on_ai_keywords_selected(self, selected_keywords):
+        """AI 분석 결과에서 키워드가 선택되었을 때"""
+        log_manager.add_log(f"✅ AI 키워드 선택: {len(selected_keywords)}개", "info")
+        
+        # 선택된 키워드를 4단계에서 사용할 수 있도록 저장
+        self.selected_ai_keywords = selected_keywords
+        
+        # 4단계에 선택된 키워드 전달
+        if hasattr(self.right_panel, 'step4_widget'):
+            self.right_panel.step4_widget.set_selected_keywords(selected_keywords)
     
     def on_ai_analysis_error(self, error_message: str):
         """AI 분석 에러 처리"""
@@ -820,8 +827,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 진행상황 초기화
         self.left_panel.update_progress(3, "AI 분석 실패", 0)
         
-        # 3단계 UI 에러 표시
-        self.right_panel.step3_widget.on_analysis_error(error_message)
+        # 3단계 체크박스 UI에 빈 결과 로드 (에러 메시지 표시용)
+        self.right_panel.step3_widget.load_keywords([])
     
     def stop_ai_analysis(self):
         """AI 분석 정지 처리"""
@@ -833,8 +840,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
             from .worker import worker_manager
             worker_manager.stop_worker(self.current_ai_worker)
         
-        # 3단계 UI 버튼 상태 복원
-        self.right_panel.step3_widget.on_analysis_error("분석이 중지되었습니다.")
+        # 3단계 체크박스 UI에 빈 결과 로드 (중지 메시지 표시용)
+        self.right_panel.step3_widget.load_keywords([])
         
         # 진행상황 초기화
         self.left_panel.update_progress(3, "분석 중지됨", 0)

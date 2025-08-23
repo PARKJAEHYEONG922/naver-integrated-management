@@ -709,107 +709,13 @@ class Step2BasicAnalysisWidget(QWidget):
         """)
 
 
-class Step3AdvancedAnalysisWidget(QWidget):
-    """3단계: AI 상품명분석 위젯"""
+class Step4ResultWidget(QWidget):
+    """4단계: 최종 상품명 생성 결과"""
     
-    # 시그널  
-    ai_analysis_started = Signal(str, str)  # (prompt_type, prompt_content) AI 분석 시작
-    analysis_stopped = Signal()             # 분석 중단
+    # 시그널
+    export_requested = Signal()
     
     def __init__(self):
-        super().__init__()
-        self.product_names = []       # 2단계에서 받은 상품명들
-        self.selected_prompt_type = "default"    # 2단계에서 선택된 프롬프트 타입
-        self.selected_prompt_content = ""        # 2단계에서 선택된 프롬프트 내용
-        self.is_analysis_running = False
-        
-        # AI 분석 데이터 저장
-        self.analysis_data = {
-            'input_prompt': '',
-            'ai_response': '',
-            'extracted_keywords': [],
-            'analyzed_keywords': [],
-            'filtered_keywords': []
-        }
-        
-        self.setup_ui()
-        
-    def setup_ui(self):
-        layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
-        
-        # 단계 헤더
-        title_label = QLabel("3️⃣ AI 상품명분석")
-        title_label.setObjectName("step_title")
-        layout.addWidget(title_label)
-        
-        subtitle_label = QLabel("선택된 프롬프트로 상품명을 AI 분석하여 키워드를 추출합니다")
-        subtitle_label.setObjectName("step_subtitle") 
-        layout.addWidget(subtitle_label)
-        
-        # 분석 설정 요약 카드
-        self.summary_card = self.create_summary_card()
-        layout.addWidget(self.summary_card)
-        
-        # AI 분석 결과 표시 영역
-        self.result_area = self.create_result_area()
-        layout.addWidget(self.result_area, 1)  # 확장 가능
-        
-        # 액션 버튼
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-        
-        self.analyze_button = ModernPrimaryButton("🤖 AI 분석 시작")
-        self.analyze_button.setMinimumHeight(45)
-        self.analyze_button.setMinimumWidth(150)
-        self.analyze_button.clicked.connect(self.start_ai_analysis)
-        button_layout.addWidget(self.analyze_button)
-        
-        self.stop_button = ModernCancelButton("⏹ 정지")
-        self.stop_button.setMinimumHeight(45)
-        self.stop_button.setMinimumWidth(80)
-        self.stop_button.clicked.connect(self.stop_analysis)
-        self.stop_button.setEnabled(False)
-        button_layout.addWidget(self.stop_button)
-        
-        # 실시간 분석 내용 보기 버튼
-        from src.toolbox.ui_kit.components import ModernButton
-        self.analysis_log_button = ModernButton("📊 실시간 분석 내용", "secondary")
-        self.analysis_log_button.setMinimumHeight(45)
-        self.analysis_log_button.setMinimumWidth(150)
-        self.analysis_log_button.clicked.connect(self.show_analysis_log)
-        self.analysis_log_button.setEnabled(False)  # 분석 시작 후 활성화
-        button_layout.addWidget(self.analysis_log_button)
-        
-        layout.addLayout(button_layout)
-        
-        self.setLayout(layout)
-        self.apply_styles()
-        
-    def create_summary_card(self):
-        """분석 설정 요약 카드"""
-        card = QFrame()
-        card.setObjectName("summary_card")
-        
-        layout = QVBoxLayout()
-        layout.setContentsMargins(20, 15, 20, 15)
-        layout.setSpacing(10)
-        
-        # 제목
-        title = QLabel("📋 분석 설정 요약")
-        title.setObjectName("summary_title")
-        layout.addWidget(title)
-        
-        # 설정 정보
-        info_layout = QHBoxLayout()
-        info_layout.setSpacing(20)
-        
-        self.product_count_label = QLabel("상품명: 0개")
-        self.product_count_label.setObjectName("summary_stat")
-        info_layout.addWidget(self.product_count_label)
-        
-        self.prompt_type_label = QLabel("프롬프트: 미설정")
         self.prompt_type_label.setObjectName("summary_stat")
         info_layout.addWidget(self.prompt_type_label)
         
@@ -825,58 +731,62 @@ class Step3AdvancedAnalysisWidget(QWidget):
         layout = QVBoxLayout(card)
         layout.setContentsMargins(15, 15, 15, 15)
         
-        # 분석 진행 상황 표시
-        self.analysis_status_label = QLabel("AI 분석 결과가 여기에 표시됩니다.\n\n상단의 'AI 분석 시작' 버튼을 클릭하여 시작하세요.")
-        self.analysis_status_label.setAlignment(Qt.AlignCenter)
-        self.analysis_status_label.setStyleSheet(f"""
+        # 진행 상황 표시 (더 넓게)
+        self.progress_info = QLabel("AI 분석을 시작하려면 상단의 'AI 분석 시작' 버튼을 클릭하세요.")
+        self.progress_info.setAlignment(Qt.AlignCenter)
+        self.progress_info.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
                 font-size: 14px;
-                padding: 20px;
-                border: 2px dashed {ModernStyle.COLORS['border']};
+                padding: 15px;
+                border: 1px solid {ModernStyle.COLORS['border']};
                 border-radius: 8px;
                 background-color: {ModernStyle.COLORS['bg_secondary']};
             }}
         """)
-        layout.addWidget(self.analysis_status_label)
+        layout.addWidget(self.progress_info)
         
-        # AI 응답 표시 영역 (초기에는 숨김)
-        from PySide6.QtWidgets import QTextEdit
-        self.ai_response_display = QTextEdit()
-        self.ai_response_display.setReadOnly(True)
-        self.ai_response_display.setMaximumHeight(200)
-        self.ai_response_display.setMinimumHeight(150)
-        self.ai_response_display.setPlaceholderText("AI 응답이 여기에 실시간으로 표시됩니다...")
-        self.ai_response_display.setStyleSheet(f"""
-            QTextEdit {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border: 1px solid {ModernStyle.COLORS['success']};
-                border-radius: 6px;
-                padding: 10px;
-                font-size: 12px;
-                font-family: 'Consolas', 'Monaco', monospace;
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-        """)
-        self.ai_response_display.hide()  # 초기에는 숨김
-        layout.addWidget(self.ai_response_display)
+        # 진행률 바 추가 (더 두드러지게 표시)
+        from src.toolbox.ui_kit.components import ModernProgressBar
+        self.progress_bar = ModernProgressBar()
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setMinimumHeight(20)
+        self.progress_bar.hide()  # 초기에는 숨김
+        layout.addWidget(self.progress_bar)
         
-        # 키워드 결과 표시 영역 (초기에는 숨김)
-        self.keyword_results_display = QLabel()
-        self.keyword_results_display.setAlignment(Qt.AlignTop)
-        self.keyword_results_display.setWordWrap(True)
-        self.keyword_results_display.setStyleSheet(f"""
-            QLabel {{
-                color: {ModernStyle.COLORS['text_primary']};
-                font-size: 13px;
-                padding: 15px;
-                border: 1px solid {ModernStyle.COLORS['primary']};
-                border-radius: 8px;
+        # 키워드 결과 테이블 (더 넓게 표시)
+        from PySide6.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
+        self.keywords_table = QTableWidget()
+        self.keywords_table.setColumnCount(4)  # 체크박스, 키워드, 월검색량, 카테고리
+        self.keywords_table.setHorizontalHeaderLabels(["선택", "키워드", "월검색량", "카테고리"])
+        
+        # 테이블 헤더 크기 조정
+        header = self.keywords_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Fixed)  # 체크박스 열 고정
+        header.setSectionResizeMode(1, QHeaderView.Stretch)  # 키워드 열 늘리기
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)  # 월검색량 열 내용에 맞춤
+        header.setSectionResizeMode(3, QHeaderView.Stretch)  # 카테고리 열 늘리기
+        self.keywords_table.setColumnWidth(0, 60)  # 체크박스 열 너비
+        
+        self.keywords_table.setStyleSheet(f"""
+            QTableWidget {{
                 background-color: {ModernStyle.COLORS['bg_card']};
+                border: 1px solid {ModernStyle.COLORS['border']};
+                border-radius: 8px;
+                gridline-color: {ModernStyle.COLORS['border']};
+                selection-background-color: {ModernStyle.COLORS['primary']};
+            }}
+            QHeaderView::section {{
+                background-color: {ModernStyle.COLORS['bg_secondary']};
+                color: {ModernStyle.COLORS['text_primary']};
+                padding: 8px;
+                border: 1px solid {ModernStyle.COLORS['border']};
+                font-weight: 600;
             }}
         """)
-        self.keyword_results_display.hide()  # 초기에는 숨김
-        layout.addWidget(self.keyword_results_display)
+        self.keywords_table.hide()  # 초기에는 숨김
+        layout.addWidget(self.keywords_table)
         
         return card
     
@@ -925,10 +835,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analysis_log_button.setEnabled(True)  # 분석 로그 버튼 활성화
         
         # 결과 영역 업데이트
-        self.analysis_status_label.setText("🤖 AI 분석 중입니다...\n잠시만 기다려주세요.")
-        self.ai_response_display.clear()
-        self.ai_response_display.hide()
-        self.keyword_results_display.hide()
+        self.progress_info.setText("🤖 AI 분석을 시작합니다...")
+        self.progress_bar.setValue(0)
+        self.progress_bar.show()
+        self.keywords_table.hide()
         
         # AI 분석 시작 시그널 발송
         self.ai_analysis_started.emit(self.selected_prompt_type, self.selected_prompt_content)
@@ -940,9 +850,9 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analyze_button.setText("🤖 AI 분석 시작")
         self.stop_button.setEnabled(False)
         
-        self.analysis_status_label.setText("⏹️ 분석이 중단되었습니다.")
-        self.ai_response_display.hide()
-        self.keyword_results_display.hide()
+        self.progress_info.setText("⏹️ 분석이 중단되었습니다.")
+        self.progress_bar.hide()
+        self.keywords_table.hide()
         self.analysis_stopped.emit()
         
     def on_analysis_completed(self, results):
@@ -954,24 +864,16 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         # 결과 표시
         if isinstance(results, list) and len(results) > 0:
-            self.analysis_status_label.setText(f"✅ AI 분석 완료!\n추출된 키워드: {len(results)}개")
+            self.progress_info.setText(f"✅ AI 분석 완료! 추출된 키워드: {len(results)}개")
+            self.progress_bar.hide()
             
-            # 키워드 결과 표시
-            keyword_list = []
-            for i, result in enumerate(results[:10]):  # 상위 10개만 표시
-                if hasattr(result, 'keyword'):
-                    volume = f"({result.search_volume})" if result.search_volume else "(0)"
-                    keyword_list.append(f"{i+1}. {result.keyword} {volume}")
-                else:
-                    keyword_list.append(f"{i+1}. {result}")
-            
-            if len(results) > 10:
-                keyword_list.append(f"... 외 {len(results)-10}개")
-            
-            self.keyword_results_display.setText("\n".join(keyword_list))
-            self.keyword_results_display.show()
+            # 키워드 결과를 테이블에 표시
+            self.display_keyword_results_in_table(results)
+            self.keywords_table.show()
         else:
-            self.analysis_status_label.setText("⚠️ AI 분석 완료되었으나 유효한 키워드가 없습니다.")
+            self.progress_info.setText("⚠️ AI 분석 완료되었으나 유효한 키워드가 없습니다.")
+            self.progress_bar.hide()
+            self.keywords_table.hide()
         
     def on_analysis_error(self, error_msg):
         """AI 분석 에러 처리"""
@@ -980,9 +882,9 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analyze_button.setText("🤖 AI 분석 시작")
         self.stop_button.setEnabled(False)
         
-        self.analysis_status_label.setText(f"❌ 분석 실패:\n{error_msg}")
-        self.ai_response_display.hide()
-        self.keyword_results_display.hide()
+        self.progress_info.setText(f"❌ 분석 실패: {error_msg}")
+        self.progress_bar.hide()
+        self.keywords_table.hide()
         
     def update_analysis_data(self, data_updates):
         """실시간 분석 데이터 업데이트"""
@@ -994,16 +896,19 @@ class Step3AdvancedAnalysisWidget(QWidget):
         if 'ai_response' in data_updates:
             ai_response = data_updates['ai_response']
             if ai_response and ai_response.strip():
-                self.analysis_status_label.setText("🤖 AI 분석 응답 수신 완료!\n키워드 추출 및 월검색량 조회 중...")
-                self.ai_response_display.setPlainText(ai_response)
-                self.ai_response_display.show()
+                self.progress_info.setText("🤖 AI 분석 응답 수신 완료! 키워드 추출 및 월검색량 조회 중...")
+                # AI 응답은 더 이상 별도로 표시하지 않음
         
         # 분석된 키워드가 있으면 진행 상황 표시
         if 'analyzed_keywords' in data_updates:
             analyzed_keywords = data_updates['analyzed_keywords']
             if analyzed_keywords:
                 with_volume_count = len([kw for kw in analyzed_keywords if hasattr(kw, 'search_volume') and kw.search_volume > 0])
-                self.analysis_status_label.setText(f"📊 키워드 분석 진행 중...\n총 {len(analyzed_keywords)}개 중 {with_volume_count}개 검색량 확보")
+                self.progress_info.setText(f"📊 키워드 분석 진행 중... 총 {len(analyzed_keywords)}개 중 {with_volume_count}개 검색량 확보")
+                
+                # 진행률 계산 및 업데이트 - 기본적인 진행률 표시
+                progress = min(100, int((len(analyzed_keywords) / max(1, len(self.product_names))) * 50))  # 상품명 기준 50%까지
+                self.progress_bar.setValue(progress)
     
     def show_analysis_log(self):
         """실시간 분석 내용 다이얼로그 표시"""
@@ -1015,6 +920,95 @@ class Step3AdvancedAnalysisWidget(QWidget):
             product_names=self.product_names
         )
         dialog.exec()
+    
+    def display_keyword_results_in_table(self, keywords):
+        """키워드 결과를 테이블에 표시"""
+        try:
+            self.keywords_table.setRowCount(len(keywords))
+            
+            for row, kw in enumerate(keywords):
+                # 체크박스
+                from PySide6.QtWidgets import QTableWidgetItem
+                from PySide6.QtCore import Qt
+                
+                checkbox_item = QTableWidgetItem()
+                checkbox_item.setCheckState(Qt.CheckState.Checked)  # 기본 체크
+                checkbox_item.setFlags(checkbox_item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+                self.keywords_table.setItem(row, 0, checkbox_item)
+                
+                # 키워드
+                if hasattr(kw, 'keyword'):
+                    keyword_text = kw.keyword
+                elif isinstance(kw, dict):
+                    keyword_text = kw.get('keyword', str(kw))
+                else:
+                    keyword_text = str(kw)
+                    
+                keyword_item = QTableWidgetItem(keyword_text)
+                keyword_item.setFlags(keyword_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                self.keywords_table.setItem(row, 1, keyword_item)
+                
+                # 월검색량
+                if hasattr(kw, 'search_volume'):
+                    search_volume = kw.search_volume or 0
+                elif isinstance(kw, dict):
+                    search_volume = kw.get('search_volume', 0) or 0
+                else:
+                    search_volume = 0
+                    
+                volume_text = f"{search_volume:,}" if isinstance(search_volume, int) else str(search_volume)
+                volume_item = QTableWidgetItem(volume_text)
+                volume_item.setFlags(volume_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                volume_item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+                self.keywords_table.setItem(row, 2, volume_item)
+                
+                # 카테고리
+                if hasattr(kw, 'category'):
+                    category = kw.category or 'N/A'
+                elif isinstance(kw, dict):
+                    category = kw.get('category', 'N/A')
+                else:
+                    category = 'N/A'
+                    
+                category_item = QTableWidgetItem(category)
+                category_item.setFlags(category_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                self.keywords_table.setItem(row, 3, category_item)
+            
+            # 테이블 크기 조정
+            self.keywords_table.resizeColumnsToContents()
+            
+        except Exception as e:
+            from src.foundation.logging import get_logger
+            logger = get_logger(__name__)
+            logger.error(f"키워드 테이블 표시 오류: {e}")
+    
+    def get_selected_keywords(self):
+        """선택된 키워드 반환"""
+        selected_keywords = []
+        try:
+            from PySide6.QtCore import Qt
+            
+            for row in range(self.keywords_table.rowCount()):
+                checkbox_item = self.keywords_table.item(row, 0)
+                if checkbox_item and checkbox_item.checkState() == Qt.CheckState.Checked:
+                    keyword_item = self.keywords_table.item(row, 1)
+                    if keyword_item:
+                        selected_keywords.append(keyword_item.text())
+        except Exception as e:
+            from src.foundation.logging import get_logger
+            logger = get_logger(__name__)
+            logger.error(f"선택된 키워드 조회 오류: {e}")
+        
+        return selected_keywords
+    
+    def update_progress(self, current, total):
+        """진행률 업데이트"""
+        if total > 0:
+            progress = min(100, int((current / total) * 100))
+            self.progress_bar.setValue(progress)
+            
+            # 진행률 텍스트 업데이트
+            self.progress_info.setText(f"📊 AI 분석 진행 중... {current}/{total} ({progress}%)")
         
     def apply_styles(self):
         self.setStyleSheet(f"""

@@ -89,6 +89,8 @@ class SessionData:
     session_id: str
     product_input: Optional[ProductInput] = None
     basic_analysis_results: List[KeywordBasicData] = field(default_factory=list)
+    selected_category: str = ""  # 1단계에서 사용자가 선택한 카테고리
+    selected_basic_keywords: List[str] = field(default_factory=list)  # 1단계에서 사용자가 선택한 키워드들
     collected_product_names: List[ProductNameData] = field(default_factory=list)  # 2단계 추가
     ai_analysis_results: List[AIAnalysisResult] = field(default_factory=list)
     generated_titles: List[GeneratedTitle] = field(default_factory=list)

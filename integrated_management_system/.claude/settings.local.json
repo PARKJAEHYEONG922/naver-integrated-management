@@ -35,7 +35,10 @@
       "Bash(git restore:*)",
       "Bash(mkdir:*)",
       "Bash(set PYTHONPATH=.)",
-      "Bash(move prompt_dialog.py ai_dialog.py)"
+      "Bash(move prompt_dialog.py ai_dialog.py)",
+      "Bash(true)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)"
     ],
     "deny": []
   }

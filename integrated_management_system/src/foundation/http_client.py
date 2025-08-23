@@ -1,14 +1,146 @@
 """
 HTTP 요청 공통 처리 (타임아웃, 재시도 등)
 모든 API 호출에서 사용할 공통 HTTP 클라이언트
+병렬 API 처리 및 공용 에러 처리 포함
 """
 import time
 import requests
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List, Callable, Tuple, Union
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from functools import wraps
 
 from .exceptions import APITimeoutError, APIRateLimitError, APIResponseError, APIAuthenticationError
+from .logging import get_logger
+
+logger = get_logger("foundation.http_client")
+
+
+def api_error_handler(api_name: str = "Unknown API"):
+    """API 호출 공용 에러 처리 데코레이터"""
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                logger.debug(f"🔍 {api_name} 호출 시작: {func.__name__}")
+                result = func(*args, **kwargs)
+                logger.debug(f"✅ {api_name} 호출 성공: {func.__name__}")
+                return result
+                
+            except APIRateLimitError as e:
+                logger.warning(f"⏳ {api_name} 호출 제한: {e}")
+                raise
+            except APIAuthenticationError as e:
+                logger.error(f"🔐 {api_name} 인증 오류: {e}")
+                raise
+            except APITimeoutError as e:
+                logger.error(f"⏰ {api_name} 타임아웃: {e}")
+                raise
+            except APIResponseError as e:
+                logger.error(f"❌ {api_name} 응답 오류: {e}")
+                raise
+            except Exception as e:
+                logger.error(f"💥 {api_name} 예상치 못한 오류: {e}")
+                raise APIResponseError(f"{api_name} 호출 실패: {e}")
+        
+        return wrapper
+    return decorator
+
+
+class ParallelAPIProcessor:
+    """병렬 API 처리기"""
+    
+    def __init__(self, max_workers: int = 3, rate_limiter: Optional['RateLimiter'] = None):
+        """
+        병렬 API 처리기 초기화
+        
+        Args:
+            max_workers: 최대 동시 작업 수
+            rate_limiter: 속도 제한기 (선택)
+        """
+        self.max_workers = max_workers
+        self.rate_limiter = rate_limiter
+    
+    def process_batch(self, 
+                     func: Callable, 
+                     items: List[Any], 
+                     stop_check: Optional[Callable[[], bool]] = None,
+                     progress_callback: Optional[Callable[[int, int, str], None]] = None) -> List[Tuple[Any, Any, Optional[Exception]]]:
+        """
+        배치 아이템들을 병렬로 처리
+        
+        Args:
+            func: 실행할 함수 (item을 인자로 받음)
+            items: 처리할 아이템 리스트
+            stop_check: 중단 확인 함수
+            progress_callback: 진행률 콜백 (current, total, message)
+        
+        Returns:
+            List[Tuple[item, result, error]]: (원본 아이템, 결과, 에러) 튜플 리스트
+        """
+        results = []
+        completed_count = 0
+        total_count = len(items)
+        
+        logger.info(f"🔄 병렬 처리 시작: {total_count}개 아이템, {self.max_workers}개 워커")
+        
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            # 모든 작업 제출
+            future_to_item = {}
+            
+            for item in items:
+                if stop_check and stop_check():
+                    break
+                
+                # 레이트 리미터 적용하여 작업 제출
+                if self.rate_limiter:
+                    future = executor.submit(self._rate_limited_call, func, item)
+                else:
+                    future = executor.submit(func, item)
+                
+                future_to_item[future] = item
+            
+            # 완료된 작업들 처리
+            for future in as_completed(future_to_item):
+                if stop_check and stop_check():
+                    # 나머지 작업들 취소
+                    for f in future_to_item:
+                        f.cancel()
+                    break
+                
+                item = future_to_item[future]
+                error = None
+                result = None
+                
+                try:
+                    result = future.result()
+                except Exception as e:
+                    error = e
+                    logger.warning(f"⚠️ 아이템 처리 실패: {item} -> {e}")
+                
+                results.append((item, result, error))
+                completed_count += 1
+                
+                # 진행률 콜백 호출
+                if progress_callback:
+                    try:
+                        progress_callback(completed_count, total_count, f"{completed_count}/{total_count} 완료")
+                    except Exception as e:
+                        logger.warning(f"진행률 콜백 오류: {e}")
+        
+        success_count = len([r for r in results if r[2] is None])
+        logger.info(f"✅ 병렬 처리 완료: {success_count}/{total_count} 성공")
+        
+        return results
+    
+    def _rate_limited_call(self, func: Callable, item: Any) -> Any:
+        """레이트 리미터를 적용한 함수 호출"""
+        if self.rate_limiter:
+            with self.rate_limiter:
+                return func(item)
+        else:
+            return func(item)
 
 
 class HTTPClient:
