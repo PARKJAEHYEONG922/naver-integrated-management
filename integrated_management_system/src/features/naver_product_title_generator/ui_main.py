@@ -765,14 +765,20 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 3단계에 분석 데이터 전달
         self.right_panel.step3_widget.analysis_data['input_prompt'] = final_prompt
         
-        # AI 분석 워커 시작 - 상품명과 프롬프트를 함께 전달
+        # AI 분석 워커 시작 - 상품명과 프롬프트, 1단계 선택 키워드를 함께 전달
         from .worker import AIAnalysisWorker, worker_manager
         
         product_names = self.cached_product_names  # 2단계에서 수집된 상품명들
         
         # 프롬프트 타입에 따라 적절한 값 전달
         worker_prompt = prompt_content if prompt_type == "custom" else None
-        self.current_ai_worker = AIAnalysisWorker(product_names, worker_prompt)
+        
+        # 1단계에서 선택한 키워드들을 추출 (문자열 리스트)
+        selected_keywords = [kw.keyword for kw in self.last_selected_keywords] if self.last_selected_keywords else []
+        
+        log_manager.add_log(f"📋 1단계 키워드 {len(selected_keywords)}개를 AI 분석에 포함: {selected_keywords[:5]}{'...' if len(selected_keywords) > 5 else ''}", "info")
+        
+        self.current_ai_worker = AIAnalysisWorker(product_names, worker_prompt, selected_keywords)
         self.current_ai_worker.progress_updated.connect(self.on_ai_progress)
         self.current_ai_worker.analysis_completed.connect(self.on_ai_analysis_completed)
         self.current_ai_worker.analysis_data_updated.connect(self.on_analysis_data_updated)
@@ -790,6 +796,9 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 3단계 위젯의 analysis_data 업데이트
         for key, value in data.items():
             self.right_panel.step3_widget.analysis_data[key] = value
+        
+        # 3단계 위젯의 UI도 실시간 업데이트
+        self.right_panel.step3_widget.update_analysis_data(data)
     
     def on_ai_analysis_completed(self, keywords):
         """AI 분석 완료 처리"""

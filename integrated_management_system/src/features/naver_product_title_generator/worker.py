@@ -71,43 +71,126 @@ class BasicAnalysisWorker(QThread):
             # 2단계: 키워드별 월검색량 및 카테고리 분석
             self.progress_updated.emit(30, "네이버 API 분석 중...")
             
-            # 키워드 일괄 분석 (기존 keyword_analysis 서비스 사용)
+            # 병렬 처리로 키워드 월검색량 조회
+            from concurrent.futures import ThreadPoolExecutor, as_completed
             from src.features.keyword_analysis.service import KeywordAnalysisService
             from src.features.keyword_analysis.models import AnalysisPolicy, AnalysisScope
             from .models import KeywordBasicData
             
             # 정책 명시적으로 설정 (전체 분석)
             policy = AnalysisPolicy(scope=AnalysisScope.FULL_ANALYSIS)
-            analysis_service = KeywordAnalysisService(policy)
             analyzed_keywords = []
             
+            # 키워드를 청크로 나누기 (3개씩 병렬 처리)
+            def analyze_keyword_batch(keywords_batch, start_index):
+                """키워드 배치 분석 (레이트 리미팅 포함)"""
+                from src.foundation.http_client import rate_limiter_manager
+                
+                analysis_service = KeywordAnalysisService(policy)  # 스레드별 서비스 인스턴스
+                results = []
+                
+                # 네이버 API 전용 레이트 리미터 (초당 2회 호출)
+                rate_limiter = rate_limiter_manager.get_limiter("naver_searchad", calls_per_second=2.0)
+                
+                for i, keyword in enumerate(keywords_batch):
+                    if self.is_stopped():
+                        break
+                    
+                    # 레이트 리미팅 적용
+                    with rate_limiter:
+                        try:
+                            logger.info(f"🔍 키워드 분석 시작: '{keyword}' ({start_index + i + 1}/{len(keywords)})")
+                            kw_data = analysis_service.analyze_single_keyword(keyword)
+                            
+                            # KeywordData를 KeywordBasicData로 변환 (카테고리는 첫 번째 줄만 사용)
+                            category = kw_data.category.split('\n')[0] if kw_data.category else ""
+                            basic_data = KeywordBasicData(
+                                keyword=kw_data.keyword,
+                                search_volume=kw_data.search_volume,
+                                category=category
+                            )
+                            results.append(basic_data)
+                            
+                            if kw_data.search_volume and kw_data.search_volume > 0:
+                                logger.info(f"✅ '{keyword}' 분석 완료: 월검색량 {kw_data.search_volume}")
+                            else:
+                                logger.debug(f"❌ '{keyword}' 분석 완료: 월검색량 0")
+                                
+                        except Exception as e:
+                            logger.warning(f"❌ 키워드 '{keyword}' 분석 실패: {e}")
+                            # 실패한 키워드도 포함 (검색량 0)
+                            results.append(KeywordBasicData(
+                                keyword=keyword,
+                                search_volume=0,
+                                category="분석 실패"
+                            ))
+                
+                return results
+            
+            # 키워드를 3개씩 배치로 나누기
+            batch_size = 3
             total_keywords = len(keywords)
-            for i, keyword in enumerate(keywords):
-                if self.is_stopped():
-                    return
+            batches = []
+            
+            for i in range(0, total_keywords, batch_size):
+                batch = keywords[i:i + batch_size]
+                batches.append((batch, i))
+            
+            logger.info(f"병렬 처리 시작: {len(batches)}개 배치, 배치당 {batch_size}개 키워드")
+            self.progress_updated.emit(25, f"{total_keywords}개 키워드를 3개씩 배치로 병렬 분석 시작...")
+            
+            # ThreadPoolExecutor로 병렬 처리 (최대 3개 스레드)
+            with ThreadPoolExecutor(max_workers=3) as executor:
+                # 모든 배치를 제출
+                future_to_batch = {
+                    executor.submit(analyze_keyword_batch, batch, start_idx): (batch, start_idx)
+                    for batch, start_idx in batches
+                }
                 
-                # 진행률 업데이트 (30% ~ 90%)
-                progress = 30 + int((i / total_keywords) * 60)
-                self.progress_updated.emit(progress, f"키워드 '{keyword}' 분석 중... ({i+1}/{total_keywords})")
-                
-                try:
-                    kw_data = analysis_service.analyze_single_keyword(keyword)
-                    # KeywordData를 KeywordBasicData로 변환 (카테고리는 첫 번째 줄만 사용)
-                    category = kw_data.category.split('\n')[0] if kw_data.category else ""
-                    basic_data = KeywordBasicData(
-                        keyword=kw_data.keyword,
-                        search_volume=kw_data.search_volume,
-                        category=category
-                    )
-                    analyzed_keywords.append(basic_data)
-                except Exception as e:
-                    logger.warning(f"키워드 '{keyword}' 분석 실패: {e}")
-                    # 실패한 키워드도 포함 (검색량 0)
-                    analyzed_keywords.append(KeywordBasicData(
-                        keyword=keyword,
-                        search_volume=0,
-                        category="분석 실패"
-                    ))
+                completed_count = 0
+                for future in as_completed(future_to_batch):
+                    if self.is_stopped():
+                        # 모든 작업 취소
+                        for f in future_to_batch:
+                            f.cancel()
+                        break
+                    
+                    batch, start_idx = future_to_batch[future]
+                    
+                    try:
+                        batch_results = future.result()
+                        analyzed_keywords.extend(batch_results)
+                        
+                        completed_count += len(batch)
+                        progress = 30 + int((completed_count / total_keywords) * 60)  # 30% ~ 90%
+                        
+                        # 현재 배치의 키워드들을 진행률 메시지에 포함
+                        batch_keywords = [kw for kw in batch]  # 현재 처리된 배치의 키워드들
+                        if len(batch_keywords) == 1:
+                            current_keyword = batch_keywords[0]
+                        else:
+                            current_keyword = f"{batch_keywords[0]} 외 {len(batch_keywords)-1}개"
+                        
+                        self.progress_updated.emit(
+                            progress, 
+                            f"'{current_keyword}' 분석 완료 ({completed_count}/{total_keywords})"
+                        )
+                        
+                        logger.info(f"배치 완료: {len(batch_results)}개 키워드 분석됨 - {completed_keywords}")
+                        
+                    except Exception as e:
+                        logger.error(f"배치 분석 실패: {e}")
+                        # 실패한 배치의 키워드들을 0 검색량으로 추가
+                        for keyword in batch:
+                            analyzed_keywords.append(KeywordBasicData(
+                                keyword=keyword,
+                                search_volume=0,
+                                category="분석 실패"
+                            ))
+            
+            # 결과 정렬 (원래 순서 유지)
+            keyword_order = {kw: i for i, kw in enumerate(keywords)}
+            analyzed_keywords.sort(key=lambda x: keyword_order.get(x.keyword, 999999))
             
             if self.is_stopped():
                 return
@@ -331,10 +414,11 @@ class AIAnalysisWorker(QThread):
     analysis_data_updated = Signal(dict) # 실시간 분석 데이터 업데이트
     error_occurred = Signal(str)         # error_message
     
-    def __init__(self, product_names: List[str], prompt: str):
+    def __init__(self, product_names: List[str], prompt: str, selected_keywords: List[str] = None):
         super().__init__()
         self.product_names = product_names
         self.prompt = prompt
+        self.selected_keywords = selected_keywords or []  # 1단계에서 선택한 키워드들
         self._stop_requested = False
         self._mutex = QMutex()
     
@@ -392,72 +476,170 @@ class AIAnalysisWorker(QThread):
             
             # 2단계: AI 응답에서 키워드 추출
             from .engine_local import parse_ai_keywords_response, deduplicate_keywords
+            
+            logger.info(f"🤖 AI 응답 길이: {len(ai_response)} 문자")
+            logger.info(f"🤖 AI 응답 미리보기: {ai_response[:200]}...")
+            
             extracted_keywords = parse_ai_keywords_response(ai_response)
+            
+            logger.info(f"📝 추출된 키워드 개수: {len(extracted_keywords)}")
+            logger.info(f"📝 추출된 키워드 미리보기: {extracted_keywords[:10]}")
             
             if not extracted_keywords:
                 self.error_occurred.emit("AI에서 키워드를 추출하지 못했습니다.")
                 return
             
-            self.progress_updated.emit(60, f"키워드 중복 제거 중... ({len(extracted_keywords)}개)")
+            self.progress_updated.emit(60, f"키워드 중복 제거 및 1단계 키워드 병합 중... ({len(extracted_keywords)}개)")
             
-            # 3단계: 키워드 중복 제거 ("강아지간식" = "강아지 간식")
-            unique_keywords = deduplicate_keywords(extracted_keywords)
+            # 3단계: AI 추출 키워드와 1단계 선택 키워드 병합
+            all_keywords = extracted_keywords.copy()  # AI 추출 키워드
+            
+            # 1단계에서 선택한 키워드 추가 (중복 확인)
+            if self.selected_keywords:
+                logger.info(f"📋 1단계 선택 키워드 {len(self.selected_keywords)}개를 병합합니다: {self.selected_keywords}")
+                all_keywords.extend(self.selected_keywords)
+            
+            # 중복 제거 ("강아지간식" = "강아지 간식")
+            unique_keywords = deduplicate_keywords(all_keywords)
+            
+            # AI 키워드와 1단계 키워드 병합 결과 로그
+            ai_count = len(extracted_keywords)
+            selected_count = len(self.selected_keywords) if self.selected_keywords else 0
+            merged_count = len(unique_keywords)
+            removed_duplicates = len(all_keywords) - merged_count
+            
+            logger.info(f"🔀 키워드 병합 완료: AI {ai_count}개 + 1단계 {selected_count}개 = 총 {merged_count}개 (중복 제거: {removed_duplicates}개)")
             
             if self.is_stopped():
                 return
             
-            self.progress_updated.emit(70, f"{len(unique_keywords)}개 키워드 월검색량 조회 중...")
+            self.progress_updated.emit(70, f"{len(unique_keywords)}개 키워드 월검색량 조회 중... (AI {ai_count}개 + 선택 {selected_count}개)")
             
             # 4단계: 월검색량 조회 (기존 keyword_analysis 서비스 사용)
             logger.info(f"📊 월검색량 조회할 키워드들: {unique_keywords[:10]}...")  # 처음 10개만 로그
             
-            # 기존에 잘 작동하던 keyword_analysis 서비스 사용
+            # 병렬 처리로 키워드 월검색량 조회
+            from concurrent.futures import ThreadPoolExecutor, as_completed
             from src.features.keyword_analysis.service import KeywordAnalysisService
             from src.features.keyword_analysis.models import AnalysisPolicy, AnalysisScope
             from .models import KeywordBasicData
             
             # 정책 명시적으로 설정 (전체 분석)
             policy = AnalysisPolicy(scope=AnalysisScope.FULL_ANALYSIS)
-            analysis_service = KeywordAnalysisService(policy)
             analyzed_keywords = []
             
             logger.info(f"정책 설정: 경쟁분석={policy.should_analyze_competition()}, 카테고리분석={policy.should_analyze_category()}")
             
+            # 키워드를 청크로 나누기 (3개씩 병렬 처리)
+            def analyze_keyword_batch(keywords_batch, start_index):
+                """키워드 배치 분석 (레이트 리미팅 포함)"""
+                from src.foundation.http_client import rate_limiter_manager
+                
+                analysis_service = KeywordAnalysisService(policy)  # 스레드별 서비스 인스턴스
+                results = []
+                
+                # 네이버 API 전용 레이트 리미터 (초당 2회 호출)
+                rate_limiter = rate_limiter_manager.get_limiter("naver_searchad", calls_per_second=2.0)
+                
+                for i, keyword in enumerate(keywords_batch):
+                    if self.is_stopped():
+                        break
+                    
+                    # 레이트 리미팅 적용
+                    with rate_limiter:
+                        try:
+                            logger.info(f"🔍 키워드 분석 시작: '{keyword}' ({start_index + i + 1}/{len(unique_keywords)})")
+                            kw_data = analysis_service.analyze_single_keyword(keyword)
+                            
+                            # KeywordData를 KeywordBasicData로 변환 (카테고리는 첫 번째 줄만 사용)
+                            category = kw_data.category.split('\n')[0] if kw_data.category else ""
+                            basic_data = KeywordBasicData(
+                                keyword=kw_data.keyword,
+                                search_volume=kw_data.search_volume,
+                                category=category
+                            )
+                            results.append(basic_data)
+                            
+                            if kw_data.search_volume and kw_data.search_volume > 0:
+                                logger.info(f"✅ '{keyword}' 분석 완료: 월검색량 {kw_data.search_volume}")
+                            else:
+                                logger.debug(f"❌ '{keyword}' 분석 완료: 월검색량 0")
+                                
+                        except Exception as e:
+                            logger.error(f"❌ 키워드 '{keyword}' 분석 실패: {e}")
+                            # 실패한 키워드도 포함 (검색량 0)
+                            results.append(KeywordBasicData(
+                                keyword=keyword,
+                                search_volume=0,
+                                category="분석 실패"
+                            ))
+                
+                return results
+            
+            # 키워드를 3개씩 배치로 나누기
+            batch_size = 3
             total_keywords = len(unique_keywords)
-            for i, keyword in enumerate(unique_keywords):
-                if self.is_stopped():
-                    return
+            batches = []
+            
+            for i in range(0, total_keywords, batch_size):
+                batch = unique_keywords[i:i + batch_size]
+                batches.append((batch, i))
+            
+            logger.info(f"병렬 처리 시작: {len(batches)}개 배치, 배치당 {batch_size}개 키워드")
+            self.progress_updated.emit(25, f"{total_keywords}개 키워드를 3개씩 배치로 병렬 분석 시작...")
+            
+            # ThreadPoolExecutor로 병렬 처리 (최대 3개 스레드)
+            with ThreadPoolExecutor(max_workers=3) as executor:
+                # 모든 배치를 제출
+                future_to_batch = {
+                    executor.submit(analyze_keyword_batch, batch, start_idx): (batch, start_idx)
+                    for batch, start_idx in batches
+                }
                 
-                # 진행률 업데이트 (0% ~ 85%)
-                progress = int((i / total_keywords) * 85)  
-                self.progress_updated.emit(progress, f"키워드 '{keyword}' 분석 중... ({i+1}/{total_keywords})")
-                
-                try:
-                    logger.info(f"🔍 키워드 분석 시작: '{keyword}' ({i+1}/{total_keywords})")
-                    kw_data = analysis_service.analyze_single_keyword(keyword)
+                completed_count = 0
+                for future in as_completed(future_to_batch):
+                    if self.is_stopped():
+                        # 모든 작업 취소
+                        for f in future_to_batch:
+                            f.cancel()
+                        break
                     
-                    # KeywordData를 KeywordBasicData로 변환 (카테고리는 첫 번째 줄만 사용)
-                    category = kw_data.category.split('\n')[0] if kw_data.category else ""
-                    basic_data = KeywordBasicData(
-                        keyword=kw_data.keyword,
-                        search_volume=kw_data.search_volume,
-                        category=category
-                    )
-                    analyzed_keywords.append(basic_data)
+                    batch, start_idx = future_to_batch[future]
                     
-                    if kw_data.search_volume and kw_data.search_volume > 0:
-                        logger.info(f"✅ '{keyword}' 분석 완료: 월검색량 {kw_data.search_volume}")
-                    else:
-                        logger.debug(f"❌ '{keyword}' 분석 완료: 월검색량 0")
+                    try:
+                        batch_results = future.result()
+                        analyzed_keywords.extend(batch_results)
                         
-                except Exception as e:
-                    logger.error(f"❌ 키워드 '{keyword}' 분석 실패: {e}")
-                    # 실패한 키워드도 포함 (검색량 0)
-                    analyzed_keywords.append(KeywordBasicData(
-                        keyword=keyword,
-                        search_volume=0,
-                        category="분석 실패"
-                    ))
+                        completed_count += len(batch)
+                        progress = int((completed_count / total_keywords) * 85)
+                        
+                        # 현재 배치의 키워드들을 진행률 메시지에 포함
+                        batch_keywords = [kw for kw in batch]  # 현재 처리된 배치의 키워드들
+                        if len(batch_keywords) == 1:
+                            current_keyword = batch_keywords[0]
+                        else:
+                            current_keyword = f"{batch_keywords[0]} 외 {len(batch_keywords)-1}개"
+                        
+                        self.progress_updated.emit(
+                            progress, 
+                            f"'{current_keyword}' 분석 완료 ({completed_count}/{total_keywords})"
+                        )
+                        
+                        logger.info(f"배치 완료: {len(batch_results)}개 키워드 분석됨 - {batch_keywords}")
+                        
+                    except Exception as e:
+                        logger.error(f"배치 분석 실패: {e}")
+                        # 실패한 배치의 키워드들을 0 검색량으로 추가
+                        for keyword in batch:
+                            analyzed_keywords.append(KeywordBasicData(
+                                keyword=keyword,
+                                search_volume=0,
+                                category="분석 실패"
+                            ))
+            
+            # 결과 정렬 (원래 순서 유지)
+            keyword_order = {kw: i for i, kw in enumerate(unique_keywords)}
+            analyzed_keywords.sort(key=lambda x: keyword_order.get(x.keyword, 999999))
             
             logger.info(f"📊 월검색량 조회 완료: {len(analyzed_keywords)}개 중 검색량 있는 키워드 {len([kw for kw in analyzed_keywords if kw.search_volume > 0])}개")
             

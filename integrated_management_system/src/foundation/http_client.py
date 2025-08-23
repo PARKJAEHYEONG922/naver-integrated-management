@@ -8,7 +8,7 @@ from typing import Dict, Any, Optional
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from .exceptions import APITimeoutError, APIRateLimitError, APIResponseError
+from .exceptions import APITimeoutError, APIRateLimitError, APIResponseError, APIAuthenticationError
 
 
 class HTTPClient:
@@ -36,9 +36,13 @@ class HTTPClient:
         # 재시도 전략 설정
         retry_strategy = Retry(
             total=max_retries,
+            read=max_retries,
+            connect=max_retries,
             backoff_factor=backoff_factor,
-            status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=["HEAD", "GET", "OPTIONS", "POST"]
+            status_forcelist=[429, 500, 502, 503, 504],  # 재시도할 HTTP 상태 코드
+            allowed_methods=["HEAD", "GET", "OPTIONS", "POST"],  # 재시도할 HTTP 메서드
+            raise_on_redirect=False,  # 리다이렉트 시 예외 발생 안함
+            raise_on_status=False     # 상태 코드 오류 시 예외 발생 안함 (우리가 직접 처리)
         )
         
         adapter = HTTPAdapter(max_retries=retry_strategy)
@@ -82,21 +86,90 @@ class HTTPClient:
             
             response = self.session.request(method, url, **kwargs)
             
-            # 상태 코드 확인
+            # 상세한 상태 코드 확인
             if response.status_code == 429:
-                raise APIRateLimitError(f"Rate limit exceeded: {response.text}")
+                error_details = self.get_error_details(response)
+                raise APIRateLimitError(f"Rate limit exceeded: {error_details}")
+            elif response.status_code == 401:
+                error_details = self.get_error_details(response)
+                raise APIAuthenticationError(f"Authentication failed: {error_details}")
+            elif response.status_code == 403:
+                error_details = self.get_error_details(response)
+                raise APIAuthenticationError(f"Access forbidden: {error_details}")
+            elif response.status_code == 404:
+                error_details = self.get_error_details(response)
+                raise APIResponseError(f"Resource not found: {error_details}")
+            elif response.status_code >= 500:
+                error_details = self.get_error_details(response)
+                raise APIResponseError(f"Server error ({response.status_code}): {error_details}")
             
             response.raise_for_status()
             return response
             
+        except APIRateLimitError:
+            # 이미 처리된 예외는 그대로 전파
+            raise
+        except APIAuthenticationError:
+            # 이미 처리된 예외는 그대로 전파
+            raise
+        except APIResponseError:
+            # 이미 처리된 예외는 그대로 전파
+            raise
         except requests.exceptions.Timeout as e:
-            raise APITimeoutError(f"Request timeout: {e}")
+            raise APITimeoutError(f"Request timeout after {self.timeout}s: {e}")
+        except requests.exceptions.ConnectionError as e:
+            raise APIResponseError(f"Connection error: {e}")
+        except requests.exceptions.HTTPError as e:
+            # HTTP 상태 코드 오류
+            if hasattr(e, 'response') and e.response is not None:
+                status_code = e.response.status_code
+                if status_code == 429:
+                    raise APIRateLimitError(f"Rate limit exceeded: {e}")
+                elif status_code in [401, 403]:
+                    raise APIAuthenticationError(f"Authentication error: {e}")
+                else:
+                    raise APIResponseError(f"HTTP {status_code} error: {e}")
+            else:
+                raise APIResponseError(f"HTTP error: {e}")
         except requests.exceptions.RequestException as e:
             raise APIResponseError(f"Request failed: {e}")
+        except Exception as e:
+            # 예상치 못한 예외 처리
+            raise APIResponseError(f"Unexpected error during request: {e}")
     
     def close(self):
         """세션 종료"""
         self.session.close()
+    
+    def safe_json(self, response: requests.Response) -> Dict[str, Any]:
+        """안전한 JSON 응답 파싱"""
+        try:
+            return response.json()
+        except ValueError as e:
+            raise APIResponseError(f"Invalid JSON response: {e}")
+    
+    def get_error_details(self, response: requests.Response) -> str:
+        """응답에서 오류 상세 정보 추출"""
+        try:
+            # JSON 응답에서 에러 메시지 추출 시도
+            json_data = response.json()
+            if isinstance(json_data, dict):
+                # 일반적인 에러 필드들 확인
+                for error_field in ['error', 'message', 'error_message', 'detail', 'description']:
+                    if error_field in json_data:
+                        return str(json_data[error_field])
+                
+                # 네이버 API 특화 에러 필드
+                if 'errorMessage' in json_data:
+                    return json_data['errorMessage']
+                if 'error_description' in json_data:
+                    return json_data['error_description']
+        except (ValueError, TypeError):
+            pass
+        
+        # JSON 파싱 실패 시 텍스트 응답 반환 (최대 200자)
+        text = response.text.strip()
+        return text[:200] + "..." if len(text) > 200 else text
 
 
 class RateLimiter:
@@ -115,14 +188,20 @@ class RateLimiter:
     
     def wait(self):
         """필요시 대기"""
-        current_time = time.time()
-        elapsed = current_time - self.last_called
-        
-        if elapsed < self.min_interval:
-            sleep_time = self.min_interval - elapsed
-            time.sleep(sleep_time)
-        
-        self.last_called = time.time()
+        try:
+            current_time = time.time()
+            elapsed = current_time - self.last_called
+            
+            if elapsed < self.min_interval:
+                sleep_time = self.min_interval - elapsed
+                if sleep_time > 0:  # 음수 대기 시간 방지
+                    time.sleep(sleep_time)
+            
+            self.last_called = time.time()
+        except Exception:
+            # 시간 관련 오류 시 최소한의 대기
+            time.sleep(0.1)
+            self.last_called = time.time()
     
     def __enter__(self):
         """Context manager 진입 시 대기 수행"""

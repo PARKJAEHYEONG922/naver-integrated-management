@@ -825,20 +825,58 @@ class Step3AdvancedAnalysisWidget(QWidget):
         layout = QVBoxLayout(card)
         layout.setContentsMargins(15, 15, 15, 15)
         
-        # 플레이스홀더
-        self.result_placeholder = QLabel("AI 분석 결과가 여기에 표시됩니다.\n\n상단의 'AI 분석 시작' 버튼을 클릭하여 시작하세요.")
-        self.result_placeholder.setAlignment(Qt.AlignCenter)
-        self.result_placeholder.setStyleSheet(f"""
+        # 분석 진행 상황 표시
+        self.analysis_status_label = QLabel("AI 분석 결과가 여기에 표시됩니다.\n\n상단의 'AI 분석 시작' 버튼을 클릭하여 시작하세요.")
+        self.analysis_status_label.setAlignment(Qt.AlignCenter)
+        self.analysis_status_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
                 font-size: 14px;
-                padding: 40px;
+                padding: 20px;
                 border: 2px dashed {ModernStyle.COLORS['border']};
                 border-radius: 8px;
                 background-color: {ModernStyle.COLORS['bg_secondary']};
             }}
         """)
-        layout.addWidget(self.result_placeholder)
+        layout.addWidget(self.analysis_status_label)
+        
+        # AI 응답 표시 영역 (초기에는 숨김)
+        from PySide6.QtWidgets import QTextEdit
+        self.ai_response_display = QTextEdit()
+        self.ai_response_display.setReadOnly(True)
+        self.ai_response_display.setMaximumHeight(200)
+        self.ai_response_display.setMinimumHeight(150)
+        self.ai_response_display.setPlaceholderText("AI 응답이 여기에 실시간으로 표시됩니다...")
+        self.ai_response_display.setStyleSheet(f"""
+            QTextEdit {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                border: 1px solid {ModernStyle.COLORS['success']};
+                border-radius: 6px;
+                padding: 10px;
+                font-size: 12px;
+                font-family: 'Consolas', 'Monaco', monospace;
+                color: {ModernStyle.COLORS['text_primary']};
+            }}
+        """)
+        self.ai_response_display.hide()  # 초기에는 숨김
+        layout.addWidget(self.ai_response_display)
+        
+        # 키워드 결과 표시 영역 (초기에는 숨김)
+        self.keyword_results_display = QLabel()
+        self.keyword_results_display.setAlignment(Qt.AlignTop)
+        self.keyword_results_display.setWordWrap(True)
+        self.keyword_results_display.setStyleSheet(f"""
+            QLabel {{
+                color: {ModernStyle.COLORS['text_primary']};
+                font-size: 13px;
+                padding: 15px;
+                border: 1px solid {ModernStyle.COLORS['primary']};
+                border-radius: 8px;
+                background-color: {ModernStyle.COLORS['bg_card']};
+            }}
+        """)
+        self.keyword_results_display.hide()  # 초기에는 숨김
+        layout.addWidget(self.keyword_results_display)
         
         return card
     
@@ -887,7 +925,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analysis_log_button.setEnabled(True)  # 분석 로그 버튼 활성화
         
         # 결과 영역 업데이트
-        self.result_placeholder.setText("AI 분석 중입니다...\n잠시만 기다려주세요.")
+        self.analysis_status_label.setText("🤖 AI 분석 중입니다...\n잠시만 기다려주세요.")
+        self.ai_response_display.clear()
+        self.ai_response_display.hide()
+        self.keyword_results_display.hide()
         
         # AI 분석 시작 시그널 발송
         self.ai_analysis_started.emit(self.selected_prompt_type, self.selected_prompt_content)
@@ -899,7 +940,9 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analyze_button.setText("🤖 AI 분석 시작")
         self.stop_button.setEnabled(False)
         
-        self.result_placeholder.setText("분석이 중단되었습니다.")
+        self.analysis_status_label.setText("⏹️ 분석이 중단되었습니다.")
+        self.ai_response_display.hide()
+        self.keyword_results_display.hide()
         self.analysis_stopped.emit()
         
     def on_analysis_completed(self, results):
@@ -909,11 +952,26 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analyze_button.setText("🤖 AI 분석 시작")
         self.stop_button.setEnabled(False)
         
-        # 결과 표시 (추후 상세 구현)
-        if isinstance(results, list):
-            self.result_placeholder.setText(f"AI 분석 완료!\n\n추출된 키워드: {len(results)}개")
+        # 결과 표시
+        if isinstance(results, list) and len(results) > 0:
+            self.analysis_status_label.setText(f"✅ AI 분석 완료!\n추출된 키워드: {len(results)}개")
+            
+            # 키워드 결과 표시
+            keyword_list = []
+            for i, result in enumerate(results[:10]):  # 상위 10개만 표시
+                if hasattr(result, 'keyword'):
+                    volume = f"({result.search_volume})" if result.search_volume else "(0)"
+                    keyword_list.append(f"{i+1}. {result.keyword} {volume}")
+                else:
+                    keyword_list.append(f"{i+1}. {result}")
+            
+            if len(results) > 10:
+                keyword_list.append(f"... 외 {len(results)-10}개")
+            
+            self.keyword_results_display.setText("\n".join(keyword_list))
+            self.keyword_results_display.show()
         else:
-            self.result_placeholder.setText(f"AI 분석 완료!\n\n결과:\n{results}")
+            self.analysis_status_label.setText("⚠️ AI 분석 완료되었으나 유효한 키워드가 없습니다.")
         
     def on_analysis_error(self, error_msg):
         """AI 분석 에러 처리"""
@@ -922,8 +980,31 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analyze_button.setText("🤖 AI 분석 시작")
         self.stop_button.setEnabled(False)
         
-        self.result_placeholder.setText(f"분석 실패:\n{error_msg}")
+        self.analysis_status_label.setText(f"❌ 분석 실패:\n{error_msg}")
+        self.ai_response_display.hide()
+        self.keyword_results_display.hide()
         
+    def update_analysis_data(self, data_updates):
+        """실시간 분석 데이터 업데이트"""
+        # analysis_data 딕셔너리 업데이트
+        for key, value in data_updates.items():
+            self.analysis_data[key] = value
+        
+        # AI 응답이 있으면 실시간으로 표시
+        if 'ai_response' in data_updates:
+            ai_response = data_updates['ai_response']
+            if ai_response and ai_response.strip():
+                self.analysis_status_label.setText("🤖 AI 분석 응답 수신 완료!\n키워드 추출 및 월검색량 조회 중...")
+                self.ai_response_display.setPlainText(ai_response)
+                self.ai_response_display.show()
+        
+        # 분석된 키워드가 있으면 진행 상황 표시
+        if 'analyzed_keywords' in data_updates:
+            analyzed_keywords = data_updates['analyzed_keywords']
+            if analyzed_keywords:
+                with_volume_count = len([kw for kw in analyzed_keywords if hasattr(kw, 'search_volume') and kw.search_volume > 0])
+                self.analysis_status_label.setText(f"📊 키워드 분석 진행 중...\n총 {len(analyzed_keywords)}개 중 {with_volume_count}개 검색량 확보")
+    
     def show_analysis_log(self):
         """실시간 분석 내용 다이얼로그 표시"""
         from .ai_dialog import AIAnalysisDialog
