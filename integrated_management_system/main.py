@@ -44,8 +44,9 @@ def load_features(app):
         
         # 네이버 상품명 생성기 기능 로드 및 등록
         logger.info("네이버 상품명 생성기 모듈 로드 시작")
-        from src.features.prduct_title_generator import register as register_product_title
-        register_product_title(app)
+        from src.features.naver_product_title_generator.ui_main import NaverProductTitleGeneratorWidget
+        naver_product_widget = NaverProductTitleGeneratorWidget()
+        app.add_feature_tab(naver_product_widget, "네이버 상품명 생성기")
         logger.info("네이버 상품명 생성기 모듈 로드 완료")
         
         logger.info("모든 기능 모듈 로드 및 등록 완료")

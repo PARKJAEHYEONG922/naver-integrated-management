@@ -32,7 +32,9 @@
       "Bash(move results_widget.py ui_table.py)",
       "Bash(rg:*)",
       "Bash(git branch:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(mkdir:*)",
+      "Bash(set PYTHONPATH=.)"
     ],
     "deny": []
   }
