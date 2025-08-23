@@ -1033,8 +1033,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         # 결과 영역 업데이트
         self.analysis_status_label.setText("🤖 AI 분석 중입니다...\n잠시만 기다려주세요.")
-        self.ai_response_display.clear()
-        self.ai_response_display.hide()
         self.keyword_selection_scroll.hide()
         
         # AI 분석 시작 시그널 발송
@@ -1048,7 +1046,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.stop_button.setEnabled(False)
         
         self.analysis_status_label.setText("⏹️ 분석이 중단되었습니다.")
-        self.ai_response_display.hide()
         self.keyword_selection_scroll.hide()
         
     def on_analysis_completed(self, results):
@@ -1075,7 +1072,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.stop_button.setEnabled(False)
         
         self.analysis_status_label.setText(f"❌ 분석 실패:\n{error_msg}")
-        self.ai_response_display.hide()
         self.keyword_selection_scroll.hide()
         
     def update_analysis_data(self, data_updates):
@@ -1084,13 +1080,11 @@ class Step3AdvancedAnalysisWidget(QWidget):
         for key, value in data_updates.items():
             self.analysis_data[key] = value
         
-        # AI 응답이 있으면 실시간으로 표시
+        # AI 응답이 있으면 상태만 업데이트 (텍스트는 다이얼로그에서만 표시)
         if 'ai_response' in data_updates:
             ai_response = data_updates['ai_response']
             if ai_response and ai_response.strip():
                 self.analysis_status_label.setText("🤖 AI 분석 응답 수신 완료!\n키워드 추출 및 월검색량 조회 중...")
-                self.ai_response_display.setPlainText(ai_response)
-                self.ai_response_display.show()
         
         
     def apply_styles(self):
@@ -1150,13 +1144,11 @@ class Step3AdvancedAnalysisWidget(QWidget):
         for key, value in data_updates.items():
             self.analysis_data[key] = value
         
-        # AI 응답이 있으면 실시간으로 표시
+        # AI 응답이 있으면 상태만 업데이트 (텍스트는 다이얼로그에서만 표시)
         if 'ai_response' in data_updates:
             ai_response = data_updates['ai_response']
             if ai_response and ai_response.strip():
                 self.analysis_status_label.setText("🤖 AI 분석 응답 수신 완료!\n키워드 추출 및 월검색량 조회 중...")
-                self.ai_response_display.setPlainText(ai_response)
-                self.ai_response_display.show()
         
 
 
