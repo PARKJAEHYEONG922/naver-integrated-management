@@ -763,39 +763,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         
         self.setLayout(layout)
-        self.apply_styles()
     
-    def apply_styles(self):
-        """스타일 적용"""
-        self.setStyleSheet(f"""
-            QCheckBox[objectName="keyword_checkbox"] {{
-                font-size: 14px;
-                spacing: 5px;
-            }}
-            QCheckBox[objectName="keyword_checkbox"]::indicator {{
-                width: 18px;
-                height: 18px;
-                border-radius: 3px;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                background-color: {ModernStyle.COLORS['bg_input']};
-            }}
-            QCheckBox[objectName="keyword_checkbox"]::indicator:checked {{
-                background-color: {ModernStyle.COLORS['primary']};
-                border-color: {ModernStyle.COLORS['primary']};
-            }}
-            QLabel[objectName="keyword_name"] {{
-                font-size: 14px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                padding-left: 5px;
-            }}
-            QLabel[objectName="keyword_detail"] {{
-                font-size: 12px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                padding-left: 5px;
-                margin-bottom: 10px;
-            }}
-        """)
         
     def create_summary_card(self):
         """분석 설정 요약 카드"""
@@ -900,8 +868,8 @@ class Step3AdvancedAnalysisWidget(QWidget):
         layout.addWidget(self.analysis_status_label)
         
         
-        # AI 키워드 선택 영역 (체크박스 형태, 초기에는 숨김)
-        from PySide6.QtWidgets import QScrollArea, QGridLayout, QCheckBox
+        # AI 키워드 선택 영역 (KeywordCard 형태, 초기에는 숨김)
+        from PySide6.QtWidgets import QScrollArea
         
         self.keyword_selection_scroll = QScrollArea()
         self.keyword_selection_scroll.setWidgetResizable(True)
@@ -910,9 +878,9 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.keyword_selection_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         
         self.keyword_selection_widget = QWidget()
-        self.keyword_selection_layout = QGridLayout(self.keyword_selection_widget)
+        self.keyword_selection_layout = QVBoxLayout(self.keyword_selection_widget)
         self.keyword_selection_layout.setContentsMargins(10, 10, 10, 10)
-        self.keyword_selection_layout.setSpacing(8)
+        self.keyword_selection_layout.setSpacing(5)
         
         self.keyword_selection_scroll.setWidget(self.keyword_selection_widget)
         self.keyword_selection_scroll.hide()  # 초기에는 숨김
@@ -925,56 +893,40 @@ class Step3AdvancedAnalysisWidget(QWidget):
         return card
     
     def display_keyword_checkboxes(self, keyword_results):
-        """AI 분석 완료 후 키워드 체크박스 표시"""
-        # 기존 체크박스들 정리
+        """AI 분석 완료 후 키워드 체크박스 표시 (1단계와 동일한 KeywordCard 사용)"""
+        # 기존 카드들 정리
         self.clear_keyword_checkboxes()
         
-        # 새로운 체크박스들 생성
-        for i, keyword_data in enumerate(keyword_results):
-            checkbox = QCheckBox()
-            checkbox.setChecked(True)  # 기본적으로 선택됨
-            checkbox.setObjectName("keyword_checkbox")
+        # 새로운 KeywordCard들 생성
+        for keyword_data in keyword_results:
+            keyword_card = KeywordCard(keyword_data)
+            keyword_card.set_checked(True)  # 기본적으로 선택됨
             
-            # 키워드 정보 레이블
-            if hasattr(keyword_data, 'keyword'):
-                keyword_text = keyword_data.keyword
-                volume_text = f"월검색량: {keyword_data.search_volume:,}" if keyword_data.search_volume else "월검색량: 0"
-                category_text = f"카테고리: {keyword_data.category}" if keyword_data.category else "카테고리: 미분류"
-            else:
-                keyword_text = str(keyword_data)
-                volume_text = "월검색량: 조회 중"
-                category_text = "카테고리: 조회 중"
+            # 레이아웃에 추가
+            self.keyword_selection_layout.addWidget(keyword_card)
             
-            # 키워드명 레이블
-            keyword_label = QLabel(keyword_text)
-            keyword_label.setObjectName("keyword_name")
-            
-            # 상세 정보 레이블
-            detail_label = QLabel(f"{volume_text} | {category_text}")
-            detail_label.setObjectName("keyword_detail")
-            
-            # 그리드에 배치 (체크박스 + 키워드명)
-            row = i * 2  # 2줄씩 사용 (키워드명 + 상세정보)
-            self.keyword_selection_layout.addWidget(checkbox, row, 0)
-            self.keyword_selection_layout.addWidget(keyword_label, row, 1)
-            self.keyword_selection_layout.addWidget(detail_label, row + 1, 1)  # 키워드 밑에 상세정보
-            
-            # 체크박스 저장
-            self.keyword_checkboxes.append((checkbox, keyword_data))
+            # 카드 저장
+            self.keyword_checkboxes.append(keyword_card)
         
         # 스크롤 영역 표시
         self.keyword_selection_scroll.show()
-        self.analysis_status_label.setText(f"✅ AI 분석 완료! ({len(keyword_results)}개)")
+        self.analysis_status_label.hide()
     
     def clear_keyword_checkboxes(self):
-        """기존 키워드 체크박스들 정리"""
-        # 기존 위젯들 제거
-        for i in reversed(range(self.keyword_selection_layout.count())):
-            child = self.keyword_selection_layout.itemAt(i).widget()
-            if child:
-                child.setParent(None)
+        """기존 키워드 카드들 정리"""
+        # 기존 KeywordCard들 제거
+        for keyword_card in self.keyword_checkboxes:
+            keyword_card.setParent(None)
         
         self.keyword_checkboxes.clear()
+    
+    def get_selected_keywords(self):
+        """선택된 키워드 리스트 반환"""
+        selected = []
+        for keyword_card in self.keyword_checkboxes:
+            if keyword_card.is_checked():
+                selected.append(keyword_card.keyword_data)
+        return selected
     
     def show_analysis_log(self):
         """실시간 분석 내용 다이얼로그 표시"""
