@@ -476,12 +476,23 @@ def analyze_keywords_parallel(keywords: List[str],
         # 병렬 처리기 생성
         processor = ParallelAPIProcessor(max_workers=max_workers, rate_limiter=api_limiter)
         
+        # 진행률 콜백 래퍼 (키워드명 포함)
+        def detailed_progress_callback(current: int, total: int, message: str):
+            if progress_callback:
+                # 현재 처리 중인 키워드 표시
+                if current <= len(keywords):
+                    current_keyword = keywords[current-1] if current > 0 else ""
+                    detailed_message = f"키워드 분석 중... ({current}/{total}) '{current_keyword}'"
+                    progress_callback(current, total, detailed_message)
+                else:
+                    progress_callback(current, total, message)
+        
         # 배치 처리 실행
         results = processor.process_batch(
             func=analyze_keyword_full_info,
             items=keywords,
             stop_check=stop_check,
-            progress_callback=progress_callback
+            progress_callback=detailed_progress_callback
         )
         
         # 결과 정리
@@ -756,3 +767,107 @@ def collect_product_names_for_keywords(keywords: List[str], max_count_per_keywor
     except Exception as e:
         logger.error(f"상품명 일괄 수집 실패: {e}")
         return []
+
+
+def get_keywords_category(keyword_data_list: List[KeywordBasicData],
+                         max_workers: int = 2,
+                         stop_check: Optional[Callable[[], bool]] = None,
+                         progress_callback: Optional[Callable[[int, int, str], None]] = None) -> List[KeywordBasicData]:
+    """
+    키워드들의 카테고리를 병렬로 조회 (adapters 역할: 벤더 호출 + 정규화)
+    
+    Args:
+        keyword_data_list: 월검색량이 포함된 KeywordBasicData 리스트
+        max_workers: 최대 동시 작업 수 (기본 2개)
+        stop_check: 중단 확인 함수
+        progress_callback: 진행률 콜백
+        
+    Returns:
+        List[KeywordBasicData]: 월검색량 + 카테고리가 포함된 정규화된 데이터 리스트
+    """
+    if not keyword_data_list:
+        return []
+    
+    # 단일 키워드인 경우 병렬 처리 없이 직접 호출
+    if len(keyword_data_list) == 1:
+        try:
+            keyword_data = keyword_data_list[0]
+            category = get_keyword_category(keyword_data.keyword)
+            return [KeywordBasicData(
+                keyword=keyword_data.keyword,
+                search_volume=keyword_data.search_volume,
+                category=category
+            )]
+        except Exception as e:
+            logger.error(f"키워드 카테고리 조회 실패 '{keyword_data_list[0].keyword}': {e}")
+            return [KeywordBasicData(
+                keyword=keyword_data_list[0].keyword,
+                search_volume=keyword_data_list[0].search_volume,
+                category="분석 실패"
+            )]
+    
+    # 여러 키워드는 병렬 처리
+    try:
+        logger.info(f"🔄 병렬 카테고리 조회 시작: {len(keyword_data_list)}개 키워드, {max_workers}개 워커")
+        
+        # 레이트 리미터 설정 (카테고리 조회도 동일한 속도)
+        api_limiter = rate_limiter_manager.get_limiter("naver_category_api", calls_per_second=1.0)
+        
+        # 병렬 처리기 생성
+        processor = ParallelAPIProcessor(max_workers=max_workers, rate_limiter=api_limiter)
+        
+        # 단일 키워드 처리 함수 정의
+        def process_single_keyword_category(keyword_data: KeywordBasicData) -> KeywordBasicData:
+            try:
+                category = get_keyword_category(keyword_data.keyword)
+                return KeywordBasicData(
+                    keyword=keyword_data.keyword,
+                    search_volume=keyword_data.search_volume,
+                    category=category
+                )
+            except Exception as e:
+                logger.error(f"키워드 카테고리 조회 실패 '{keyword_data.keyword}': {e}")
+                return KeywordBasicData(
+                    keyword=keyword_data.keyword,
+                    search_volume=keyword_data.search_volume,
+                    category="분석 실패"
+                )
+        
+        # 진행률 콜백 래퍼 (키워드명 포함)
+        def wrapped_progress_callback(current: int, total: int, current_item: KeywordBasicData):
+            if progress_callback:
+                message = f"카테고리 조회 중 '{current_item.keyword}' ({current}/{total})"
+                progress_callback(current, total, message)
+        
+        # 병렬 처리 실행
+        batch_results = processor.process_batch(
+            func=process_single_keyword_category,
+            items=keyword_data_list,
+            stop_check=stop_check,
+            progress_callback=lambda current, total, msg: wrapped_progress_callback(current, total, keyword_data_list[current-1] if current > 0 and current <= len(keyword_data_list) else None)
+        )
+        
+        # 결과 정리
+        results = []
+        for keyword_data, result, error in batch_results:
+            if error is None and result is not None:
+                results.append(result)
+            else:
+                # 실패한 경우 원본 데이터에 실패 표시
+                results.append(KeywordBasicData(
+                    keyword=keyword_data.keyword,
+                    search_volume=keyword_data.search_volume,
+                    category="카테고리 조회 실패"
+                ))
+        
+        logger.info(f"✅ 병렬 카테고리 조회 완료: {len(results)}개 키워드")
+        return results
+        
+    except Exception as e:
+        logger.error(f"병렬 카테고리 조회 실패: {e}")
+        # 실패시 원본 데이터에 빈 카테고리 추가해서 반환
+        return [KeywordBasicData(
+            keyword=kd.keyword,
+            search_volume=kd.search_volume,
+            category="조회 실패"
+        ) for kd in keyword_data_list]

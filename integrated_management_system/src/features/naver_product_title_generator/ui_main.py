@@ -16,10 +16,10 @@ from src.desktop.common_log import log_manager
 
 from .ui_steps import (
     Step1ResultWidget,
-    Step2BasicAnalysisWidget, 
+    Step2BasicAnalysisWidget,
+    Step3AdvancedAnalysisWidget,
     Step4ResultWidget
 )
-from .ui_ai_selection import Step3AIKeywordSelectionWidget
 from .service import product_title_service
 
 
@@ -254,8 +254,8 @@ class RightPanel(QWidget):
         self.step2_widget = Step2BasicAnalysisWidget()
         self.content_stack.addWidget(self.step2_widget)
         
-        # 3단계: AI 키워드 선택 
-        self.step3_widget = Step3AIKeywordSelectionWidget()
+        # 3단계: AI 상품명 분석
+        self.step3_widget = Step3AdvancedAnalysisWidget()
         self.content_stack.addWidget(self.step3_widget)
         
         # 4단계: 최종 결과
@@ -486,8 +486,9 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 2단계 프롬프트 선택 시그널
         self.right_panel.step2_widget.prompt_selected.connect(self.on_prompt_selected)
         
-        # 3단계 AI 키워드 선택 시그널
-        self.right_panel.step3_widget.keywords_selected.connect(self.on_ai_keywords_selected)
+        # 3단계 AI 분석 시그널
+        self.right_panel.step3_widget.ai_analysis_started.connect(self.on_ai_analysis_started)
+        self.right_panel.step3_widget.analysis_stopped.connect(self.on_ai_analysis_stopped)
         
         # API 설정 변경 시그널 연결 (부모 윈도우에서 받기)
         self.connect_to_api_dialog()
@@ -792,9 +793,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
     
     def on_analysis_data_updated(self, data: dict):
         """AI 분석 데이터 실시간 업데이트"""
-        # 새로운 체크박스 UI는 실시간 분석 데이터 업데이트가 필요 없음
-        # 최종 결과만 load_keywords()로 표시
-        pass
+        # 3단계 위젯의 analysis_data 업데이트 (실시간 분석 내용 다이얼로그용)
+        self.right_panel.step3_widget.update_analysis_data(data)
     
     def on_ai_analysis_completed(self, keywords):
         """AI 분석 완료 처리"""
@@ -845,6 +845,20 @@ class NaverProductTitleGeneratorWidget(QWidget):
         
         # 진행상황 초기화
         self.left_panel.update_progress(3, "분석 중지됨", 0)
+    
+    def on_ai_analysis_started(self, prompt_type: str, prompt_content: str):
+        """3단계에서 AI 분석이 시작되었을 때"""
+        log_manager.add_log(f"🤖 AI 분석 시작 요청됨", "info")
+        
+        # 실제 AI 분석 시작
+        self.start_ai_analysis(prompt_type, prompt_content)
+    
+    def on_ai_analysis_stopped(self):
+        """3단계에서 AI 분석이 중단되었을 때"""
+        log_manager.add_log(f"⏹ AI 분석 중단 요청됨", "warning")
+        
+        # 실제 AI 분석 중단
+        self.stop_ai_analysis()
         
     def apply_styles(self):
         self.setStyleSheet(f"""

@@ -38,7 +38,8 @@
       "Bash(move prompt_dialog.py ai_dialog.py)",
       "Bash(true)",
       "Bash(git fetch:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(del test_ui.py)"
     ],
     "deny": []
   }
