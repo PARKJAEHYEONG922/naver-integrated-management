@@ -31,7 +31,6 @@ class KeywordBasicData:
     keyword: str
     search_volume: int      # 월 검색량
     category: str          # 카테고리 (+ 비율)
-    competition: str       # 경쟁도 (높음/보통/낮음)
     is_selected: bool = False  # 사용자 선택 여부
     analyzed_at: datetime = field(default_factory=datetime.now)
 

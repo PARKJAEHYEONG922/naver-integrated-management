@@ -535,8 +535,8 @@ class AIAnalysisDialog(QDialog):
         
         # 테이블
         self.search_volume_table = QTableWidget()
-        self.search_volume_table.setColumnCount(4)
-        self.search_volume_table.setHorizontalHeaderLabels(["키워드", "월검색량", "경쟁도", "카테고리"])
+        self.search_volume_table.setColumnCount(3)
+        self.search_volume_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
         layout.addWidget(self.search_volume_table)
         
         self.tab_widget.addTab(tab, "📊 월검색량 조회")
@@ -554,8 +554,8 @@ class AIAnalysisDialog(QDialog):
         
         # 테이블
         self.filtered_table = QTableWidget()
-        self.filtered_table.setColumnCount(4)
-        self.filtered_table.setHorizontalHeaderLabels(["키워드", "월검색량", "경쟁도", "카테고리"])
+        self.filtered_table.setColumnCount(3)
+        self.filtered_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
         layout.addWidget(self.filtered_table)
         
         self.tab_widget.addTab(tab, "✅ 필터링된 키워드")
@@ -573,8 +573,8 @@ class AIAnalysisDialog(QDialog):
         
         # 테이블
         self.final_table = QTableWidget()
-        self.final_table.setColumnCount(4)
-        self.final_table.setHorizontalHeaderLabels(["키워드", "월검색량", "경쟁도", "카테고리"])
+        self.final_table.setColumnCount(3)
+        self.final_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
         layout.addWidget(self.final_table)
         
         self.tab_widget.addTab(tab, "🎯 최종 키워드")
@@ -614,20 +614,17 @@ class AIAnalysisDialog(QDialog):
                 # KeywordBasicData 객체인 경우
                 table.setItem(row, 0, QTableWidgetItem(keyword_data.keyword))
                 table.setItem(row, 1, QTableWidgetItem(str(keyword_data.search_volume)))
-                table.setItem(row, 2, QTableWidgetItem(keyword_data.competition))
-                table.setItem(row, 3, QTableWidgetItem(keyword_data.category or ""))
+                table.setItem(row, 2, QTableWidgetItem(keyword_data.category or ""))
             elif isinstance(keyword_data, dict):
                 # dict인 경우
                 table.setItem(row, 0, QTableWidgetItem(keyword_data.get('keyword', '')))
                 table.setItem(row, 1, QTableWidgetItem(str(keyword_data.get('search_volume', 0))))
-                table.setItem(row, 2, QTableWidgetItem(keyword_data.get('competition', '')))
-                table.setItem(row, 3, QTableWidgetItem(keyword_data.get('category', '')))
+                table.setItem(row, 2, QTableWidgetItem(keyword_data.get('category', '')))
             else:
                 # 문자열인 경우
                 table.setItem(row, 0, QTableWidgetItem(str(keyword_data)))
                 table.setItem(row, 1, QTableWidgetItem("조회 중"))
                 table.setItem(row, 2, QTableWidgetItem("조회 중"))
-                table.setItem(row, 3, QTableWidgetItem("조회 중"))
         
         # 테이블 크기 조정
         table.resizeColumnsToContents()

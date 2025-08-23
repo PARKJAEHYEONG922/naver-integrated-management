@@ -12,7 +12,7 @@ from src.toolbox.progress import calc_percentage
 from .models import (
     AnalysisStep, KeywordBasicData, ProductNameData, AIAnalysisResult, GeneratedTitle
 )
-from .adapters import parse_keywords, analyze_keywords_batch, collect_product_names_for_keywords
+from .adapters import parse_keywords, collect_product_names_for_keywords
 
 logger = get_logger("features.naver_product_title_generator.worker")
 
@@ -51,7 +51,7 @@ class BasicAnalysisWorker(QThread):
             logger.info(f"기초분석 시작: {self.product_name}")
             
             # 1단계: 키워드 파싱
-            self.progress_updated.emit(10, "키워드 파싱 중...")
+            self.progress_updated.emit(0, "키워드 파싱 중...")
             
             if self.is_stopped():
                 return
@@ -66,13 +66,48 @@ class BasicAnalysisWorker(QThread):
             if self.is_stopped():
                 return
             
-            self.progress_updated.emit(30, f"{len(keywords)}개 키워드 파싱 완료")
+            self.progress_updated.emit(20, f"{len(keywords)}개 키워드 파싱 완료")
             
             # 2단계: 키워드별 월검색량 및 카테고리 분석
-            self.progress_updated.emit(50, "네이버 API 분석 중...")
+            self.progress_updated.emit(30, "네이버 API 분석 중...")
             
-            # 키워드 일괄 분석 (네이버 검색광고 API + 쇼핑 API)
-            analyzed_keywords = analyze_keywords_batch(keywords)
+            # 키워드 일괄 분석 (기존 keyword_analysis 서비스 사용)
+            from src.features.keyword_analysis.service import KeywordAnalysisService
+            from src.features.keyword_analysis.models import AnalysisPolicy, AnalysisScope
+            from .models import KeywordBasicData
+            
+            # 정책 명시적으로 설정 (전체 분석)
+            policy = AnalysisPolicy(scope=AnalysisScope.FULL_ANALYSIS)
+            analysis_service = KeywordAnalysisService(policy)
+            analyzed_keywords = []
+            
+            total_keywords = len(keywords)
+            for i, keyword in enumerate(keywords):
+                if self.is_stopped():
+                    return
+                
+                # 진행률 업데이트 (30% ~ 90%)
+                progress = 30 + int((i / total_keywords) * 60)
+                self.progress_updated.emit(progress, f"키워드 '{keyword}' 분석 중... ({i+1}/{total_keywords})")
+                
+                try:
+                    kw_data = analysis_service.analyze_single_keyword(keyword)
+                    # KeywordData를 KeywordBasicData로 변환 (카테고리는 첫 번째 줄만 사용)
+                    category = kw_data.category.split('\n')[0] if kw_data.category else ""
+                    basic_data = KeywordBasicData(
+                        keyword=kw_data.keyword,
+                        search_volume=kw_data.search_volume,
+                        category=category
+                    )
+                    analyzed_keywords.append(basic_data)
+                except Exception as e:
+                    logger.warning(f"키워드 '{keyword}' 분석 실패: {e}")
+                    # 실패한 키워드도 포함 (검색량 0)
+                    analyzed_keywords.append(KeywordBasicData(
+                        keyword=keyword,
+                        search_volume=0,
+                        category="분석 실패"
+                    ))
             
             if self.is_stopped():
                 return
@@ -293,6 +328,7 @@ class AIAnalysisWorker(QThread):
     # 시그널 정의
     progress_updated = Signal(int, str)  # progress%, message
     analysis_completed = Signal(list)    # List[KeywordBasicData] - AI 분석 결과
+    analysis_data_updated = Signal(dict) # 실시간 분석 데이터 업데이트
     error_occurred = Signal(str)         # error_message
     
     def __init__(self, product_names: List[str], prompt: str):
@@ -343,36 +379,117 @@ class AIAnalysisWorker(QThread):
             # 설정된 AI API 호출
             ai_response = self.call_ai_api(final_prompt)
             
+            # AI 응답 데이터 업데이트
+            self.analysis_data_updated.emit({
+                'input_prompt': final_prompt,
+                'ai_response': ai_response
+            })
+            
             if self.is_stopped():
                 return
             
             self.progress_updated.emit(50, "AI 응답 키워드 추출 중...")
             
             # 2단계: AI 응답에서 키워드 추출
-            from ..engine_local import parse_ai_keywords_response
+            from .engine_local import parse_ai_keywords_response, deduplicate_keywords
             extracted_keywords = parse_ai_keywords_response(ai_response)
             
             if not extracted_keywords:
                 self.error_occurred.emit("AI에서 키워드를 추출하지 못했습니다.")
                 return
             
-            if self.is_stopped():
-                return
+            self.progress_updated.emit(60, f"키워드 중복 제거 중... ({len(extracted_keywords)}개)")
             
-            self.progress_updated.emit(70, f"{len(extracted_keywords)}개 키워드 검색량 조회 중...")
-            
-            # 3단계: 각 키워드의 월검색량 조회
-            from ..adapters import analyze_keywords_batch
-            analyzed_keywords = analyze_keywords_batch(extracted_keywords)
+            # 3단계: 키워드 중복 제거 ("강아지간식" = "강아지 간식")
+            unique_keywords = deduplicate_keywords(extracted_keywords)
             
             if self.is_stopped():
                 return
             
-            self.progress_updated.emit(90, "검색량 100 이상 키워드 필터링 중...")
+            self.progress_updated.emit(70, f"{len(unique_keywords)}개 키워드 월검색량 조회 중...")
             
-            # 4단계: 검색량 100 이상 필터링
-            from ..engine_local import filter_keywords_by_search_volume
-            filtered_keywords = filter_keywords_by_search_volume(analyzed_keywords, 100)
+            # 4단계: 월검색량 조회 (기존 keyword_analysis 서비스 사용)
+            logger.info(f"📊 월검색량 조회할 키워드들: {unique_keywords[:10]}...")  # 처음 10개만 로그
+            
+            # 기존에 잘 작동하던 keyword_analysis 서비스 사용
+            from src.features.keyword_analysis.service import KeywordAnalysisService
+            from src.features.keyword_analysis.models import AnalysisPolicy, AnalysisScope
+            from .models import KeywordBasicData
+            
+            # 정책 명시적으로 설정 (전체 분석)
+            policy = AnalysisPolicy(scope=AnalysisScope.FULL_ANALYSIS)
+            analysis_service = KeywordAnalysisService(policy)
+            analyzed_keywords = []
+            
+            logger.info(f"정책 설정: 경쟁분석={policy.should_analyze_competition()}, 카테고리분석={policy.should_analyze_category()}")
+            
+            total_keywords = len(unique_keywords)
+            for i, keyword in enumerate(unique_keywords):
+                if self.is_stopped():
+                    return
+                
+                # 진행률 업데이트 (0% ~ 85%)
+                progress = int((i / total_keywords) * 85)  
+                self.progress_updated.emit(progress, f"키워드 '{keyword}' 분석 중... ({i+1}/{total_keywords})")
+                
+                try:
+                    logger.info(f"🔍 키워드 분석 시작: '{keyword}' ({i+1}/{total_keywords})")
+                    kw_data = analysis_service.analyze_single_keyword(keyword)
+                    
+                    # KeywordData를 KeywordBasicData로 변환 (카테고리는 첫 번째 줄만 사용)
+                    category = kw_data.category.split('\n')[0] if kw_data.category else ""
+                    basic_data = KeywordBasicData(
+                        keyword=kw_data.keyword,
+                        search_volume=kw_data.search_volume,
+                        category=category
+                    )
+                    analyzed_keywords.append(basic_data)
+                    
+                    if kw_data.search_volume and kw_data.search_volume > 0:
+                        logger.info(f"✅ '{keyword}' 분석 완료: 월검색량 {kw_data.search_volume}")
+                    else:
+                        logger.debug(f"❌ '{keyword}' 분석 완료: 월검색량 0")
+                        
+                except Exception as e:
+                    logger.error(f"❌ 키워드 '{keyword}' 분석 실패: {e}")
+                    # 실패한 키워드도 포함 (검색량 0)
+                    analyzed_keywords.append(KeywordBasicData(
+                        keyword=keyword,
+                        search_volume=0,
+                        category="분석 실패"
+                    ))
+            
+            logger.info(f"📊 월검색량 조회 완료: {len(analyzed_keywords)}개 중 검색량 있는 키워드 {len([kw for kw in analyzed_keywords if kw.search_volume > 0])}개")
+            
+            # 분석 데이터 업데이트 (월검색량 조회 결과)
+            self.analysis_data_updated.emit({
+                'analyzed_keywords': analyzed_keywords,
+                'extracted_keywords': unique_keywords
+            })
+            
+            if self.is_stopped():
+                return
+            
+            self.progress_updated.emit(85, "월검색량 100 이상 키워드 필터링 중...")
+            
+            # 5단계: 월검색량 100 이상 필터링
+            from .engine_local import filter_keywords_by_search_volume
+            volume_filtered = filter_keywords_by_search_volume(analyzed_keywords, 100)
+            
+            if not volume_filtered:
+                self.error_occurred.emit("월검색량 100 이상인 키워드가 없습니다.")
+                return
+            
+            self.progress_updated.emit(95, f"{len(volume_filtered)}개 키워드 카테고리 조회 중...")
+            
+            # 6단계: 카테고리 정보 보강 (100 이상 키워드만)
+            # TODO: 여기에 카테고리 조회 로직 추가 예정
+            filtered_keywords = volume_filtered
+            
+            # 최종 분석 데이터 업데이트
+            self.analysis_data_updated.emit({
+                'filtered_keywords': filtered_keywords
+            })
             
             self.progress_updated.emit(100, f"AI 분석 완료: {len(filtered_keywords)}개 키워드")
             

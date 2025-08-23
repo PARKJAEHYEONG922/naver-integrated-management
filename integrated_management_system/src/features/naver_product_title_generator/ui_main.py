@@ -648,7 +648,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
         
     def on_prompt_selected(self, prompt_type: str, prompt_content: str):
         """2단계에서 프롬프트가 선택되었을 때"""
-        log_manager.add_log(f"📝 프롬프트 선택됨: {prompt_type}", "info")
+        prompt_display = "기본 프롬프트" if prompt_type == "default" else "사용자 정의 프롬프트"
+        log_manager.add_log(f"📝 프롬프트 선택됨: {prompt_display}", "info")
         
         # 3단계에 프롬프트 정보 전달
         self.right_panel.step3_widget.set_prompt_info(prompt_type, prompt_content)
@@ -750,7 +751,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
     
     def start_ai_analysis(self, prompt_type: str, prompt_content: str):
         """AI 분석 시작 처리"""
-        log_manager.add_log(f"🤖 AI 분석 시작: {prompt_type} 프롬프트", "info")
+        prompt_display = "기본 프롬프트" if prompt_type == "default" else "사용자 정의 프롬프트"
+        log_manager.add_log(f"🤖 AI 분석 시작: {prompt_display}", "info")
         
         # 진행상황 업데이트
         self.left_panel.update_progress(3, "AI 키워드 추출 중...", 10)
@@ -767,9 +769,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
         from .worker import AIAnalysisWorker, worker_manager
         
         product_names = self.cached_product_names  # 2단계에서 수집된 상품명들
-        self.current_ai_worker = AIAnalysisWorker(product_names, prompt_content)
+        
+        # 프롬프트 타입에 따라 적절한 값 전달
+        worker_prompt = prompt_content if prompt_type == "custom" else None
+        self.current_ai_worker = AIAnalysisWorker(product_names, worker_prompt)
         self.current_ai_worker.progress_updated.connect(self.on_ai_progress)
         self.current_ai_worker.analysis_completed.connect(self.on_ai_analysis_completed)
+        self.current_ai_worker.analysis_data_updated.connect(self.on_analysis_data_updated)
         self.current_ai_worker.error_occurred.connect(self.on_ai_analysis_error)
         
         
@@ -778,6 +784,12 @@ class NaverProductTitleGeneratorWidget(QWidget):
     def on_ai_progress(self, progress: int, message: str):
         """AI 분석 진행률 업데이트"""
         self.left_panel.update_progress(3, message, progress)
+    
+    def on_analysis_data_updated(self, data: dict):
+        """AI 분석 데이터 실시간 업데이트"""
+        # 3단계 위젯의 analysis_data 업데이트
+        for key, value in data.items():
+            self.right_panel.step3_widget.analysis_data[key] = value
     
     def on_ai_analysis_completed(self, keywords):
         """AI 분석 완료 처리"""
