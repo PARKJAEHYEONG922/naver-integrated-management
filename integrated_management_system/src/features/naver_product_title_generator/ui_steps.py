@@ -277,6 +277,24 @@ class Step1ResultWidget(QWidget):
             if card.is_checked():
                 selected.append(card.keyword_data)
         return selected
+    
+    def get_selected_category(self):
+        """선택된 키워드들의 주요 카테고리 반환"""
+        selected_keywords = self.get_selected_keywords()
+        if not selected_keywords:
+            return ""
+        
+        # 선택된 키워드들의 카테고리 통계
+        category_count = {}
+        for keyword_data in selected_keywords:
+            category = keyword_data.category or "미분류"
+            category_count[category] = category_count.get(category, 0) + 1
+        
+        # 가장 많이 선택된 카테고리 반환
+        if category_count:
+            return max(category_count.items(), key=lambda x: x[1])[0]
+        
+        return ""
         
     def validate_category_consistency(self) -> bool:
         """선택된 키워드들의 카테고리 일치 검증"""
@@ -763,7 +781,47 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         
         self.setLayout(layout)
+        self.apply_styles()
     
+    def apply_styles(self):
+        """3단계 스타일 적용"""
+        self.setStyleSheet(f"""
+            QWidget {{
+                background-color: {ModernStyle.COLORS['bg_primary']};
+            }}
+            QLabel[objectName="step_title"] {{
+                font-size: 22px;
+                font-weight: 600;
+                color: {ModernStyle.COLORS['text_primary']};
+                margin-bottom: 5px;
+            }}
+            QLabel[objectName="step_subtitle"] {{
+                font-size: 14px;
+                color: {ModernStyle.COLORS['text_secondary']};
+                margin-bottom: 15px;
+            }}
+            QLabel[objectName="summary_title"] {{
+                font-size: 20px;
+                font-weight: 600;
+                color: {ModernStyle.COLORS['text_primary']};
+                margin-bottom: 10px;
+            }}
+            QLabel[objectName="result_title"] {{
+                font-size: 20px;
+                font-weight: 600;
+                color: {ModernStyle.COLORS['text_primary']};
+                margin-bottom: 10px;
+            }}
+            QLabel[objectName="summary_stat"] {{
+                font-size: 13px;
+                font-weight: 500;
+                color: {ModernStyle.COLORS['text_primary']};
+                padding: 5px 10px;
+                background-color: {ModernStyle.COLORS['bg_secondary']};
+                border-radius: 4px;
+                margin-right: 10px;
+            }}
+        """)
         
     def create_summary_card(self):
         """분석 설정 요약 카드"""
@@ -873,14 +931,14 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         self.keyword_selection_scroll = QScrollArea()
         self.keyword_selection_scroll.setWidgetResizable(True)
-        self.keyword_selection_scroll.setMinimumHeight(300)
+        self.keyword_selection_scroll.setMaximumHeight(400)  # 최대 높이 제한
         self.keyword_selection_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.keyword_selection_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         
         self.keyword_selection_widget = QWidget()
         self.keyword_selection_layout = QVBoxLayout(self.keyword_selection_widget)
-        self.keyword_selection_layout.setContentsMargins(10, 10, 10, 10)
-        self.keyword_selection_layout.setSpacing(5)
+        self.keyword_selection_layout.setContentsMargins(5, 5, 5, 5)
+        self.keyword_selection_layout.setSpacing(3)
         
         self.keyword_selection_scroll.setWidget(self.keyword_selection_widget)
         self.keyword_selection_scroll.hide()  # 초기에는 숨김
@@ -899,14 +957,19 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         # 새로운 KeywordCard들 생성
         for keyword_data in keyword_results:
-            keyword_card = KeywordCard(keyword_data)
-            keyword_card.set_checked(True)  # 기본적으로 선택됨
+            # AI 키워드는 모두 초록색으로 표시 (카테고리와 상관없이)
+            ai_category_colors = {keyword_data.category: "#10b981", "default": "#10b981"}  # 초록색
+            keyword_card = KeywordCard(keyword_data, ai_category_colors)
+            keyword_card.set_checked(False)  # 사용자가 직접 선택하도록 해제 상태
             
             # 레이아웃에 추가
             self.keyword_selection_layout.addWidget(keyword_card)
             
             # 카드 저장
             self.keyword_checkboxes.append(keyword_card)
+        
+        # 하단 여백 추가 (키워드들이 위쪽에 붙도록)
+        self.keyword_selection_layout.addStretch()
         
         # 스크롤 영역 표시
         self.keyword_selection_scroll.show()

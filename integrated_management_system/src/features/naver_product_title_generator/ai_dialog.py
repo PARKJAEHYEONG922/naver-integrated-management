@@ -214,7 +214,7 @@ class PromptSelectionDialog(QDialog):
             dialog = ModernConfirmDialog(
                 self, 
                 "프롬프트 내용 없음", 
-                "저장할 프롬프트 내용이 없습니다.\\n\\n"
+                "저장할 프롬프트 내용이 없습니다.\n\n"
                 "프롬프트 내용을 입력해주세요.",
                 confirm_text="확인", 
                 cancel_text=None, 
@@ -232,7 +232,7 @@ class PromptSelectionDialog(QDialog):
             dialog = ModernConfirmDialog(
                 self, 
                 "저장 완료", 
-                "사용자 정의 프롬프트가 저장되었습니다.\\n\\n"
+                "사용자 정의 프롬프트가 저장되었습니다.\n\n"
                 "다음에 다이얼로그를 열 때도 자동으로 불러와집니다.",
                 confirm_text="확인", 
                 cancel_text=None, 
@@ -245,7 +245,7 @@ class PromptSelectionDialog(QDialog):
             dialog = ModernConfirmDialog(
                 self, 
                 "저장 실패", 
-                f"프롬프트 저장 중 오류가 발생했습니다:\\n\\n{str(e)}",
+                f"프롬프트 저장 중 오류가 발생했습니다:\n\n{str(e)}",
                 confirm_text="확인", 
                 cancel_text=None, 
                 icon="❌"
@@ -395,17 +395,17 @@ class PromptSelectionDialog(QDialog):
                 border-color: {ModernStyle.COLORS['primary']};
             }}
             QPushButton[objectName="save_button"] {{
-                background-color: {ModernStyle.COLORS['primary']};
+                background-color: {ModernStyle.COLORS['success']};
                 color: white;
-                border: 1px solid {ModernStyle.COLORS['primary']};
+                border: 1px solid {ModernStyle.COLORS['success']};
                 border-radius: 6px;
                 padding: 6px 12px;
                 font-size: 12px;
                 font-weight: 500;
             }}
             QPushButton[objectName="save_button"]:hover {{
-                background-color: {ModernStyle.COLORS['success']};
-                border-color: {ModernStyle.COLORS['success']};
+                background-color: #059669;
+                border-color: #059669;
             }}
             QPushButton[objectName="save_button"]:disabled {{
                 opacity: 0.5;
