@@ -6,6 +6,14 @@ import os
 from typing import Dict, Any, Optional
 from dataclasses import dataclass, asdict
 
+try:
+    from PySide6.QtCore import QObject, Signal
+    QT_AVAILABLE = True
+except ImportError:
+    QT_AVAILABLE = False
+    QObject = object
+    Signal = None
+
 from .logging import get_logger
 
 logger = get_logger("foundation.config")
@@ -27,6 +35,7 @@ class APIConfig:
     openai_api_key: str = ""
     claude_api_key: str = ""
     gemini_api_key: str = ""
+    current_ai_model: str = ""  # 현재 선택된 AI 모델
     
     def is_searchad_valid(self) -> bool:
         """검색광고 API 설정 유효성 확인"""
@@ -48,11 +57,18 @@ class APIConfig:
         return self.is_searchad_valid() and self.is_shopping_valid()
 
 
-class ConfigManager:
+class ConfigManager(QObject):
     """설정 관리자 - SQLite3 기반"""
+    
+    # API 설정 변경 시그널 (Qt가 사용 가능할 때만)
+    if QT_AVAILABLE:
+        api_config_changed = Signal()
+        app_config_changed = Signal()
     
     def __init__(self):
         """설정 관리자 초기화 (DB 기반)"""
+        if QT_AVAILABLE:
+            super().__init__()
         # DB는 지연 로딩 (순환 import 방지)
         self._db = None
     
@@ -89,6 +105,11 @@ class ConfigManager:
             
             db.save_api_config('unified_api_config', config_dict)
             logger.info("API 설정 저장 완료")
+            
+            # API 설정 변경 시그널 발생 (Qt가 사용 가능할 때만)
+            if QT_AVAILABLE and hasattr(self, 'api_config_changed'):
+                self.api_config_changed.emit()
+            
             return True
             
         except Exception as e:

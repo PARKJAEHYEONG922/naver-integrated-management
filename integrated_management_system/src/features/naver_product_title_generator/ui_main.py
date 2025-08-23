@@ -145,13 +145,8 @@ class LeftPanel(QWidget):
         self.current_step_label.setText(f"{step}/4 단계")
         self.status_label.setText(status)
         
-        # 진행률 바 업데이트 (단계 완료 기준)
-        if step == 1:
-            step_progress = progress  # 1단계는 직접 progress 값 사용
-        else:
-            # 2단계부터는 이전 단계 완료분 + 현재 단계 진행률
-            step_progress = ((step - 1) * 25) + (progress // 4)
-        self.progress_bar.setValue(min(step_progress, 100))
+        # 진행률 바 업데이트 (각 단계별 독립적으로)
+        self.progress_bar.setValue(min(progress, 100))
         
     def set_navigation_enabled(self, prev: bool, next_: bool):
         """네비게이션 버튼 활성화 설정"""
@@ -212,8 +207,8 @@ class RightPanel(QWidget):
         nav_layout = QHBoxLayout()
         
         self.prev_button = ModernCancelButton("◀ 이전")
-        self.prev_button.setMinimumHeight(40)
-        self.prev_button.setMinimumWidth(100)
+        self.prev_button.setFixedHeight(40)
+        self.prev_button.setFixedWidth(120)
         self.prev_button.setEnabled(False)
         self.prev_button.clicked.connect(self.previous_step.emit)
         nav_layout.addWidget(self.prev_button)
@@ -221,8 +216,8 @@ class RightPanel(QWidget):
         nav_layout.addStretch()
         
         self.next_button = ModernPrimaryButton("다음 ▶")
-        self.next_button.setMinimumHeight(40)
-        self.next_button.setMinimumWidth(100)
+        self.next_button.setFixedHeight(40)
+        self.next_button.setFixedWidth(120)
         self.next_button.setEnabled(False)
         self.next_button.clicked.connect(self.next_step.emit)
         nav_layout.addWidget(self.next_button)
@@ -325,6 +320,12 @@ class NaverProductTitleGeneratorWidget(QWidget):
         main_layout.addLayout(content_layout)
         self.apply_styles()
         
+        # 초기 상태를 1단계로 설정
+        self.go_to_step(1)
+        
+        # 현재 AI 모델 정보 로드
+        self.load_current_ai_model()
+        
     def setup_header(self, layout):
         """헤더 섹션 (제목 + 사용법) - 파워링크와 동일"""
         header_layout = QHBoxLayout()
@@ -343,9 +344,24 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 사용법 버튼 (공용 컴포넌트 사용)
         self.help_button = ModernHelpButton("❓ 사용법")
         self.help_button.clicked.connect(self.show_help_dialog)
-        
         header_layout.addWidget(self.help_button)
+        
+        # 스트레치로 공간 확보 (AI 모델 표시를 제일 오른쪽으로)
         header_layout.addStretch()
+        
+        # 현재 AI 모델 표시 (제일 오른쪽)
+        self.ai_model_label = QLabel("AI 모델: 설정 중...")
+        self.ai_model_label.setStyleSheet(f"""
+            QLabel {{
+                font-size: 13px;
+                color: {ModernStyle.COLORS['text_secondary']};
+                background-color: {ModernStyle.COLORS['bg_secondary']};
+                padding: 6px 12px;
+                border-radius: 6px;
+                border: 1px solid {ModernStyle.COLORS['border']};
+            }}
+        """)
+        header_layout.addWidget(self.ai_model_label)
         
         layout.addLayout(header_layout)
     
@@ -382,6 +398,80 @@ class NaverProductTitleGeneratorWidget(QWidget):
         )
         dialog.exec()
         
+    def load_current_ai_model(self):
+        """현재 설정된 AI 모델 정보 로드"""
+        try:
+            from src.foundation.config import config_manager
+            api_config = config_manager.load_api_config()
+            
+            current_model = getattr(api_config, 'current_ai_model', '')
+            if current_model and current_model != "AI 제공자를 선택하세요":
+                # 모델명 간소화 표시
+                if "무료" in current_model or "최신" in current_model:
+                    self.ai_model_label.setText(f"🤖 AI: {current_model}")
+                    self.ai_model_label.setStyleSheet(f"""
+                        QLabel {{
+                            font-size: 13px;
+                            color: {ModernStyle.COLORS['success']};
+                            background-color: {ModernStyle.COLORS['bg_secondary']};
+                            padding: 6px 12px;
+                            border-radius: 6px;
+                            border: 1px solid {ModernStyle.COLORS['success']};
+                            font-weight: 600;
+                        }}
+                    """)
+                elif "유료" in current_model:
+                    self.ai_model_label.setText(f"🤖 AI: {current_model}")
+                    self.ai_model_label.setStyleSheet(f"""
+                        QLabel {{
+                            font-size: 13px;
+                            color: {ModernStyle.COLORS['primary']};
+                            background-color: {ModernStyle.COLORS['bg_secondary']};
+                            padding: 6px 12px;
+                            border-radius: 6px;
+                            border: 1px solid {ModernStyle.COLORS['primary']};
+                            font-weight: 600;
+                        }}
+                    """)
+                else:
+                    self.ai_model_label.setText(f"🤖 AI: {current_model}")
+                    self.ai_model_label.setStyleSheet(f"""
+                        QLabel {{
+                            font-size: 13px;
+                            color: {ModernStyle.COLORS['text_secondary']};
+                            background-color: {ModernStyle.COLORS['bg_secondary']};
+                            padding: 6px 12px;
+                            border-radius: 6px;
+                            border: 1px solid {ModernStyle.COLORS['border']};
+                        }}
+                    """)
+            else:
+                self.ai_model_label.setText("⚠️ AI 모델 미설정")
+                self.ai_model_label.setStyleSheet(f"""
+                    QLabel {{
+                        font-size: 13px;
+                        color: {ModernStyle.COLORS['warning']};
+                        background-color: {ModernStyle.COLORS['bg_secondary']};
+                        padding: 6px 12px;
+                        border-radius: 6px;
+                        border: 1px solid {ModernStyle.COLORS['warning']};
+                    }}
+                """)
+                
+        except Exception as e:
+            self.ai_model_label.setText("❌ AI 모델 로드 실패")
+            self.ai_model_label.setStyleSheet(f"""
+                QLabel {{
+                    font-size: 13px;
+                    color: {ModernStyle.COLORS['danger']};
+                    background-color: {ModernStyle.COLORS['bg_secondary']};
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    border: 1px solid {ModernStyle.COLORS['danger']};
+                }}
+            """)
+            print(f"AI 모델 로드 오류: {e}")
+        
     def setup_connections(self):
         """시그널 연결 - 새로운 레이아웃"""
         # 왼쪽 패널 시그널
@@ -392,6 +482,27 @@ class NaverProductTitleGeneratorWidget(QWidget):
         self.right_panel.previous_step.connect(self.go_previous_step)
         self.right_panel.next_step.connect(self.go_next_step)
         self.right_panel.reset_all.connect(self.reset_all_steps)
+        
+        # 3단계 AI 분석 시그널
+        self.right_panel.step3_widget.ai_analysis_started.connect(self.start_ai_analysis)
+        self.right_panel.step3_widget.stop_button.clicked.connect(self.stop_ai_analysis)
+        
+        # API 설정 변경 시그널 연결 (부모 윈도우에서 받기)
+        self.connect_to_api_dialog()
+    
+    def connect_to_api_dialog(self):
+        """API 설정 변경 시그널에 연결 (foundation config manager 사용)"""
+        try:
+            from src.foundation.config import config_manager
+            # 전역 config manager의 API 설정 변경 시그널에 연결
+            if hasattr(config_manager, 'api_config_changed'):
+                config_manager.api_config_changed.connect(self.on_api_settings_changed)
+        except Exception as e:
+            pass  # 시그널 연결 실패는 조용히 처리
+    
+    def on_api_settings_changed(self):
+        """API 설정이 변경되었을 때 AI 모델 표시 업데이트"""
+        self.load_current_ai_model()
         
     def on_analysis_started(self, product_name: str):
         """분석 시작 처리"""
@@ -519,6 +630,9 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 오른쪽 패널에 상품명 표시
         self.right_panel.step2_widget.display_product_names(product_names)
         
+        # 3단계에 상품명 데이터 전달
+        self.right_panel.step3_widget.set_product_names(product_names)
+        
         # 다음 단계 활성화
         self.right_panel.set_next_enabled(True)
     
@@ -535,9 +649,19 @@ class NaverProductTitleGeneratorWidget(QWidget):
             self.current_step = step
             self.right_panel.go_to_step(step)
             
-            # 진행상황 업데이트
+            # 진행상황 업데이트 (진행률 0%로 초기화)
             step_names = ["키워드 분석", "키워드 선택", "심화분석", "상품명생성"]
-            self.left_panel.update_progress(step, f"{step_names[step-1]} 단계")
+            self.left_panel.update_progress(step, f"{step_names[step-1]} 단계", 0)
+            
+            # 분석시작 버튼은 1단계에서만 활성화
+            if step == 1:
+                self.left_panel.start_button.setEnabled(True)
+                self.left_panel.start_button.show()
+                self.left_panel.stop_button.show()
+            else:
+                self.left_panel.start_button.setEnabled(False)
+                self.left_panel.start_button.hide()
+                self.left_panel.stop_button.hide()
             
     def go_previous_step(self):
         """이전 단계로"""
@@ -605,6 +729,66 @@ class NaverProductTitleGeneratorWidget(QWidget):
         last_names = {kw.keyword for kw in self.last_selected_keywords}
         
         return current_names != last_names
+    
+    def start_ai_analysis(self, prompt: str):
+        """AI 분석 시작 처리"""
+        log_manager.add_log(f"🤖 AI 분석 시작", "info")
+        
+        # 진행상황 업데이트
+        self.left_panel.update_progress(3, "AI 키워드 추출 중...", 10)
+        
+        # AI 분석 워커 시작
+        from .worker import AIAnalysisWorker, worker_manager
+        
+        self.current_ai_worker = AIAnalysisWorker(prompt)
+        self.current_ai_worker.progress_updated.connect(self.on_ai_progress)
+        self.current_ai_worker.analysis_completed.connect(self.on_ai_analysis_completed)
+        self.current_ai_worker.error_occurred.connect(self.on_ai_analysis_error)
+        
+        worker_manager.start_worker(self.current_ai_worker)
+    
+    def on_ai_progress(self, progress: int, message: str):
+        """AI 분석 진행률 업데이트"""
+        self.left_panel.update_progress(3, message, progress)
+    
+    def on_ai_analysis_completed(self, keywords):
+        """AI 분석 완료 처리"""
+        log_manager.add_log(f"✅ AI 분석 완료: {len(keywords)}개 키워드", "success")
+        
+        # 진행상황 업데이트
+        self.left_panel.update_progress(3, "AI 분석 완료", 100)
+        
+        # 3단계 UI 업데이트
+        self.right_panel.step3_widget.on_analysis_completed(keywords)
+        
+        # 다음 단계 활성화
+        self.right_panel.set_next_enabled(True)
+    
+    def on_ai_analysis_error(self, error_message: str):
+        """AI 분석 에러 처리"""
+        log_manager.add_log(f"❌ AI 분석 실패: {error_message}", "error")
+        
+        # 진행상황 초기화
+        self.left_panel.update_progress(3, "AI 분석 실패", 0)
+        
+        # 3단계 UI 에러 표시
+        self.right_panel.step3_widget.on_analysis_error(error_message)
+    
+    def stop_ai_analysis(self):
+        """AI 분석 정지 처리"""
+        log_manager.add_log("⏹ AI 분석이 중지되었습니다", "warning")
+        
+        # 실제 워커 중지
+        if hasattr(self, 'current_ai_worker') and self.current_ai_worker:
+            self.current_ai_worker.request_stop()
+            from .worker import worker_manager
+            worker_manager.stop_worker(self.current_ai_worker)
+        
+        # 3단계 UI 버튼 상태 복원
+        self.right_panel.step3_widget.on_analysis_error("분석이 중지되었습니다.")
+        
+        # 진행상황 초기화
+        self.left_panel.update_progress(3, "분석 중지됨", 0)
         
     def apply_styles(self):
         self.setStyleSheet(f"""

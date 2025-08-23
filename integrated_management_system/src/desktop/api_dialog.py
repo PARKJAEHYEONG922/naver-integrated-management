@@ -10,6 +10,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 from src.toolbox.ui_kit import ModernStyle
+from src.foundation.logging import get_logger
+
+logger = get_logger("desktop.api_dialog")
 
 class APISettingsDialog(QDialog):
     """API 설정 다이얼로그"""
@@ -292,7 +295,7 @@ class APISettingsDialog(QDialog):
         ai_selector_layout = QVBoxLayout()
         ai_selector_layout.setSpacing(10)
         
-        # AI 제공자 콤보박스
+        # 1단계: AI 제공자 선택
         provider_layout = QHBoxLayout()
         provider_layout.addWidget(QLabel("AI 제공자:"))
         
@@ -300,14 +303,25 @@ class APISettingsDialog(QDialog):
         self.ai_provider_combo = QComboBox()
         self.ai_provider_combo.addItems([
             "AI 제공자를 선택하세요",
-            "GPT-4o Mini (무료)",
-            "GPT-4o (유료)",
-            "Gemini 1.5 Flash (무료)",
-            "Claude Sonnet (유료)"
+            "OpenAI (GPT)",
+            "Google (Gemini)", 
+            "Anthropic (Claude)"
         ])
         self.ai_provider_combo.currentTextChanged.connect(self.on_ai_provider_changed)
         provider_layout.addWidget(self.ai_provider_combo, 1)
         ai_selector_layout.addLayout(provider_layout)
+        
+        # 2단계: 모델 선택 (초기에는 숨김)
+        model_layout = QHBoxLayout()
+        self.model_label = QLabel("AI 모델:")
+        self.model_label.setVisible(False)
+        model_layout.addWidget(self.model_label)
+        
+        self.ai_model_combo = QComboBox()
+        self.ai_model_combo.setVisible(False)
+        self.ai_model_combo.currentTextChanged.connect(self.on_ai_model_changed)
+        model_layout.addWidget(self.ai_model_combo, 1)
+        ai_selector_layout.addLayout(model_layout)
         
         ai_selector_group.setLayout(ai_selector_layout)
         layout.addWidget(ai_selector_group)
@@ -325,6 +339,8 @@ class APISettingsDialog(QDialog):
         self.ai_api_key.setPlaceholderText("API 키를 입력하세요")
         self.ai_api_key.setEchoMode(QLineEdit.Password)
         api_key_layout.addWidget(self.ai_api_key, 1)
+        
+        
         ai_config_layout.addLayout(api_key_layout)
         
         # 적용/삭제 버튼
@@ -392,37 +408,66 @@ class APISettingsDialog(QDialog):
         self.tab_widget.addTab(tab, "AI API")
     
     def on_ai_provider_changed(self, provider_text):
-        """AI 제공자 변경시 호출"""
+        """AI 제공자 변경시 호출 (1단계)"""
         if provider_text == "AI 제공자를 선택하세요":
+            # 모델 선택 숨기기
+            self.model_label.setVisible(False)
+            self.ai_model_combo.setVisible(False)
             self.ai_config_group.setVisible(False)
             self.current_ai_provider = None
-            self.ai_api_key.clear()
+            if hasattr(self, 'ai_api_key'):
+                self.ai_api_key.clear()
+        else:
+            # 모델 선택 표시
+            self.model_label.setVisible(True)
+            self.ai_model_combo.setVisible(True)
+            
+            # 제공자별 모델 목록 설정
+            self.ai_model_combo.clear()
+            if provider_text == "OpenAI (GPT)":
+                self.ai_model_combo.addItems([
+                    "모델을 선택하세요",
+                    "GPT-4o Mini (무료, 빠름)",
+                    "GPT-4o (유료, 고품질)",
+                    "GPT-4 Turbo (유료, 긴 컨텍스트)"
+                ])
+                self.current_ai_provider = "openai"
+                if hasattr(self, 'ai_api_key'):
+                    self.ai_api_key.setPlaceholderText("sk-...")
+                    
+            elif provider_text == "Google (Gemini)":
+                self.ai_model_combo.addItems([
+                    "모델을 선택하세요",
+                    "Gemini 1.5 Flash (무료, 빠름)",
+                    "Gemini 1.5 Pro (유료, 고품질)",
+                    "Gemini 2.0 Flash (최신, 무료)"
+                ])
+                self.current_ai_provider = "gemini"
+                if hasattr(self, 'ai_api_key'):
+                    self.ai_api_key.setPlaceholderText("Google AI API 키")
+                    
+            elif provider_text == "Anthropic (Claude)":
+                self.ai_model_combo.addItems([
+                    "모델을 선택하세요",
+                    "Claude 3.5 Sonnet (유료, 고품질)", 
+                    "Claude 3.5 Haiku (유료, 빠름)",
+                    "Claude 3 Opus (유료, 최고품질)"
+                ])
+                self.current_ai_provider = "claude"
+                if hasattr(self, 'ai_api_key'):
+                    self.ai_api_key.setPlaceholderText("Anthropic API 키")
+            
+            # 해당 제공자의 저장된 API 키만 로드
+            self.load_provider_api_key()
+    
+    def on_ai_model_changed(self, model_text):
+        """AI 모델 변경시 호출 (2단계)"""
+        if model_text == "모델을 선택하세요" or not model_text:
+            self.ai_config_group.setVisible(False)
         else:
             self.ai_config_group.setVisible(True)
-            
-            # 이전 제공자 정보 저장 (변경 전에)
-            old_provider = getattr(self, 'current_ai_provider', None)
-            old_key = self.ai_api_key.text() if hasattr(self, 'ai_api_key') else ""
-            
-            # 새 제공자 설정
-            if "GPT" in provider_text:
-                self.ai_api_key.setPlaceholderText("sk-...")
-                self.current_ai_provider = "openai"
-            elif "Gemini" in provider_text:
-                self.ai_api_key.setPlaceholderText("Google AI API 키")
-                self.current_ai_provider = "gemini"
-            elif "Claude" in provider_text:
-                self.ai_api_key.setPlaceholderText("Anthropic API 키")
-                self.current_ai_provider = "claude"
-            
-            # 이전 제공자의 키를 임시 저장 (메모리에만)
-            if old_provider and old_key:
-                if not hasattr(self, '_temp_ai_keys'):
-                    self._temp_ai_keys = {}
-                self._temp_ai_keys[old_provider] = old_key
-            
-            # 새 제공자의 설정 로드 (파일에서 또는 임시 저장소에서)
-            self.load_ai_settings_with_temp()
+            # 현재 선택된 모델 저장
+            self.current_ai_model = model_text
     
     def apply_ai_api(self):
         """AI API 테스트 후 적용"""
@@ -451,8 +496,13 @@ class APISettingsDialog(QDialog):
                 result = (False, "지원되지 않는 AI 제공자입니다.")
             
             if result[0]:  # 테스트 성공시 자동 적용
-                # 설정 저장
-                self.save_ai_config(self.current_ai_provider, api_key)
+                # 현재 선택된 모델 확인
+                selected_model = getattr(self, 'current_ai_model', '')
+                if not selected_model:
+                    selected_model = self.ai_model_combo.currentText()
+                
+                # 설정 저장 (제공자, API 키, 선택된 모델)
+                self.save_ai_config(self.current_ai_provider, api_key, selected_model)
                 
                 # 성공시 임시 저장된 키 제거 (정식 저장되었으므로)
                 if hasattr(self, '_temp_ai_keys') and self.current_ai_provider in self._temp_ai_keys:
@@ -461,7 +511,7 @@ class APISettingsDialog(QDialog):
                 # 변경 로그 메시지 추가
                 self.log_ai_provider_change()
                 
-                self.ai_status.setText(f"✅ {self.ai_provider_combo.currentText()} API가 적용되었습니다.")
+                self.ai_status.setText(f"✅ {selected_model} API가 적용되었습니다.")
                 self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['success']};")
                 self.api_settings_changed.emit()
             else:
@@ -473,6 +523,69 @@ class APISettingsDialog(QDialog):
             self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['danger']};")
         finally:
             self.ai_apply_btn.setEnabled(True)
+    
+    def save_ai_config(self, provider: str, api_key: str, selected_model: str):
+        """AI API 설정 저장"""
+        try:
+            from src.foundation.config import config_manager
+            
+            # 현재 API 설정 로드
+            api_config = config_manager.load_api_config()
+            
+            # 제공자별로 API 키 저장
+            if provider == "openai":
+                api_config.openai_api_key = api_key
+            elif provider == "gemini":
+                api_config.gemini_api_key = api_key
+            elif provider == "claude":
+                api_config.claude_api_key = api_key
+            
+            # 선택된 모델 저장
+            api_config.current_ai_model = selected_model
+            
+            # 설정 저장
+            success = config_manager.save_api_config(api_config)
+            
+            if success:
+                logger.info(f"AI API 설정 저장 완료: {provider} - {selected_model}")
+            else:
+                logger.error("AI API 설정 저장 실패")
+                
+        except Exception as e:
+            logger.error(f"AI API 설정 저장 중 오류: {e}")
+    
+    
+    def load_provider_api_key(self):
+        """현재 선택된 제공자의 API 키만 로드"""
+        try:
+            from src.foundation.config import config_manager
+            api_config = config_manager.load_api_config()
+            
+            if hasattr(self, 'current_ai_provider') and self.current_ai_provider:
+                if self.current_ai_provider == "openai" and hasattr(api_config, 'openai_api_key'):
+                    if api_config.openai_api_key:
+                        self.ai_api_key.setText(api_config.openai_api_key)
+                    else:
+                        self.ai_api_key.clear()
+                        
+                elif self.current_ai_provider == "gemini" and hasattr(api_config, 'gemini_api_key'):
+                    if api_config.gemini_api_key:
+                        self.ai_api_key.setText(api_config.gemini_api_key)
+                    else:
+                        self.ai_api_key.clear()
+                        
+                elif self.current_ai_provider == "claude" and hasattr(api_config, 'claude_api_key'):
+                    if api_config.claude_api_key:
+                        self.ai_api_key.setText(api_config.claude_api_key)
+                    else:
+                        self.ai_api_key.clear()
+                else:
+                    self.ai_api_key.clear()
+            else:
+                self.ai_api_key.clear()
+                
+        except Exception as e:
+            logger.error(f"제공자 API 키 로드 실패: {e}")
     
     def delete_ai_api(self):
         """AI API 삭제 (foundation config_manager 사용)"""
@@ -514,33 +627,6 @@ class APISettingsDialog(QDialog):
                 
             except Exception as e:
                 QMessageBox.critical(self, "오류", f"API 설정 삭제 실패: {str(e)}")
-    
-    def save_ai_config(self, provider, api_key):
-        """AI API 설정 저장 (foundation config_manager 사용)"""
-        try:
-            from src.foundation.config import config_manager
-            
-            # 현재 설정 로드
-            api_config = config_manager.load_api_config()
-            
-            # 모든 AI API 키 초기화 (한 번에 하나만 사용)
-            api_config.openai_api_key = ""
-            api_config.claude_api_key = ""
-            api_config.gemini_api_key = ""
-            
-            # 선택된 제공자만 설정
-            if provider == "openai":
-                api_config.openai_api_key = api_key
-            elif provider == "claude":
-                api_config.claude_api_key = api_key
-            elif provider == "gemini":
-                api_config.gemini_api_key = api_key
-            
-            # foundation config_manager로 저장
-            config_manager.save_api_config(api_config)
-                
-        except Exception as e:
-            print(f"AI API 설정 저장 오류: {e}")
     
     def log_ai_provider_change(self):
         """AI 제공자 변경 시 로그 메시지 출력"""
@@ -793,10 +879,36 @@ API 키 발급 방법:
 3. '사용 API' 에서 '검색' 체크
 4. 등록 완료 후 Client ID, Client Secret 확인
 
-⚠️ 주의사항:
+🤖 AI API 키 발급 방법:
+
+📋 OpenAI (GPT) API 키:
+1. https://platform.openai.com 접속
+2. 우상단 'API' 메뉴 클릭
+3. 좌측 'API keys' 메뉴에서 'Create new secret key' 클릭
+4. 키 이름 입력 후 생성
+5. 생성된 키를 복사하여 붙여넣기
+💡 주의: 키는 한 번만 표시되므로 안전한 곳에 보관
+
+🧠 Google (Gemini) API 키:
+1. https://aistudio.google.com 접속
+2. 'Get API key' 버튼 클릭
+3. 'Create API key in new project' 선택
+4. 생성된 키를 복사하여 붙여넣기
+💡 월 무료 할당량: 15 requests/minute
+
+🌟 Anthropic (Claude) API 키:
+1. https://console.anthropic.com 접속
+2. 좌측 'API Keys' 메뉴 클릭
+3. 'Create Key' 버튼 클릭
+4. 키 이름 입력 후 생성
+5. 생성된 키를 복사하여 붙여넣기
+💡 주의: 유료 서비스, 크레딧 충전 필요
+
+⚠️ 보안 주의사항:
 - API 키는 개인정보이므로 타인과 공유하지 마세요
 - 월 호출 한도를 확인하고 사용하세요
 - 검색광고 API는 승인 절차가 있을 수 있습니다
+- AI API 키는 정기적으로 교체하는 것을 권장합니다
 
 💾 설정 저장:
 - API 키는 로컬에 안전하게 암호화되어 저장됩니다
@@ -965,51 +1077,90 @@ API 키 발급 방법:
             self.check_api_status()
     
     def load_ai_settings_from_foundation(self, api_config):
-        """foundation config에서 AI API 설정 로드"""
+        """foundation config에서 AI API 설정 로드 (2단계 선택 방식)"""
         try:
-            # OpenAI가 설정되어 있으면
-            if api_config.openai_api_key:
-                # GPT 관련 옵션 찾기
-                for i in range(self.ai_provider_combo.count()):
-                    item_text = self.ai_provider_combo.itemText(i)
-                    if "GPT" in item_text:
-                        self.ai_provider_combo.setCurrentIndex(i)
-                        self.on_ai_provider_changed(item_text)
+            # 현재 선택된 AI 모델이 있으면 복원
+            current_model = getattr(api_config, 'current_ai_model', '')
+            logger.info(f"로드할 AI 모델: '{current_model}'")
+            
+            if current_model and current_model != "AI 제공자를 선택하세요":
+                
+                # 모델명에서 제공자 추출하고 UI 복원
+                if "GPT" in current_model and api_config.openai_api_key:
+                    self.ai_provider_combo.setCurrentText("OpenAI (GPT)")
+                    # 콤보박스 이벤트로 모델 목록 생성되고 나서 모델 선택 및 UI 펼치기
+                    def select_openai_model():
+                        # 모델 선택
+                        for i in range(self.ai_model_combo.count()):
+                            if self.ai_model_combo.itemText(i) == current_model:
+                                self.ai_model_combo.setCurrentIndex(i)
+                                break
+                        
+                        # UI 표시
+                        self.model_label.setVisible(True)
+                        self.ai_model_combo.setVisible(True)
+                        self.ai_config_group.setVisible(True)
                         self.ai_api_key.setText(api_config.openai_api_key)
-                        self.ai_status.setText(f"✅ {item_text} API가 적용되었습니다.")
+                        self.ai_status.setText(f"✅ {current_model} API가 적용되었습니다.")
                         self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['success']};")
-                        return
-            
-            # Claude가 설정되어 있으면
-            elif api_config.claude_api_key:
-                for i in range(self.ai_provider_combo.count()):
-                    item_text = self.ai_provider_combo.itemText(i)
-                    if "Claude" in item_text:
-                        self.ai_provider_combo.setCurrentIndex(i)
-                        self.on_ai_provider_changed(item_text)
-                        self.ai_api_key.setText(api_config.claude_api_key)
-                        self.ai_status.setText(f"✅ {item_text} API가 적용되었습니다.")
-                        self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['success']};")
-                        return
-            
-            # Gemini가 설정되어 있으면
-            elif hasattr(api_config, 'gemini_api_key') and api_config.gemini_api_key:
-                for i in range(self.ai_provider_combo.count()):
-                    item_text = self.ai_provider_combo.itemText(i)
-                    if "Gemini" in item_text:
-                        self.ai_provider_combo.setCurrentIndex(i)
-                        self.on_ai_provider_changed(item_text)
+                    
+                    from PySide6.QtCore import QTimer
+                    QTimer.singleShot(100, select_openai_model)
+                    
+                elif "Gemini" in current_model and hasattr(api_config, 'gemini_api_key') and api_config.gemini_api_key:
+                    self.ai_provider_combo.setCurrentText("Google (Gemini)")
+                    def select_gemini_model():
+                        # 모델 선택
+                        for i in range(self.ai_model_combo.count()):
+                            if self.ai_model_combo.itemText(i) == current_model:
+                                self.ai_model_combo.setCurrentIndex(i)
+                                break
+                        
+                        # UI 표시
+                        self.model_label.setVisible(True)
+                        self.ai_model_combo.setVisible(True)
+                        self.ai_config_group.setVisible(True)
                         self.ai_api_key.setText(api_config.gemini_api_key)
-                        self.ai_status.setText(f"✅ {item_text} API가 적용되었습니다.")
+                        self.ai_status.setText(f"✅ {current_model} API가 적용되었습니다.")
                         self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['success']};")
-                        return
-            
-            # 아무것도 설정되지 않은 경우
-            self.ai_provider_combo.setCurrentText("AI 제공자를 선택하세요")
-            self.ai_config_group.setVisible(False)
+                    
+                    from PySide6.QtCore import QTimer
+                    QTimer.singleShot(100, select_gemini_model)
+                    
+                elif "Claude" in current_model and api_config.claude_api_key:
+                    self.ai_provider_combo.setCurrentText("Anthropic (Claude)")
+                    def select_claude_model():
+                        # 모델 선택
+                        for i in range(self.ai_model_combo.count()):
+                            if self.ai_model_combo.itemText(i) == current_model:
+                                self.ai_model_combo.setCurrentIndex(i)
+                                break
+                        
+                        # UI 표시
+                        self.model_label.setVisible(True)
+                        self.ai_model_combo.setVisible(True)
+                        self.ai_config_group.setVisible(True)
+                        self.ai_api_key.setText(api_config.claude_api_key)
+                        self.ai_status.setText(f"✅ {current_model} API가 적용되었습니다.")
+                        self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['success']};")
+                    
+                    from PySide6.QtCore import QTimer
+                    QTimer.singleShot(100, select_claude_model)
+                else:
+                    # 저장된 모델은 있지만 API 키가 없는 경우
+                    self.ai_status.setText("🟡 AI API 키가 없습니다. 재설정이 필요합니다.")
+                    self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['warning']};")
+            else:
+                # 설정된 AI API가 없으면
+                self.ai_provider_combo.setCurrentText("AI 제공자를 선택하세요")
+                self.ai_config_group.setVisible(False)
+                self.ai_status.setText("🟡 AI API를 적용해주세요.")
+                self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['warning']};")
                 
         except Exception as e:
-            print(f"AI 설정 로드 오류: {e}")
+            logger.error(f"AI 설정 로드 실패: {e}")
+            self.ai_status.setText("❌ AI API 설정 로드 실패")
+            self.ai_status.setStyleSheet(f"color: {ModernStyle.COLORS['danger']};")
     
     
     def save_settings(self):
@@ -1028,16 +1179,11 @@ API 키 발급 방법:
             api_config.shopping_client_id = self.shopping_client_id.text().strip()
             api_config.shopping_client_secret = self.shopping_client_secret.text().strip()
             
-            # AI API는 현재 선택된 제공자와 입력된 키로 업데이트
+            # AI API는 현재 선택된 제공자의 키만 업데이트 (다른 제공자 키는 보존)
             if (hasattr(self, 'current_ai_provider') and self.current_ai_provider and 
                 hasattr(self, 'ai_api_key') and self.ai_api_key.text().strip()):
                 
-                # 모든 AI API 키 초기화
-                api_config.openai_api_key = ""
-                api_config.claude_api_key = ""
-                api_config.gemini_api_key = ""
-                
-                # 현재 선택된 제공자만 설정
+                # 현재 선택된 제공자의 키만 설정 (다른 키들은 기존값 유지)
                 ai_key = self.ai_api_key.text().strip()
                 if self.current_ai_provider == "openai":
                     api_config.openai_api_key = ai_key

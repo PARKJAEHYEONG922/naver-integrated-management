@@ -287,5 +287,289 @@ class WorkerManager:
         return self.current_worker is not None and self.current_worker.isRunning()
 
 
+class AIAnalysisWorker(QThread):
+    """3단계: AI 키워드 분석 워커"""
+    
+    # 시그널 정의
+    progress_updated = Signal(int, str)  # progress%, message
+    analysis_completed = Signal(list)    # List[KeywordBasicData] - AI 분석 결과
+    error_occurred = Signal(str)         # error_message
+    
+    def __init__(self, prompt: str):
+        super().__init__()
+        self.prompt = prompt
+        self._stop_requested = False
+        self._mutex = QMutex()
+    
+    def request_stop(self):
+        """작업 중단 요청"""
+        with QMutexLocker(self._mutex):
+            self._stop_requested = True
+            
+    def stop(self):
+        """작업 중단 요청 (하위 호환)"""
+        self.request_stop()
+    
+    def is_stopped(self) -> bool:
+        """중단 요청 확인"""
+        with QMutexLocker(self._mutex):
+            return self._stop_requested
+    
+    def run(self):
+        """워커 실행"""
+        try:
+            logger.info(f"AI 분석 시작")
+            
+            # 1단계: AI API 호출
+            self.progress_updated.emit(10, "AI 모델에 분석 요청 중...")
+            
+            if self.is_stopped():
+                return
+            
+            # 설정된 AI API 호출
+            ai_response = self.call_ai_api(self.prompt)
+            
+            if self.is_stopped():
+                return
+            
+            self.progress_updated.emit(50, "AI 응답 키워드 추출 중...")
+            
+            # 2단계: AI 응답에서 키워드 추출
+            from ..engine_local import parse_ai_keywords_response
+            extracted_keywords = parse_ai_keywords_response(ai_response)
+            
+            if not extracted_keywords:
+                self.error_occurred.emit("AI에서 키워드를 추출하지 못했습니다.")
+                return
+            
+            if self.is_stopped():
+                return
+            
+            self.progress_updated.emit(70, f"{len(extracted_keywords)}개 키워드 검색량 조회 중...")
+            
+            # 3단계: 각 키워드의 월검색량 조회
+            from ..adapters import analyze_keywords_batch
+            analyzed_keywords = analyze_keywords_batch(extracted_keywords)
+            
+            if self.is_stopped():
+                return
+            
+            self.progress_updated.emit(90, "검색량 100 이상 키워드 필터링 중...")
+            
+            # 4단계: 검색량 100 이상 필터링
+            from ..engine_local import filter_keywords_by_search_volume
+            filtered_keywords = filter_keywords_by_search_volume(analyzed_keywords, 100)
+            
+            self.progress_updated.emit(100, f"AI 분석 완료: {len(filtered_keywords)}개 키워드")
+            
+            # 완료 시그널 발송
+            self.analysis_completed.emit(filtered_keywords)
+            
+            logger.info(f"AI 분석 완료: {len(filtered_keywords)}개 키워드")
+            
+        except Exception as e:
+            logger.error(f"AI 분석 실패: {e}")
+            self.error_occurred.emit(f"AI 분석 중 오류가 발생했습니다: {e}")
+    
+    def call_ai_api(self, prompt: str) -> str:
+        """사용자가 설정한 AI API 호출"""
+        try:
+            from src.foundation.config import config_manager
+            api_config = config_manager.load_api_config()
+            
+            # 현재 선택된 AI 모델 확인
+            current_model = getattr(api_config, 'current_ai_model', '')
+            if not current_model or current_model == "AI 제공자를 선택하세요":
+                raise Exception("AI 모델이 선택되지 않았습니다. 설정 메뉴에서 AI 모델을 선택해주세요.")
+            
+            # 선택된 모델에 따라 적절한 API 호출
+            if "GPT" in current_model:
+                if not hasattr(api_config, 'openai_api_key') or not api_config.openai_api_key:
+                    raise Exception("OpenAI API 키가 설정되지 않았습니다.")
+                logger.info(f"{current_model}를 사용하여 분석합니다.")
+                return self.call_openai_direct(prompt, api_config.openai_api_key, current_model)
+                
+            elif "Gemini" in current_model:
+                if not hasattr(api_config, 'gemini_api_key') or not api_config.gemini_api_key:
+                    raise Exception("Gemini API 키가 설정되지 않았습니다.")
+                logger.info(f"{current_model}를 사용하여 분석합니다.")
+                return self.call_gemini_direct(prompt, api_config.gemini_api_key, current_model)
+                
+            elif "Claude" in current_model:
+                if not hasattr(api_config, 'claude_api_key') or not api_config.claude_api_key:
+                    raise Exception("Claude API 키가 설정되지 않았습니다.")
+                logger.info(f"{current_model}를 사용하여 분석합니다.")
+                return self.call_claude_direct(prompt, api_config.claude_api_key, current_model)
+            else:
+                raise Exception(f"지원되지 않는 AI 모델입니다: {current_model}")
+                
+        except Exception as e:
+            logger.error(f"AI API 호출 실패: {e}")
+            raise Exception(f"AI 분석 실패: {e}")
+    
+    def call_openai_direct(self, prompt: str, api_key: str, model_name: str) -> str:
+        """OpenAI API 직접 호출"""
+        import requests
+        
+        try:
+            headers = {
+                'Authorization': f'Bearer {api_key}',
+                'Content-Type': 'application/json'
+            }
+            
+            # 선택된 모델에 따라 실제 모델 ID 설정
+            if "GPT-4o Mini" in model_name:
+                model_id = "gpt-4o-mini"
+                max_tokens = 16384
+            elif "GPT-4o" in model_name and "Mini" not in model_name:
+                model_id = "gpt-4o"
+                max_tokens = 8192
+            elif "GPT-4 Turbo" in model_name:
+                model_id = "gpt-4-turbo"
+                max_tokens = 8192
+            else:
+                model_id = "gpt-4o-mini"  # 기본값
+                max_tokens = 16384
+            
+            payload = {
+                "model": model_id,
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": max_tokens,
+                "temperature": 0.3
+            }
+            
+            response = requests.post(
+                'https://api.openai.com/v1/chat/completions',
+                headers=headers,
+                json=payload,
+                timeout=60
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'choices' in data and len(data['choices']) > 0:
+                    return data['choices'][0]['message']['content']
+                else:
+                    raise Exception("OpenAI API 응답이 비어있습니다.")
+            else:
+                raise Exception(f"OpenAI API 오류: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            logger.error(f"OpenAI API 호출 실패: {e}")
+            raise Exception(f"OpenAI API 호출 실패: {e}")
+    
+    def call_gemini_direct(self, prompt: str, api_key: str, model_name: str) -> str:
+        """Gemini API 직접 호출"""
+        import requests
+        
+        try:
+            headers = {
+                'Content-Type': 'application/json'
+            }
+            
+            # 선택된 모델에 따라 실제 모델 ID 설정
+            if "Gemini 1.5 Flash" in model_name:
+                model_id = "gemini-1.5-flash-latest"
+                max_tokens = 8192
+            elif "Gemini 1.5 Pro" in model_name:
+                model_id = "gemini-1.5-pro-latest"
+                max_tokens = 8192
+            elif "Gemini 2.0 Flash" in model_name:
+                model_id = "gemini-2.0-flash-exp"
+                max_tokens = 8192
+            else:
+                model_id = "gemini-1.5-flash-latest"  # 기본값
+                max_tokens = 8192
+            
+            payload = {
+                "contents": [{
+                    "parts": [{"text": prompt}]
+                }],
+                "generationConfig": {
+                    "temperature": 0.3,
+                    "maxOutputTokens": max_tokens
+                }
+            }
+            
+            url = f'https://generativelanguage.googleapis.com/v1beta/models/{model_id}:generateContent?key={api_key}'
+            
+            response = requests.post(
+                url,
+                headers=headers,
+                json=payload,
+                timeout=60
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'candidates' in data and len(data['candidates']) > 0:
+                    content = data['candidates'][0].get('content', {})
+                    parts = content.get('parts', [])
+                    if parts:
+                        return parts[0].get('text', '')
+                    else:
+                        raise Exception("Gemini API 응답이 비어있습니다.")
+                else:
+                    raise Exception("Gemini API 응답이 비어있습니다.")
+            else:
+                raise Exception(f"Gemini API 오류: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            logger.error(f"Gemini API 호출 실패: {e}")
+            raise Exception(f"Gemini API 호출 실패: {e}")
+    
+    def call_claude_direct(self, prompt: str, api_key: str, model_name: str) -> str:
+        """Claude API 직접 호출"""
+        import requests
+        
+        try:
+            headers = {
+                'x-api-key': api_key,
+                'Content-Type': 'application/json',
+                'anthropic-version': '2023-06-01'
+            }
+            
+            # 선택된 모델에 따라 실제 모델 ID 설정
+            if "Claude 3.5 Sonnet" in model_name:
+                model_id = "claude-3-5-sonnet-20241022"
+                max_tokens = 8192
+            elif "Claude 3.5 Haiku" in model_name:
+                model_id = "claude-3-5-haiku-20241022"
+                max_tokens = 8192
+            elif "Claude 3 Opus" in model_name:
+                model_id = "claude-3-opus-20240229"
+                max_tokens = 8192
+            else:
+                model_id = "claude-3-5-sonnet-20241022"  # 기본값
+                max_tokens = 8192
+            
+            payload = {
+                "model": model_id,
+                "max_tokens": max_tokens,
+                "temperature": 0.3,
+                "messages": [{"role": "user", "content": prompt}]
+            }
+            
+            response = requests.post(
+                'https://api.anthropic.com/v1/messages',
+                headers=headers,
+                json=payload,
+                timeout=60
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'content' in data and len(data['content']) > 0:
+                    return data['content'][0]['text']
+                else:
+                    raise Exception("Claude API 응답이 비어있습니다.")
+            else:
+                raise Exception(f"Claude API 오류: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            logger.error(f"Claude API 호출 실패: {e}")
+            raise Exception(f"Claude API 호출 실패: {e}")
+
+
 # 전역 워커 매니저
 worker_manager = WorkerManager()

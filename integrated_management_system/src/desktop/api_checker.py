@@ -122,10 +122,17 @@ class APIChecker:
             if gemini_key:
                 configured_apis.append("Gemini")
             
+            # 현재 선택된 AI 모델 정보 추가
+            current_model = getattr(api_config, 'current_ai_model', '')
+            if current_model and current_model != "AI 제공자를 선택하세요":
+                message = f"설정 완료 ({', '.join(configured_apis)}) - 현재 모델: {current_model}"
+            else:
+                message = f"설정 완료 ({', '.join(configured_apis)}) - 모델 미선택"
+            
             return {
                 "configured": True,
                 "connected": True,
-                "message": f"설정 완료 ({', '.join(configured_apis)})"
+                "message": message
             }
         else:
             return {
