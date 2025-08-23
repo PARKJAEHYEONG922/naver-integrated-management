@@ -469,6 +469,8 @@ class AIAnalysisWorker(QThread):
                 'extracted_keywords': unique_keywords
             })
             
+            logger.info(f"📊 월검색량 필터링 전: {len(volume_analyzed)}개 키워드")
+            
             if not volume_filtered:
                 logger.warning("⚠️ 월검색량 100 이상인 키워드가 없습니다. 필터링 기준을 10으로 낮춥니다.")
                 # 월검색량 기준을 10으로 낮춰서 재시도
@@ -482,6 +484,10 @@ class AIAnalysisWorker(QThread):
                     logger.info(f"📊 월검색량 10 이상 필터링 완료: {len(volume_filtered)}개 키워드")
             else:
                 logger.info(f"📊 월검색량 100 이상 필터링 완료: {len(volume_filtered)}개 키워드")
+            
+            # 필터링된 키워드 미리보기
+            for i, kw in enumerate(volume_filtered[:3]):
+                logger.info(f"  필터링된 키워드 {i+1}: '{kw.keyword}' (검색량: {kw.search_volume})")
             
             if self.is_stopped():
                 return
@@ -562,10 +568,10 @@ class AIAnalysisWorker(QThread):
             # 완료 시그널 발송 (카테고리 매칭된 키워드들)
             self.analysis_completed.emit(category_matched_keywords)
             
-            logger.info(f"AI 분석 완료: {len(final_keywords)}개 키워드")
+            logger.info(f"AI 분석 완료 - 전체: {len(final_keywords)}개, 필터링: {len(category_matched_keywords)}개")
             
         except Exception as e:
-            logger.error(f"AI 분석 실패: {e}")
+            logger.error(f"AI 분석 실패: {e}", exc_info=True)
             self.error_occurred.emit(f"AI 분석 중 오류가 발생했습니다: {e}")
     
     def call_ai_api(self, prompt: str) -> str:

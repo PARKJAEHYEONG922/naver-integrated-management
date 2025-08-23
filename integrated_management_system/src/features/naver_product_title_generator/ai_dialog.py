@@ -587,7 +587,7 @@ class AIAnalysisDialog(QDialog):
         layout.setContentsMargins(15, 15, 15, 15)
         
         # 설명
-        desc_label = QLabel("최종적으로 선별된 키워드 목록입니다. (월검색량 100+ 및 카테고리 정보 포함)")
+        desc_label = QLabel("1단계에서 선택한 카테고리와 일치하는 최종 키워드 목록입니다.")
         desc_label.setObjectName("tab_desc")
         layout.addWidget(desc_label)
         
@@ -626,8 +626,9 @@ class AIAnalysisDialog(QDialog):
         final_keywords = self.analysis_data.get('final_keywords', [])
         self.populate_keyword_table(self.step2_category_table, final_keywords)
         
-        # 6번 탭: 최종 키워드 (동일)
-        self.populate_keyword_table(self.final_table, final_keywords)
+        # 6번 탭: 최종 키워드 (카테고리 필터링된 결과)
+        category_matched_keywords = self.analysis_data.get('category_matched_keywords', final_keywords)
+        self.populate_keyword_table(self.final_table, category_matched_keywords)
     
     def populate_volume_only_table(self, table, keywords):
         """월검색량만 있는 키워드 테이블 채우기 (카테고리 없음)"""
