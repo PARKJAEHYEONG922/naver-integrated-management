@@ -42,6 +42,12 @@ def load_features(app):
         register_powerlink(app)
         logger.info("PowerLink 분석기 모듈 로드 완료")
         
+        # 네이버 상품명 생성기 기능 로드 및 등록
+        logger.info("네이버 상품명 생성기 모듈 로드 시작")
+        from src.features.prduct_title_generator import register as register_product_title
+        register_product_title(app)
+        logger.info("네이버 상품명 생성기 모듈 로드 완료")
+        
         logger.info("모든 기능 모듈 로드 및 등록 완료")
         
     except Exception as e:

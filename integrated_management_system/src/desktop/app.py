@@ -240,7 +240,7 @@ class MainWindow(QMainWindow):
             'rank_tracking': '네이버상품 순위추적',
             'naver_cafe': '네이버 카페DB추출',
             'powerlink_analyzer': 'PowerLink 분석',
-            'product_title_generator': '상품명 생성',
+            'prduct_title_generator': '네이버 상품명 만들기',
         }
         return module_names.get(module_id, module_id)
     
@@ -265,7 +265,7 @@ class MainWindow(QMainWindow):
             '네이버상품 순위추적': 'rank_tracking',
             '네이버 카페DB추출': 'naver_cafe',
             'PowerLink 분석': 'powerlink_analyzer',
-            '상품명 생성': 'product_title_generator',
+            '네이버 상품명 만들기': 'prduct_title_generator',
         }
         return title_map.get(title, title.lower().replace(' ', '_'))
 

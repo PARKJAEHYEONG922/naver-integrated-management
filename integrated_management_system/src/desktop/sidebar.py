@@ -113,6 +113,7 @@ class Sidebar(QWidget):
             ('rank_tracking', '네이버상품 순위추적', '📈'),
             ('naver_cafe', '네이버 카페DB추출', '👥'),
             ('powerlink_analyzer', '파워링크 광고비', '💰'),
+            ('prduct_title_generator', '네이버 상품명 만들기', '🏷️'),
         ]
         
         for page_id, name, icon in default_modules:

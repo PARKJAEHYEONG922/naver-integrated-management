@@ -211,16 +211,17 @@ class ModernProgressBar(QProgressBar):
         """스타일 설정"""
         self.setStyleSheet(f"""
             QProgressBar {{
-                border: 2px solid {ModernStyle.BORDER_COLOR};
-                border-radius: {ModernStyle.BUTTON_BORDER_RADIUS}px;
+                border: 2px solid {ModernStyle.COLORS['border']};
+                border-radius: 8px;
                 text-align: center;
                 font-family: {ModernStyle.DEFAULT_FONT};
                 font-size: {ModernStyle.FONT_SIZE_NORMAL}px;
-                background-color: {ModernStyle.BACKGROUND_COLOR};
+                background-color: {ModernStyle.COLORS['bg_input']};
+                height: 25px;
             }}
             QProgressBar::chunk {{
-                background-color: {ModernStyle.PRIMARY_COLOR};
-                border-radius: {ModernStyle.BUTTON_BORDER_RADIUS - 2}px;
+                background-color: {ModernStyle.COLORS['primary']};
+                border-radius: 6px;
             }}
         """)
         
