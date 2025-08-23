@@ -129,11 +129,11 @@ class Step1ResultWidget(QWidget):
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(15)
         
         # 헤더
-        header_label = QLabel("🎯 키워드 분석 결과")
+        header_label = QLabel("1️⃣ 키워드 분석 결과")
         header_label.setObjectName("step_title")
         layout.addWidget(header_label)
         
@@ -378,13 +378,13 @@ class Step2BasicAnalysisWidget(QWidget):
     def setup_ui(self):
         layout = QVBoxLayout()
         layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
+        layout.setSpacing(15)
         
         # 헤더
         header_layout = QVBoxLayout()
         header_layout.setSpacing(8)
         
-        title = QLabel("📋 상품명 수집 결과")
+        title = QLabel("2️⃣ 상품명 수집 결과")
         title.setObjectName("step_title")
         header_layout.addWidget(title)
         
@@ -705,7 +705,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
         layout.setSpacing(15)
         
         # 단계 헤더
-        title_label = QLabel("3️⃣ AI 심화분석")
+        title_label = QLabel("3️⃣ AI 상품명분석")
         title_label.setObjectName("step_title")
         layout.addWidget(title_label)
         
