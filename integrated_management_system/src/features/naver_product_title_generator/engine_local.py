@@ -306,32 +306,19 @@ def is_category_match(target_category: str, keyword_category: str) -> bool:
     if not target_parts or not keyword_parts:
         return False
     
-    # 1. 전체 경로가 포함관계인지 확인
-    # 예: target이 "생활/건강 > 반려동물"이고 keyword가 "생활/건강 > 반려동물 > 강아지 간식"인 경우
-    if len(target_parts) <= len(keyword_parts):
-        match = True
-        for i, target_part in enumerate(target_parts):
-            if target_part != keyword_parts[i]:
-                match = False
-                break
-        if match:
-            return True
+    # 최소 3단계 깊이까지는 일치해야 함 (예: "생활/건강 > 반려동물 > 강아지 사료")
+    min_depth = min(3, len(target_parts), len(keyword_parts))
     
-    # 2. 반대로 keyword가 더 짧은 경우
-    if len(keyword_parts) <= len(target_parts):
-        match = True
-        for i, keyword_part in enumerate(keyword_parts):
-            if keyword_part != target_parts[i]:
-                match = False
-                break
-        if match:
-            return True
+    for i in range(min_depth):
+        if i >= len(target_parts) or i >= len(keyword_parts):
+            break
+            
+        # 3단계(인덱스 2)에서 "강아지 사료"와 "강아지 간식"처럼 다른 경우 불일치
+        if target_parts[i] != keyword_parts[i]:
+            return False
     
-    # 3. 최상위 카테고리가 같은지 확인
-    if target_parts[0] == keyword_parts[0]:
-        return True
-    
-    return False
+    # 모든 깊이가 일치하면 True
+    return True
 
 
 def normalize_keyword_for_comparison(keyword: str) -> str:
