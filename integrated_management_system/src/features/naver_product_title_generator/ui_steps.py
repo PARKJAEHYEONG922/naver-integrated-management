@@ -899,26 +899,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
         """)
         layout.addWidget(self.analysis_status_label)
         
-        # AI 응답 표시 영역 (초기에는 숨김)
-        from PySide6.QtWidgets import QTextEdit
-        self.ai_response_display = QTextEdit()
-        self.ai_response_display.setReadOnly(True)
-        self.ai_response_display.setMaximumHeight(200)
-        self.ai_response_display.setMinimumHeight(150)
-        self.ai_response_display.setPlaceholderText("AI 응답이 여기에 실시간으로 표시됩니다...")
-        self.ai_response_display.setStyleSheet(f"""
-            QTextEdit {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border: 1px solid {ModernStyle.COLORS['success']};
-                border-radius: 6px;
-                padding: 10px;
-                font-size: 12px;
-                font-family: 'Consolas', 'Monaco', monospace;
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-        """)
-        self.ai_response_display.hide()  # 초기에는 숨김
-        layout.addWidget(self.ai_response_display)
         
         # AI 키워드 선택 영역 (체크박스 형태, 초기에는 숨김)
         from PySide6.QtWidgets import QScrollArea, QGridLayout, QCheckBox
