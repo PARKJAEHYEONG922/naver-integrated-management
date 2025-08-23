@@ -245,25 +245,34 @@ def filter_keywords_by_category(keywords: List[KeywordBasicData], target_categor
     if not keywords or not target_category:
         return keywords
     
-    # 카테고리 정규화 (공백 제거, 소문자 변환)
-    def normalize_category(category: str) -> str:
-        return category.strip().lower().replace(" ", "")
+    # % 부분 제거
+    target_clean = target_category.split('(')[0].strip() if '(' in target_category else target_category.strip()
     
-    target_normalized = normalize_category(target_category)
+    # 디버깅용 로그
+    from src.foundation.logging import get_logger
+    logger = get_logger("features.naver_product_title_generator.engine_local")
+    logger.info(f"🎯 필터링 대상 카테고리: '{target_clean}'")
     
     filtered = []
     for kw in keywords:
         if not kw.category:
+            logger.debug(f"  ❌ '{kw.keyword}' - 카테고리 없음")
             continue
             
-        kw_normalized = normalize_category(kw.category)
+        # 키워드 카테고리도 % 부분 제거
+        kw_clean = kw.category.split('(')[0].strip() if '(' in kw.category else kw.category.strip()
         
-        # 카테고리 매칭 로직 (부분 일치)
-        if is_category_match(target_normalized, kw_normalized):
+        # 카테고리 매칭 로직 (원본 문자열로 비교)
+        is_match = is_category_match(target_clean, kw_clean)
+        logger.info(f"  {'✅' if is_match else '❌'} '{kw.keyword}' - '{kw_clean}' {'매칭!' if is_match else '불일치'}")
+        
+        if is_match:
             filtered.append(kw)
     
     # 검색량 내림차순으로 정렬
     filtered.sort(key=lambda x: x.search_volume, reverse=True)
+    
+    logger.info(f"📊 필터링 결과: {len(keywords)}개 중 {len(filtered)}개 매칭")
     
     return filtered
 
@@ -273,8 +282,8 @@ def is_category_match(target_category: str, keyword_category: str) -> bool:
     두 카테고리가 매칭되는지 확인
     
     Args:
-        target_category: 1단계 선택 카테고리 (정규화됨)
-        keyword_category: 키워드의 카테고리 (정규화됨)
+        target_category: 1단계 선택 카테고리
+        keyword_category: 키워드의 카테고리
         
     Returns:
         bool: 매칭 여부
@@ -282,31 +291,45 @@ def is_category_match(target_category: str, keyword_category: str) -> bool:
     if not target_category or not keyword_category:
         return False
     
+    # 소문자로 변환하여 대소문자 구분 없이 비교
+    target_lower = target_category.lower()
+    keyword_lower = keyword_category.lower()
+    
     # 정확히 같은 경우
-    if target_category == keyword_category:
+    if target_lower == keyword_lower:
         return True
     
-    # 카테고리 경로 분리 (> 또는 - 기준)
-    target_parts = [part.strip() for part in target_category.replace('>', '|').replace('-', '|').split('|') if part.strip()]
-    keyword_parts = [part.strip() for part in keyword_category.replace('>', '|').replace('-', '|').split('|') if part.strip()]
+    # 카테고리 경로 분리 (> 기준)
+    target_parts = [part.strip() for part in target_lower.split('>') if part.strip()]
+    keyword_parts = [part.strip() for part in keyword_lower.split('>') if part.strip()]
     
     if not target_parts or not keyword_parts:
         return False
     
-    # 최상위 카테고리가 같은지 확인
-    if target_parts[0] == keyword_parts[0]:
-        return True
-    
-    # 하위 카테고리 중 하나라도 같은지 확인
-    for target_part in target_parts:
-        if target_part in keyword_parts:
+    # 1. 전체 경로가 포함관계인지 확인
+    # 예: target이 "생활/건강 > 반려동물"이고 keyword가 "생활/건강 > 반려동물 > 강아지 간식"인 경우
+    if len(target_parts) <= len(keyword_parts):
+        match = True
+        for i, target_part in enumerate(target_parts):
+            if target_part != keyword_parts[i]:
+                match = False
+                break
+        if match:
             return True
     
-    # 부분 문자열 포함 확인
-    for target_part in target_parts:
-        for keyword_part in keyword_parts:
-            if target_part in keyword_part or keyword_part in target_part:
-                return True
+    # 2. 반대로 keyword가 더 짧은 경우
+    if len(keyword_parts) <= len(target_parts):
+        match = True
+        for i, keyword_part in enumerate(keyword_parts):
+            if keyword_part != target_parts[i]:
+                match = False
+                break
+        if match:
+            return True
+    
+    # 3. 최상위 카테고리가 같은지 확인
+    if target_parts[0] == keyword_parts[0]:
+        return True
     
     return False
 

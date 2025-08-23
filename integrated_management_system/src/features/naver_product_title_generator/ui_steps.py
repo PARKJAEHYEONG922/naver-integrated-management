@@ -284,16 +284,21 @@ class Step1ResultWidget(QWidget):
         if not selected_keywords:
             return ""
         
-        # 선택된 키워드들의 카테고리 통계
+        # 선택된 키워드들의 카테고리 통계 (미분류 제외)
         category_count = {}
         for keyword_data in selected_keywords:
-            category = keyword_data.category or "미분류"
-            category_count[category] = category_count.get(category, 0) + 1
+            category = keyword_data.category
+            if category and category.strip() and category != "미분류":
+                # % 부분 제거 (예: "생활/건강 > 반려동물 (85%)" -> "생활/건강 > 반려동물")
+                category_clean = category.split('(')[0].strip()
+                category_count[category_clean] = category_count.get(category_clean, 0) + 1
         
         # 가장 많이 선택된 카테고리 반환
         if category_count:
-            return max(category_count.items(), key=lambda x: x[1])[0]
+            selected_category = max(category_count.items(), key=lambda x: x[1])[0]
+            return selected_category
         
+        # 유효한 카테고리가 없으면 빈 문자열 반환 (모든 키워드 표시)
         return ""
         
     def validate_category_consistency(self) -> bool:

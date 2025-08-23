@@ -470,15 +470,25 @@ class AIAnalysisWorker(QThread):
             })
             
             if not volume_filtered:
-                self.error_occurred.emit("월검색량 100 이상인 키워드가 없습니다.")
-                return
-            
-            logger.info(f"📊 월검색량 100 이상 필터링 완료: {len(volume_filtered)}개 키워드")
+                logger.warning("⚠️ 월검색량 100 이상인 키워드가 없습니다. 필터링 기준을 10으로 낮춥니다.")
+                # 월검색량 기준을 10으로 낮춰서 재시도
+                volume_filtered = filter_keywords_by_search_volume(volume_analyzed, 10)
+                
+                if not volume_filtered:
+                    # 그래도 없으면 모든 키워드 사용
+                    volume_filtered = volume_analyzed
+                    logger.info(f"📊 모든 키워드 사용: {len(volume_filtered)}개")
+                else:
+                    logger.info(f"📊 월검색량 10 이상 필터링 완료: {len(volume_filtered)}개 키워드")
+            else:
+                logger.info(f"📊 월검색량 100 이상 필터링 완료: {len(volume_filtered)}개 키워드")
             
             if self.is_stopped():
                 return
             
             self.progress_updated.emit(85, f"2단계: {len(volume_filtered)}개 키워드 카테고리 조회 중...")
+            
+            logger.info(f"🏷️ 카테고리 조회 시작: {len(volume_filtered)}개 키워드")
             
             # 6단계: 카테고리 정보 조회 (100 이상 키워드만)
             from .adapters import get_keywords_category
@@ -493,14 +503,20 @@ class AIAnalysisWorker(QThread):
                 self.progress_updated.emit(progress, f"2단계: {message}")
             
             # 병렬 카테고리 분석 실행
-            final_keywords = get_keywords_category(
-                keyword_data_list=volume_filtered,
-                max_workers=2,  # 카테고리 조회는 더 무거우므로 2개로 제한
-                stop_check=self.is_stopped,
-                progress_callback=category_progress_callback
-            )
-            
-            logger.info(f"📊 2단계 카테고리 조회 완료: {len(final_keywords)}개 키워드")
+            try:
+                final_keywords = get_keywords_category(
+                    keyword_data_list=volume_filtered,
+                    max_workers=2,  # 카테고리 조회는 더 무거우므로 2개로 제한
+                    stop_check=self.is_stopped,
+                    progress_callback=category_progress_callback
+                )
+                
+                logger.info(f"📊 2단계 카테고리 조회 완료: {len(final_keywords)}개 키워드")
+            except Exception as e:
+                logger.error(f"❌ 카테고리 조회 실패: {e}")
+                # 카테고리 조회 실패 시 월검색량만 있는 데이터 사용
+                final_keywords = volume_filtered
+                logger.info(f"📊 카테고리 없이 진행: {len(final_keywords)}개 키워드")
             
             if self.is_stopped():
                 return
@@ -510,12 +526,25 @@ class AIAnalysisWorker(QThread):
             # 7단계: 1단계에서 선택한 카테고리와 매칭되는 키워드만 필터링
             from .engine_local import filter_keywords_by_category
             
-            if self.selected_category:
+            logger.info(f"🔍 카테고리 필터링 시작: 선택된 카테고리='{self.selected_category}', 전체 키워드={len(final_keywords)}개")
+            
+            # 전체 키워드들의 카테고리 미리보기 (디버깅용)
+            logger.info("📊 전체 키워드 카테고리 목록:")
+            for i, kw in enumerate(final_keywords[:5]):
+                logger.info(f"  키워드 {i+1}: '{kw.keyword}' → 카테고리: '{kw.category}'")
+            
+            if self.selected_category and self.selected_category.strip():
+                logger.info(f"🎯 필터링할 카테고리: '{self.selected_category}'")
                 category_matched_keywords = filter_keywords_by_category(final_keywords, self.selected_category)
                 logger.info(f"📋 카테고리 매칭 완료: 선택 카테고리 '{self.selected_category}'와 매칭되는 {len(category_matched_keywords)}개 키워드")
                 
+                # 디버깅용: 매칭된 키워드들의 카테고리 로그
+                for i, kw in enumerate(category_matched_keywords[:3]):
+                    logger.info(f"  매칭 키워드 {i+1}: '{kw.keyword}' - '{kw.category}'")
+                
                 if not category_matched_keywords:
                     logger.warning(f"⚠️ 선택 카테고리 '{self.selected_category}'와 매칭되는 키워드가 없습니다.")
+                    # 빈 리스트 유지 (키워드를 표시하지 않음)
             else:
                 # 선택된 카테고리가 없으면 모든 키워드 표시
                 category_matched_keywords = final_keywords

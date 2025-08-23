@@ -803,9 +803,11 @@ class NaverProductTitleGeneratorWidget(QWidget):
     def on_ai_analysis_completed(self, keywords):
         """AI 분석 완료 처리"""
         log_manager.add_log(f"✅ AI 분석 완료: {len(keywords)}개 키워드", "success")
+        log_manager.add_log(f"🔍 선택된 카테고리: '{self.last_selected_category}'", "info") 
+        log_manager.add_log(f"📋 반환된 키워드들: {[kw.keyword for kw in keywords[:5]]}{'...' if len(keywords) > 5 else ''}", "info")
         
-        # 진행상황 업데이트
-        self.left_panel.update_progress(3, "AI 분석 완료", 100)
+        # 진행상황 업데이트 - 키워드 개수 포함
+        self.left_panel.update_progress(3, f"AI분석 완료 총 {len(keywords)}개 키워드", 100)
         
         # 3단계에 AI 분석 완료 알림
         self.right_panel.step3_widget.on_analysis_completed(keywords)
