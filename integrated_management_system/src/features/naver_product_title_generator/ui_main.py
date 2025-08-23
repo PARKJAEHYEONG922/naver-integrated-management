@@ -290,6 +290,7 @@ class NaverProductTitleGeneratorWidget(QWidget):
         super().__init__()
         self.current_step = 1
         self.last_selected_keywords = []  # 마지막으로 상품명 수집한 키워드들
+        self.last_selected_category = ""  # 1단계에서 선택한 카테고리
         self.cached_product_names = []    # 캐시된 상품명 결과
         self.setup_ui()
         self.setup_connections()
@@ -775,9 +776,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 1단계에서 선택한 키워드들을 추출 (문자열 리스트)
         selected_keywords = [kw.keyword for kw in self.last_selected_keywords] if self.last_selected_keywords else []
         
-        log_manager.add_log(f"📋 1단계 키워드 {len(selected_keywords)}개를 AI 분석에 포함: {selected_keywords[:5]}{'...' if len(selected_keywords) > 5 else ''}", "info")
+        # 1단계에서 선택한 카테고리 추출
+        selected_category = self.right_panel.step1_widget.get_selected_category()
+        self.last_selected_category = selected_category  # 저장
         
-        self.current_ai_worker = AIAnalysisWorker(product_names, worker_prompt, selected_keywords)
+        log_manager.add_log(f"📋 1단계 키워드 {len(selected_keywords)}개, 카테고리 '{selected_category}'를 AI 분석에 포함", "info")
+        
+        self.current_ai_worker = AIAnalysisWorker(product_names, worker_prompt, selected_keywords, selected_category)
         self.current_ai_worker.progress_updated.connect(self.on_ai_progress)
         self.current_ai_worker.analysis_completed.connect(self.on_ai_analysis_completed)
         self.current_ai_worker.analysis_data_updated.connect(self.on_analysis_data_updated)

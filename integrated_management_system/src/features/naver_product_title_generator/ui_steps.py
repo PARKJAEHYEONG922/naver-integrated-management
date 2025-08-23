@@ -923,10 +923,28 @@ class Step3AdvancedAnalysisWidget(QWidget):
     def get_selected_keywords(self):
         """선택된 키워드 리스트 반환"""
         selected = []
-        for keyword_card in self.keyword_checkboxes:
-            if keyword_card.is_checked():
-                selected.append(keyword_card.keyword_data)
+        for card in self.keyword_cards:
+            if card.is_checked():
+                selected.append(card.keyword_data)
         return selected
+    
+    def get_selected_category(self):
+        """선택된 키워드들의 주요 카테고리 반환"""
+        selected_keywords = self.get_selected_keywords()
+        if not selected_keywords:
+            return ""
+        
+        # 선택된 키워드들의 카테고리 통계
+        category_count = {}
+        for keyword_data in selected_keywords:
+            category = keyword_data.category or "미분류"
+            category_count[category] = category_count.get(category, 0) + 1
+        
+        # 가장 많이 선택된 카테고리 반환
+        if category_count:
+            return max(category_count.items(), key=lambda x: x[1])[0]
+        
+        return ""
     
     def show_analysis_log(self):
         """실시간 분석 내용 다이얼로그 표시"""
