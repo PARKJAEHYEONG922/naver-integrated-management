@@ -515,9 +515,7 @@ class AIAnalysisWorker(QThread):
                 logger.info(f"📋 카테고리 매칭 완료: 선택 카테고리 '{self.selected_category}'와 매칭되는 {len(category_matched_keywords)}개 키워드")
                 
                 if not category_matched_keywords:
-                    # 매칭되는 키워드가 없어도 모든 키워드 반환 (사용자가 선택할 수 있도록)
-                    logger.warning(f"⚠️ 선택 카테고리 '{self.selected_category}'와 매칭되는 키워드가 없습니다. 모든 키워드를 표시합니다.")
-                    category_matched_keywords = final_keywords
+                    logger.warning(f"⚠️ 선택 카테고리 '{self.selected_category}'와 매칭되는 키워드가 없습니다.")
             else:
                 # 선택된 카테고리가 없으면 모든 키워드 표시
                 category_matched_keywords = final_keywords
