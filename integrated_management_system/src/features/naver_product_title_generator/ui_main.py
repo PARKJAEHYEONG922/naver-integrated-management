@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (
     QFrame, QStackedWidget, QSizePolicy
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit.modern_style import ModernStyle
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernCancelButton, ModernHelpButton, ModernCard, ModernProgressBar
@@ -487,8 +486,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
         self.right_panel.step2_widget.prompt_selected.connect(self.on_prompt_selected)
         
         # 3단계 AI 분석 시그널
-        self.right_panel.step3_widget.ai_analysis_started.connect(self.on_ai_analysis_started)
-        self.right_panel.step3_widget.analysis_stopped.connect(self.on_ai_analysis_stopped)
+        self.right_panel.step3_widget.ai_analysis_started.connect(self.start_ai_analysis)
+        self.right_panel.step3_widget.analysis_stopped.connect(lambda: self.stop_ai_analysis())
         
         # API 설정 변경 시그널 연결 (부모 윈도우에서 받기)
         self.connect_to_api_dialog()
@@ -803,22 +802,12 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 진행상황 업데이트
         self.left_panel.update_progress(3, "AI 분석 완료", 100)
         
-        # 3단계 체크박스 UI에 키워드 로드
-        self.right_panel.step3_widget.load_keywords(keywords)
+        # 3단계에 AI 분석 완료 알림
+        self.right_panel.step3_widget.on_analysis_completed(keywords)
         
         # 다음 단계 활성화
         self.right_panel.set_next_enabled(True)
     
-    def on_ai_keywords_selected(self, selected_keywords):
-        """AI 분석 결과에서 키워드가 선택되었을 때"""
-        log_manager.add_log(f"✅ AI 키워드 선택: {len(selected_keywords)}개", "info")
-        
-        # 선택된 키워드를 4단계에서 사용할 수 있도록 저장
-        self.selected_ai_keywords = selected_keywords
-        
-        # 4단계에 선택된 키워드 전달
-        if hasattr(self.right_panel, 'step4_widget'):
-            self.right_panel.step4_widget.set_selected_keywords(selected_keywords)
     
     def on_ai_analysis_error(self, error_message: str):
         """AI 분석 에러 처리"""
@@ -827,8 +816,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 진행상황 초기화
         self.left_panel.update_progress(3, "AI 분석 실패", 0)
         
-        # 3단계 체크박스 UI에 빈 결과 로드 (에러 메시지 표시용)
-        self.right_panel.step3_widget.load_keywords([])
+        # 3단계에 에러 알림
+        self.right_panel.step3_widget.on_analysis_error(error_message)
     
     def stop_ai_analysis(self):
         """AI 분석 정지 처리"""
@@ -840,25 +829,12 @@ class NaverProductTitleGeneratorWidget(QWidget):
             from .worker import worker_manager
             worker_manager.stop_worker(self.current_ai_worker)
         
-        # 3단계 체크박스 UI에 빈 결과 로드 (중지 메시지 표시용)
-        self.right_panel.step3_widget.load_keywords([])
+        # 3단계에 중단 알림
+        self.right_panel.step3_widget.stop_analysis()
         
         # 진행상황 초기화
         self.left_panel.update_progress(3, "분석 중지됨", 0)
     
-    def on_ai_analysis_started(self, prompt_type: str, prompt_content: str):
-        """3단계에서 AI 분석이 시작되었을 때"""
-        log_manager.add_log(f"🤖 AI 분석 시작 요청됨", "info")
-        
-        # 실제 AI 분석 시작
-        self.start_ai_analysis(prompt_type, prompt_content)
-    
-    def on_ai_analysis_stopped(self):
-        """3단계에서 AI 분석이 중단되었을 때"""
-        log_manager.add_log(f"⏹ AI 분석 중단 요청됨", "warning")
-        
-        # 실제 AI 분석 중단
-        self.stop_ai_analysis()
         
     def apply_styles(self):
         self.setStyleSheet(f"""

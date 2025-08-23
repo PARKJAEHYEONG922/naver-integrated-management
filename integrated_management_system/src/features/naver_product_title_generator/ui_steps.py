@@ -973,6 +973,17 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         self.keyword_checkboxes.clear()
     
+    def show_analysis_log(self):
+        """실시간 분석 내용 다이얼로그 표시"""
+        from .ai_dialog import AIAnalysisDialog
+        
+        dialog = AIAnalysisDialog(
+            parent=self,
+            analysis_data=self.analysis_data,
+            product_names=self.product_names
+        )
+        dialog.exec()
+    
     def set_product_names(self, product_names):
         """2단계에서 수집된 상품명 설정"""
         self.product_names = product_names
@@ -1021,7 +1032,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analysis_status_label.setText("🤖 AI 분석 중입니다...\n잠시만 기다려주세요.")
         self.ai_response_display.clear()
         self.ai_response_display.hide()
-        self.keyword_results_display.hide()
+        self.keyword_selection_scroll.hide()
         
         # AI 분석 시작 시그널 발송
         self.ai_analysis_started.emit(self.selected_prompt_type, self.selected_prompt_content)
@@ -1079,23 +1090,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
                 self.ai_response_display.setPlainText(ai_response)
                 self.ai_response_display.show()
         
-        # 분석된 키워드가 있으면 진행 상황 표시
-        if 'analyzed_keywords' in data_updates:
-            analyzed_keywords = data_updates['analyzed_keywords']
-            if analyzed_keywords:
-                with_volume_count = len([kw for kw in analyzed_keywords if hasattr(kw, 'search_volume') and kw.search_volume > 0])
-                self.analysis_status_label.setText(f"📊 키워드 분석 진행 중...\n총 {len(analyzed_keywords)}개 중 {with_volume_count}개 검색량 확보")
-    
-    def show_analysis_log(self):
-        """실시간 분석 내용 다이얼로그 표시"""
-        from .ai_dialog import AIAnalysisDialog
-        
-        dialog = AIAnalysisDialog(
-            self,
-            analysis_data=self.analysis_data,
-            product_names=self.product_names
-        )
-        dialog.exec()
         
     def apply_styles(self):
         self.setStyleSheet(f"""
@@ -1150,12 +1144,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
                 self.ai_response_display.setPlainText(ai_response)
                 self.ai_response_display.show()
         
-        # 분석된 키워드가 있으면 진행 상황 표시
-        if 'analyzed_keywords' in data_updates:
-            analyzed_keywords = data_updates['analyzed_keywords']
-            if analyzed_keywords:
-                with_volume_count = len([kw for kw in analyzed_keywords if hasattr(kw, 'search_volume') and kw.search_volume > 0])
-                self.analysis_status_label.setText(f"📊 키워드 분석 진행 중...\n총 {len(analyzed_keywords)}개 중 {with_volume_count}개 검색량 확보")
 
 
 class Step4ResultWidget(QWidget):
