@@ -761,33 +761,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.result_area = self.create_result_area()
         layout.addWidget(self.result_area, 1)  # 확장 가능
         
-        # 액션 버튼
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-        
-        self.analyze_button = ModernPrimaryButton("🤖 AI 분석 시작")
-        self.analyze_button.setMinimumHeight(45)
-        self.analyze_button.setMinimumWidth(150)
-        self.analyze_button.clicked.connect(self.start_ai_analysis)
-        button_layout.addWidget(self.analyze_button)
-        
-        self.stop_button = ModernCancelButton("⏹ 정지")
-        self.stop_button.setMinimumHeight(45)
-        self.stop_button.setMinimumWidth(80)
-        self.stop_button.clicked.connect(self.stop_analysis)
-        self.stop_button.setEnabled(False)
-        button_layout.addWidget(self.stop_button)
-        
-        # 실시간 분석 내용 보기 버튼
-        from src.toolbox.ui_kit.components import ModernButton
-        self.analysis_log_button = ModernButton("📊 실시간 분석 내용", "secondary")
-        self.analysis_log_button.setMinimumHeight(45)
-        self.analysis_log_button.setMinimumWidth(150)
-        self.analysis_log_button.clicked.connect(self.show_analysis_log)
-        self.analysis_log_button.setEnabled(False)  # 분석 시작 후 활성화
-        button_layout.addWidget(self.analysis_log_button)
-        
-        layout.addLayout(button_layout)
         
         self.setLayout(layout)
         self.apply_styles()
@@ -826,17 +799,40 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
     def create_summary_card(self):
         """분석 설정 요약 카드"""
-        card = QFrame()
+        from src.toolbox.ui_kit.components import ModernCard
+        
+        card = ModernCard()
         card.setObjectName("summary_card")
         
         layout = QVBoxLayout()
         layout.setContentsMargins(20, 15, 20, 15)
-        layout.setSpacing(10)
+        layout.setSpacing(15)
         
-        # 제목
+        # 헤더 (제목 + 버튼들)
+        header_layout = QHBoxLayout()
+        header_layout.setSpacing(15)
+        
         title = QLabel("📋 분석 설정 요약")
         title.setObjectName("summary_title")
-        layout.addWidget(title)
+        header_layout.addWidget(title)
+        
+        header_layout.addStretch()
+        
+        # AI 분석 버튼들을 헤더에 배치
+        self.analyze_button = ModernPrimaryButton("🤖 AI 분석 시작")
+        self.analyze_button.setMinimumHeight(40)
+        self.analyze_button.setMinimumWidth(130)
+        self.analyze_button.clicked.connect(self.start_ai_analysis)
+        header_layout.addWidget(self.analyze_button)
+        
+        self.stop_button = ModernCancelButton("⏹ 정지")
+        self.stop_button.setMinimumHeight(40)
+        self.stop_button.setMinimumWidth(70)
+        self.stop_button.clicked.connect(self.stop_analysis)
+        self.stop_button.setEnabled(False)
+        header_layout.addWidget(self.stop_button)
+        
+        layout.addLayout(header_layout)
         
         # 설정 정보
         info_layout = QHBoxLayout()
@@ -858,9 +854,35 @@ class Step3AdvancedAnalysisWidget(QWidget):
     
     def create_result_area(self):
         """분석 결과 표시 영역"""
-        card = ModernCard("📊 분석 결과")
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(15, 15, 15, 15)
+        from src.toolbox.ui_kit.components import ModernCard
+        
+        card = ModernCard()
+        card.setObjectName("result_card")
+        
+        layout = QVBoxLayout()
+        layout.setContentsMargins(20, 15, 20, 15)
+        layout.setSpacing(15)
+        
+        # 헤더 (제목 + 실시간 분석내용 버튼)
+        header_layout = QHBoxLayout()
+        header_layout.setSpacing(15)
+        
+        title = QLabel("📊 분석 결과")
+        title.setObjectName("result_title")
+        header_layout.addWidget(title)
+        
+        header_layout.addStretch()
+        
+        # 실시간 분석내용 버튼을 결과 카드 오른쪽 위에 배치
+        from src.toolbox.ui_kit.components import ModernButton
+        self.analysis_log_button = ModernButton("📊 실시간 분석 내용", "secondary")
+        self.analysis_log_button.setMinimumHeight(35)
+        self.analysis_log_button.setMinimumWidth(130)
+        self.analysis_log_button.clicked.connect(self.show_analysis_log)
+        self.analysis_log_button.setEnabled(False)  # 분석 시작 후 활성화
+        header_layout.addWidget(self.analysis_log_button)
+        
+        layout.addLayout(header_layout)
         
         # 분석 진행 상황 표시
         self.analysis_status_label = QLabel("AI 분석 결과가 여기에 표시됩니다.\n\n상단의 'AI 분석 시작' 버튼을 클릭하여 시작하세요.")
@@ -919,6 +941,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
         # 선택된 키워드 추적용
         self.keyword_checkboxes = []
         
+        card.setLayout(layout)
         return card
     
     def display_keyword_checkboxes(self, keyword_results):
@@ -1047,7 +1070,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analysis_status_label.setText("⏹️ 분석이 중단되었습니다.")
         self.ai_response_display.hide()
         self.keyword_selection_scroll.hide()
-        self.analysis_stopped.emit()
         
     def on_analysis_completed(self, results):
         """AI 분석 완료 처리"""
@@ -1127,6 +1149,18 @@ class Step3AdvancedAnalysisWidget(QWidget):
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 border-radius: 4px;
                 margin-right: 10px;
+            }}
+            QLabel[objectName="result_title"] {{
+                font-size: 16px;
+                font-weight: 600;
+                color: {ModernStyle.COLORS['text_primary']};
+                margin-bottom: 10px;
+            }}
+            QFrame[objectName="result_card"] {{
+                background-color: {ModernStyle.COLORS['bg_card']};
+                border: 1px solid {ModernStyle.COLORS['border']};
+                border-radius: 8px;
+                margin: 10px 0;
             }}
         """)
     
