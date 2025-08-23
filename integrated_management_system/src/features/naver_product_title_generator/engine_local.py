@@ -10,12 +10,13 @@ from collections import Counter
 from .models import KeywordBasicData, GeneratedTitle
 
 
-# AI 프롬프트 템플릿
-DEFAULT_AI_PROMPT = """당신은 네이버 쇼핑 상품명 분석 전문가입니다.  
+# AI 프롬프트 시스템 (공용 - 모든 프롬프트에 자동 추가)
+SYSTEM_PROMPT = """당신은 네이버 쇼핑 상품명 분석 전문가입니다.  
 아래 상품명을 분석해, 사람들이 실제 검색할 가능성이 높은 키워드를 생성하세요.  
-결과는 네이버 월간 검색량 API 비교용이며, 모든 카테고리에 공용으로 사용 가능해야 합니다.
+결과는 네이버 월간 검색량 API 비교용이며, 모든 카테고리에 공용으로 사용 가능해야 합니다."""
 
-규칙
+# 기본 프롬프트 내용 (사용자에게 표시용)
+DEFAULT_AI_PROMPT = """규칙
 
 1. 브랜드명 제거  
 - 모든 브랜드 삭제
@@ -56,10 +57,7 @@ DEFAULT_AI_PROMPT = """당신은 네이버 쇼핑 상품명 분석 전문가입�
 - 키워드만 쉼표(,)로 구분.  
 - single + bigram + trigram 합산 200개 이상.  
 - 중복 제거(붙임·띄어쓰기 동일 키워드도 중복 제거).  
-- 설명·기타 문장 금지.
-
-상품명 목록:
-{product_titles}"""
+- 설명·기타 문장 금지."""
 
 
 def extract_keywords_from_product_name(product_name: str) -> List[str]:
@@ -143,14 +141,15 @@ def build_ai_prompt(product_titles: List[str], custom_prompt: Optional[str] = No
     Returns:
         str: 완성된 프롬프트
     """
+    # 상품명 목록 텍스트 생성
+    titles_text = "\n".join([f"- {title}" for title in product_titles])
+    
     if custom_prompt:
-        # 사용자 정의 프롬프트에 상품명 목록 추가
-        titles_text = "\n".join([f"- {title}" for title in product_titles])
-        return f"{custom_prompt}\n\n상품명 목록:\n{titles_text}"
+        # 공용 시스템 프롬프트 + 사용자 정의 프롬프트 + 상품명 목록
+        return f"{SYSTEM_PROMPT}\n\n{custom_prompt}\n\n상품명 목록:\n{titles_text}"
     else:
-        # 기본 프롬프트 사용
-        titles_text = "\n".join([f"- {title}" for title in product_titles])
-        return DEFAULT_AI_PROMPT.format(product_titles=titles_text)
+        # 공용 시스템 프롬프트 + 기본 프롬프트 + 상품명 목록
+        return f"{SYSTEM_PROMPT}\n\n{DEFAULT_AI_PROMPT}\n\n상품명 목록:\n{titles_text}"
 
 
 def parse_ai_keywords_response(ai_response: str) -> List[str]:

@@ -295,8 +295,9 @@ class AIAnalysisWorker(QThread):
     analysis_completed = Signal(list)    # List[KeywordBasicData] - AI 분석 결과
     error_occurred = Signal(str)         # error_message
     
-    def __init__(self, prompt: str):
+    def __init__(self, product_names: List[str], prompt: str):
         super().__init__()
+        self.product_names = product_names
         self.prompt = prompt
         self._stop_requested = False
         self._mutex = QMutex()
@@ -326,8 +327,21 @@ class AIAnalysisWorker(QThread):
             if self.is_stopped():
                 return
             
+            # 프롬프트 생성 (상품명 + 사용자 프롬프트 결합)
+            from .engine_local import build_ai_prompt
+            
+            # 상품명에서 title 추출
+            product_titles = []
+            for product in self.product_names:
+                if isinstance(product, dict):
+                    product_titles.append(product.get('title', ''))
+                elif isinstance(product, str):
+                    product_titles.append(product)
+            
+            final_prompt = build_ai_prompt(product_titles, self.prompt)
+            
             # 설정된 AI API 호출
-            ai_response = self.call_ai_api(self.prompt)
+            ai_response = self.call_ai_api(final_prompt)
             
             if self.is_stopped():
                 return

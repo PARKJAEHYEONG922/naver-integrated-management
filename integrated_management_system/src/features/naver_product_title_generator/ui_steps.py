@@ -4,7 +4,7 @@
 """
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QFrame, QScrollArea, QCheckBox, QPushButton
+    QFrame, QScrollArea, QCheckBox, QPushButton, QDialog
 )
 from PySide6.QtCore import Qt, Signal
 
@@ -367,12 +367,14 @@ class Step2BasicAnalysisWidget(QWidget):
     """2단계: 수집된 상품명 표시 및 AI 분석 시작"""
     
     # 시그널
-    ai_analysis_requested = Signal()    # AI 분석 시작
-    ai_analysis_stopped = Signal()      # AI 분석 중단
+    prompt_selected = Signal(str, str)  # (prompt_type, prompt_content) - 프롬프트 선택됨
     
     def __init__(self):
         super().__init__()
         self.product_names = []
+        self.current_prompt_type = "default"  # "default" or "custom"  
+        self.current_prompt_content = ""      # 선택된 프롬프트 내용
+        self.prompt_selected_by_user = False  # 사용자가 프롬프트를 선택했는지 여부
         self.setup_ui()
         
     def setup_ui(self):
@@ -433,18 +435,11 @@ class Step2BasicAnalysisWidget(QWidget):
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         
-        self.ai_analysis_button = ModernPrimaryButton("🤖 AI 분석 시작")
-        self.ai_analysis_button.setMinimumHeight(45)
-        self.ai_analysis_button.setMinimumWidth(150)
-        self.ai_analysis_button.clicked.connect(self.ai_analysis_requested.emit)
-        button_layout.addWidget(self.ai_analysis_button)
-        
-        self.stop_button = ModernCancelButton("⏹ 정지")
-        self.stop_button.setMinimumHeight(45)
-        self.stop_button.setMinimumWidth(80)
-        self.stop_button.clicked.connect(self.ai_analysis_stopped.emit)
-        self.stop_button.setEnabled(False)
-        button_layout.addWidget(self.stop_button)
+        self.ai_prompt_button = ModernPrimaryButton("📝 AI 프롬프트")
+        self.ai_prompt_button.setMinimumHeight(45)
+        self.ai_prompt_button.setMinimumWidth(150)
+        self.ai_prompt_button.clicked.connect(self.show_prompt_dialog)
+        button_layout.addWidget(self.ai_prompt_button)
         
         layout.addLayout(button_layout)
         
@@ -523,8 +518,8 @@ class Step2BasicAnalysisWidget(QWidget):
             
         self.content_layout.addStretch()
         
-        # AI 분석 버튼 활성화
-        self.ai_analysis_button.setEnabled(True)
+        # AI 프롬프트 버튼 활성화
+        self.ai_prompt_button.setEnabled(True)
     
     def create_product_card(self, product: dict, display_rank: int) -> QFrame:
         """상품명 카드 생성"""
@@ -620,10 +615,38 @@ class Step2BasicAnalysisWidget(QWidget):
             # 예외가 발생하면 로그만 남기고 계속 진행
             print(f"clear_content 에러 (무시됨): {e}")
     
-    def set_ai_analysis_running(self, running: bool):
-        """AI 분석 상태 설정"""
-        self.ai_analysis_button.setEnabled(not running)
-        self.stop_button.setEnabled(running)
+    def show_prompt_dialog(self):
+        """프롬프트 선택 다이얼로그 표시"""
+        from .ai_dialog import PromptSelectionDialog
+        
+        dialog = PromptSelectionDialog(
+            self,
+            current_type=self.current_prompt_type,
+            current_content=self.current_prompt_content
+        )
+        
+        if dialog.exec() == QDialog.Accepted:
+            self.current_prompt_type = dialog.get_selected_type()
+            self.current_prompt_content = dialog.get_selected_content()
+            self.prompt_selected_by_user = True  # 사용자가 직접 선택함
+            
+            # 시그널 발생
+            self.prompt_selected.emit(self.current_prompt_type, self.current_prompt_content)
+    
+    def ensure_prompt_selected(self):
+        """프롬프트가 선택되지 않았으면 자동으로 기본 프롬프트 선택"""
+        if not self.prompt_selected_by_user:
+            # 기본 프롬프트 자동 선택
+            from .engine_local import DEFAULT_AI_PROMPT
+            self.current_prompt_type = "default"
+            self.current_prompt_content = DEFAULT_AI_PROMPT
+            self.prompt_selected_by_user = True  # 자동 선택됨으로 표시
+            
+            # 시그널 발생 (3단계에 알림)
+            self.prompt_selected.emit(self.current_prompt_type, self.current_prompt_content)
+            
+            return True
+        return True
     
     def apply_styles(self):
         self.setStyleSheet(f"""
@@ -687,16 +710,28 @@ class Step2BasicAnalysisWidget(QWidget):
 
 
 class Step3AdvancedAnalysisWidget(QWidget):
-    """3단계: AI 심화분석 위젯"""
+    """3단계: AI 상품명분석 위젯"""
     
-    # 시그널
-    ai_analysis_started = Signal(str)  # 프롬프트와 함께 시작
+    # 시그널  
+    ai_analysis_started = Signal(str, str)  # (prompt_type, prompt_content) AI 분석 시작
+    analysis_stopped = Signal()             # 분석 중단
     
     def __init__(self):
         super().__init__()
-        self.current_prompt_type = "default"  # "default" or "custom"
-        self.custom_prompt = ""
-        self.product_names = []  # 2단계에서 받은 상품명들
+        self.product_names = []       # 2단계에서 받은 상품명들
+        self.selected_prompt_type = "default"    # 2단계에서 선택된 프롬프트 타입
+        self.selected_prompt_content = ""        # 2단계에서 선택된 프롬프트 내용
+        self.is_analysis_running = False
+        
+        # AI 분석 데이터 저장
+        self.analysis_data = {
+            'input_prompt': '',
+            'ai_response': '',
+            'extracted_keywords': [],
+            'analyzed_keywords': [],
+            'filtered_keywords': []
+        }
+        
         self.setup_ui()
         
     def setup_ui(self):
@@ -709,13 +744,13 @@ class Step3AdvancedAnalysisWidget(QWidget):
         title_label.setObjectName("step_title")
         layout.addWidget(title_label)
         
-        subtitle_label = QLabel("상품명을 AI로 분석하여 검색 가능성 높은 키워드를 추출합니다")
+        subtitle_label = QLabel("선택된 프롬프트로 상품명을 AI 분석하여 키워드를 추출합니다")
         subtitle_label.setObjectName("step_subtitle") 
         layout.addWidget(subtitle_label)
         
-        # 프롬프트 설정 카드
-        prompt_card = self.create_prompt_card()
-        layout.addWidget(prompt_card)
+        # 분석 설정 요약 카드
+        self.summary_card = self.create_summary_card()
+        layout.addWidget(self.summary_card)
         
         # AI 분석 결과 표시 영역
         self.result_area = self.create_result_area()
@@ -733,56 +768,55 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         self.stop_button = ModernCancelButton("⏹ 정지")
         self.stop_button.setMinimumHeight(45)
+        self.stop_button.setMinimumWidth(80)
+        self.stop_button.clicked.connect(self.stop_analysis)
         self.stop_button.setEnabled(False)
         button_layout.addWidget(self.stop_button)
+        
+        # 실시간 분석 내용 보기 버튼
+        from src.toolbox.ui_kit.components import ModernButton
+        self.analysis_log_button = ModernButton("📊 실시간 분석 내용", "secondary")
+        self.analysis_log_button.setMinimumHeight(45)
+        self.analysis_log_button.setMinimumWidth(150)
+        self.analysis_log_button.clicked.connect(self.show_analysis_log)
+        self.analysis_log_button.setEnabled(False)  # 분석 시작 후 활성화
+        button_layout.addWidget(self.analysis_log_button)
         
         layout.addLayout(button_layout)
         
         self.setLayout(layout)
         self.apply_styles()
         
-    def create_prompt_card(self):
-        """프롬프트 설정 카드"""
-        from PySide6.QtWidgets import QRadioButton, QButtonGroup
+    def create_summary_card(self):
+        """분석 설정 요약 카드"""
+        card = QFrame()
+        card.setObjectName("summary_card")
         
-        card = ModernCard("🎯 AI 분석 프롬프트 설정")
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(15, 15, 15, 15)
-        layout.setSpacing(12)
+        layout = QVBoxLayout()
+        layout.setContentsMargins(20, 15, 20, 15)
+        layout.setSpacing(10)
         
-        # 프롬프트 선택 라디오 버튼
-        self.prompt_group = QButtonGroup()
+        # 제목
+        title = QLabel("📋 분석 설정 요약")
+        title.setObjectName("summary_title")
+        layout.addWidget(title)
         
-        self.default_prompt_radio = QRadioButton("기본 프롬프트 사용")
-        self.default_prompt_radio.setChecked(True)
-        self.default_prompt_radio.toggled.connect(self.on_prompt_type_changed)
-        self.prompt_group.addButton(self.default_prompt_radio)
-        layout.addWidget(self.default_prompt_radio)
+        # 설정 정보
+        info_layout = QHBoxLayout()
+        info_layout.setSpacing(20)
         
-        self.custom_prompt_radio = QRadioButton("사용자 정의 프롬프트 사용")
-        self.custom_prompt_radio.toggled.connect(self.on_prompt_type_changed)
-        self.prompt_group.addButton(self.custom_prompt_radio)
-        layout.addWidget(self.custom_prompt_radio)
+        self.product_count_label = QLabel("상품명: 0개")
+        self.product_count_label.setObjectName("summary_stat")
+        info_layout.addWidget(self.product_count_label)
         
-        # 사용자 정의 프롬프트 입력 영역
-        from PySide6.QtWidgets import QTextEdit
+        self.prompt_type_label = QLabel("프롬프트: 미설정")
+        self.prompt_type_label.setObjectName("summary_stat")
+        info_layout.addWidget(self.prompt_type_label)
         
-        self.custom_prompt_edit = QTextEdit()
-        self.custom_prompt_edit.setPlaceholderText("사용자 정의 프롬프트를 입력하세요...\n\n상품명 목록은 자동으로 추가됩니다.")
-        self.custom_prompt_edit.setMaximumHeight(120)
-        self.custom_prompt_edit.setEnabled(False)
-        layout.addWidget(self.custom_prompt_edit)
+        info_layout.addStretch()
+        layout.addLayout(info_layout)
         
-        # 프롬프트 버튼
-        prompt_btn_layout = QHBoxLayout()
-        
-        self.reset_prompt_button = ModernCancelButton("🔄 기본값 복원")
-        self.reset_prompt_button.clicked.connect(self.reset_to_default_prompt)
-        prompt_btn_layout.addWidget(self.reset_prompt_button)
-        
-        prompt_btn_layout.addStretch()
-        layout.addLayout(prompt_btn_layout)
-        
+        card.setLayout(layout)
         return card
     
     def create_result_area(self):
@@ -807,23 +841,22 @@ class Step3AdvancedAnalysisWidget(QWidget):
         layout.addWidget(self.result_placeholder)
         
         return card
-        
-    def on_prompt_type_changed(self):
-        """프롬프트 타입 변경 처리"""
-        if self.default_prompt_radio.isChecked():
-            self.current_prompt_type = "default"
-            self.custom_prompt_edit.setEnabled(False)
-        else:
-            self.current_prompt_type = "custom"
-            self.custom_prompt_edit.setEnabled(True)
-            self.custom_prompt_edit.setFocus()
     
-    def reset_to_default_prompt(self):
-        """기본 프롬프트로 복원"""
-        self.default_prompt_radio.setChecked(True)
-        self.custom_prompt_edit.clear()
-        self.custom_prompt = ""
+    def set_product_names(self, product_names):
+        """2단계에서 수집된 상품명 설정"""
+        self.product_names = product_names
+        self.product_count_label.setText(f"상품명: {len(product_names)}개")
+    
+    def set_prompt_info(self, prompt_type, prompt_content):
+        """2단계에서 선택된 프롬프트 정보 설정"""
+        self.selected_prompt_type = prompt_type
+        self.selected_prompt_content = prompt_content
         
+        if prompt_type == "custom":
+            self.prompt_type_label.setText("프롬프트: 사용자 정의")
+        else:
+            self.prompt_type_label.setText("프롬프트: 기본 프롬프트")
+    
     def start_ai_analysis(self):
         """AI 분석 시작"""
         if not self.product_names:
@@ -835,57 +868,72 @@ class Step3AdvancedAnalysisWidget(QWidget):
             )
             dialog.exec()
             return
-        
-        # 프롬프트 준비
-        if self.current_prompt_type == "custom":
-            custom_text = self.custom_prompt_edit.toPlainText().strip()
-            if not custom_text:
-                from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-                dialog = ModernConfirmDialog(
-                    self, "프롬프트 없음", 
-                    "사용자 정의 프롬프트가 입력되지 않았습니다.\n프롬프트를 입력하거나 기본 프롬프트를 사용해주세요.",
-                    confirm_text="확인", cancel_text=None, icon="⚠️"
-                )
-                dialog.exec()
-                return
-            self.custom_prompt = custom_text
             
+        if not self.selected_prompt_content:
+            from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+            dialog = ModernConfirmDialog(
+                self, "프롬프트 미설정", 
+                "프롬프트가 설정되지 않았습니다.\n2단계에서 먼저 프롬프트를 선택해주세요.",
+                confirm_text="확인", cancel_text=None, icon="⚠️"
+            )
+            dialog.exec()
+            return
+        
         # 버튼 상태 변경
+        self.is_analysis_running = True
         self.analyze_button.setEnabled(False)
         self.analyze_button.setText("분석 중...")
         self.stop_button.setEnabled(True)
+        self.analysis_log_button.setEnabled(True)  # 분석 로그 버튼 활성화
+        
+        # 결과 영역 업데이트
+        self.result_placeholder.setText("AI 분석 중입니다...\n잠시만 기다려주세요.")
         
         # AI 분석 시작 시그널 발송
-        from ..engine_local import build_ai_prompt
-        
-        titles = [name['title'] for name in self.product_names if name.get('title')]
-        prompt = build_ai_prompt(
-            titles, 
-            self.custom_prompt if self.current_prompt_type == "custom" else None
-        )
-        
-        self.ai_analysis_started.emit(prompt)
+        self.ai_analysis_started.emit(self.selected_prompt_type, self.selected_prompt_content)
     
-    def set_product_names(self, product_names):
-        """2단계에서 수집된 상품명 설정"""
-        self.product_names = product_names
+    def stop_analysis(self):
+        """분석 중단"""
+        self.is_analysis_running = False
+        self.analyze_button.setEnabled(True)
+        self.analyze_button.setText("🤖 AI 분석 시작")
+        self.stop_button.setEnabled(False)
+        
+        self.result_placeholder.setText("분석이 중단되었습니다.")
+        self.analysis_stopped.emit()
         
     def on_analysis_completed(self, results):
         """AI 분석 완료 처리"""
+        self.is_analysis_running = False
         self.analyze_button.setEnabled(True)
         self.analyze_button.setText("🤖 AI 분석 시작")
         self.stop_button.setEnabled(False)
         
         # 결과 표시 (추후 상세 구현)
-        self.result_placeholder.setText(f"AI 분석 완료!\n\n추출된 키워드: {len(results)}개")
+        if isinstance(results, list):
+            self.result_placeholder.setText(f"AI 분석 완료!\n\n추출된 키워드: {len(results)}개")
+        else:
+            self.result_placeholder.setText(f"AI 분석 완료!\n\n결과:\n{results}")
         
     def on_analysis_error(self, error_msg):
         """AI 분석 에러 처리"""
+        self.is_analysis_running = False
         self.analyze_button.setEnabled(True)
         self.analyze_button.setText("🤖 AI 분석 시작")
         self.stop_button.setEnabled(False)
         
         self.result_placeholder.setText(f"분석 실패:\n{error_msg}")
+        
+    def show_analysis_log(self):
+        """실시간 분석 내용 다이얼로그 표시"""
+        from .ai_dialog import AIAnalysisDialog
+        
+        dialog = AIAnalysisDialog(
+            self,
+            analysis_data=self.analysis_data,
+            product_names=self.product_names
+        )
+        dialog.exec()
         
     def apply_styles(self):
         self.setStyleSheet(f"""
@@ -893,45 +941,36 @@ class Step3AdvancedAnalysisWidget(QWidget):
                 background-color: {ModernStyle.COLORS['bg_primary']};
             }}
             QLabel[objectName="step_title"] {{
-                font-size: 24px;
+                font-size: 22px;
                 font-weight: 600;
-                color: {ModernStyle.COLORS['primary']};
+                color: {ModernStyle.COLORS['text_primary']};
                 margin-bottom: 5px;
             }}
             QLabel[objectName="step_subtitle"] {{
-                font-size: 16px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                margin-bottom: 20px;
-            }}
-            QRadioButton {{
                 font-size: 14px;
+                color: {ModernStyle.COLORS['text_secondary']};
+                margin-bottom: 15px;
+            }}
+            QFrame[objectName="summary_card"] {{
+                background-color: {ModernStyle.COLORS['bg_card']};
+                border: 1px solid {ModernStyle.COLORS['border']};
+                border-radius: 8px;
+                margin: 10px 0;
+            }}
+            QLabel[objectName="summary_title"] {{
+                font-size: 16px;
+                font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
-                margin: 5px 0;
+                margin-bottom: 10px;
             }}
-            QRadioButton::indicator {{
-                width: 16px;
-                height: 16px;
-            }}
-            QRadioButton::indicator:unchecked {{
-                border: 2px solid {ModernStyle.COLORS['border']};
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border-radius: 8px;
-            }}
-            QRadioButton::indicator:checked {{
-                border: 2px solid {ModernStyle.COLORS['primary']};
-                background-color: {ModernStyle.COLORS['primary']};
-                border-radius: 8px;
-            }}
-            QTextEdit {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                padding: 12px;
+            QLabel[objectName="summary_stat"] {{
                 font-size: 13px;
+                font-weight: 500;
                 color: {ModernStyle.COLORS['text_primary']};
-            }}
-            QTextEdit:focus {{
-                border-color: {ModernStyle.COLORS['primary']};
+                padding: 5px 10px;
+                background-color: {ModernStyle.COLORS['bg_secondary']};
+                border-radius: 4px;
+                margin-right: 10px;
             }}
         """)
 

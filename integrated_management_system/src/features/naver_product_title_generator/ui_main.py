@@ -483,9 +483,12 @@ class NaverProductTitleGeneratorWidget(QWidget):
         self.right_panel.next_step.connect(self.go_next_step)
         self.right_panel.reset_all.connect(self.reset_all_steps)
         
+        # 2단계 프롬프트 선택 시그널
+        self.right_panel.step2_widget.prompt_selected.connect(self.on_prompt_selected)
+        
         # 3단계 AI 분석 시그널
         self.right_panel.step3_widget.ai_analysis_started.connect(self.start_ai_analysis)
-        self.right_panel.step3_widget.stop_button.clicked.connect(self.stop_ai_analysis)
+        self.right_panel.step3_widget.analysis_stopped.connect(self.stop_ai_analysis)
         
         # API 설정 변경 시그널 연결 (부모 윈도우에서 받기)
         self.connect_to_api_dialog()
@@ -643,6 +646,16 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 진행상황 초기화
         self.left_panel.update_progress(2, "상품명 수집 실패", 0)
         
+    def on_prompt_selected(self, prompt_type: str, prompt_content: str):
+        """2단계에서 프롬프트가 선택되었을 때"""
+        log_manager.add_log(f"📝 프롬프트 선택됨: {prompt_type}", "info")
+        
+        # 3단계에 프롬프트 정보 전달
+        self.right_panel.step3_widget.set_prompt_info(prompt_type, prompt_content)
+        
+        # 다음 단계 활성화
+        self.right_panel.set_next_enabled(True)
+        
     def go_to_step(self, step: int):
         """특정 단계로 이동"""
         if 1 <= step <= 4:
@@ -695,6 +708,11 @@ class NaverProductTitleGeneratorWidget(QWidget):
                     self.right_panel.set_next_enabled(True)
                     return
             
+            # Step 2에서 Step 3로 넘어갈 때
+            elif self.current_step == 2:
+                # 프롬프트가 선택되지 않았으면 자동으로 기본 프롬프트 선택
+                self.right_panel.step2_widget.ensure_prompt_selected()
+            
             self.go_to_step(self.current_step + 1)
         
     def reset_all_steps(self):
@@ -730,20 +748,30 @@ class NaverProductTitleGeneratorWidget(QWidget):
         
         return current_names != last_names
     
-    def start_ai_analysis(self, prompt: str):
+    def start_ai_analysis(self, prompt_type: str, prompt_content: str):
         """AI 분석 시작 처리"""
-        log_manager.add_log(f"🤖 AI 분석 시작", "info")
+        log_manager.add_log(f"🤖 AI 분석 시작: {prompt_type} 프롬프트", "info")
         
         # 진행상황 업데이트
         self.left_panel.update_progress(3, "AI 키워드 추출 중...", 10)
         
-        # AI 분석 워커 시작
+        # 최종 프롬프트 생성 (실시간 로그용)
+        from .engine_local import build_ai_prompt
+        product_titles = [p.get('title', '') for p in self.cached_product_names if isinstance(p, dict)]
+        final_prompt = build_ai_prompt(product_titles, prompt_content if prompt_type == "custom" else None)
+        
+        # 3단계에 분석 데이터 전달
+        self.right_panel.step3_widget.analysis_data['input_prompt'] = final_prompt
+        
+        # AI 분석 워커 시작 - 상품명과 프롬프트를 함께 전달
         from .worker import AIAnalysisWorker, worker_manager
         
-        self.current_ai_worker = AIAnalysisWorker(prompt)
+        product_names = self.cached_product_names  # 2단계에서 수집된 상품명들
+        self.current_ai_worker = AIAnalysisWorker(product_names, prompt_content)
         self.current_ai_worker.progress_updated.connect(self.on_ai_progress)
         self.current_ai_worker.analysis_completed.connect(self.on_ai_analysis_completed)
         self.current_ai_worker.error_occurred.connect(self.on_ai_analysis_error)
+        
         
         worker_manager.start_worker(self.current_ai_worker)
     
