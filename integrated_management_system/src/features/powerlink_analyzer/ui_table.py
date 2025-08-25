@@ -1351,8 +1351,6 @@ class PowerLinkResultsWidget(QWidget):
             self.mobile_table.setSortingEnabled(False)
             self.pc_table.setSortingEnabled(False)
             
-            logger.error(f"🔧 정렬 기능 임시 비활성화 - 모바일: {mobile_sorting_was_enabled}, PC: {pc_sorting_was_enabled}")
-            print(f"🔧 정렬 기능 임시 비활성화 - 모바일: {mobile_sorting_was_enabled}, PC: {pc_sorting_was_enabled}")
             
             # 기존 테이블 데이터 클리어
             self.mobile_table.clear_table()
@@ -1397,8 +1395,6 @@ class PowerLinkResultsWidget(QWidget):
                 
                 # ModernTableWidget API 사용하여 행 추가
                 mobile_row = self.mobile_table.add_row_with_data(mobile_row_data, checkable=True)
-                logger.error(f"🔍 모바일 테이블에 키워드 '{result.keyword}' 추가됨, 행 번호: {mobile_row}")
-                print(f"🔍 모바일 테이블에 키워드 '{result.keyword}' 추가됨, 행 번호: {mobile_row}")
                 
                 # 모바일 테이블 데이터 검증 및 강제 재설정 (간헐적 데이터 누락 문제 해결)
                 from PySide6.QtCore import QCoreApplication
@@ -1415,22 +1411,14 @@ class PowerLinkResultsWidget(QWidget):
                 
                 # 누락된 데이터가 있으면 강제로 다시 설정
                 if missing_data_cols:
-                    logger.error(f"⚠️ 모바일 테이블 {mobile_row}행에 누락된 데이터 감지: 컬럼 {missing_data_cols}")
-                    print(f"⚠️ 모바일 테이블 {mobile_row}행에 누락된 데이터 감지: 컬럼 {missing_data_cols}")
                     
                     for col_idx in missing_data_cols:
                         try:
                             from PySide6.QtWidgets import QTableWidgetItem
                             item = QTableWidgetItem(str(mobile_row_data[col_idx]))
                             self.mobile_table.setItem(mobile_row, col_idx, item)
-                            logger.error(f"🔧 모바일 {mobile_row}행 {col_idx}컬럼 데이터 강제 설정: '{mobile_row_data[col_idx]}'")
-                            print(f"🔧 모바일 {mobile_row}행 {col_idx}컬럼 데이터 강제 설정: '{mobile_row_data[col_idx]}'")
                         except Exception as set_error:
-                            logger.error(f"❌ 모바일 데이터 강제 설정 실패: {set_error}")
-                            print(f"❌ 모바일 데이터 강제 설정 실패: {set_error}")
-                else:
-                    logger.error(f"✅ 모바일 테이블 {mobile_row}행 모든 데이터 정상 설정됨")
-                    print(f"✅ 모바일 테이블 {mobile_row}행 모든 데이터 정상 설정됨")
+                            pass
                 
                 # 모바일 상세 버튼 추가
                 mobile_detail_button = QPushButton("상세")
@@ -1459,14 +1447,10 @@ class PowerLinkResultsWidget(QWidget):
                 
                 # 상세 버튼 배치 시도 및 디버깅
                 try:
-                    logger.error(f"🔧 모바일 상세 버튼 배치 시도: 행={mobile_row}, 컬럼=9, 키워드={result.keyword}")
-                    print(f"🔧 모바일 상세 버튼 배치 시도: 행={mobile_row}, 컬럼=9, 키워드={result.keyword}")
                     
                     # 테이블 행 수 확인
                     total_rows = self.mobile_table.rowCount()
                     total_cols = self.mobile_table.columnCount()
-                    logger.error(f"🔧 모바일 테이블 크기: {total_rows}행 x {total_cols}컬럼")
-                    print(f"🔧 모바일 테이블 크기: {total_rows}행 x {total_cols}컬럼")
                     
                     # 버튼 배치
                     self.mobile_table.setCellWidget(mobile_row, 9, mobile_detail_button)
@@ -1482,15 +1466,12 @@ class PowerLinkResultsWidget(QWidget):
                     # 배치 후 확인
                     placed_widget = self.mobile_table.cellWidget(mobile_row, 9)
                     if placed_widget is not None:
-                        logger.error(f"✅ 모바일 상세 버튼 배치 성공: {result.keyword}")
-                        print(f"✅ 모바일 상세 버튼 배치 성공: {result.keyword}")
+                        pass
                     else:
-                        logger.error(f"❌ 모바일 상세 버튼 배치 실패: {result.keyword}")
-                        print(f"❌ 모바일 상세 버튼 배치 실패: {result.keyword}")
+                        pass
                         
                 except Exception as btn_error:
-                    logger.error(f"❌ 모바일 상세 버튼 배치 중 오류: {result.keyword}, 오류: {btn_error}")
-                    print(f"❌ 모바일 상세 버튼 배치 중 오류: {result.keyword}, 오류: {btn_error}")
+                    pass
                 
                 # PC 테이블에 추가
                 # 월검색량
@@ -1520,8 +1501,6 @@ class PowerLinkResultsWidget(QWidget):
                 
                 # ModernTableWidget API 사용하여 행 추가
                 pc_row = self.pc_table.add_row_with_data(pc_row_data, checkable=True)
-                logger.error(f"🔍 PC 테이블에 키워드 '{result.keyword}' 추가됨, 행 번호: {pc_row}")
-                print(f"🔍 PC 테이블에 키워드 '{result.keyword}' 추가됨, 행 번호: {pc_row}")
                 
                 # PC 상세 버튼 추가
                 pc_detail_button = QPushButton("상세")
@@ -1550,14 +1529,10 @@ class PowerLinkResultsWidget(QWidget):
                 
                 # 상세 버튼 배치 시도 및 디버깅
                 try:
-                    logger.error(f"🔧 PC 상세 버튼 배치 시도: 행={pc_row}, 컬럼=9, 키워드={result.keyword}")
-                    print(f"🔧 PC 상세 버튼 배치 시도: 행={pc_row}, 컬럼=9, 키워드={result.keyword}")
                     
                     # 테이블 행 수 확인
                     total_rows = self.pc_table.rowCount()
                     total_cols = self.pc_table.columnCount()
-                    logger.error(f"🔧 PC 테이블 크기: {total_rows}행 x {total_cols}컬럼")
-                    print(f"🔧 PC 테이블 크기: {total_rows}행 x {total_cols}컬럼")
                     
                     # 버튼 배치
                     self.pc_table.setCellWidget(pc_row, 9, pc_detail_button)
@@ -1572,16 +1547,9 @@ class PowerLinkResultsWidget(QWidget):
                     
                     # 배치 후 확인
                     placed_widget = self.pc_table.cellWidget(pc_row, 9)
-                    if placed_widget is not None:
-                        logger.error(f"✅ PC 상세 버튼 배치 성공: {result.keyword}")
-                        print(f"✅ PC 상세 버튼 배치 성공: {result.keyword}")
-                    else:
-                        logger.error(f"❌ PC 상세 버튼 배치 실패: {result.keyword}")
-                        print(f"❌ PC 상세 버튼 배치 실패: {result.keyword}")
                         
                 except Exception as btn_error:
-                    logger.error(f"❌ PC 상세 버튼 배치 중 오류: {result.keyword}, 오류: {btn_error}")
-                    print(f"❌ PC 상세 버튼 배치 중 오류: {result.keyword}, 오류: {btn_error}")
+                    pass
             
             logger.info(f"테이블 새로고침 완료: {len(all_keywords)}개 키워드")
             logger.info(f"최종 테이블 행 수 - 모바일: {self.mobile_table.rowCount()}, PC: {self.pc_table.rowCount()}")
@@ -1601,17 +1569,12 @@ class PowerLinkResultsWidget(QWidget):
                 if 'mobile_sorting_was_enabled' in locals():
                     self.mobile_table.setSortingEnabled(mobile_sorting_was_enabled)
                     self.pc_table.setSortingEnabled(pc_sorting_was_enabled)
-                    logger.error(f"🔧 정렬 기능 복원 완료 - 모바일: {mobile_sorting_was_enabled}, PC: {pc_sorting_was_enabled}")
-                    print(f"🔧 정렬 기능 복원 완료 - 모바일: {mobile_sorting_was_enabled}, PC: {pc_sorting_was_enabled}")
                 else:
                     # 예외가 발생해서 변수가 설정되지 않은 경우 기본값으로 복원
                     self.mobile_table.setSortingEnabled(True)
                     self.pc_table.setSortingEnabled(True)
-                    logger.error("🔧 정렬 기능 기본값으로 복원 (True)")
-                    print("🔧 정렬 기능 기본값으로 복원 (True)")
             except Exception as sort_error:
-                logger.error(f"❌ 정렬 기능 복원 중 오류: {sort_error}")
-                print(f"❌ 정렬 기능 복원 중 오류: {sort_error}")
+                pass
             
             # 갱신 플래그 해제
             self._table_refreshing = False
@@ -1619,8 +1582,6 @@ class PowerLinkResultsWidget(QWidget):
     def _ensure_all_detail_buttons(self):
         """모든 행의 상세 버튼이 제대로 표시되는지 확인하고 복구"""
         try:
-            logger.error("🔧 상세 버튼 최종 확인 및 복구 시작")
-            print("🔧 상세 버튼 최종 확인 및 복구 시작")
             
             # 서비스에서 모든 키워드 데이터 가져오기
             service_keywords_dict = powerlink_service.get_all_keywords()
@@ -1670,8 +1631,6 @@ class PowerLinkResultsWidget(QWidget):
                             mobile_detail_button.show()
                             mobile_detail_button.setVisible(True)
                             mobile_missing_count += 1
-                            logger.error(f"🔧 모바일 {row}행 상세 버튼 복구: {keyword}")
-                            print(f"🔧 모바일 {row}행 상세 버튼 복구: {keyword}")
             
             # PC 테이블 버튼 확인 및 복구
             pc_missing_count = 0
@@ -1717,19 +1676,14 @@ class PowerLinkResultsWidget(QWidget):
                             pc_detail_button.show()
                             pc_detail_button.setVisible(True)
                             pc_missing_count += 1
-                            logger.error(f"🔧 PC {row}행 상세 버튼 복구: {keyword}")
-                            print(f"🔧 PC {row}행 상세 버튼 복구: {keyword}")
             
             if mobile_missing_count > 0 or pc_missing_count > 0:
-                logger.error(f"🔧 상세 버튼 복구 완료 - 모바일: {mobile_missing_count}개, PC: {pc_missing_count}개")
-                print(f"🔧 상세 버튼 복구 완료 - 모바일: {mobile_missing_count}개, PC: {pc_missing_count}개")
+                pass
             else:
-                logger.error("✅ 모든 상세 버튼이 정상적으로 표시됨")
-                print("✅ 모든 상세 버튼이 정상적으로 표시됨")
+                pass
                 
         except Exception as e:
-            logger.error(f"❌ 상세 버튼 복구 중 오류: {e}")
-            print(f"❌ 상세 버튼 복구 중 오류: {e}")
+            pass
 
     def clear_all_tables(self):
         """모든 테이블 클리어 (전체 클리어 시 사용)"""
@@ -1999,31 +1953,19 @@ class PowerLinkResultsWidget(QWidget):
             keyword_col = self._get_column_index(table, "키워드", 1)
             rank_col = self._get_column_index(table, "추천순위", 8)
             
-            logger.error(f"🔍 재계산: {device_type} 테이블 컬럼 인덱스: 키워드={keyword_col}, 추천순위={rank_col}")
-            print(f"🔍 재계산: {device_type} 테이블 컬럼 인덱스: 키워드={keyword_col}, 추천순위={rank_col}")
             
             # 테이블에서 키워드와 데이터를 추출 (점수와 함께)
             table_keywords = []
-            logger.error(f"🔍 재계산: 테이블 행 수 = {table.rowCount()}")
-            print(f"🔍 재계산: 테이블 행 수 = {table.rowCount()}")
             
             for row in range(table.rowCount()):
-                logger.error(f"🔍 재계산: 행 {row} 처리 시작")
-                print(f"🔍 재계산: 행 {row} 처리 시작")
                 
                 keyword_item = table.item(row, keyword_col)
-                logger.error(f"🔍 재계산: 행 {row} keyword_item = {keyword_item}")
-                print(f"🔍 재계산: 행 {row} keyword_item = {keyword_item}")
                 
                 if keyword_item and keyword_item.text():
                     keyword = keyword_item.text().strip()
-                    logger.error(f"🔍 재계산: 행 {row} 키워드 '{keyword}' 처리 중")
-                    print(f"🔍 재계산: 행 {row} 키워드 '{keyword}' 처리 중")
                     
                     # 서비스에서 해당 키워드의 전체 데이터 가져오기
                     keyword_data = keyword_database.get_keyword(keyword)
-                    logger.error(f"🔍 재계산: '{keyword}' 서비스 데이터 = {keyword_data is not None}")
-                    print(f"🔍 재계산: '{keyword}' 서비스 데이터 = {keyword_data is not None}")
                     
                     if keyword_data:
                         # 점수 계산
@@ -2034,38 +1976,20 @@ class PowerLinkResultsWidget(QWidget):
                             from .engine_local import hybrid_score_pc
                             score = hybrid_score_pc(keyword_data)
                         
-                        logger.error(f"🔍 재계산: '{keyword}' 점수 = {score}")
-                        print(f"🔍 재계산: '{keyword}' 점수 = {score}")
                         table_keywords.append((keyword, keyword_data, score))
                     else:
-                        logger.error(f"❌ 재계산: '{keyword}' 서비스에서 데이터 없음")
-                        print(f"❌ 재계산: '{keyword}' 서비스에서 데이터 없음")
-                else:
-                    logger.error(f"❌ 재계산: 행 {row} 키워드 아이템이 없거나 텍스트가 비어있음")
-                    print(f"❌ 재계산: 행 {row} 키워드 아이템이 없거나 텍스트가 비어있음")
+                        pass
                     
-                logger.error(f"🔍 재계산: 행 {row} 처리 완료")
-                print(f"🔍 재계산: 행 {row} 처리 완료")
                         
-            logger.error(f"🔍 재계산: 수집된 키워드 수 = {len(table_keywords)}")
-            print(f"🔍 재계산: 수집된 키워드 수 = {len(table_keywords)}")
             
             if not table_keywords:
-                logger.error(f"❌ 재계산: 수집된 키워드가 없어서 순위 재계산 중단")
-                print(f"❌ 재계산: 수집된 키워드가 없어서 순위 재계산 중단")
                 return
             
             # 점수 기준으로 내림차순 정렬 (높은 점수가 1위)
-            logger.error(f"🔍 재계산: 점수 기준 정렬 시작")
-            print(f"🔍 재계산: 점수 기준 정렬 시작")
             table_keywords.sort(key=lambda x: x[2], reverse=True)
-            logger.error(f"🔍 재계산: 정렬 완료, 순위 업데이트 시작")
-            print(f"🔍 재계산: 정렬 완료, 순위 업데이트 시작")
             
             # 테이블에서 키워드를 찾아 순위 업데이트
             for rank, (keyword, data, score) in enumerate(table_keywords, 1):
-                logger.error(f"🔍 재계산: {rank}위 '{keyword}' (점수: {score}) 순위 업데이트 중")
-                print(f"🔍 재계산: {rank}위 '{keyword}' (점수: {score}) 순위 업데이트 중")
                 
                 # 테이블에서 해당 키워드의 행을 찾기
                 found = False
@@ -2076,21 +2000,16 @@ class PowerLinkResultsWidget(QWidget):
                         rank_item = table.item(row, rank_col)
                         if rank_item:
                             rank_item.setText(f"{rank}위")
-                            logger.error(f"✅ 재계산: 키워드 '{keyword}' 순위 업데이트: {rank}위")
-                            print(f"✅ 재계산: 키워드 '{keyword}' 순위 업데이트: {rank}위")
                         else:
                             # 아이템이 없으면 새로 생성
                             from PySide6.QtWidgets import QTableWidgetItem
                             rank_item = QTableWidgetItem(f"{rank}위")
                             table.setItem(row, rank_col, rank_item)
-                            logger.error(f"✅ 재계산: 키워드 '{keyword}' 순위 아이템 생성: {rank}위")
-                            print(f"✅ 재계산: 키워드 '{keyword}' 순위 아이템 생성: {rank}위")
                         found = True
                         break
                         
                 if not found:
-                    logger.error(f"❌ 재계산: 키워드 '{keyword}'의 테이블 행을 찾을 수 없음")
-                    print(f"❌ 재계산: 키워드 '{keyword}'의 테이블 행을 찾을 수 없음")
+                    pass
             
             logger.info(f"{device_type} 테이블 순위 재계산 완료: {len(table_keywords)}개 키워드")
             
@@ -2128,11 +2047,7 @@ class PowerLinkResultsWidget(QWidget):
     
     def delete_selected_keywords(self, device_type: str):
         """선택된 키워드만 삭제 (실제 선택삭제)"""
-        logger.error(f"🔥🔥🔥 NEW delete_selected_keywords 호출됨!!! device_type: {device_type} 🔥🔥🔥")
-        print(f"🔥🔥🔥 NEW delete_selected_keywords 호출됨!!! device_type: {device_type} 🔥🔥🔥")
         try:
-            logger.error(f"🔍 Step 1: 디바이스 타입에 따른 테이블 선택 - {device_type}")
-            print(f"🔍 Step 1: 디바이스 타입에 따른 테이블 선택 - {device_type}")
             
             # 디바이스 타입에 따라 해당 테이블 선택
             if device_type == 'mobile':
@@ -2142,123 +2057,66 @@ class PowerLinkResultsWidget(QWidget):
                 table = self.pc_table
                 other_table = self.mobile_table
                 
-            logger.error(f"🔍 Step 2: 테이블 객체 확인 - table 존재: {table is not None}")
-            print(f"🔍 Step 2: 테이블 객체 확인 - table 존재: {table is not None}")
                 
             # 선택된 행 확인
-            logger.error(f"🔍 Step 3: 선택된 행 확인 시작")
-            print(f"🔍 Step 3: 선택된 행 확인 시작")
             
             checked_rows = table.get_checked_rows()
-            logger.error(f"🔍 Step 4: 선택된 행 결과 - {checked_rows}")
-            print(f"🔍 Step 4: 선택된 행 결과 - {checked_rows}")
             
             if not checked_rows:
-                logger.error(f"🚫 선택된 키워드가 없어서 종료 - {device_type}")
-                print(f"🚫 선택된 키워드가 없어서 종료 - {device_type}")
                 return
                 
-            logger.error(f"🔍 Step 5: {device_type} 테이블에서 {len(checked_rows)}개 키워드 삭제 시작")
-            print(f"🔍 Step 5: {device_type} 테이블에서 {len(checked_rows)}개 키워드 삭제 시작")
             
             # 컬럼 인덱스 찾기
-            logger.error(f"🔍 Step 6: 컬럼 인덱스 찾기 시작")
-            print(f"🔍 Step 6: 컬럼 인덱스 찾기 시작")
             
             keyword_col = self._get_column_index(table, "키워드", 1)
-            logger.error(f"🔍 Step 7: {device_type} 테이블 키워드 컬럼 인덱스: {keyword_col}")
-            print(f"🔍 Step 7: {device_type} 테이블 키워드 컬럼 인덱스: {keyword_col}")
             
             # 삭제할 키워드들 수집 (모바일/PC는 한몸이므로)
-            logger.error(f"🔍 Step 8: 키워드 수집 시작")
-            print(f"🔍 Step 8: 키워드 수집 시작")
             
             keywords_to_delete = []
             for row_index in checked_rows:
                 keyword_item = table.item(row_index, keyword_col)
-                logger.error(f"🔍 Row {row_index}: keyword_item = {keyword_item}")
-                print(f"🔍 Row {row_index}: keyword_item = {keyword_item}")
                 
                 if keyword_item and keyword_item.text():
                     keyword = keyword_item.text().strip()
                     keywords_to_delete.append(keyword)
-                    logger.error(f"🔍 키워드 추가: {keyword}")
-                    print(f"🔍 키워드 추가: {keyword}")
                     
-            logger.error(f"🔍 Step 9: 삭제할 키워드들: {keywords_to_delete}")
-            print(f"🔍 Step 9: 삭제할 키워드들: {keywords_to_delete}")
             
             if not keywords_to_delete:
-                logger.error(f"🚫 수집된 키워드가 없어서 종료")
-                print(f"🚫 수집된 키워드가 없어서 종료")
                 return
             
-            logger.error(f"🔍 Step 10: 행 삭제 시작 - {len(checked_rows)}개 행")
-            print(f"🔍 Step 10: 행 삭제 시작 - {len(checked_rows)}개 행")
             
             # 역순으로 행 삭제 (인덱스 변화 방지)
             checked_rows.sort(reverse=True)
             for row_index in checked_rows:
-                logger.error(f"🔍 행 {row_index} 삭제 중...")
-                print(f"🔍 행 {row_index} 삭제 중...")
                 table.removeRow(row_index)
-                logger.error(f"✅ {device_type} 테이블에서 행 {row_index} 삭제 완료")
-                print(f"✅ {device_type} 테이블에서 행 {row_index} 삭제 완료")
             
-            logger.error(f"🔍 Step 11: 상대방 테이블 동기화 시작")
-            print(f"🔍 Step 11: 상대방 테이블 동기화 시작")
             
             # 동일한 키워드들을 상대방 테이블에서도 삭제 (모바일/PC는 한몸)
             other_keyword_col = self._get_column_index(other_table, "키워드", 1)
-            logger.error(f"🔍 상대방 테이블 키워드 컬럼 인덱스: {other_keyword_col}")
-            print(f"🔍 상대방 테이블 키워드 컬럼 인덱스: {other_keyword_col}")
             
             for keyword in keywords_to_delete:
-                logger.error(f"🔍 상대방 테이블에서 '{keyword}' 찾는 중...")
-                print(f"🔍 상대방 테이블에서 '{keyword}' 찾는 중...")
                 
                 for row in range(other_table.rowCount() - 1, -1, -1):  # 역순으로 탐색
                     keyword_item = other_table.item(row, other_keyword_col)
                     if keyword_item and keyword_item.text().strip() == keyword:
                         other_table.removeRow(row)
                         other_device_type = 'pc' if device_type == 'mobile' else 'mobile'
-                        logger.error(f"✅ {other_device_type} 테이블에서 키워드 '{keyword}' 삭제 (동기화)")
-                        print(f"✅ {other_device_type} 테이블에서 키워드 '{keyword}' 삭제 (동기화)")
                         break
             
-            logger.error(f"🔍 Step 12: 서비스에서 키워드 삭제 시작")
-            print(f"🔍 Step 12: 서비스에서 키워드 삭제 시작")
             
             # 서비스 데이터에서도 키워드들 삭제
             for keyword in keywords_to_delete:
                 try:
-                    logger.error(f"🔍 서비스에서 '{keyword}' 삭제 중...")
-                    print(f"🔍 서비스에서 '{keyword}' 삭제 중...")
                     keyword_database.remove_keyword(keyword)
-                    logger.error(f"✅ 서비스에서 키워드 '{keyword}' 삭제 완료")
-                    print(f"✅ 서비스에서 키워드 '{keyword}' 삭제 완료")
                 except Exception as e:
-                    logger.error(f"❌ 서비스에서 키워드 '{keyword}' 삭제 실패: {e}")
-                    print(f"❌ 서비스에서 키워드 '{keyword}' 삭제 실패: {e}")
+                    pass
             
-            logger.error(f"🔍 Step 13: 순위 재계산 시작")
-            print(f"🔍 Step 13: 순위 재계산 시작")
             
             # 두 테이블 모두의 순위 재계산
-            logger.error("🔍 모바일 테이블 순위 재계산 시작")
-            print("🔍 모바일 테이블 순위 재계산 시작")
             self._recalculate_rankings_for_table(self.mobile_table, 'mobile')
-            logger.error("✅ 모바일 테이블 순위 재계산 완료")
-            print("✅ 모바일 테이블 순위 재계산 완료")
             
-            logger.error("🔍 PC 테이블 순위 재계산 시작")
-            print("🔍 PC 테이블 순위 재계산 시작")
             self._recalculate_rankings_for_table(self.pc_table, 'pc')
-            logger.error("✅ PC 테이블 순위 재계산 완료")
-            print("✅ PC 테이블 순위 재계산 완료")
             
-            logger.error(f"🔍 Step 14: 버튼 상태 업데이트")
-            print(f"🔍 Step 14: 버튼 상태 업데이트")
             
             # 버튼 상태 업데이트
             self.update_delete_button_state()
