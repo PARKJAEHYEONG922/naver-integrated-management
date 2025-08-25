@@ -365,3 +365,24 @@ class RateLimiterManager:
 
 # 전역 속도 제한기 관리자
 rate_limiter_manager = RateLimiterManager()
+
+
+# 유틸리티 함수들
+def safe_api_call(func: Callable, *args, **kwargs):
+    """안전한 API 호출 래퍼"""
+    try:
+        return func(*args, **kwargs)
+    except (APITimeoutError, APIRateLimitError, APIAuthenticationError, APIResponseError):
+        # 이미 처리된 예외는 그대로 전파
+        raise
+    except Exception as e:
+        # 예상치 못한 예외를 API 예외로 변환
+        from .exceptions import ExceptionMapper
+        raise ExceptionMapper.map_requests_exception(e)
+
+
+def batch_api_call(func: Callable, items: List[Any], max_workers: int = 3, 
+                  stop_check: Optional[Callable[[], bool]] = None) -> List[Tuple[Any, Any, Optional[Exception]]]:
+    """배치 API 호출 단순화 함수"""
+    processor = ParallelAPIProcessor(max_workers=max_workers)
+    return processor.process_batch(func, items, stop_check=stop_check)

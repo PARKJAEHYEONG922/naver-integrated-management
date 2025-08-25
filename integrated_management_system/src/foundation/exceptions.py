@@ -198,6 +198,11 @@ class ProductNotFoundError(RankTrackingError):
     pass
 
 
+class InvalidProductIdError(RankTrackingError):
+    """유효하지 않은 상품 ID"""
+    pass
+
+
 class InvalidProjectURLError(RankTrackingError):
     """유효하지 않은 프로젝트 URL"""
     pass
@@ -208,12 +213,32 @@ class RankCheckError(RankTrackingError):
     pass
 
 
+class RankOutOfRangeError(RankTrackingError):
+    """순위가 추적 범위를 벗어남 (200위 초과)"""
+    pass
+
+
+class KeywordAnalysisError(RankTrackingError):
+    """키워드 분석 실패"""
+    pass
+
+
+class ProductInfoUpdateError(RankTrackingError):
+    """상품 정보 업데이트 실패"""
+    pass
+
+
 class DuplicateProjectError(RankTrackingError):
     """중복 프로젝트 예외"""
     
     def __init__(self, message: str, existing_project=None):
         super().__init__(message)
         self.existing_project = existing_project
+
+
+class DuplicateKeywordError(RankTrackingError):
+    """중복 키워드 예외"""
+    pass
 
 
 # 네트워크 관련 예외 (새로 추가)

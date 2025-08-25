@@ -210,7 +210,7 @@ class RankTrackingAdapter:
     def check_product_rank(self, keyword: str, product_id: str) -> RankingCheckDTO:
         """키워드에서 상품 순위 확인"""
         try:
-            rank = self.shopping_client.find_product_rank(keyword, product_id, max_pages=10)
+            rank = self.shopping_client.find_product_rank(keyword, product_id, max_pages=2)
             
             result = RankingCheckDTO(
                 success=True,

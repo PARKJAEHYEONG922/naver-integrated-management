@@ -1260,7 +1260,7 @@ class RankingTableWidget(QWidget):
         
         # 키워드 추가 버튼 - 반응형
         button_width_add = ResponsiveUI.get_button_min_width() + 20
-        self.add_keyword_button = ModernPrimaryButton("➕ 키워드 추가")
+        self.add_keyword_button = ModernPrimaryButton("➕ 키워드추가")
         self.add_keyword_button.clicked.connect(self.add_keyword)
         self.add_keyword_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화
         self.add_keyword_button.setMinimumWidth(button_width_add)
