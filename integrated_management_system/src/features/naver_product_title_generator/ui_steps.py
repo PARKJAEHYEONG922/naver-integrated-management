@@ -1091,6 +1091,9 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analysis_status_label.setText("⏹️ 분석이 중단되었습니다.")
         self.keyword_selection_scroll.hide()
         
+        # 분석 중단 시그널 발송
+        self.analysis_stopped.emit()
+        
     def on_analysis_completed(self, results):
         """AI 분석 완료 처리"""
         self.is_analysis_running = False

@@ -702,8 +702,7 @@ class NaverProductTitleGeneratorWidget(QWidget):
                     self.start_product_name_collection(selected_keywords)
                     return  # 수집 완료 후 자동으로 다음 단계로 이동
                 else:
-                    # 키워드가 동일함 → 기존 결과 재사용
-                    log_manager.add_log(f"✅ 동일한 키워드, 기존 결과 재사용", "info")
+                    # 키워드가 동일함 → 기존 결과 재사용 (로그 제거)
                     self.go_to_step(2)
                     self.right_panel.step2_widget.display_product_names(self.cached_product_names)
                     self.right_panel.set_next_enabled(True)
@@ -803,8 +802,6 @@ class NaverProductTitleGeneratorWidget(QWidget):
     def on_ai_analysis_completed(self, keywords):
         """AI 분석 완료 처리"""
         log_manager.add_log(f"✅ AI 분석 완료: {len(keywords)}개 키워드", "success")
-        log_manager.add_log(f"🔍 선택된 카테고리: '{self.last_selected_category}'", "info") 
-        log_manager.add_log(f"📋 반환된 키워드들: {[kw.keyword for kw in keywords[:5]]}{'...' if len(keywords) > 5 else ''}", "info")
         
         # 진행상황 업데이트 - 키워드 개수 포함
         self.left_panel.update_progress(3, f"AI분석 완료 총 {len(keywords)}개 키워드", 100)
