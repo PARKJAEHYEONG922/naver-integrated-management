@@ -138,7 +138,7 @@ class NaverCafeControlWidget(QWidget):
             if i < len(self.progress_steps) - 1:
                 arrow_label = QLabel("→")
                 arrow_label.setAlignment(Qt.AlignCenter)
-                arrow_font_size = ResponsiveUI.get_font_size_pt('normal')
+                arrow_font_size = ResponsiveUI.get_font_size_pt('small')
                 arrow_label.setStyleSheet(f"""
                     QLabel {{
                         color: {ModernStyle.COLORS['text_muted']};
@@ -191,13 +191,13 @@ class NaverCafeControlWidget(QWidget):
             QLabel {{
                 color: {color};
                 background-color: {bg_color};
-                border-radius: {ResponsiveUI.scale(4)}px;
-                padding: {ResponsiveUI.scale(8)}px {ResponsiveUI.scale(6)}px;
+                border-radius: {ResponsiveUI.scale(3)}px;
+                padding: {ResponsiveUI.scale(6)}px {ResponsiveUI.scale(4)}px;
                 font-size: {ResponsiveUI.get_font_size_pt('small')}pt;
                 font-weight: 600;
                 text-align: center;
-                min-width: {ResponsiveUI.scale(65)}px;
-                max-width: {ResponsiveUI.scale(80)}px;
+                min-width: {ResponsiveUI.scale(50)}px;
+                max-width: {ResponsiveUI.scale(60)}px;
             }}
         """)
     
