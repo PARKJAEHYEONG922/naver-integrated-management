@@ -371,7 +371,7 @@ class NaverCafeDataAdapter:
             all_user_ids = []
             for idx, user in enumerate(users):
                 raw = (user.user_id or f"user{idx}")
-                clean = "".join(c for c in raw if c.isalnum()) or f"user{idx}"
+                clean = "".join(c for c in raw if c.isalnum() or c == '_') or f"user{idx}"
                 if clean not in all_user_ids:
                     all_user_ids.append(clean)
             all_user_ids.sort()

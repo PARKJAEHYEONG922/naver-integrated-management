@@ -109,9 +109,9 @@ class NaverCafeResultsWidget(QWidget):
         
         # 컬럼 너비 설정 (체크박스가 없으므로 자유롭게 설정 가능)
         header = self.users_table.horizontalHeader()
-        header.resizeSection(0, ResponsiveUI.scale(64))   # 번호 
-        header.resizeSection(1, ResponsiveUI.scale(200))  # 사용자 ID
-        header.resizeSection(2, ResponsiveUI.scale(144))  # 닉네임
+        header.resizeSection(0, ResponsiveUI.scale(50))   # 번호 
+        header.resizeSection(1, ResponsiveUI.scale(150))  # 사용자 ID
+        header.resizeSection(2, ResponsiveUI.scale(150))  # 닉네임
         header.resizeSection(3, ResponsiveUI.scale(150))  # 추출 시간
         
         layout.addWidget(self.users_table)
@@ -188,11 +188,11 @@ class NaverCafeResultsWidget(QWidget):
         # 컬럼 너비 설정 (체크박스 컬럼 제외하고 나머지만 설정)
         history_header = self.history_table.horizontalHeader()
         # history_header.resizeSection(0, 80)   # 선택 체크박스 - ModernTableWidget에서 자동 처리
-        history_header.resizeSection(1, ResponsiveUI.scale(130))  # 날짜 + 시간 (더 넓게)
-        history_header.resizeSection(2, ResponsiveUI.scale(200))  # 카페명
-        history_header.resizeSection(3, ResponsiveUI.scale(144))  # 게시판명 
-        history_header.resizeSection(4, ResponsiveUI.scale(100))  # 추출수
-        history_header.resizeSection(5, ResponsiveUI.scale(120))  # 페이지
+        history_header.resizeSection(1, ResponsiveUI.scale(110))  # 날짜 + 시간
+        history_header.resizeSection(2, ResponsiveUI.scale(140))  # 카페명
+        history_header.resizeSection(3, ResponsiveUI.scale(130))  # 게시판명 
+        history_header.resizeSection(4, ResponsiveUI.scale(80))   # 추출수
+        history_header.resizeSection(5, ResponsiveUI.scale(100))  # 페이지
         
         # 행 높이는 ModernTableWidget 기본값(35px) 사용
         
@@ -533,7 +533,7 @@ class NaverCafeResultsWidget(QWidget):
         
         if not selected_data:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
-            ModernInfoDialog.warning(self, "데이터 없음", "선택된 기록에 다운로드할 사용자 데이터가 없습니다.")
+            ModernInfoDialog.warning(self, "데이터 없음", "선택된 기록에 사용자 데이터가 없습니다.")
             return
         
         # UI 레이어에서 다이얼로그 처리 (CLAUDE.md: UI 분리)

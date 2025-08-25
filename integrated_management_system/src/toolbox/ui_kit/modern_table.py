@@ -124,7 +124,7 @@ class ModernTableWidget(QTableWidget):
             first_header_style = f"""
             /* 첫 번째 컬럼 (일반 컬럼) - 체크박스가 없는 경우 */
             QHeaderView::section:first {{
-                font-size: 14px;
+                font-size: 12px;
                 color: {ModernStyle.COLORS['text_primary']};
                 font-weight: 600;
                 text-align: center;

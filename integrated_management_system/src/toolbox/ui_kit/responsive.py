@@ -39,14 +39,14 @@ class ResponsiveUI:
         """
         _, screen_height = ResponsiveUI.get_screen_size()
         
-        # 1080p 기준 폰트 크기 (pt 단위) - 전체적으로 -4pt 적용 (추가 -2pt)
+        # 1080p 기준 폰트 크기 (pt 단위)
         base_sizes = {
-            'title': 14,      # 제목 (18 -> 16 -> 14)
-            'header': 12,     # 헤더 (16 -> 14 -> 12)
-            'large': 10,      # 큰 글씨 (14 -> 12 -> 10)
-            'normal': 8,      # 일반 (12 -> 10 -> 8)
-            'small': 4,       # 작은 글씨 (8 -> 6 -> 4)
-            'tiny': 2,        # 매우 작은 글씨 (6 -> 4 -> 2)
+            'title': 14,      # 제목
+            'header': 12,     # 헤더
+            'large': 10,      # 큰 글씨
+            'normal': 8,      # 일반
+            'small': 7,       # 작은 글씨
+            'tiny': 2,        # 매우 작은 글씨
         }
         
         base_size = base_sizes.get(font_type, base_sizes['normal'])

@@ -45,12 +45,19 @@ class NaverCafeWidget(QWidget):
         
         # 좌측 패널 (컨트롤 위젯)
         self.control_widget = NaverCafeControlWidget()
+        # 좌측 패널 최대 너비 제한 (ResponsiveUI 스케일 값들 때문에 너무 커지는 것 방지)
+        self.control_widget.setMaximumWidth(ResponsiveUI.scale(500))
         
         # 우측 패널 (결과 위젯)
         self.results_widget = NaverCafeResultsWidget()
         
         # control_widget에 results_widget 참조 설정 (테이블 사용자 확인용)
         self.control_widget.results_widget = self.results_widget
+        
+        # 좌측 패널 크기 정책 설정 (최대한 작게 유지)
+        from PySide6.QtWidgets import QSizePolicy
+        self.control_widget.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        self.results_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         # 1:1 비율로 좌우 패널 배치
         content_layout.addWidget(self.control_widget, 1)  # 50%

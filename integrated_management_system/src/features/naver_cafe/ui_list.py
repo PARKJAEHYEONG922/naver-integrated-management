@@ -55,7 +55,7 @@ class NaverCafeControlWidget(QWidget):
     def setup_ui(self):
         """UI 초기화"""
         layout = QVBoxLayout(self)
-        layout.setSpacing(ResponsiveUI.scale(15))
+        layout.setSpacing(ResponsiveUI.scale(10))
         
         # 1. 진행상황 카드
         progress_card = self.create_progress_card()
@@ -87,6 +87,8 @@ class NaverCafeControlWidget(QWidget):
     def create_progress_card(self) -> ModernCard:
         """진행상황 카드"""
         card = ModernCard("📊 진행상황")
+        # 진행상황 카드의 고정 높이 설정 (크기 변동 방지)
+        card.setFixedHeight(ResponsiveUI.scale(140))
         layout = QVBoxLayout()
         layout.setSpacing(ResponsiveUI.scale(10))
         
@@ -104,7 +106,7 @@ class NaverCafeControlWidget(QWidget):
         border_radius = ResponsiveUI.scale(8)
         padding = ResponsiveUI.scale(12)
         margin = ResponsiveUI.scale(5)
-        min_height = ResponsiveUI.scale(60)
+        min_height = ResponsiveUI.scale(30)
         progress_container.setStyleSheet(f"""
             QWidget {{
                 background-color: {ModernStyle.COLORS['bg_input']};
@@ -160,10 +162,8 @@ class NaverCafeControlWidget(QWidget):
                 color: {ModernStyle.COLORS['primary']};
                 font-size: {status_font_size}pt;
                 font-weight: 600;
-                padding: {ResponsiveUI.scale(8)}px;
                 background-color: rgba(59, 130, 246, 0.1);
                 border-radius: {ResponsiveUI.scale(4)}px;
-                margin: {ResponsiveUI.scale(3)}px 0;
             }}
         """)
         layout.addWidget(self.status_label)
@@ -263,16 +263,20 @@ class NaverCafeControlWidget(QWidget):
         
         # 검색어 입력과 검색 버튼을 가로로 배치
         search_input_layout = QHBoxLayout()
+        search_input_layout.setSpacing(ResponsiveUI.scale(8))
         
         # 검색어 입력
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("카페명 또는 URL을 입력하세요")
+        # 입력 필드와 버튼의 높이를 동일하게 설정
+        input_height = ResponsiveUI.scale(32)  # 패딩 포함한 총 높이
+        self.search_input.setFixedHeight(input_height)
         self.search_input.setStyleSheet(f"""
             QLineEdit {{
                 background-color: {ModernStyle.COLORS['bg_input']};
                 border: 2px solid {ModernStyle.COLORS['border']};
                 border-radius: {ResponsiveUI.scale(8)}px;
-                padding: {ResponsiveUI.scale(12)}px;
+                padding: {ResponsiveUI.scale(8)}px {ResponsiveUI.scale(10)}px;
                 font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -284,7 +288,8 @@ class NaverCafeControlWidget(QWidget):
         
         # 검색 버튼 - toolbox 공용 컴포넌트 사용
         self.search_button = ModernPrimaryButton("🔍 검색")
-        self.search_button.setFixedHeight(ResponsiveUI.scale(45))
+        # 입력 필드와 동일한 높이로 설정
+        self.search_button.setFixedHeight(input_height)
         
         search_input_layout.addWidget(self.search_input, 1)
         search_input_layout.addWidget(self.search_button)
@@ -309,7 +314,7 @@ class NaverCafeControlWidget(QWidget):
                 border-radius: {ResponsiveUI.scale(6)}px;
                 background-color: {ModernStyle.COLORS['bg_input']};
                 font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
-                min-height: {ResponsiveUI.scale(35)}px;
+                min-height: {ResponsiveUI.scale(10)}px;
             }}
             QComboBox:focus {{
                 border-color: {ModernStyle.COLORS['primary']};
@@ -329,7 +334,7 @@ class NaverCafeControlWidget(QWidget):
                 background-color: rgba(16, 185, 129, 0.1);
                 border-radius: {ResponsiveUI.scale(4)}px;
                 margin-top: {ResponsiveUI.scale(5)}px;
-                min-height: {ResponsiveUI.scale(20)}px;
+                min-height: {ResponsiveUI.scale(10)}px;
             }}
         """)
         self.selected_cafe_label.setVisible(False)  # 처음에는 숨김
@@ -424,7 +429,7 @@ class NaverCafeControlWidget(QWidget):
                 background-color: rgba(16, 185, 129, 0.1);
                 border-radius: {ResponsiveUI.scale(4)}px;
                 margin-top: {ResponsiveUI.scale(5)}px;
-                min-height: {ResponsiveUI.scale(20)}px;
+                min-height: {ResponsiveUI.scale(10)}px;
             }}
         """)
         self.selected_board_label.setVisible(False)
@@ -459,7 +464,7 @@ class NaverCafeControlWidget(QWidget):
                     border-radius: {ResponsiveUI.scale(6)}px;
                     background-color: {ModernStyle.COLORS['bg_primary']};
                     font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
-                    min-height: {ResponsiveUI.scale(30)}px;
+                    min-height: {ResponsiveUI.scale(10)}px;
                 }}
                 QSpinBox:focus {{
                     border-color: {ModernStyle.COLORS['primary']};
@@ -500,12 +505,12 @@ class NaverCafeControlWidget(QWidget):
         
         # 추출 시작 버튼 - toolbox 공용 컴포넌트 사용
         self.extract_button = ModernSuccessButton("🚀 추출 시작")
-        self.extract_button.setFixedHeight(ResponsiveUI.scale(45))
+        self.extract_button.setFixedHeight(ResponsiveUI.scale(15))
         self.extract_button.setEnabled(False)  # 처음엔 비활성화
         
         # 정지 버튼 - toolbox 공용 컴포넌트 사용 (활성화 시에만 빨간색)
         self.stop_button = ModernCancelButton("⏹ 정지")
-        self.stop_button.setFixedHeight(ResponsiveUI.scale(45))
+        self.stop_button.setFixedHeight(ResponsiveUI.scale(15))
         self.stop_button.setEnabled(False)  # 처음엔 비활성화
         
         button_layout.addWidget(self.extract_button)
