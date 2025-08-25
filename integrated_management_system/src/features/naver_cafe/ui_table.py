@@ -297,7 +297,7 @@ class NaverCafeResultsWidget(QWidget):
         ], checkable=True)
         
         # task_id를 날짜 셀에 숨김 데이터로 저장
-        date_item = self.history_table.item(row, 1)  # 날짜 셀
+        date_item = self.history_table.item(row, 0)  # 날짜 셀 (첫 번째 컬럼)
         if date_item:
             date_item.setData(Qt.UserRole, task.task_id)
         
@@ -374,7 +374,7 @@ class NaverCafeResultsWidget(QWidget):
         # UI 레이어에서 다이얼로그 처리 후 service 호출 (CLAUDE.md: UI 분리)
         format_type = self.show_save_format_dialog(len(users_data))
         if format_type:
-            self.export_users_data(users_data, format_type, self)
+            self.export_users_data_internal(users_data, format_type, self)
     
     def show_save_format_dialog(self, users_count: int) -> str:
         """저장 포맷 선택 다이얼로그 표시 - UI 레이어 책임"""
@@ -500,23 +500,52 @@ class NaverCafeResultsWidget(QWidget):
         except Exception as e:
             logger.error(f"저장 포맷 선택 다이얼로그 오류: {e}")
             return None
+    
+    def export_users_data_internal(self, users_data: list, format_type: str, parent_widget=None) -> bool:
+        """사용자 데이터 내보내기 - UI 레이어에서 처리"""
+        try:
+            # 선택된 형식으로 내보내기
+            if format_type == "excel":
+                return self.export_to_excel_with_dialog(users_data, parent_widget)
+            elif format_type == "meta_csv":
+                return self.export_to_meta_csv_with_dialog(users_data, parent_widget)
+            else:
+                logger.warning(f"지원하지 않는 내보내기 형식: {format_type}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"사용자 데이터 내보내기 오류: {e}")
+            return False
             
     def download_selected_history(self):
         """선택된 기록 다운로드 - Excel/Meta CSV 선택 다이얼로그"""
         selected_tasks = []
         selected_data = []
         
+        # 임시: DB에 있는 모든 task_id 확인
+        try:
+            from src.foundation.db import get_db
+            db = get_db()
+            all_tasks = db.list_cafe_extraction_tasks()
+            logger.info(f"[DEBUG] DB에 있는 모든 task들: {[(t.get('task_id'), type(t.get('task_id'))) for t in all_tasks]}")
+        except Exception as e:
+            logger.warning(f"[DEBUG] 모든 task 조회 실패: {e}")
+        
         # 선택된 항목 찾기 (ModernTableWidget API 사용)
         for row in self.history_table.get_checked_rows():
-            date_item = self.history_table.item(row, 1)
+            date_item = self.history_table.item(row, 0)  # 첫 번째 컬럼 (날짜)
             if date_item:
                 # 숨김 데이터에서 task_id 가져오기
                 task_id = date_item.data(Qt.UserRole)
-                if task_id:
+                logger.info(f"[UI] row={row}, task_id={repr(task_id)}, type={type(task_id).__name__}")
+                if task_id is not None:
                     selected_tasks.append(task_id)
                     
                     # 해당 기록의 사용자 데이터 가져오기 - service 경유 (CLAUDE.md: UI는 service 경유)
                     task_users = self.service.get_users_by_task_id(task_id)
+                    logger.info(f"[UI] task_users 조회 결과: {len(task_users)}개")
+                    if not task_users:
+                        logger.warning(f"[UI] task_id={task_id}에 대한 사용자 데이터가 없습니다. DB 쿼리 확인 필요.")
                     for user in task_users:
                         user_data = [
                             str(len(selected_data) + 1),  # 번호
@@ -539,7 +568,7 @@ class NaverCafeResultsWidget(QWidget):
         # UI 레이어에서 다이얼로그 처리 (CLAUDE.md: UI 분리)
         format_type = self.show_save_format_dialog(len(selected_data))
         if format_type:
-            success = self.export_users_data(selected_data, format_type, self)
+            success = self.export_users_data_internal(selected_data, format_type, self)
             if success:
                 log_manager.add_log(f"선택된 {len(selected_tasks)}개 기록의 사용자 데이터 다운로드 완료 (총 {len(selected_data)}명)", "success")
         
@@ -579,11 +608,11 @@ class NaverCafeResultsWidget(QWidget):
         
         # 선택된 항목 찾기
         for row in self.history_table.get_checked_rows():
-            date_item = self.history_table.item(row, 1)
+            date_item = self.history_table.item(row, 0)  # 첫 번째 컬럼 (날짜)
             if date_item:
                 # 숨김 데이터에서 task_id 가져오기
                 task_id = date_item.data(Qt.UserRole)
-                if task_id:
+                if task_id is not None:
                     selected_tasks.append(task_id)
                     selected_rows.append(row)
         
@@ -630,21 +659,22 @@ class NaverCafeResultsWidget(QWidget):
         
         # 선택된 항목 찾기 (ModernTableWidget API 사용)
         for row in self.history_table.get_checked_rows():
-            task_id_item = self.history_table.item(row, 1)
+            task_id_item = self.history_table.item(row, 0)  # 첫 번째 컬럼 (날짜)
             if task_id_item:
                 task_id = task_id_item.data(Qt.UserRole)  # 숨김 데이터에서 task_id 가져오기
-                selected_tasks.append(task_id)
-                
-                # 해당 기록의 사용자 데이터 가져오기 - Foundation DB에서 조회
-                task_users = self._get_users_by_task_id(task_id)
-                for user in task_users:
-                    user_data = [
-                        str(len(selected_data) + 1),  # 번호
-                        user.user_id,                # 사용자 ID
-                        user.nickname,               # 닉네임
-                        user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
-                    ]
-                    selected_data.append(user_data)
+                if task_id is not None:
+                    selected_tasks.append(task_id)
+                    
+                    # 해당 기록의 사용자 데이터 가져오기 - Foundation DB에서 조회
+                    task_users = self._get_users_by_task_id(task_id)
+                    for user in task_users:
+                        user_data = [
+                            str(len(selected_data) + 1),  # 번호
+                            user.user_id,                # 사용자 ID
+                            user.nickname,               # 닉네임
+                            user.last_seen.strftime("%Y-%m-%d %H:%M:%S") if user.last_seen else ""  # 추출 시간
+                        ]
+                        selected_data.append(user_data)
         
         if not selected_tasks:
             from src.toolbox.ui_kit.modern_dialog import ModernInfoDialog
@@ -664,42 +694,6 @@ class NaverCafeResultsWidget(QWidget):
     
     
     # Legacy header checkbox method removed - ModernTableWidget handles automatically
-    
-    
-    
-    # ==================== 시그널 핸들러 메서드 ====================
-    
-    def on_user_extracted(self, user: ExtractedUser):
-        """실시간 사용자 추출 시 테이블에 추가"""
-        self.add_user_to_table(user)
-    
-    def on_extraction_completed(self, result: dict):
-        """추출 완료 시 기록 테이블 새로고침"""
-        try:
-            # 기록 테이블 새로고침 (새로 저장된 기록을 포함하여)
-            self.refresh_history_table()
-            logger.info("추출 완료 후 기록 테이블 새로고침 완료")
-        except Exception as e:
-            logger.error(f"추출 완료 후 기록 테이블 새로고침 실패: {e}")
-    
-    # ==================== UI 내보내기 메서드들 (service에서 이동) ====================
-    
-    def export_users_data(self, users_data: list, format_type: str, parent_widget=None) -> bool:
-        """사용자 데이터 내보내기 - UI 레이어에서 처리"""
-        try:
-            # 선택된 형식으로 내보내기
-            if format_type == "excel":
-                return self.export_to_excel_with_dialog(users_data, parent_widget)
-            elif format_type == "meta_csv":
-                return self.export_to_meta_csv_with_dialog(users_data, parent_widget)
-            else:
-                logger.warning(f"지원하지 않는 내보내기 형식: {format_type}")
-                return False
-                
-        except Exception as e:
-            logger.error(f"사용자 데이터 내보내기 오류: {e}")
-            return False
-    
     def export_to_excel_with_dialog(self, users_data: list, parent_widget=None) -> bool:
         """엑셀로 내보내기 - 파일 선택 다이얼로그 포함"""
         try:
@@ -721,7 +715,8 @@ class NaverCafeResultsWidget(QWidget):
                     user = ExtractedUser(
                         user_id=row_data[1],
                         nickname=row_data[2],
-                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now()
+                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now(),
+                        article_count=1
                     )
                     users.append(user)
             
@@ -769,7 +764,8 @@ class NaverCafeResultsWidget(QWidget):
                     user = ExtractedUser(
                         user_id=row_data[1],
                         nickname=row_data[2],
-                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now()
+                        last_seen=datetime.strptime(row_data[3], "%Y-%m-%d %H:%M:%S") if row_data[3] else datetime.now(),
+                        article_count=1
                     )
                     users.append(user)
             
@@ -816,3 +812,18 @@ class NaverCafeResultsWidget(QWidget):
             logger.warning(f"저장 완료 다이얼로그 표시 실패: {e}")
             # 폴백: 일반 메시지박스
             QMessageBox.information(self, title, message)
+    
+    # ==================== 시그널 핸들러 메서드 ====================
+    
+    def on_user_extracted(self, user: ExtractedUser):
+        """실시간 사용자 추출 시 테이블에 추가"""
+        self.add_user_to_table(user)
+    
+    def on_extraction_completed(self, result: dict):
+        """추출 완료 시 기록 테이블 새로고침"""
+        try:
+            # 기록 테이블 새로고침 (새로 저장된 기록을 포함하여)
+            self.refresh_history_table()
+            logger.info("추출 완료 후 기록 테이블 새로고침 완료")
+        except Exception as e:
+            logger.error(f"추출 완료 후 기록 테이블 새로고침 실패: {e}")

@@ -241,4 +241,60 @@ class CafeExtractionRepository:
         )
     
 
+class CafeExtractionDatabase:
+    """카페 추출 데이터베이스 헬퍼 - CLAUDE.md: 간단 레포 헬퍼"""
+    
+    def __init__(self):
+        from src.foundation.db import get_db
+        self._db = get_db()
+    
+    def save_extraction_task(self, task: ExtractionTask) -> bool:
+        """추출 작업 저장"""
+        task_data = CafeExtractionRepository.task_to_dict(task)
+        return self._db.add_cafe_extraction_task(task_data)
+    
+    def get_extraction_tasks(self) -> List[ExtractionTask]:
+        """모든 추출 작업 조회"""
+        tasks_data = self._db.get_cafe_extraction_tasks()
+        return [CafeExtractionRepository.dict_to_task(task_data) for task_data in tasks_data]
+    
+    def get_users_by_task_id(self, task_id: str) -> List[ExtractedUser]:
+        """특정 작업의 사용자 목록 조회"""
+        results_data = self._db.get_cafe_extraction_results(task_id)
+        users = []
+        for result in results_data:
+            user = ExtractedUser(
+                user_id=result.get('user_id', ''),
+                nickname=result.get('nickname', ''),
+                article_count=result.get('article_count', 1),
+                first_seen=datetime.fromisoformat(result['first_seen']) if result.get('first_seen') else datetime.now(),
+                last_seen=datetime.fromisoformat(result['last_seen']) if result.get('last_seen') else datetime.now()
+            )
+            users.append(user)
+        return users
+    
+    def delete_extraction_task(self, task_id: str) -> bool:
+        """추출 작업 삭제"""
+        return self._db.delete_cafe_extraction_task(task_id)
+    
+    def save_extraction_results(self, task_id: str, users: List[ExtractedUser]) -> int:
+        """추출 결과 저장"""
+        users_data = []
+        for user in users:
+            user_data = {
+                'user_id': user.user_id,
+                'nickname': user.nickname,
+                'article_count': user.article_count,
+                'first_seen': user.first_seen,
+                'last_seen': user.last_seen
+            }
+            users_data.append(user_data)
+        return self._db.save_cafe_extraction_results(task_id, users_data)
+    
+    def clear_all(self):
+        """모든 데이터 초기화 - 호환성 메서드"""
+        # 실제로는 메모리만 관리하므로 여기서는 아무것도 하지 않음
+        # 필요하면 특정 작업의 결과만 삭제하는 로직 추가 가능
+        pass
+
 

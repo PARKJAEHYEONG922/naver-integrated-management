@@ -6,7 +6,7 @@
 """
 import sqlite3
 from pathlib import Path
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 import json
 from contextlib import contextmanager
@@ -30,7 +30,7 @@ class CommonDB:
         
         self.db_path = db_path
         self.init_database()
-        logger.info(f"공용 DB 초기화 완료: {db_path}")
+        logger.info(f"공용 DB 초기화 완료: {Path(self.db_path).resolve()}")
     
     @contextmanager
     def get_connection(self):
@@ -199,6 +199,23 @@ class CommonDB:
                 cursor.execute("ALTER TABLE keywords ADD COLUMN monthly_volume INTEGER DEFAULT 0")
             except sqlite3.OperationalError:
                 pass  # 컬럼이 이미 존재함
+            
+            # cafe_extraction_results 테이블에 누락된 컬럼 추가
+            try:
+                cursor.execute("ALTER TABLE cafe_extraction_results ADD COLUMN first_seen TEXT")
+            except sqlite3.OperationalError:
+                pass  # 컬럼이 이미 존재함
+            
+            try:
+                cursor.execute("ALTER TABLE cafe_extraction_results ADD COLUMN last_seen TEXT")
+            except sqlite3.OperationalError:
+                pass  # 컬럼이 이미 존재함
+            
+            # cafe_extraction_tasks 테이블에 누락된 컬럼 추가
+            try:
+                cursor.execute("ALTER TABLE cafe_extraction_tasks ADD COLUMN started_at TIMESTAMP NULL")
+            except sqlite3.OperationalError:
+                pass  # 이미 있으면 패스
             
             # 인덱스 생성
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_projects_product_id ON projects (product_id)")
@@ -889,61 +906,6 @@ class CommonDB:
         """프로젝트 키워드 목록 (rank_tracking 호환)"""
         return self.get_keywords(project_id, active_only=True)
     
-    def get_keyword_management_history(self, project_id: int) -> List[Dict[str, Any]]:
-        """키워드 관리 이력 조회"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT keyword, action, action_date as action_time
-                FROM keyword_management_history
-                WHERE project_id = ?
-                ORDER BY action_date DESC
-            """, (project_id,))
-            
-            return [dict(row) for row in cursor.fetchall()]
-    
-    def get_basic_info_change_history(self, project_id: int) -> List[Dict[str, Any]]:
-        """기본정보 변경 이력 조회"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT field_name, old_value, new_value, changed_at as change_time
-                FROM basic_info_change_history
-                WHERE project_id = ?
-                ORDER BY changed_at DESC
-            """, (project_id,))
-            
-            return [dict(row) for row in cursor.fetchall()]
-    
-    def add_basic_info_change_record(self, project_id: int, field_name: str, old_value: str, new_value: str):
-        """기본정보 변경 이력 추가"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                INSERT INTO basic_info_change_history (project_id, field_name, old_value, new_value)
-                VALUES (?, ?, ?, ?)
-            """, (project_id, field_name, old_value, new_value))
-            
-            conn.commit()
-    
-    def get_ranking_history_for_project(self, project_id: int) -> List[Dict[str, Any]]:
-        """프로젝트의 순위 이력 조회"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT k.keyword, r.rank_position as rank, r.total_results as result_count, r.search_date as check_time
-                FROM keywords k
-                JOIN ranking_results r ON k.id = r.keyword_id
-                WHERE k.project_id = ?
-                ORDER BY r.search_date DESC
-            """, (project_id,))
-            
-            return [dict(row) for row in cursor.fetchall()]
-    
     
     # ========== 카페 추출 관련 메서드 ==========
     
@@ -978,18 +940,6 @@ class CommonDB:
             conn.commit()
             logger.info(f"카페 추출 작업 생성: {task_id}")
             return task_id
-    
-    def get_cafe_extraction_task(self, task_id: str) -> Optional[Dict[str, Any]]:
-        """카페 추출 작업 조회"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT * FROM cafe_extraction_tasks WHERE task_id = ?
-            """, (task_id,))
-            
-            row = cursor.fetchone()
-            return dict(row) if row else None
     
     def list_cafe_extraction_tasks(self, status: Optional[str] = None, limit: int = 100) -> List[Dict[str, Any]]:
         """카페 추출 작업 목록 조회"""
@@ -1076,22 +1026,6 @@ class CommonDB:
                 history.append(history_item)
             
             return history
-    
-    def delete_cafe_extraction_task(self, task_id: str) -> bool:
-        """카페 추출 작업 삭제 (결과와 히스토리 포함)"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            # 관련 데이터 모두 삭제
-            cursor.execute("DELETE FROM cafe_extraction_history WHERE task_id = ?", (task_id,))
-            cursor.execute("DELETE FROM cafe_extraction_results WHERE task_id = ?", (task_id,))
-            cursor.execute("DELETE FROM cafe_extraction_tasks WHERE task_id = ?", (task_id,))
-            
-            conn.commit()
-            success = cursor.rowcount > 0
-            if success:
-                logger.debug(f"카페 추출 작업 삭제: {task_id}")
-            return success
     
     # ========== 일반적인 유틸리티 메서드 ==========
     
@@ -1395,102 +1329,38 @@ class CommonDB:
             return False
     
     
-    def list_cafe_extraction_tasks(self, limit: int = 50) -> List[Dict[str, Any]]:
-        """카페 추출 작업 목록 조회"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT task_id, cafe_name, cafe_url, board_name, board_url,
-                       start_page, end_page, status, created_at, total_extracted
-                FROM cafe_extraction_tasks
-                ORDER BY created_at DESC
-                LIMIT ?
-            """, (limit,))
-            
-            return [dict(row) for row in cursor.fetchall()]
-    
-    def get_cafe_extraction_task(self, task_id: str) -> Optional[Dict[str, Any]]:
-        """특정 카페 추출 작업 조회"""
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT task_id, cafe_name, cafe_url, board_name, board_url,
-                       start_page, end_page, status, created_at, started_at,
-                       completed_at, error_message, total_extracted
-                FROM cafe_extraction_tasks
-                WHERE task_id = ?
-            """, (task_id,))
-            
-            row = cursor.fetchone()
-            if row:
-                return dict(row)
-            return None
-    
-    def update_cafe_extraction_task_status(self, task_id: str, status: str, 
-                                         current_page: Optional[int] = None,
-                                         total_extracted: Optional[int] = None,
-                                         error_message: Optional[str] = None) -> bool:
-        """카페 추출 작업 상태 업데이트"""
-        from datetime import datetime
-        
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            
-            # 동적으로 UPDATE 쿼리 생성
-            set_clauses = ["status = ?"]
-            values = [status]
-            
-            if status == 'extracting' and current_page is not None:
-                set_clauses.extend(["current_page = ?", "started_at = ?"])
-                values.extend([current_page, datetime.now().isoformat()])
-            elif status == 'completed':
-                set_clauses.append("completed_at = ?")
-                values.append(datetime.now().isoformat())
-            elif status == 'failed' and error_message:
-                set_clauses.append("error_message = ?")
-                values.append(error_message)
-            
-            if total_extracted is not None:
-                set_clauses.append("total_extracted = ?")
-                values.append(total_extracted)
-            
-            values.append(task_id)  # WHERE 절용
-            
-            query = f"""
-                UPDATE cafe_extraction_tasks
-                SET {', '.join(set_clauses)}
-                WHERE task_id = ?
-            """
-            
-            cursor.execute(query, values)
-            conn.commit()
-            
-            return cursor.rowcount > 0
-    
     def save_cafe_extraction_results(self, task_id: str, users: List[Dict[str, Any]]) -> int:
-        """카페 추출 결과 저장"""
+        """카페 추출 결과 저장 (부모 행 보장)"""
         with self.get_connection() as conn:
             cursor = conn.cursor()
+            tid = self._norm_task_id(task_id)
             
+            # 부모 작업 행 보장
+            self._ensure_task_row(cursor, tid)
+
             # 기존 결과 삭제 (재추출의 경우)
-            cursor.execute("DELETE FROM cafe_extraction_results WHERE task_id = ?", (task_id,))
+            cursor.execute("DELETE FROM cafe_extraction_results WHERE task_id = ?", (tid,))
             
             # 새 결과 저장
             saved_count = 0
             for user in users:
+                fs, ls = user.get('first_seen'), user.get('last_seen')
+                if isinstance(fs, datetime): 
+                    fs = fs.isoformat()
+                if isinstance(ls, datetime): 
+                    ls = ls.isoformat()
+                
                 cursor.execute("""
                     INSERT INTO cafe_extraction_results (
                         task_id, user_id, nickname, article_count, first_seen, last_seen
                     ) VALUES (?, ?, ?, ?, ?, ?)
                 """, (
-                    task_id,
-                    user.get('user_id', ''),
-                    user.get('nickname', ''),
-                    user.get('article_count', 1),
-                    user.get('first_seen', ''),
-                    user.get('last_seen', '')
+                    tid, 
+                    user.get('user_id',''), 
+                    user.get('nickname',''),
+                    int(user.get('article_count', 1)),
+                    fs or None, 
+                    ls or None
                 ))
                 saved_count += 1
             
@@ -1504,11 +1374,17 @@ class CommonDB:
             cursor = conn.cursor()
             
             cursor.execute("""
-                SELECT user_id, nickname, article_count, first_seen, last_seen
+                SELECT
+                    user_id,
+                    nickname,
+                    article_count,
+                    -- first_seen/last_seen 없던 DB도 동작하도록 extracted_at로 폴백
+                    COALESCE(first_seen, extracted_at) AS first_seen,
+                    COALESCE(last_seen, extracted_at) AS last_seen
                 FROM cafe_extraction_results
-                WHERE task_id = ?
+                WHERE TRIM(task_id) = TRIM(?)
                 ORDER BY article_count DESC, nickname
-            """, (task_id,))
+            """, (str(task_id),))
             
             return [dict(row) for row in cursor.fetchall()]
 
@@ -1631,42 +1507,143 @@ class CommonDB:
 
     # ==================== 카페 추출 관련 메서드 ====================
     
+    def _norm_task_id(self, v) -> str:
+        """task_id 정규화 - 공백 제거"""
+        return str(v).strip() if v is not None else ""
+    
+    def _ensure_task_row(self, cursor, task_id: str):
+        """부모 작업 행 존재 보장 (FK 제약조건 문제 해결)"""
+        tid = self._norm_task_id(task_id)
+        cursor.execute("SELECT 1 FROM cafe_extraction_tasks WHERE task_id = ?", (tid,))
+        if cursor.fetchone():
+            return
+        now = datetime.now().isoformat()
+        cursor.execute("""
+            INSERT INTO cafe_extraction_tasks (
+                task_id, cafe_name, cafe_url, board_name, board_url,
+                start_page, end_page, status, current_page, total_extracted, created_at
+            ) VALUES (?, '', '', '', '', 1, 1, 'pending', 1, 0, ?)
+        """, (tid, now))
+
     def add_cafe_extraction_task(self, task_data: Dict[str, Any]) -> bool:
-        """카페 추출 작업 추가"""
+        """카페 추출 작업 추가 (UPSERT 적용)"""
         try:
             with self.get_connection() as conn:
                 cursor = conn.cursor()
+                tid = self._norm_task_id(task_data.get('task_id'))
                 
                 cursor.execute("""
                     INSERT INTO cafe_extraction_tasks (
                         task_id, cafe_name, cafe_url, board_name, board_url,
                         start_page, end_page, status, current_page, total_extracted,
-                        created_at, completed_at, error_message
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        created_at, started_at, completed_at, error_message
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(task_id) DO UPDATE SET
+                        cafe_name = excluded.cafe_name,
+                        cafe_url = excluded.cafe_url,
+                        board_name = excluded.board_name,
+                        board_url = excluded.board_url,
+                        start_page = excluded.start_page,
+                        end_page = excluded.end_page,
+                        status = excluded.status,
+                        current_page = excluded.current_page,
+                        total_extracted = excluded.total_extracted,
+                        started_at = COALESCE(excluded.started_at, started_at),
+                        completed_at = COALESCE(excluded.completed_at, completed_at),
+                        error_message = excluded.error_message,
+                        updated_at = CURRENT_TIMESTAMP
                 """, (
-                    task_data.get('task_id'),
-                    task_data.get('cafe_name'),
-                    task_data.get('cafe_url'),
-                    task_data.get('board_name'),
-                    task_data.get('board_url'),
-                    task_data.get('start_page', 1),
-                    task_data.get('end_page', 10),
-                    task_data.get('status', 'pending'),
-                    task_data.get('current_page', 1),
-                    task_data.get('total_extracted', 0),
-                    task_data.get('created_at'),
+                    tid,
+                    task_data.get('cafe_name',''),
+                    task_data.get('cafe_url',''),
+                    task_data.get('board_name',''),
+                    task_data.get('board_url',''),
+                    task_data.get('start_page',1),
+                    task_data.get('end_page',10),
+                    task_data.get('status','pending'),
+                    task_data.get('current_page',1),
+                    task_data.get('total_extracted',0),
+                    task_data.get('created_at', datetime.now().isoformat()),
+                    task_data.get('started_at'),
                     task_data.get('completed_at'),
-                    task_data.get('error_message', '')
+                    task_data.get('error_message','')
                 ))
                 
                 conn.commit()
-                logger.info(f"카페 추출 작업 저장 완료: {task_data.get('task_id')}")
+                logger.info(f"카페 추출 작업 저장/업서트 완료: {tid}")
                 return True
                 
         except Exception as e:
             logger.error(f"카페 추출 작업 저장 실패: {e}")
             return False
     
+    def get_cafe_extraction_task(self, task_id: str) -> Optional[Dict[str, Any]]:
+        """특정 카페 추출 작업 조회"""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    SELECT task_id, cafe_name, cafe_url, board_name, board_url,
+                           start_page, end_page, status, created_at, started_at,
+                           completed_at, error_message, total_extracted
+                    FROM cafe_extraction_tasks
+                    WHERE task_id = ?
+                """, (task_id,))
+                
+                row = cursor.fetchone()
+                if row:
+                    return dict(row)
+                return None
+        except Exception as e:
+            logger.error(f"카페 추출 작업 조회 실패: {e}")
+            return None
+    
+    def update_cafe_extraction_task_status(self, task_id: str, status: str, 
+                                         current_page: Optional[int] = None,
+                                         total_extracted: Optional[int] = None,
+                                         error_message: Optional[str] = None) -> bool:
+        """카페 추출 작업 상태 업데이트"""
+        from datetime import datetime
+        
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                # 동적으로 UPDATE 쿼리 생성
+                set_clauses = ["status = ?"]
+                values = [status]
+                
+                if status == 'extracting' and current_page is not None:
+                    set_clauses.extend(["current_page = ?", "started_at = ?"])
+                    values.extend([current_page, datetime.now().isoformat()])
+                elif status == 'completed':
+                    set_clauses.append("completed_at = ?")
+                    values.append(datetime.now().isoformat())
+                elif status == 'failed' and error_message:
+                    set_clauses.append("error_message = ?")
+                    values.append(error_message)
+                
+                if total_extracted is not None:
+                    set_clauses.append("total_extracted = ?")
+                    values.append(total_extracted)
+                
+                values.append(task_id)  # WHERE 절용
+                
+                query = f"""
+                    UPDATE cafe_extraction_tasks
+                    SET {', '.join(set_clauses)}
+                    WHERE task_id = ?
+                """
+                
+                cursor.execute(query, values)
+                conn.commit()
+                
+                return cursor.rowcount > 0
+        except Exception as e:
+            logger.error(f"카페 추출 작업 상태 업데이트 실패: {e}")
+            return False
+
     def get_cafe_extraction_tasks(self) -> List[Dict[str, Any]]:
         """모든 카페 추출 작업 조회 (최신순)"""
         try:
@@ -1704,26 +1681,32 @@ class CommonDB:
             return False
     
     def add_cafe_extraction_result(self, result_data: Dict[str, Any]) -> bool:
-        """카페 추출 결과 추가"""
+        """카페 추출 결과 추가 (부모 행 보장)"""
         try:
             with self.get_connection() as conn:
                 cursor = conn.cursor()
+                tid = self._norm_task_id(result_data.get('task_id'))
                 
+                # 부모 작업 행 보장
+                self._ensure_task_row(cursor, tid)
+
+                now = datetime.now().isoformat()
                 cursor.execute("""
                     INSERT INTO cafe_extraction_results (
-                        task_id, user_id, nickname, article_count, 
-                        article_url, article_title, article_date
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                        task_id, user_id, nickname, article_count,
+                        article_url, article_title, article_date,
+                        first_seen, last_seen
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
-                    result_data.get('task_id'),
-                    result_data.get('user_id'),
-                    result_data.get('nickname'),
-                    result_data.get('article_count', 1),
+                    tid,
+                    result_data.get('user_id', ''),
+                    result_data.get('nickname', ''),
+                    int(result_data.get('article_count', 1)),
                     result_data.get('article_url', ''),
                     result_data.get('article_title', ''),
-                    result_data.get('article_date', '')
+                    result_data.get('article_date', ''),
+                    now, now
                 ))
-                
                 conn.commit()
                 return True
                 
@@ -1738,9 +1721,9 @@ class CommonDB:
                 cursor = conn.cursor()
                 
                 cursor.execute("""
-                    SELECT * FROM cafe_extraction_results
+                    SELECT * FROM cafe_extraction_results 
                     WHERE task_id = ?
-                    ORDER BY extracted_at ASC
+                    ORDER BY id
                 """, (task_id,))
                 
                 rows = cursor.fetchall()
@@ -1749,6 +1732,7 @@ class CommonDB:
         except Exception as e:
             logger.error(f"카페 추출 결과 조회 실패: {e}")
             return []
+    
     
     
 
