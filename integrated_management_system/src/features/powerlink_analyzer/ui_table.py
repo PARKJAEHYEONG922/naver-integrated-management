@@ -1938,6 +1938,7 @@ class PowerLinkResultsWidget(QWidget):
     
     def _recalculate_rankings_for_table(self, table, device_type: str):
         """테이블에 남은 키워드들로만 순위 재계산 후 순위 컬럼 업데이트"""
+        was_sorting = True  # 기본값 설정
         try:
             logger.info(f"_recalculate_rankings_for_table 호출됨: {device_type}, 행 수: {table.rowCount()}")
             if table.rowCount() == 0:
