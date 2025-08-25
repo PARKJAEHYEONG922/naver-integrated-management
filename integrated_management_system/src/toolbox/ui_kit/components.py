@@ -12,6 +12,7 @@ from PySide6.QtGui import QFont, QPalette, QColor
 
 from src.foundation.logging import get_logger
 from .modern_style import ModernStyle
+from .responsive import ResponsiveUI
 
 
 logger = get_logger("toolbox.ui_kit")
@@ -61,17 +62,26 @@ class ModernCancelButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """키워드 분석기의 정지 버튼 스타일"""
+        """키워드 분석기의 정지 버튼 스타일 - 반응형"""
+        # 반응형 값들 계산
+        padding_v = ResponsiveUI.get_spacing('small')
+        padding_h = ResponsiveUI.get_spacing('normal')
+        font_size = ResponsiveUI.get_font_size_pt('normal')
+        border_radius = ResponsiveUI.get_spacing('tiny')
+        min_width = ResponsiveUI.get_button_min_width()
+        min_height = ResponsiveUI.get_button_height()
+        
         self.setStyleSheet(f"""
             QPushButton {{
                 background-color: {ModernStyle.COLORS['bg_input']};
                 color: {ModernStyle.COLORS['text_secondary']};
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 13px;
+                padding: {padding_v}px {padding_h}px;
+                border-radius: {border_radius}px;
+                font-size: {font_size}pt;
                 font-weight: 600;
-                min-width: 80px;
+                min-width: {min_width}px;
+                min-height: {min_height}px;
             }}
             QPushButton:enabled {{
                 background-color: #ef4444;

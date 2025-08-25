@@ -3,6 +3,7 @@
 앱 전반에 걸친 일관된 디자인 시스템
 """
 from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 
 
 class AppStyles:
@@ -29,10 +30,10 @@ class AppStyles:
     
     @staticmethod
     def get_title_label_style():
-        """제목 라벨 스타일"""
+        """제목 라벨 스타일 - 반응형"""
         return f"""
             QLabel {{
-                font-size: 18px;
+                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -40,17 +41,18 @@ class AppStyles:
     
     @staticmethod
     def get_api_settings_button_style():
-        """API 설정 버튼 스타일"""
+        """API 설정 버튼 스타일 - 반응형"""
         return f"""
             QPushButton {{
                 background-color: {ModernStyle.COLORS['success']};
                 color: white;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 14px;
+                padding: {ResponsiveUI.get_spacing('small')}px {ResponsiveUI.get_spacing('normal')}px;
+                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
+                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
                 font-weight: 600;
-                min-width: 120px;
+                min-width: {ResponsiveUI.get_button_min_width()}px;
+                min-height: {ResponsiveUI.get_button_height()}px;
             }}
             QPushButton:hover {{
                 background-color: #059669;
@@ -73,11 +75,11 @@ class AppStyles:
     
     @staticmethod
     def get_placeholder_title_style():
-        """플레이스홀더 제목 스타일"""
+        """플레이스홀더 제목 스타일 - 반응형"""
         return f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_primary']};
-                font-size: 32px;
+                font-size: {ResponsiveUI.get_font_size_pt('title')}pt;
                 font-weight: 700;
                 margin-bottom: 20px;
             }}
@@ -100,7 +102,7 @@ class AppStyles:
         return f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_muted']};
-                font-size: 12px;
+                font-size: {ResponsiveUI.get_font_size_pt('small')}pt;
                 font-family: 'Courier New', monospace;
             }}
         """
@@ -112,59 +114,113 @@ class AppStyles:
 
 
 class WindowConfig:
-    """윈도우 설정 상수"""
+    """윈도우 설정 상수 - 반응형"""
     
-    # 기본 윈도우 크기
-    MIN_WIDTH = 1200
-    MIN_HEIGHT = 800
+    @staticmethod
+    def get_min_window_size():
+        """최소 윈도우 크기 (화면 크기 기반)"""
+        screen_width, screen_height = ResponsiveUI.get_screen_size()
+        min_width = max(1000, int(screen_width * 0.6))  # 화면 너비의 최소 60%
+        min_height = max(700, int(screen_height * 0.6))  # 화면 높이의 최소 60%
+        return min_width, min_height
     
-    # 화면 비율
-    SCREEN_WIDTH_RATIO = 0.8
-    SCREEN_HEIGHT_RATIO = 0.8
+    @staticmethod
+    def get_default_window_size():
+        """기본 윈도우 크기"""
+        return ResponsiveUI.get_window_size(75, 75)  # 화면의 75% × 75%
     
-    # 헤더 높이
-    HEADER_HEIGHT = 60
+    @staticmethod
+    def get_header_height():
+        """헤더 높이"""
+        return max(50, min(70, ResponsiveUI.height_percent(5)))  # 화면 높이의 5%, 50-70px 제한
     
-    # 레이아웃 여백
-    MAIN_MARGIN = 0
-    HEADER_MARGIN = (20, 10, 20, 10)
+    @staticmethod
+    def get_main_margins():
+        """메인 레이아웃 여백"""
+        margin = ResponsiveUI.get_spacing('small')
+        return (margin, margin, margin, margin)
     
-    # 스플리터 비율
-    CONTENT_LOG_RATIO = [700, 300]  # 컨텐츠 70%, 로그 30%
-    INPUT_RESULT_RATIO = [300, 600]  # 입력 30%, 결과 60%
+    @staticmethod
+    def get_header_margins():
+        """헤더 여백"""
+        h_margin = ResponsiveUI.get_spacing('normal')
+        v_margin = ResponsiveUI.get_spacing('small')
+        return (h_margin, v_margin, h_margin, v_margin)
     
-    # 로그 위젯 크기
-    LOG_MIN_WIDTH = 300
-    LOG_MAX_WIDTH = 400
+    @staticmethod
+    def get_content_log_ratio():
+        """컨텐츠:로그 비율 (모든 화면에서 동일한 비율)"""
+        screen_width, _ = ResponsiveUI.get_screen_size()
+        
+        # 모든 화면에서 동일한 비율 유지
+        content_ratio = 0.82  # 82%
+        log_ratio = 0.18      # 18%
+        
+        content_width = int(screen_width * content_ratio)
+        log_width = int(screen_width * log_ratio)
+        
+        return [content_width, log_width]
+    
+    @staticmethod
+    def get_log_widget_sizes():
+        """로그 위젯 크기 (비율 기반으로 일관성 유지)"""
+        screen_width, _ = ResponsiveUI.get_screen_size()
+        
+        # 화면 너비의 비율로 계산 (최소/최대 제한)
+        min_width = max(180, int(screen_width * 0.12))  # 화면의 12%
+        max_width = min(350, int(screen_width * 0.20))  # 화면의 20%
+        
+        return min_width, max_width
 
 
 class LayoutConfig:
-    """레이아웃 설정 상수"""
+    """레이아웃 설정 상수 - 반응형"""
     
-    # 기본 여백 및 간격
-    DEFAULT_MARGIN = (20, 20, 20, 20)
-    DEFAULT_SPACING = 10
-    SECTION_SPACING = 15
+    @staticmethod
+    def get_default_margin():
+        """기본 여백"""
+        margin = ResponsiveUI.get_spacing('normal')
+        return (margin, margin, margin, margin)
     
-    # 컴포넌트 여백
-    COMPONENT_MARGIN = (10, 10, 10, 10)
-    BUTTON_SPACING = 8
+    @staticmethod
+    def get_default_spacing():
+        """기본 간격"""
+        return ResponsiveUI.get_spacing('small')
     
-    # 입력 필드 높이
-    INPUT_MAX_HEIGHT = 200
+    @staticmethod
+    def get_section_spacing():
+        """섹션 간격"""
+        return ResponsiveUI.get_spacing('normal')
     
-    # 버튼 크기
-    BUTTON_MIN_WIDTH = 80
-    BUTTON_PADDING = (8, 16, 8, 16)
+    @staticmethod
+    def get_component_margin():
+        """컴포넌트 여백 - 반응형"""
+        margin = ResponsiveUI.get_spacing('normal')
+        return (margin, margin, margin, margin)
     
-    # 컬럼 너비 (트리 위젯)
-    TREE_COLUMN_WIDTHS = {
-        'keyword': 150,
-        'category': 200,
-        'volume': 100,
-        'products': 100,
-        'strength': 100
-    }
+    @staticmethod
+    def get_button_spacing():
+        """버튼 간격 - 반응형"""
+        return ResponsiveUI.get_spacing('small')
+    
+    # 입력 필드 높이 - 반응형으로 개선 가능
+    @staticmethod
+    def get_input_max_height():
+        """입력 필드 최대 높이"""
+        return ResponsiveUI.height_percent(25)  # 화면 높이의 25%
+    
+    # 컬럼 너비 (트리 위젯) - 반응형으로 개선 가능
+    @staticmethod
+    def get_tree_column_widths():
+        """트리 위젯 컬럼 너비 - 반응형"""
+        base_width = ResponsiveUI.width_percent(8)  # 화면 너비의 8%
+        return {
+            'keyword': max(150, base_width),
+            'category': max(200, int(base_width * 1.3)),
+            'volume': max(100, int(base_width * 0.7)),
+            'products': max(100, int(base_width * 0.7)),
+            'strength': max(100, int(base_width * 0.7))
+        }
 
 
 class IconConfig:

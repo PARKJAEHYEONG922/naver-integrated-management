@@ -12,8 +12,9 @@ from PySide6.QtCore import Qt, QTimer
 from src.foundation.logging import get_logger
 from src.desktop.sidebar import Sidebar
 from src.desktop.common_log import CommonLogWidget
-from .components import PlaceholderWidget, HeaderWidget, ErrorWidget
+from .components import PlaceholderWidget, ErrorWidget
 from .styles import AppStyles, WindowConfig, apply_global_styles
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 
 logger = get_logger("desktop.app")
 
@@ -31,21 +32,18 @@ class MainWindow(QMainWindow):
         self.setup_window()
     
     def setup_window(self):
-        """윈도우 기본 설정"""
+        """윈도우 기본 설정 - 반응형"""
         self.setWindowTitle("통합 관리 시스템")
         
-        # 화면 크기 가져오기
-        screen = QApplication.primaryScreen()
-        screen_size = screen.size()
+        # 반응형 윈도우 크기 설정
+        min_width, min_height = WindowConfig.get_min_window_size()
+        default_size = WindowConfig.get_default_window_size()
         
-        # 화면 크기의 80% 정도로 설정, 최소 크기 보장
-        width = max(WindowConfig.MIN_WIDTH, int(screen_size.width() * WindowConfig.SCREEN_WIDTH_RATIO))
-        height = max(WindowConfig.MIN_HEIGHT, int(screen_size.height() * WindowConfig.SCREEN_HEIGHT_RATIO))
-        
-        self.setMinimumSize(WindowConfig.MIN_WIDTH, WindowConfig.MIN_HEIGHT)
-        self.resize(width, height)
+        self.setMinimumSize(min_width, min_height)
+        self.resize(default_size)
         
         # 화면 중앙에 배치
+        screen = QApplication.primaryScreen()
         screen_center = screen.availableGeometry().center()
         window_rect = self.frameGeometry()
         window_rect.moveCenter(screen_center)
@@ -60,20 +58,18 @@ class MainWindow(QMainWindow):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         
-        # 전체 레이아웃 (수직)
+        # 전체 레이아웃 (수직) - 반응형 여백
         main_container_layout = QVBoxLayout()
-        main_container_layout.setContentsMargins(WindowConfig.MAIN_MARGIN, WindowConfig.MAIN_MARGIN, 
-                                                WindowConfig.MAIN_MARGIN, WindowConfig.MAIN_MARGIN)
+        margins = WindowConfig.get_main_margins()
+        main_container_layout.setContentsMargins(*margins)
         main_container_layout.setSpacing(0)
         
-        # 헤더 추가
-        self.setup_header(main_container_layout)
+        # 헤더 제거 - API 설정 버튼을 로그 영역으로 이동
         
-        # 메인 레이아웃 (수평)
+        # 메인 레이아웃 (수평) - 반응형 여백
         main_layout = QHBoxLayout()
-        main_layout.setContentsMargins(WindowConfig.MAIN_MARGIN, WindowConfig.MAIN_MARGIN,
-                                      WindowConfig.MAIN_MARGIN, WindowConfig.MAIN_MARGIN)
-        main_layout.setSpacing(0)
+        main_layout.setContentsMargins(*margins)
+        main_layout.setSpacing(ResponsiveUI.get_spacing('small'))
         
         # 사이드바 (모듈별 네비게이션)
         self.sidebar = Sidebar()
@@ -86,17 +82,19 @@ class MainWindow(QMainWindow):
         self.content_stack = QStackedWidget()
         self.content_stack.setStyleSheet(AppStyles.get_content_stack_style())
         
-        # 공통 로그 위젯
+        # 공통 로그 위젯 - 반응형 크기 및 API 설정 연결
         self.common_log = CommonLogWidget()
-        self.common_log.setMinimumWidth(WindowConfig.LOG_MIN_WIDTH)
-        self.common_log.setMaximumWidth(WindowConfig.LOG_MAX_WIDTH)
+        self.common_log.api_settings_requested.connect(self.open_api_settings)
+        log_min_width, log_max_width = WindowConfig.get_log_widget_sizes()
+        self.common_log.setMinimumWidth(log_min_width)
+        self.common_log.setMaximumWidth(log_max_width)
         
         # 스플리터에 추가
         main_splitter.addWidget(self.content_stack)
         main_splitter.addWidget(self.common_log)
         
-        # 비율 설정 (컨텐츠 70%, 로그 30%)
-        main_splitter.setSizes(WindowConfig.CONTENT_LOG_RATIO)
+        # 비율 설정 (컨텐츠 70%, 로그 30%) - 반응형
+        main_splitter.setSizes(WindowConfig.get_content_log_ratio())
         
         # 메인 레이아웃에 추가
         main_layout.addWidget(self.sidebar)
@@ -112,11 +110,6 @@ class MainWindow(QMainWindow):
         # 초기 페이지 로드 (UI 완전 초기화 후)
         QTimer.singleShot(0, self.load_initial_page)
     
-    def setup_header(self, layout):
-        """헤더 설정"""
-        self.header = HeaderWidget()
-        self.header.api_settings_requested.connect(self.open_api_settings)
-        layout.addWidget(self.header)
     
     def open_api_settings(self):
         """통합 API 설정 열기"""

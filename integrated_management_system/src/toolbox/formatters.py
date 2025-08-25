@@ -4,7 +4,7 @@ UI/엑셀/CSV 등 사람이 읽는 결과에만 사용. DB/연산에는 원시�
 """
 import math
 from typing import Optional, Union, List
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
 
 
 def format_int(value: Optional[int], default: str = "N/A", thousand_sep: bool = True) -> str:
@@ -221,8 +221,19 @@ def format_datetime(value: Optional[Union[datetime, str]],
         except:
             return str(value) if value else default
     
-    # datetime 객체 포맷팅
-    return format_date(value, format_str, default)
+    # UTC에서 한국 시간(KST)으로 변환
+    if value.tzinfo is not None:
+        # 이미 timezone 정보가 있는 경우 KST로 변환
+        kst = timezone(timedelta(hours=9))
+        value = value.astimezone(kst)
+    else:
+        # timezone 정보가 없는 경우 UTC로 가정하고 KST로 변환
+        utc_time = value.replace(tzinfo=timezone.utc)
+        kst = timezone(timedelta(hours=9))
+        value = utc_time.astimezone(kst)
+    
+    # datetime 객체 포맷팅 (timezone 정보 제거하고 포맷)
+    return format_date(value.replace(tzinfo=None), format_str, default)
 
 
 def format_datetime_full(value: Optional[Union[datetime, str]], default: str = "") -> str:

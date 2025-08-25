@@ -797,7 +797,7 @@ class RankTrackingRepository:
                     {
                         'keyword': row[0],
                         'action': row[1],
-                        'action_date': row[2]
+                        'action_time': row[2]  # UI에서 사용하는 키명으로 변경
                     }
                     for row in cursor.fetchall()
                 ]
@@ -823,7 +823,7 @@ class RankTrackingRepository:
                         'old_value': row[1],
                         'new_value': row[2],
                         'change_type': row[3],
-                        'changed_at': row[4]
+                        'change_time': row[4]  # UI에서 사용하는 키명으로 변경
                     }
                     for row in cursor.fetchall()
                 ]

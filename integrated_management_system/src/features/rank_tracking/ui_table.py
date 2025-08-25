@@ -12,6 +12,7 @@ from PySide6.QtGui import QFont, QColor
 
 from src.toolbox.ui_kit.modern_table import ModernTableWidget
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton, ModernSuccessButton, ModernCancelButton
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 
@@ -35,35 +36,45 @@ class AddKeywordsDialog(QDialog):
     def setup_ui(self):
         self.setWindowTitle("키워드 추가")
         self.setModal(True)
-        self.setMinimumSize(560, 520)
-        self.resize(560, 520)
         
-        # 메인 레이아웃
+        # 반응형 크기 설정
+        dialog_size = ResponsiveUI.get_dialog_size(560, 520, 25, 25)
+        self.setMinimumSize(dialog_size)
+        self.resize(dialog_size)
+        
+        # 메인 레이아웃 - 반응형
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(30, 25, 30, 30)
-        main_layout.setSpacing(20)
+        margin_h = ResponsiveUI.get_spacing('large')
+        margin_v = ResponsiveUI.get_spacing('normal')
+        spacing = ResponsiveUI.get_spacing('normal')
+        main_layout.setContentsMargins(margin_h, margin_v, margin_h, margin_h)
+        main_layout.setSpacing(spacing)
         
-        # 헤더
+        # 헤더 - 반응형
         header_label = QLabel("📝 키워드 추가")
-        header_label.setStyleSheet("""
-            QLabel {
+        header_font_size = ResponsiveUI.get_font_size_pt('title')
+        header_padding = ResponsiveUI.get_spacing('tiny')
+        header_label.setStyleSheet(f"""
+            QLabel {{
                 color: #2563eb;
-                font-size: 20px;
+                font-size: {header_font_size}pt;
                 font-weight: bold;
-                padding: 0 0 5px 0;
+                padding: 0 0 {header_padding}px 0;
                 margin: 0;
-            }
+            }}
         """)
         main_layout.addWidget(header_label)
         
-        # 설명
+        # 설명 - 반응형
         self.description_label = QLabel("추적할 키워드를 입력하세요")
-        self.description_label.setStyleSheet("""
-            QLabel {
+        desc_font_size = ResponsiveUI.get_font_size_pt('header')
+        desc_margin = ResponsiveUI.get_spacing('normal')
+        self.description_label.setStyleSheet(f"""
+            QLabel {{
                 color: #64748b;
-                font-size: 14px;
-                margin: 0 0 10px 0;
-            }
+                font-size: {desc_font_size}pt;
+                margin: 0 0 {desc_margin}px 0;
+            }}
         """)
         main_layout.addWidget(self.description_label)
         
@@ -80,55 +91,68 @@ class AddKeywordsDialog(QDialog):
         """)
         main_layout.addWidget(separator)
         
-        # 입력 라벨
+        # 입력 라벨 - 반응형
         input_label = QLabel("키워드 목록")
-        input_label.setStyleSheet("""
-            QLabel {
+        label_font_size = ResponsiveUI.get_font_size_pt('normal')
+        label_margin = ResponsiveUI.get_spacing('tiny')
+        input_label.setStyleSheet(f"""
+            QLabel {{
                 color: #1e293b;
-                font-size: 13px;
+                font-size: {label_font_size}pt;
                 font-weight: 600;
-                margin: 5px 0;
-            }
+                margin: {label_margin}px 0;
+            }}
         """)
         main_layout.addWidget(input_label)
         
-        # 키워드 입력 필드
+        # 키워드 입력 필드 - 반응형
         self.keywords_input = QTextEdit()
         self.keywords_input.setPlaceholderText("예:\n강아지 사료\n고양이 간식\n반려동물 장난감\n\n또는 쉼표로 구분: 강아지 사료, 고양이 간식, 반려동물 장난감")
-        self.keywords_input.setStyleSheet("""
-            QTextEdit {
+        input_font_size = ResponsiveUI.get_font_size_pt('normal')
+        input_padding = ResponsiveUI.get_spacing('normal')
+        input_border_radius = ResponsiveUI.get_spacing('small')
+        input_height = ResponsiveUI.height_percent(8) # 화면 높이의 8%
+        input_height = max(120, min(180, input_height))  # 최소 120px, 최대 180px
+        self.keywords_input.setStyleSheet(f"""
+            QTextEdit {{
                 border: 2px solid #e2e8f0;
-                border-radius: 8px;
-                padding: 12px;
-                font-size: 13px;
+                border-radius: {input_border_radius}px;
+                padding: {input_padding}px;
+                font-size: {input_font_size}pt;
                 font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
                 background-color: #ffffff;
                 color: #1e293b;
                 line-height: 1.4;
-            }
-            QTextEdit:focus {
+            }}
+            QTextEdit:focus {{
                 border-color: #2563eb;
                 outline: none;
-            }
+            }}
         """)
-        self.keywords_input.setMinimumHeight(160)
-        self.keywords_input.setMaximumHeight(160)
+        self.keywords_input.setMinimumHeight(input_height)
+        self.keywords_input.setMaximumHeight(input_height)
         main_layout.addWidget(self.keywords_input)
         
-        # 안내 텍스트
+        # 안내 텍스트 - 반응형
         help_label = QLabel("ℹ️ 각 줄에 하나씩 입력하거나 쉼표(,)로 구분해서 입력하세요")
         help_label.setWordWrap(True)
-        help_label.setStyleSheet("""
-            QLabel {
+        help_font_size = ResponsiveUI.get_font_size_pt('small')
+        help_padding_v = ResponsiveUI.get_spacing('small')
+        help_padding_h = ResponsiveUI.get_spacing('normal')
+        help_border_radius = ResponsiveUI.get_spacing('small')
+        help_margin_v = ResponsiveUI.get_spacing('tiny')
+        help_margin_bottom = ResponsiveUI.get_spacing('normal')
+        help_label.setStyleSheet(f"""
+            QLabel {{
                 color: #64748b;
-                font-size: 12px;
+                font-size: {help_font_size}pt;
                 line-height: 1.4;
-                padding: 8px 12px;
+                padding: {help_padding_v}px {help_padding_h}px;
                 background-color: #f1f5f9;
-                border-radius: 6px;
+                border-radius: {help_border_radius}px;
                 border-left: 3px solid #3b82f6;
-                margin: 5px 0 10px 0;
-            }
+                margin: {help_margin_v}px 0 {help_margin_bottom}px 0;
+            }}
         """)
         main_layout.addWidget(help_label)
         
@@ -136,18 +160,17 @@ class AddKeywordsDialog(QDialog):
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         
+        # 버튼들 - 반응형
+        button_width = ResponsiveUI.get_button_min_width()
+        
         self.cancel_button = ModernCancelButton("취소")
         self.cancel_button.clicked.connect(self.reject)
-        self.cancel_button.setFixedWidth(80)
-        # 강제로 동일한 크기 적용
-        self.cancel_button.setStyleSheet(self.cancel_button.styleSheet() + "QPushButton { width: 80px; min-width: 80px; max-width: 80px; }")
+        self.cancel_button.setFixedWidth(button_width)
         button_layout.addWidget(self.cancel_button)
         
         self.ok_button = ModernPrimaryButton("추가")
         self.ok_button.clicked.connect(self.accept)
-        self.ok_button.setFixedWidth(80)
-        # 강제로 동일한 크기 적용
-        self.ok_button.setStyleSheet(self.ok_button.styleSheet() + "QPushButton { width: 80px; min-width: 80px; max-width: 80px; }")
+        self.ok_button.setFixedWidth(button_width)
         button_layout.addWidget(self.ok_button)
         
         main_layout.addLayout(button_layout)
@@ -224,13 +247,15 @@ class RankingTableWidget(QWidget):
         keyword_info_worker_manager.keyword_info_finished.connect(self.on_keyword_info_finished)
     
     def setup_ui(self):
-        """UI 구성 - 원본과 완전 동일"""
+        """UI 구성 - 반응형"""
         layout = QVBoxLayout()
-        layout.setContentsMargins(10, 10, 10, 10)
-        layout.setSpacing(10)
+        margin = ResponsiveUI.get_spacing('normal')
+        spacing = ResponsiveUI.get_spacing('normal')
+        layout.setContentsMargins(margin, margin, margin, margin)
+        layout.setSpacing(spacing)
         
         
-        # 테이블 상단 버튼들
+        # 테이블 상단 버튼들 - 반응형
         button_layout = QHBoxLayout()
         
         # 키워드 삭제 버튼
@@ -239,27 +264,35 @@ class RankingTableWidget(QWidget):
         self.delete_keywords_button.setEnabled(False)
         button_layout.addWidget(self.delete_keywords_button)
         
-        # 진행상황 표시를 버튼 옆에 배치 (원본과 동일)
+        # 진행상황 표시를 버튼 옆에 배치 - 반응형
         self.progress_frame = QFrame()
         self.progress_frame.setVisible(False)
         progress_layout = QHBoxLayout()  # 가로 배치로 변경
-        progress_layout.setContentsMargins(5, 5, 5, 5)  # 여백 최소화
-        progress_layout.setSpacing(8)  # 간격을 8px로 줄임
+        progress_margin = ResponsiveUI.get_spacing('tiny')
+        progress_spacing = ResponsiveUI.get_spacing('small')
+        progress_layout.setContentsMargins(progress_margin, progress_margin, progress_margin, progress_margin)
+        progress_layout.setSpacing(progress_spacing)
         
         from PySide6.QtWidgets import QProgressBar, QSizePolicy
         
+        # 진행률 라벨 - 반응형
         self.progress_label = QLabel("작업 진행 중...")
-        self.progress_label.setFont(QFont("맑은 고딕", 10))  # 폰트 크기 줄임
+        progress_font_size = ResponsiveUI.get_font_size_pt('small')
+        self.progress_label.setFont(QFont("맑은 고딕", progress_font_size))
         self.progress_label.setStyleSheet("color: #007ACC; font-weight: 500;")
-        self.progress_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.progress_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         progress_layout.addWidget(self.progress_label)
         
+        # 진행률 바 - 반응형
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
-        self.progress_bar.setFixedHeight(16)  # 높이 제한
-        self.progress_bar.setFixedWidth(150)  # 폭 제한
+        progress_bar_height = ResponsiveUI.get_spacing('large')  # 높이도 살짝 늘림
+        progress_bar_width = ResponsiveUI.width_percent(10)  # 화면 너비의 10%로 증가
+        progress_bar_width = max(150, min(250, progress_bar_width))  # 최소 150px, 최대 250px로 증가
+        self.progress_bar.setFixedHeight(progress_bar_height)
+        self.progress_bar.setFixedWidth(progress_bar_width)
         self.progress_bar.setVisible(False)  # 단계 진행시에만 표시
-        self.progress_bar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)  # 크기 고정
+        self.progress_bar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         progress_layout.addWidget(self.progress_bar)
         
         progress_layout.addStretch()  # 오른쪽에 늘어나는 공간 추가
@@ -296,7 +329,7 @@ class RankingTableWidget(QWidget):
         self.ranking_table.horizontalHeader().setContextMenuPolicy(Qt.CustomContextMenu)
         self.ranking_table.horizontalHeader().customContextMenuRequested.connect(self.show_header_context_menu)
         
-        # 컬럼 너비 설정 (기본 4개 컬럼)
+        # 컬럼 너비 설정 (기본 4개 컬럼) - 고정값
         self.ranking_table.setColumnWidth(0, 50)       # 체크박스
         self.ranking_table.setColumnWidth(1, 200)      # 키워드
         self.ranking_table.setColumnWidth(2, 180)      # 카테고리  
@@ -594,13 +627,13 @@ class RankingTableWidget(QWidget):
             except:
                 pass
         
-        # 기본 4개 컬럼 설정 (헤더 체크박스 설정 제외)
+        # 기본 4개 컬럼 설정 (헤더 체크박스 설정 제외) - 반응형
         base_columns = ["", "키워드", "카테고리", "월검색량"]
         self.ranking_table.setColumnCount(len(base_columns))
         self.ranking_table.setHorizontalHeaderLabels(base_columns)
         # setup_header_checkbox() 호출하지 않음 - 나중에 호출
         
-        # 컬럼 너비 설정
+        # 컬럼 너비 설정 (고정값)
         self.ranking_table.setColumnWidth(0, 50)   # 체크박스
         self.ranking_table.setColumnWidth(1, 200)  # 키워드
         self.ranking_table.setColumnWidth(2, 180)  # 카테고리
@@ -1218,44 +1251,48 @@ class RankingTableWidget(QWidget):
     
     def setup_buttons(self, layout):
         """하단 버튼들 설정"""
-        # 하단 버튼 영역
+        # 하단 버튼 영역 - 반응형
         button_layout = QHBoxLayout()
-        button_layout.setContentsMargins(0, 10, 0, 0)
-        button_layout.setSpacing(10)
+        button_margin = ResponsiveUI.get_spacing('normal')
+        button_spacing = ResponsiveUI.get_spacing('normal')
+        button_layout.setContentsMargins(0, button_margin, 0, 0)
+        button_layout.setSpacing(button_spacing)
         
-        # 키워드 추가 버튼 (새 프로젝트 생성과 동일한 색상)
+        # 키워드 추가 버튼 - 반응형
+        button_width_add = ResponsiveUI.get_button_min_width() + 20
         self.add_keyword_button = ModernPrimaryButton("➕ 키워드 추가")
         self.add_keyword_button.clicked.connect(self.add_keyword)
         self.add_keyword_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화
-        self.add_keyword_button.setMinimumWidth(130)
-        self.add_keyword_button.setMaximumWidth(130)
+        self.add_keyword_button.setMinimumWidth(button_width_add)
+        self.add_keyword_button.setMaximumWidth(button_width_add)
         button_layout.addWidget(self.add_keyword_button)
         
-        # 순위 확인 버튼 (키워드 검색기 클리어 버튼과 동일한 warning 색상)
+        # 순위 확인 버튼 - 반응형
+        button_width = ResponsiveUI.get_button_min_width()
         self.check_button = ModernSuccessButton("🔍 순위 확인")
         self.check_button.clicked.connect(self.check_rankings)
         self.check_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화
-        self.check_button.setMinimumWidth(120)
-        self.check_button.setMaximumWidth(120)
+        self.check_button.setMinimumWidth(button_width)
+        self.check_button.setMaximumWidth(button_width)
         button_layout.addWidget(self.check_button)
         
-        # 정지 버튼
+        # 정지 버튼 - 반응형
         self.stop_button = ModernCancelButton("⏹️ 정지")
         self.stop_button.clicked.connect(self.stop_ranking_check)
         self.stop_button.setEnabled(False)
-        self.stop_button.setMinimumWidth(120)
-        self.stop_button.setMaximumWidth(120)
+        self.stop_button.setMinimumWidth(button_width)
+        self.stop_button.setMaximumWidth(button_width)
         button_layout.addWidget(self.stop_button)
         
         # 오른쪽 끝으로 밀기 위한 스트레치
         button_layout.addStretch()
         
-        # 저장 버튼 (오른쪽 끝)
+        # 저장 버튼 (오른쪽 끝) - 반응형
         self.save_button = ModernSuccessButton("💾 저장")
         self.save_button.clicked.connect(self.export_data)
         self.save_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화
-        self.save_button.setMinimumWidth(120)
-        self.save_button.setMaximumWidth(120)
+        self.save_button.setMinimumWidth(button_width)
+        self.save_button.setMaximumWidth(button_width)
         button_layout.addWidget(self.save_button)
         
         layout.addLayout(button_layout)

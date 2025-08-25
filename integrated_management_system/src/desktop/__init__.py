@@ -6,7 +6,6 @@ PySide6 기반 GUI 애플리케이션의 핵심 구성 요소들
 from .app import MainWindow, run_app
 from .components import (
     PlaceholderWidget,
-    HeaderWidget, 
     StatusWidget,
     ErrorWidget,
     LoadingWidget,
@@ -30,7 +29,6 @@ __all__ = [
     
     # UI 컴포넌트
     'PlaceholderWidget',
-    'HeaderWidget',
     'StatusWidget', 
     'ErrorWidget',
     'LoadingWidget',

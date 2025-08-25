@@ -15,6 +15,7 @@ from src.toolbox.ui_kit import (
     ModernPrimaryButton, ModernSuccessButton, ModernDangerButton, 
     ModernCancelButton, ModernHelpButton
 )
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 from src.desktop.common_log import log_manager
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDialog, ModernSaveCompletionDialog
 from .worker import BackgroundWorker
@@ -52,10 +53,13 @@ class KeywordAnalysisWidget(QWidget):
         self.keyword_result_ready.connect(self._safe_add_keyword_result)
     
     def setup_ui(self):
-        """원본 키워드 검색기 UI 레이아웃 완전 복원"""
+        """원본 키워드 검색기 UI 레이아웃 - 반응형 적용"""
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(10)
+        # 반응형 마진과 간격
+        margin = ResponsiveUI.get_spacing('large')
+        spacing = ResponsiveUI.get_spacing('normal')
+        main_layout.setContentsMargins(margin, margin, margin, margin)
+        main_layout.setSpacing(spacing)
         
         # 헤더 (제목 + 사용법 버튼)
         self.setup_header(main_layout)
@@ -78,11 +82,12 @@ class KeywordAnalysisWidget(QWidget):
         """헤더 섹션 (제목 + 사용법 툴팁)"""
         header_layout = QHBoxLayout()
         
-        # 제목
+        # 제목 - 반응형 폰트
         title_label = QLabel("🔍 키워드 검색기")
+        title_font_size = ResponsiveUI.get_font_size_pt('title')
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 24px;
+                font-size: {title_font_size}pt;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -128,15 +133,22 @@ class KeywordAnalysisWidget(QWidget):
             QMessageBox.information(self, "키워드 검색기 사용법", help_text)
     
     def setup_input_section(self, layout):
-        """키워드 입력 + 검색/정지 버튼 섹션"""
+        """키워드 입력 + 검색/정지 버튼 섹션 - 반응형"""
         input_frame = QFrame()
-        input_frame.setFixedHeight(160)  # UI 블록 고정 높이
+        # 반응형 높이 (화면 높이의 약 15%)
+        frame_height = ResponsiveUI.height_percent(15)
+        frame_height = max(140, min(180, frame_height))  # 최소 140px, 최대 180px
+        input_frame.setFixedHeight(frame_height)
+        
+        # 반응형 패딩과 테두리
+        frame_padding = ResponsiveUI.get_spacing('small')
+        border_radius = ResponsiveUI.get_spacing('normal')
         input_frame.setStyleSheet(f"""
             QFrame {{
                 background-color: {ModernStyle.COLORS['bg_card']};
-                border-radius: 12px;
+                border-radius: {border_radius}px;
                 border: 1px solid {ModernStyle.COLORS['border']};
-                padding: 8px;
+                padding: {frame_padding}px;
             }}
         """)
         
@@ -145,18 +157,28 @@ class KeywordAnalysisWidget(QWidget):
         # 키워드 입력 + 버튼 가로 배치
         input_row = QHBoxLayout()
         input_row_widget = QWidget()
-        input_row_widget.setFixedHeight(140)  # 내부 검색 영역 고정 높이
+        # 반응형 내부 높이
+        inner_height = frame_height - (frame_padding * 2) - 10  # 여유 공간
+        input_row_widget.setFixedHeight(inner_height)
         
-        # 텍스트 입력
+        # 텍스트 입력 - 반응형
         self.keyword_input = QTextEdit()
         self.keyword_input.setPlaceholderText("예: 아이폰 케이스, 갤럭시 충전기, 블루투스 이어폰")
-        self.keyword_input.setMaximumHeight(80)
+        
+        # 반응형 텍스트 입력창 높이 및 스타일
+        text_height = ResponsiveUI.height_percent(7.5)  # 화면 높이의 7.5%
+        text_height = max(60, min(100, text_height))  # 최소 60px, 최대 100px
+        text_padding = ResponsiveUI.get_spacing('small')
+        text_border_radius = ResponsiveUI.get_spacing('small')
+        text_font_size = ResponsiveUI.get_font_size_pt('normal')
+        
+        self.keyword_input.setMaximumHeight(text_height)
         self.keyword_input.setStyleSheet(f"""
             QTextEdit {{
-                font-size: 14px;
-                padding: 8px;
+                font-size: {text_font_size}pt;
+                padding: {text_padding}px;
                 border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border-radius: {text_border_radius}px;
                 background-color: {ModernStyle.COLORS['bg_primary']};
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -166,21 +188,20 @@ class KeywordAnalysisWidget(QWidget):
         """)
         input_row.addWidget(self.keyword_input, 3)  # 비율 3 (더 넓게)
         
-        # 버튼 컨테이너
+        # 버튼 컨테이너 - 반응형
         button_container = QVBoxLayout()
-        button_container.setSpacing(5)
+        button_spacing = ResponsiveUI.get_spacing('tiny')
+        button_container.setSpacing(button_spacing)
         
         # 검색 시작 버튼
         self.search_button = ModernPrimaryButton("🔍 검색")
         self.search_button.clicked.connect(self.start_search)
-        self.search_button.setMinimumWidth(80)
         button_container.addWidget(self.search_button)
         
         # 정지 버튼
         self.cancel_button = ModernCancelButton("⏹ 정지")
         self.cancel_button.clicked.connect(self.cancel_search)
         self.cancel_button.setEnabled(False)
-        self.cancel_button.setMinimumWidth(80)
         button_container.addWidget(self.cancel_button)
         
         input_row.addLayout(button_container)
@@ -191,40 +212,50 @@ class KeywordAnalysisWidget(QWidget):
         layout.addWidget(input_frame)
     
     def setup_progress_section(self, layout):
-        """진행 상태 섹션"""
+        """진행 상태 섹션 - 반응형"""
         progress_layout = QHBoxLayout()
         
+        # 진행 라벨 - 반응형 폰트
         self.progress_label = QLabel("대기 중...")
+        label_font_size = ResponsiveUI.get_font_size_pt('normal')
         self.progress_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 14px;
+                font-size: {label_font_size}pt;
                 color: {ModernStyle.COLORS['text_secondary']};
             }}
         """)
         progress_layout.addWidget(self.progress_label)
         
+        # 진행률 바 - 반응형
         self.progress_bar = QProgressBar()
+        progress_height = ResponsiveUI.get_button_height()  # 버튼과 비슷한 높이
+        progress_border_radius = ResponsiveUI.get_spacing('small')
+        progress_font_size = ResponsiveUI.get_font_size_pt('small')
+        progress_max_width = ResponsiveUI.width_percent(20)  # 화면 너비의 20%
+        progress_max_width = max(250, min(400, progress_max_width))  # 최소 250px, 최대 400px
+        
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
                 border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border-radius: {progress_border_radius}px;
                 text-align: center;
                 font-weight: 500;
+                font-size: {progress_font_size}pt;
                 background-color: {ModernStyle.COLORS['bg_card']};
-                height: 25px;
             }}
             QProgressBar::chunk {{
                 background-color: {ModernStyle.COLORS['primary']};
-                border-radius: 6px;
+                border-radius: {progress_border_radius - 2}px;
             }}
         """)
-        self.progress_bar.setMaximumWidth(300)
+        self.progress_bar.setMaximumWidth(progress_max_width)
+        self.progress_bar.setMinimumHeight(progress_height)
         progress_layout.addWidget(self.progress_bar)
         
         layout.addLayout(progress_layout)
     
     def setup_results_section(self, layout):
-        """결과 테이블 섹션"""
+        """결과 테이블 섹션 - 반응형"""
         self.results_tree = QTreeWidget()
         self.results_tree.setHeaderLabels([
             "키워드", "카테고리", "월검색량", "전체상품수", "경쟁강도"
@@ -236,27 +267,43 @@ class KeywordAnalysisWidget(QWidget):
         # 다중 선택 모드 활성화
         self.results_tree.setSelectionMode(QAbstractItemView.MultiSelection)
         
-        # 컬럼 너비 설정
-        self.results_tree.setColumnWidth(0, 220)  # 키워드
-        self.results_tree.setColumnWidth(1, 525)  # 카테고리 (1.5배)
-        self.results_tree.setColumnWidth(2, 100)  # 월검색량
-        self.results_tree.setColumnWidth(3, 100)  # 전체상품수
-        self.results_tree.setColumnWidth(4, 80)   # 경쟁강도
+        # 반응형 컬럼 너비 설정 (더 작게)
+        screen_width, _ = ResponsiveUI.get_screen_size()
+        # 앱은 화면의 85% 사용, 사이드바 제외, 마진 고려
+        app_width = screen_width * 0.85  # 앱 윈도우 크기
+        sidebar_width = ResponsiveUI.get_sidebar_width()
+        margin = ResponsiveUI.get_spacing('large') * 2  # 양쪽 마진
+        available_width = (app_width - sidebar_width - margin - 100) * 0.6  # 60%만 사용
+        
+        # 기존 비율 유지하여 반응형 적용 (더 작게)
+        total_original = 220 + 525 + 100 + 100 + 80  # 1025
+        self.results_tree.setColumnWidth(0, int(available_width * 220 / total_original))  # 키워드 ~21%
+        self.results_tree.setColumnWidth(1, int(available_width * 525 / total_original))  # 카테고리 ~51% 
+        self.results_tree.setColumnWidth(2, int(available_width * 100 / total_original))  # 월검색량 ~10%
+        self.results_tree.setColumnWidth(3, int(available_width * 100 / total_original))  # 전체상품수 ~10%
+        self.results_tree.setColumnWidth(4, int(available_width * 80 / total_original))   # 경쟁강도 ~8%
         
         # 테이블이 사용 가능한 공간을 모두 차지하도록 설정
         self.results_tree.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
+        # 반응형 테이블 스타일
+        table_border_radius = ResponsiveUI.get_spacing('small')
+        table_font_size = ResponsiveUI.get_font_size_pt('normal')
+        item_padding_v = ResponsiveUI.get_spacing('tiny')
+        item_padding_h = ResponsiveUI.get_spacing('tiny')
+        header_padding = ResponsiveUI.get_spacing('small')
+        
         self.results_tree.setStyleSheet(f"""
             QTreeWidget {{
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border-radius: {table_border_radius}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
                 alternate-background-color: {ModernStyle.COLORS['bg_primary']};
-                font-size: 13px;
+                font-size: {table_font_size}pt;
                 gridline-color: {ModernStyle.COLORS['border']};
             }}
             QTreeWidget::item {{
-                padding: 8px 4px;
+                padding: {item_padding_v}px {item_padding_h}px;
                 border-bottom: 1px solid {ModernStyle.COLORS['border']};
             }}
             QTreeWidget::item:selected {{
@@ -268,11 +315,19 @@ class KeywordAnalysisWidget(QWidget):
                 border: none;
                 border-right: 1px solid {ModernStyle.COLORS['border']};
                 border-bottom: 2px solid {ModernStyle.COLORS['border']};
-                padding: 8px;
+                padding: {header_padding}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
+                font-size: {table_font_size}pt;
             }}
         """)
+        
+        # 헤더 중앙 정렬 설정
+        header = self.results_tree.header()
+        for i in range(self.results_tree.columnCount()):
+            header.setSectionResizeMode(i, header.ResizeMode.Interactive)
+            # Qt 방식으로 헤더 텍스트 중앙 정렬
+            self.results_tree.headerItem().setTextAlignment(i, Qt.AlignCenter)
         
         layout.addWidget(self.results_tree)
     
@@ -509,6 +564,21 @@ class KeywordAnalysisWidget(QWidget):
         # 중복 제거 및 건너뛴 키워드 추적
         unique_keywords, skipped_keywords = filter_unique_keywords_with_skipped(keywords, existing_keywords)
         
+        # 키워드 처리 결과 로깅
+        if skipped_keywords:
+            self.add_log(f"⚠️ 중복 제거: {len(skipped_keywords)}개 키워드 건너뜀 ({', '.join(skipped_keywords[:3])}{'...' if len(skipped_keywords) > 3 else ''})", "warning")
+        
+        # 검색할 키워드가 없는 경우 처리
+        if not unique_keywords:
+            self.add_log("❌ 모든 키워드가 중복되어 검색할 키워드가 없습니다.", "error")
+            # 입력창 비우기
+            self.keyword_input.clear()
+            try:
+                ModernInfoDialog.warning(self, "중복 키워드", "입력된 모든 키워드가 이미 검색되었거나 중복입니다.")
+            except:
+                QMessageBox.information(self, "중복 키워드", "입력된 모든 키워드가 이미 검색되었거나 중복입니다.")
+            return
+        
         # UI 상태 변경
         self.is_search_canceled = False  # 새 검색 시작 시 취소 상태 초기화
         self.search_button.setEnabled(False)
@@ -535,7 +605,11 @@ class KeywordAnalysisWidget(QWidget):
             result_callback=self._create_result_callback()
         )
         
-        self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")
+        # 상세한 검색 시작 로그
+        if len(keywords) == len(unique_keywords):
+            self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개", "info")
+        else:
+            self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개 (입력: {len(keywords)}개, 중복 제거: {len(skipped_keywords)}개)", "info")
     
     def _analyze_keywords_task(self, keywords, progress_callback=None, result_callback=None, cancel_event=None):
         """워커에서 실행할 실제 작업: analyze_single_keyword 반복 + 진행률 콜백"""
@@ -649,6 +723,13 @@ class KeywordAnalysisWidget(QWidget):
         item.setData(2, Qt.UserRole, 0 if keyword_data.search_volume is None else keyword_data.search_volume)
         item.setData(3, Qt.UserRole, 0 if keyword_data.total_products is None else keyword_data.total_products)
         item.setData(4, Qt.UserRole, keyword_data.competition_strength)
+
+        # 각 컬럼별 텍스트 정렬 설정
+        item.setTextAlignment(0, Qt.AlignLeft | Qt.AlignVCenter)      # 키워드: 왼쪽 정렬
+        item.setTextAlignment(1, Qt.AlignLeft | Qt.AlignVCenter)      # 카테고리: 왼쪽 정렬
+        item.setTextAlignment(2, Qt.AlignCenter | Qt.AlignVCenter)    # 월검색량: 중앙 정렬
+        item.setTextAlignment(3, Qt.AlignCenter | Qt.AlignVCenter)    # 전체상품수: 중앙 정렬
+        item.setTextAlignment(4, Qt.AlignCenter | Qt.AlignVCenter)    # 경쟁강도: 중앙 정렬
 
         self.results_tree.addTopLevelItem(item)
         self.search_results.append(keyword_data)

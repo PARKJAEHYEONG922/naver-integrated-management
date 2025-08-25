@@ -8,8 +8,9 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
-from .styles import AppStyles, IconConfig, LayoutConfig
+from .styles import AppStyles, IconConfig, LayoutConfig, WindowConfig
 from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 from src.foundation.logging import get_logger
 
 logger = get_logger("desktop.components")
@@ -50,38 +51,6 @@ class PlaceholderWidget(QWidget):
         self.setLayout(layout)
 
 
-class HeaderWidget(QWidget):
-    """헤더 위젯"""
-    
-    api_settings_requested = Signal()
-    
-    def __init__(self, title="통합 관리 시스템"):
-        super().__init__()
-        self.title = title
-        self.setup_ui()
-    
-    def setup_ui(self):
-        """헤더 UI 설정"""
-        self.setFixedHeight(LayoutConfig.DEFAULT_SPACING * 6)  # 60px
-        self.setStyleSheet(AppStyles.get_header_style())
-        
-        layout = QHBoxLayout()
-        layout.setContentsMargins(*LayoutConfig.COMPONENT_MARGIN)
-        
-        # 프로그램 제목
-        title_label = QLabel(f"{IconConfig.APP_ICON} {self.title}")
-        title_label.setStyleSheet(AppStyles.get_title_label_style())
-        layout.addWidget(title_label)
-        
-        layout.addStretch()
-        
-        # API 설정 버튼
-        self.api_settings_button = QPushButton(f"{IconConfig.BUTTON_ICONS['settings']} API 설정")
-        self.api_settings_button.clicked.connect(self.api_settings_requested.emit)
-        self.api_settings_button.setStyleSheet(AppStyles.get_api_settings_button_style())
-        layout.addWidget(self.api_settings_button)
-        
-        self.setLayout(layout)
 
 
 class StatusWidget(QWidget):
@@ -93,13 +62,14 @@ class StatusWidget(QWidget):
     
     def setup_ui(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(10, 5, 10, 5)
+        layout.setContentsMargins(ResponsiveUI.get_spacing('small'), ResponsiveUI.get_spacing('tiny'), 
+                                  ResponsiveUI.get_spacing('small'), ResponsiveUI.get_spacing('tiny'))
         
         self.status_label = QLabel("준비")
         self.status_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
-                font-size: 12px;
+                font-size: {ResponsiveUI.get_font_size_pt('small')}pt;
             }}
         """)
         
@@ -125,7 +95,7 @@ class StatusWidget(QWidget):
         self.status_label.setStyleSheet(f"""
             QLabel {{
                 color: {color};
-                font-size: 12px;
+                font-size: {ResponsiveUI.get_font_size_pt('small')}pt;
             }}
         """)
 
@@ -167,7 +137,7 @@ class LoadingWidget(QWidget):
         loading_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_primary']};
-                font-size: 16px;
+                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
                 font-weight: 500;
             }}
         """)
@@ -209,15 +179,16 @@ class FeatureCardWidget(QWidget):
     
     def setup_ui(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(*LayoutConfig.COMPONENT_MARGIN)
-        layout.setSpacing(LayoutConfig.BUTTON_SPACING)
+        margin = ResponsiveUI.get_spacing('normal')
+        layout.setContentsMargins(margin, margin, margin, margin)
+        layout.setSpacing(ResponsiveUI.get_spacing('small'))
         
-        # 카드 스타일
+        # 카드 스타일 - 반응형
         self.setStyleSheet(f"""
             QWidget {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
             }}
             QWidget:hover {{
                 border-color: {ModernStyle.COLORS['primary']};
@@ -229,13 +200,13 @@ class FeatureCardWidget(QWidget):
         header_layout = QHBoxLayout()
         
         icon_label = QLabel(self.icon)
-        icon_label.setStyleSheet("font-size: 24px;")
+        icon_label.setStyleSheet(f"font-size: {ResponsiveUI.get_font_size_pt('title')}pt;")
         header_layout.addWidget(icon_label)
         
         title_label = QLabel(self.title)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 16px;
+                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -248,7 +219,7 @@ class FeatureCardWidget(QWidget):
         desc_label = QLabel(self.description)
         desc_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 14px;
+                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
                 color: {ModernStyle.COLORS['text_secondary']};
                 line-height: 1.4;
             }}
@@ -278,15 +249,19 @@ class ModernButton(QPushButton):
         self.setup_style()
     
     def setup_style(self):
-        """버튼 스타일 설정"""
+        """버튼 스타일 설정 - 반응형"""
+        padding_v = ResponsiveUI.get_spacing('small')
+        padding_h = ResponsiveUI.get_spacing('normal')
+        
         base_style = f"""
             QPushButton {{
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-size: 14px;
+                padding: {padding_v}px {padding_h}px;
+                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
+                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
                 font-weight: 600;
-                min-width: {LayoutConfig.BUTTON_MIN_WIDTH}px;
+                min-width: {ResponsiveUI.get_button_min_width()}px;
+                min-height: {ResponsiveUI.get_button_height()}px;
             }}
         """
         
@@ -364,22 +339,22 @@ class InfoPanel(QFrame):
             QFrame {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                padding: 15px;
+                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
+                padding: {ResponsiveUI.get_spacing('normal')}px;
             }}
         """)
         
         layout = QVBoxLayout()
-        layout.setSpacing(LayoutConfig.BUTTON_SPACING)
+        layout.setSpacing(ResponsiveUI.get_spacing('small'))
         
         # 제목
         title_label = QLabel(self.title)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 16px;
+                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 8px;
+                margin-bottom: {ResponsiveUI.get_spacing('small')}px;
             }}
         """)
         layout.addWidget(title_label)
@@ -389,7 +364,7 @@ class InfoPanel(QFrame):
             content_label = QLabel(self.content)
             content_label.setStyleSheet(f"""
                 QLabel {{
-                    font-size: 14px;
+                    font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
                     color: {ModernStyle.COLORS['text_secondary']};
                     line-height: 1.4;
                 }}
@@ -403,3 +378,5 @@ class InfoPanel(QFrame):
         """내용 업데이트"""
         self.content = content
         # 기존 내용 위젯을 찾아서 업데이트하거나 새로 생성
+
+

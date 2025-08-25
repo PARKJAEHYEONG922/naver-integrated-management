@@ -1,7 +1,9 @@
 """
 모던한 Qt 스타일 정의
 기존 블로그 자동화에서 사용하던 스타일을 재사용
+반응형 UI 지원 추가
 """
+from .responsive import ResponsiveUI
 
 class ModernStyle:
     """모던한 Qt 스타일 정의"""
@@ -36,11 +38,42 @@ class ModernStyle:
     
     # 기본 폰트 (호환성 유지)
     DEFAULT_FONT = "맑은 고딕"
+    
+    # 반응형 값들 (동적 계산)
+    @classmethod
+    def get_font_size_header(cls):
+        return ResponsiveUI.get_font_size_pt('header')
+    
+    @classmethod 
+    def get_font_size_normal(cls):
+        return ResponsiveUI.get_font_size_pt('normal')
+    
+    @classmethod
+    def get_button_height(cls):
+        return ResponsiveUI.get_button_height()
+    
+    # 호환성을 위한 기본값 (가능하면 위의 메서드 사용 권장)
     FONT_SIZE_HEADER = 14
     FONT_SIZE_NORMAL = 12
     BUTTON_HEIGHT = 36
     
-    # 텍스트 스타일 상수들 (키워드 분석기 UI 호환)
+    # 텍스트 스타일 상수들 (키워드 분석기 UI 호환) - 반응형으로 개선
+    @classmethod
+    def get_title_style(cls):
+        """제목 스타일 - 반응형"""
+        font_size = ResponsiveUI.get_font_size_pt('title')
+        margin = ResponsiveUI.get_spacing('small')
+        return f"""
+            QLabel {{
+                font-size: {font_size}pt;
+                font-weight: bold;
+                color: {cls.COLORS['text_primary']};
+                font-family: '{cls.DEFAULT_FONT}';
+                margin-bottom: {margin}px;
+            }}
+        """
+    
+    # 호환성을 위한 기존 상수 (가능하면 get_title_style() 사용 권장)
     TITLE = f"""
         QLabel {{
             font-size: 18px;
@@ -140,16 +173,25 @@ class ModernStyle:
     
     @classmethod
     def get_button_style(cls, button_type='primary'):
-        """버튼 스타일 반환 - 키워드 분석기 스타일 기반으로 개선"""
+        """버튼 스타일 반환 - 반응형 지원"""
+        # 반응형 값들 계산
+        padding_v = ResponsiveUI.get_spacing('small')
+        padding_h = ResponsiveUI.get_spacing('normal')
+        font_size = ResponsiveUI.get_font_size_pt('normal')
+        border_radius = ResponsiveUI.get_spacing('tiny')
+        min_width = ResponsiveUI.get_button_min_width()
+        min_height = ResponsiveUI.get_button_height()
+        
         base_style = f"""
             QPushButton {{
                 border: none;
-                border-radius: 6px;
-                padding: 8px 16px;
+                border-radius: {border_radius}px;
+                padding: {padding_v}px {padding_h}px;
                 font-weight: 600;
-                font-size: 13px;
+                font-size: {font_size}pt;
                 font-family: '{cls.DEFAULT_FONT}';
-                min-width: 80px;
+                min-width: {min_width}px;
+                min-height: {min_height}px;
             }}
             QPushButton:pressed {{
                 margin-top: 1px;

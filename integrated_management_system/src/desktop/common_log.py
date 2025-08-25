@@ -3,9 +3,10 @@
 모든 모듈에서 공유하는 통합 로그 영역
 """
 from datetime import datetime
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QTextEdit, QLabel, QPushButton
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QLabel, QPushButton
 from PySide6.QtCore import QObject, Signal
 from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit.components import ModernSuccessButton
 
 
 class LogManager(QObject):
@@ -59,6 +60,9 @@ class LogManager(QObject):
 class CommonLogWidget(QWidget):
     """공통 로그 위젯"""
     
+    # API 설정 요청 시그널
+    api_settings_requested = Signal()
+    
     def __init__(self):
         super().__init__()
         self.log_manager = LogManager()
@@ -71,20 +75,37 @@ class CommonLogWidget(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(10)
         
-        # 로그 제목
+        # 로그 헤더 (제목 + API 설정 버튼)
+        header_layout = QHBoxLayout()
+        header_layout.setContentsMargins(10, 10, 10, 10)
+        
         log_title = QLabel("📋 실행 로그")
         log_title.setStyleSheet(f"""
             QLabel {{
                 font-size: 16px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
-                padding: 10px;
-                background-color: {ModernStyle.COLORS['bg_card']};
-                border-radius: 8px;
-                border-bottom: 2px solid {ModernStyle.COLORS['primary']};
             }}
         """)
-        layout.addWidget(log_title)
+        header_layout.addWidget(log_title)
+        
+        header_layout.addStretch()
+        
+        # API 설정 버튼 (공용 버튼 사용)
+        api_settings_btn = ModernSuccessButton("⚙️ API 설정")
+        api_settings_btn.clicked.connect(self.api_settings_requested.emit)
+        header_layout.addWidget(api_settings_btn)
+        
+        # 헤더를 카드 스타일로 감싸기
+        header_widget = QWidget()
+        header_widget.setLayout(header_layout)
+        header_widget.setStyleSheet(f"""
+            QWidget {{
+                background-color: {ModernStyle.COLORS['bg_card']};
+                border-radius: 8px;
+            }}
+        """)
+        layout.addWidget(header_widget)
         
         # 로그 텍스트 영역
         self.log_text = QTextEdit()
