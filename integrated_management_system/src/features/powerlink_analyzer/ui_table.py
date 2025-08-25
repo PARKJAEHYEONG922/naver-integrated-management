@@ -38,8 +38,8 @@ class PowerLinkSaveDialog(QDialog):
         """UI 초기화 (글씨 잘림 방지 및 크기 조정)"""
         self.setWindowTitle("저장 완료")
         self.setModal(True)
-        dialog_width = ResponsiveUI.scale(420)
-        dialog_height = ResponsiveUI.scale(220)
+        dialog_width = ResponsiveUI.scale(380)
+        dialog_height = ResponsiveUI.scale(200)
         self.setFixedSize(dialog_width, dialog_height)  # 크기 증가로 글씨 잘림 방지
         
         # 메인 레이아웃
