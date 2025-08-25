@@ -915,6 +915,19 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         layout.addLayout(header_layout)
         
+        # 전체선택 버튼 (실시간 분석내용 버튼 아래)
+        select_layout = QHBoxLayout()
+        select_layout.addStretch()
+        
+        self.select_all_button = QPushButton("전체선택")
+        self.select_all_button.setObjectName("select_all_btn")
+        self.select_all_button.clicked.connect(self.toggle_all_selection)
+        self.select_all_button.setMaximumWidth(80)
+        self.select_all_button.setEnabled(False)  # 분석 완료 후 활성화
+        select_layout.addWidget(self.select_all_button)
+        
+        layout.addLayout(select_layout)
+        
         # 분석 진행 상황 표시
         self.analysis_status_label = QLabel("AI 분석 결과가 여기에 표시됩니다.\n\n상단의 'AI 분석 시작' 버튼을 클릭하여 시작하세요.")
         self.analysis_status_label.setAlignment(Qt.AlignCenter)
@@ -966,6 +979,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
             ai_category_colors = {keyword_data.category: "#10b981", "default": "#10b981"}  # 초록색
             keyword_card = KeywordCard(keyword_data, ai_category_colors)
             keyword_card.set_checked(False)  # 사용자가 직접 선택하도록 해제 상태
+            keyword_card.selection_changed.connect(self.on_selection_changed)  # 선택 변경 시그널 연결
             
             # 레이아웃에 추가
             self.keyword_selection_layout.addWidget(keyword_card)
@@ -979,6 +993,9 @@ class Step3AdvancedAnalysisWidget(QWidget):
         # 스크롤 영역 표시
         self.keyword_selection_scroll.show()
         self.analysis_status_label.hide()
+        
+        # 전체선택 버튼 활성화
+        self.select_all_button.setEnabled(True)
     
     def clear_keyword_checkboxes(self):
         """기존 키워드 카드들 정리"""
@@ -991,10 +1008,36 @@ class Step3AdvancedAnalysisWidget(QWidget):
     def get_selected_keywords(self):
         """선택된 키워드 리스트 반환"""
         selected = []
-        for card in self.keyword_cards:
+        for card in self.keyword_checkboxes:  # keyword_cards -> keyword_checkboxes로 수정
             if card.is_checked():
                 selected.append(card.keyword_data)
         return selected
+    
+    def toggle_all_selection(self):
+        """전체 선택/해제 토글"""
+        if not hasattr(self, 'keyword_checkboxes') or not self.keyword_checkboxes:
+            return
+            
+        selected_count = sum(1 for card in self.keyword_checkboxes if card.is_checked())
+        total_count = len(self.keyword_checkboxes)
+        
+        new_state = selected_count < total_count
+        
+        for card in self.keyword_checkboxes:
+            card.set_checked(new_state)
+            
+        self.select_all_button.setText("전체해제" if new_state else "전체선택")
+    
+    def on_selection_changed(self):
+        """선택 상태 변경 시 버튼 텍스트 업데이트"""
+        if hasattr(self, 'keyword_checkboxes') and self.keyword_checkboxes:
+            selected_count = sum(1 for card in self.keyword_checkboxes if card.is_checked())
+            total_count = len(self.keyword_checkboxes)
+            
+            if selected_count == total_count and total_count > 0:
+                self.select_all_button.setText("전체해제")
+            else:
+                self.select_all_button.setText("전체선택")
     
     def get_selected_category(self):
         """선택된 키워드들의 주요 카테고리 반환"""
@@ -1120,6 +1163,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analysis_status_label.setText(f"❌ 분석 실패:\n{error_msg}")
         self.keyword_selection_scroll.hide()
         
+        # 전체선택 버튼 비활성화
+        self.select_all_button.setEnabled(False)
+        self.select_all_button.setText("전체선택")
+        
     def update_analysis_data(self, data_updates):
         """실시간 분석 데이터 업데이트"""
         # analysis_data 딕셔너리 업데이트
@@ -1155,6 +1202,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         # 키워드 선택 영역만 초기화 (헤더 레이아웃은 유지)
         self.clear_keyword_checkboxes()
         self.keyword_selection_scroll.hide()
+        
+        # 전체선택 버튼 비활성화
+        self.select_all_button.setEnabled(False)
+        self.select_all_button.setText("전체선택")
         
     def apply_styles(self):
         self.setStyleSheet(f"""

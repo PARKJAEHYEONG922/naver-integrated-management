@@ -784,7 +784,6 @@ class NaverProductTitleGeneratorWidget(QWidget):
         selected_category = self.right_panel.step1_widget.get_selected_category()
         self.last_selected_category = selected_category  # 저장
         
-        log_manager.add_log(f"📋 1단계 키워드 {len(selected_keywords)}개, 카테고리 '{selected_category}'를 AI 분석에 포함", "info")
         
         self.current_ai_worker = AIAnalysisWorker(product_names, worker_prompt, selected_keywords, selected_category)
         self.current_ai_worker.progress_updated.connect(self.on_ai_progress)
