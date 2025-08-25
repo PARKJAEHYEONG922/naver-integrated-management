@@ -169,7 +169,7 @@ class NewProjectDialog(QDialog):
         
         # 도움말
         help_label = QLabel("💡 팁: 네이버 쇼핑에서 상품 페이지 URL을 복사해서 붙여넣으세요.\n상품명은 키워드 생성을 위해 사용됩니다.")
-        help_font_size = ResponsiveUI.get_font_size_pt('small')
+        help_font_size = ResponsiveUI.get_font_size_pt('normal')
         help_padding = ResponsiveUI.scale(6)
         help_border_radius = ResponsiveUI.scale(4)
         help_margin = ResponsiveUI.scale(6)
@@ -205,7 +205,7 @@ class NewProjectDialog(QDialog):
         self.setLayout(main_layout)
         
         # 반응형 크기 설정
-        dialog_width = ResponsiveUI.scale(580)
+        dialog_width = ResponsiveUI.scale(500)
         dialog_height = ResponsiveUI.scale(480)
         self.adjustSize()
         self.setMinimumWidth(dialog_width)
@@ -309,7 +309,7 @@ class NewProjectDialog(QDialog):
         
         # 오류 라벨 생성
         self.error_label = QLabel(message)
-        error_font_size = ResponsiveUI.get_font_size_pt('small')
+        error_font_size = ResponsiveUI.get_font_size_pt('normal')
         error_padding_v = ResponsiveUI.scale(6)
         error_padding_h = ResponsiveUI.scale(10)
         error_border_radius = ResponsiveUI.scale(6)
@@ -390,8 +390,11 @@ class ProjectHistoryDialog(QDialog):
         
         # 헤더
         header_label = QLabel(f"📊 {self.project_name} - 변경 이력")
-        header_label.setFont(QFont("맑은 고딕", 16, QFont.Bold))
-        header_label.setStyleSheet(f"color: {ModernStyle.COLORS['text_primary']}; margin-bottom: 10px;")
+        header_font = QFont("맑은 고딕")
+        header_font.setPointSize(ResponsiveUI.get_font_size_pt('title'))
+        header_font.setWeight(QFont.Bold)
+        header_label.setFont(header_font)
+        header_label.setStyleSheet(f"color: {ModernStyle.COLORS['text_primary']}; margin-bottom: {ResponsiveUI.scale(10)}px;")
         layout.addWidget(header_label)
         
         # 탭 위젯
@@ -1019,18 +1022,26 @@ class ProjectHistoryDialog(QDialog):
                 
                 # 현재 순위
                 if current_rank and isinstance(current_rank, int) and current_rank > 0:
-                    current_rank_display = f"{current_rank}위"
-                    current_rank_item = SortableTableWidgetItem(current_rank_display, current_rank)
+                    if current_rank > 200 or current_rank == 999:
+                        current_rank_display = "200위+"
+                        current_rank_item = SortableTableWidgetItem(current_rank_display, 999)
+                    else:
+                        current_rank_display = f"{current_rank}위"
+                        current_rank_item = SortableTableWidgetItem(current_rank_display, current_rank)
                 else:
-                    current_rank_item = SortableTableWidgetItem("-", 999)
+                    current_rank_item = SortableTableWidgetItem("-", 9999)  # 정렬용으로 더 큰 값 사용
                 self.ranking_history_table.setItem(row, 3, current_rank_item)
                 
                 # 이전 순위
                 if previous_rank and isinstance(previous_rank, int) and previous_rank > 0:
-                    previous_rank_display = f"{previous_rank}위"
-                    previous_rank_item = SortableTableWidgetItem(previous_rank_display, previous_rank)
+                    if previous_rank > 200 or previous_rank == 999:
+                        previous_rank_display = "200위+"
+                        previous_rank_item = SortableTableWidgetItem(previous_rank_display, 999)
+                    else:
+                        previous_rank_display = f"{previous_rank}위"
+                        previous_rank_item = SortableTableWidgetItem(previous_rank_display, previous_rank)
                 else:
-                    previous_rank_item = SortableTableWidgetItem("-", 999)
+                    previous_rank_item = SortableTableWidgetItem("-", 9999)  # 정렬용으로 더 큰 값 사용
                 self.ranking_history_table.setItem(row, 4, previous_rank_item)
                 
                 # 순위변동

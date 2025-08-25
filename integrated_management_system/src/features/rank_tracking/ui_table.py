@@ -38,9 +38,10 @@ class AddKeywordsDialog(QDialog):
         self.setModal(True)
         
         # 반응형 크기 설정
-        dialog_size = (ResponsiveUI.scale(560), ResponsiveUI.scale(520))
-        self.setMinimumSize(dialog_size)
-        self.resize(dialog_size)
+        dialog_width = ResponsiveUI.scale(480)
+        dialog_height = ResponsiveUI.scale(450)
+        self.setMinimumSize(dialog_width, dialog_height)
+        self.resize(dialog_width, dialog_height)
         
         # 메인 레이아웃 - 반응형
         main_layout = QVBoxLayout()
@@ -136,7 +137,7 @@ class AddKeywordsDialog(QDialog):
         # 안내 텍스트 - 반응형
         help_label = QLabel("ℹ️ 각 줄에 하나씩 입력하거나 쉼표(,)로 구분해서 입력하세요")
         help_label.setWordWrap(True)
-        help_font_size = ResponsiveUI.get_font_size_pt('small')
+        help_font_size = ResponsiveUI.get_font_size_pt('normal')
         help_padding_v = ResponsiveUI.scale(6)
         help_padding_h = ResponsiveUI.scale(10)
         help_border_radius = ResponsiveUI.scale(6)
