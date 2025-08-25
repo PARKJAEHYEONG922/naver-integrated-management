@@ -112,16 +112,16 @@ class NaverCafeControlWidget(QWidget):
                 background-color: {ModernStyle.COLORS['bg_input']};
                 border: 1px solid {ModernStyle.COLORS['border']};
                 border-radius: {border_radius}px;
-                padding: {padding}px;
-                margin: {margin}px 0;
+                padding: 0px;
+                margin: 0px;
                 min-height: {min_height}px;
             }}
         """)
         
         progress_grid = QHBoxLayout()
         progress_grid.setContentsMargins(
-            ResponsiveUI.scale(10), ResponsiveUI.scale(8),
-            ResponsiveUI.scale(10), ResponsiveUI.scale(8)
+            ResponsiveUI.scale(5), ResponsiveUI.scale(4),
+            ResponsiveUI.scale(5), ResponsiveUI.scale(4)
         )
         progress_grid.setSpacing(ResponsiveUI.scale(8))
         

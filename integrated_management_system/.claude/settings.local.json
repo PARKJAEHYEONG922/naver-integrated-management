@@ -39,7 +39,8 @@
       "Bash(true)",
       "Bash(git fetch:*)",
       "Bash(git pull:*)",
-      "Bash(del test_ui.py)"
+      "Bash(del test_ui.py)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   }
