@@ -45,8 +45,8 @@ class NaverCafeWidget(QWidget):
         
         # 좌측 패널 (컨트롤 위젯)
         self.control_widget = NaverCafeControlWidget()
-        # 200px 기준으로 반응형 조정하되 최소 150px 보장
-        control_width = max(150, ResponsiveUI.scale(200))
+        # 400px 기준으로 반응형 조정하되 최소 300px 보장 (기존 2배 크기)
+        control_width = max(300, ResponsiveUI.scale(400))
         self.control_widget.setFixedWidth(control_width)
         
         # 우측 패널 (결과 위젯)
