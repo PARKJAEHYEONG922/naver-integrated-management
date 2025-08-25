@@ -1062,6 +1062,9 @@ class Step3AdvancedAnalysisWidget(QWidget):
             dialog.exec()
             return
         
+        # 새로운 분석 시작 전에 이전 분석 데이터 초기화
+        self.reset_analysis_data()
+        
         # 버튼 상태 변경
         self.is_analysis_running = True
         self.analyze_button.setEnabled(False)
@@ -1069,8 +1072,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.stop_button.setEnabled(True)
         self.analysis_log_button.setEnabled(True)  # 분석 로그 버튼 활성화
         
-        # 결과 영역 업데이트
+        # 결과 영역을 초기 상태로 되돌리기
         self.analysis_status_label.setText("🤖 AI 분석 중입니다...\n잠시만 기다려주세요.")
+        self.analysis_status_label.setAlignment(Qt.AlignCenter)
+        self.analysis_status_label.show()
         self.keyword_selection_scroll.hide()
         
         # AI 분석 시작 시그널 발송
@@ -1123,7 +1128,30 @@ class Step3AdvancedAnalysisWidget(QWidget):
             ai_response = data_updates['ai_response']
             if ai_response and ai_response.strip():
                 self.analysis_status_label.setText("🤖 AI 분석 응답 수신 완료!\n키워드 추출 및 월검색량 조회 중...")
+    
+    def clear_keyword_checkboxes(self):
+        """기존 체크박스 카드들 모두 제거"""
+        while self.keyword_selection_layout.count():
+            item = self.keyword_selection_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
         
+        self.keyword_checkboxes.clear()
+    
+    def reset_analysis_data(self):
+        """분석 데이터 초기화 (AI 분석 시작 시 호출)"""
+        # 분석 데이터 초기화
+        self.analysis_data = {
+            'input_prompt': '',
+            'ai_response': '',
+            'extracted_keywords': [],
+            'analyzed_keywords': [],
+            'filtered_keywords': []
+        }
+        
+        # 키워드 선택 영역만 초기화 (헤더 레이아웃은 유지)
+        self.clear_keyword_checkboxes()
+        self.keyword_selection_scroll.hide()
         
     def apply_styles(self):
         self.setStyleSheet(f"""
@@ -1175,19 +1203,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
                 margin: 10px 0;
             }}
         """)
-    
-    def update_analysis_data(self, data_updates):
-        """실시간 분석 데이터 업데이트"""
-        # analysis_data 딕셔너리 업데이트
-        for key, value in data_updates.items():
-            self.analysis_data[key] = value
-        
-        # AI 응답이 있으면 상태만 업데이트 (텍스트는 다이얼로그에서만 표시)
-        if 'ai_response' in data_updates:
-            ai_response = data_updates['ai_response']
-            if ai_response and ai_response.strip():
-                self.analysis_status_label.setText("🤖 AI 분석 응답 수신 완료!\n키워드 추출 및 월검색량 조회 중...")
-        
 
 
 class Step4ResultWidget(QWidget):

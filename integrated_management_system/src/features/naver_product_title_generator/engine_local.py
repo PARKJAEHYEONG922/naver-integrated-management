@@ -306,18 +306,15 @@ def is_category_match(target_category: str, keyword_category: str) -> bool:
     if not target_parts or not keyword_parts:
         return False
     
-    # 최소 3단계 깊이까지는 일치해야 함 (예: "생활/건강 > 반려동물 > 강아지 사료")
-    min_depth = min(3, len(target_parts), len(keyword_parts))
+    # 두 카테고리의 최소 길이까지 비교 (전체 깊이 비교)
+    min_depth = min(len(target_parts), len(keyword_parts))
     
     for i in range(min_depth):
-        if i >= len(target_parts) or i >= len(keyword_parts):
-            break
-            
-        # 3단계(인덱스 2)에서 "강아지 사료"와 "강아지 간식"처럼 다른 경우 불일치
+        # 각 단계에서 일치하지 않으면 False
         if target_parts[i] != keyword_parts[i]:
             return False
     
-    # 모든 깊이가 일치하면 True
+    # 모든 단계가 일치하면 True
     return True
 
 
