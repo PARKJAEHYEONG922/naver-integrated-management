@@ -56,8 +56,8 @@ class KeywordAnalysisWidget(QWidget):
         """원본 키워드 검색기 UI 레이아웃 - 반응형 적용"""
         main_layout = QVBoxLayout()
         # 반응형 마진과 간격
-        margin = ResponsiveUI.get_spacing('large')
-        spacing = ResponsiveUI.get_spacing('normal')
+        margin = ResponsiveUI.scale(16)
+        spacing = ResponsiveUI.scale(10)
         main_layout.setContentsMargins(margin, margin, margin, margin)
         main_layout.setSpacing(spacing)
         
@@ -136,13 +136,13 @@ class KeywordAnalysisWidget(QWidget):
         """키워드 입력 + 검색/정지 버튼 섹션 - 반응형"""
         input_frame = QFrame()
         # 반응형 높이 (화면 높이의 약 15%)
-        frame_height = ResponsiveUI.height_percent(15)
+        frame_height = ResponsiveUI.scale(120)
         frame_height = max(140, min(180, frame_height))  # 최소 140px, 최대 180px
         input_frame.setFixedHeight(frame_height)
         
         # 반응형 패딩과 테두리
-        frame_padding = ResponsiveUI.get_spacing('small')
-        border_radius = ResponsiveUI.get_spacing('normal')
+        frame_padding = ResponsiveUI.scale(6)
+        border_radius = ResponsiveUI.scale(10)
         input_frame.setStyleSheet(f"""
             QFrame {{
                 background-color: {ModernStyle.COLORS['bg_card']};
@@ -166,10 +166,10 @@ class KeywordAnalysisWidget(QWidget):
         self.keyword_input.setPlaceholderText("예: 아이폰 케이스, 갤럭시 충전기, 블루투스 이어폰")
         
         # 반응형 텍스트 입력창 높이 및 스타일
-        text_height = ResponsiveUI.height_percent(7.5)  # 화면 높이의 7.5%
+        text_height = ResponsiveUI.scale(60)  # 화면 높이의 7.5%
         text_height = max(60, min(100, text_height))  # 최소 60px, 최대 100px
-        text_padding = ResponsiveUI.get_spacing('small')
-        text_border_radius = ResponsiveUI.get_spacing('small')
+        text_padding = ResponsiveUI.scale(6)
+        text_border_radius = ResponsiveUI.scale(6)
         text_font_size = ResponsiveUI.get_font_size_pt('normal')
         
         self.keyword_input.setMaximumHeight(text_height)
@@ -190,7 +190,7 @@ class KeywordAnalysisWidget(QWidget):
         
         # 버튼 컨테이너 - 반응형
         button_container = QVBoxLayout()
-        button_spacing = ResponsiveUI.get_spacing('tiny')
+        button_spacing = ResponsiveUI.scale(4)
         button_container.setSpacing(button_spacing)
         
         # 검색 시작 버튼
@@ -228,11 +228,10 @@ class KeywordAnalysisWidget(QWidget):
         
         # 진행률 바 - 반응형
         self.progress_bar = QProgressBar()
-        progress_height = ResponsiveUI.get_button_height()  # 버튼과 비슷한 높이
-        progress_border_radius = ResponsiveUI.get_spacing('small')
+        progress_height = ResponsiveUI.scale(20)  # 높이 20으로 변경
+        progress_border_radius = ResponsiveUI.scale(6)
         progress_font_size = ResponsiveUI.get_font_size_pt('small')
-        progress_max_width = ResponsiveUI.width_percent(20)  # 화면 너비의 20%
-        progress_max_width = max(250, min(400, progress_max_width))  # 최소 250px, 최대 400px
+        progress_max_width = ResponsiveUI.scale(200)  # 너비 200으로 변경
         
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
@@ -271,8 +270,8 @@ class KeywordAnalysisWidget(QWidget):
         screen_width, _ = ResponsiveUI.get_screen_size()
         # 앱은 화면의 85% 사용, 사이드바 제외, 마진 고려
         app_width = screen_width * 0.85  # 앱 윈도우 크기
-        sidebar_width = ResponsiveUI.get_sidebar_width()
-        margin = ResponsiveUI.get_spacing('large') * 2  # 양쪽 마진
+        sidebar_width = ResponsiveUI.scale(220)
+        margin = ResponsiveUI.scale(16) * 2  # 양쪽 마진
         available_width = (app_width - sidebar_width - margin - 100) * 0.6  # 60%만 사용
         
         # 기존 비율 유지하여 반응형 적용 (더 작게)
@@ -287,11 +286,11 @@ class KeywordAnalysisWidget(QWidget):
         self.results_tree.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         # 반응형 테이블 스타일
-        table_border_radius = ResponsiveUI.get_spacing('small')
+        table_border_radius = ResponsiveUI.scale(6)
         table_font_size = ResponsiveUI.get_font_size_pt('normal')
-        item_padding_v = ResponsiveUI.get_spacing('tiny')
-        item_padding_h = ResponsiveUI.get_spacing('tiny')
-        header_padding = ResponsiveUI.get_spacing('small')
+        item_padding_v = ResponsiveUI.scale(4)
+        item_padding_h = ResponsiveUI.scale(4)
+        header_padding = ResponsiveUI.scale(6)
         
         self.results_tree.setStyleSheet(f"""
             QTreeWidget {{

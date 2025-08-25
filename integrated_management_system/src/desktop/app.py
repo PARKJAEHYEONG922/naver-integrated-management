@@ -69,7 +69,7 @@ class MainWindow(QMainWindow):
         # 메인 레이아웃 (수평) - 반응형 여백
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(*margins)
-        main_layout.setSpacing(ResponsiveUI.get_spacing('small'))
+        main_layout.setSpacing(ResponsiveUI.scale(6))
         
         # 사이드바 (모듈별 네비게이션)
         self.sidebar = Sidebar()

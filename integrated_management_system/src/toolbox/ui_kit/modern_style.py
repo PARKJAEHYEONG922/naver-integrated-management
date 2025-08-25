@@ -50,7 +50,7 @@ class ModernStyle:
     
     @classmethod
     def get_button_height(cls):
-        return ResponsiveUI.get_button_height()
+        return ResponsiveUI.scale(35)
     
     # 호환성을 위한 기본값 (가능하면 위의 메서드 사용 권장)
     FONT_SIZE_HEADER = 14
@@ -62,7 +62,7 @@ class ModernStyle:
     def get_title_style(cls):
         """제목 스타일 - 반응형"""
         font_size = ResponsiveUI.get_font_size_pt('title')
-        margin = ResponsiveUI.get_spacing('small')
+        margin = ResponsiveUI.scale(6)
         return f"""
             QLabel {{
                 font-size: {font_size}pt;
@@ -174,13 +174,13 @@ class ModernStyle:
     @classmethod
     def get_button_style(cls, button_type='primary'):
         """버튼 스타일 반환 - 반응형 지원"""
-        # 반응형 값들 계산
-        padding_v = ResponsiveUI.get_spacing('small')
-        padding_h = ResponsiveUI.get_spacing('normal')
+        # 반응형 값들 계산 - 버튼 사이즈 조정
+        padding_v = ResponsiveUI.scale(3)
+        padding_h = ResponsiveUI.scale(5)
         font_size = ResponsiveUI.get_font_size_pt('normal')
-        border_radius = ResponsiveUI.get_spacing('tiny')
-        min_width = ResponsiveUI.get_button_min_width()
-        min_height = ResponsiveUI.get_button_height()
+        border_radius = ResponsiveUI.scale(4)
+        min_width = ResponsiveUI.scale(70)
+        min_height = ResponsiveUI.scale(25)
         
         base_style = f"""
             QPushButton {{

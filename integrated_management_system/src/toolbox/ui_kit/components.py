@@ -63,13 +63,13 @@ class ModernCancelButton(QPushButton):
     
     def _setup_style(self):
         """키워드 분석기의 정지 버튼 스타일 - 반응형"""
-        # 반응형 값들 계산
-        padding_v = ResponsiveUI.get_spacing('small')
-        padding_h = ResponsiveUI.get_spacing('normal')
+        # 반응형 값들 계산 - 버튼 사이즈 조정
+        padding_v = ResponsiveUI.scale(3)
+        padding_h = ResponsiveUI.scale(5)
         font_size = ResponsiveUI.get_font_size_pt('normal')
-        border_radius = ResponsiveUI.get_spacing('tiny')
-        min_width = ResponsiveUI.get_button_min_width()
-        min_height = ResponsiveUI.get_button_height()
+        border_radius = ResponsiveUI.scale(4)
+        min_width = ResponsiveUI.scale(70)
+        min_height = ResponsiveUI.scale(25)
         
         self.setStyleSheet(f"""
             QPushButton {{

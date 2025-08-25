@@ -26,9 +26,9 @@ class ModernSidebarButton(QPushButton):
             text_color = ModernStyle.COLORS['text_primary']
         
         # 반응형 패딩과 폰트 크기 - 사이드바용 (여유로운 클릭 영역)
-        padding_v = ResponsiveUI.get_spacing('normal')
-        padding_h = ResponsiveUI.get_spacing('large')
-        font_size = ResponsiveUI.get_font_size_pt('sidebar')
+        padding_v = ResponsiveUI.scale(10)
+        padding_h = ResponsiveUI.scale(16)
+        font_size = ResponsiveUI.get_font_size_pt('large')
         
         style = f"""
             QPushButton {{
@@ -39,8 +39,8 @@ class ModernSidebarButton(QPushButton):
                 text-align: left;
                 font-size: {font_size}pt;
                 font-weight: 500;
-                min-height: {ResponsiveUI.get_button_height()}px;
-                max-height: {ResponsiveUI.get_button_height()}px;
+                min-height: {ResponsiveUI.scale(35)}px;
+                max-height: {ResponsiveUI.scale(35)}px;
             }}
             QPushButton:hover {{
                 background-color: {ModernStyle.COLORS['bg_muted']};
@@ -80,9 +80,9 @@ class Sidebar(QWidget):
     def setup_ui(self):
         """사이드바 UI 설정 - 반응형"""
         # 반응형 사이드바 너비
-        sidebar_width = ResponsiveUI.get_sidebar_width()
-        self.setMinimumWidth(ResponsiveUI.Layout.SIDEBAR_MIN)
-        self.setMaximumWidth(ResponsiveUI.Layout.SIDEBAR_MAX)
+        sidebar_width = ResponsiveUI.scale(220)
+        self.setMinimumWidth(ResponsiveUI.scale(180))
+        self.setMaximumWidth(ResponsiveUI.scale(250))
         self.setFixedWidth(sidebar_width)
         
         self.setStyleSheet(f"""
@@ -93,14 +93,14 @@ class Sidebar(QWidget):
         """)
         
         layout = QVBoxLayout()
-        spacing = ResponsiveUI.get_spacing('normal')
+        spacing = ResponsiveUI.scale(10)
         layout.setContentsMargins(0, spacing, 0, spacing)
-        layout.setSpacing(ResponsiveUI.get_spacing('tiny'))
+        layout.setSpacing(ResponsiveUI.scale(4))
         
         # 앱 제목 - 반응형
         title_label = QLabel("📊 네이버 통합 관리")
         title_font = ResponsiveUI.get_font_size_pt('header')
-        title_padding = ResponsiveUI.get_spacing('normal')
+        title_padding = ResponsiveUI.scale(10)
         title_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_primary']};
@@ -116,7 +116,7 @@ class Sidebar(QWidget):
         
         # 버튼들이 추가될 영역
         self.button_layout = QVBoxLayout()
-        self.button_layout.setSpacing(ResponsiveUI.get_spacing('normal'))
+        self.button_layout.setSpacing(ResponsiveUI.scale(10))
         layout.addLayout(self.button_layout)
         
         layout.addStretch()

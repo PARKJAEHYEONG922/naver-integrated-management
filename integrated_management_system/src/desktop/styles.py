@@ -47,12 +47,12 @@ class AppStyles:
                 background-color: {ModernStyle.COLORS['success']};
                 color: white;
                 border: none;
-                padding: {ResponsiveUI.get_spacing('small')}px {ResponsiveUI.get_spacing('normal')}px;
-                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
+                padding: {ResponsiveUI.scale(6)}px {ResponsiveUI.scale(10)}px;
+                border-radius: {ResponsiveUI.scale(4)}px;
                 font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
                 font-weight: 600;
-                min-width: {ResponsiveUI.get_button_min_width()}px;
-                min-height: {ResponsiveUI.get_button_height()}px;
+                min-width: {ResponsiveUI.scale(120)}px;
+                min-height: {ResponsiveUI.scale(35)}px;
             }}
             QPushButton:hover {{
                 background-color: #059669;
@@ -132,19 +132,19 @@ class WindowConfig:
     @staticmethod
     def get_header_height():
         """헤더 높이"""
-        return max(50, min(70, ResponsiveUI.height_percent(5)))  # 화면 높이의 5%, 50-70px 제한
+        return max(50, min(70, ResponsiveUI.scale(40)))  # 화면 높이의 5%, 50-70px 제한
     
     @staticmethod
     def get_main_margins():
         """메인 레이아웃 여백"""
-        margin = ResponsiveUI.get_spacing('small')
+        margin = ResponsiveUI.scale(6)
         return (margin, margin, margin, margin)
     
     @staticmethod
     def get_header_margins():
         """헤더 여백"""
-        h_margin = ResponsiveUI.get_spacing('normal')
-        v_margin = ResponsiveUI.get_spacing('small')
+        h_margin = ResponsiveUI.scale(10)
+        v_margin = ResponsiveUI.scale(6)
         return (h_margin, v_margin, h_margin, v_margin)
     
     @staticmethod
@@ -163,14 +163,10 @@ class WindowConfig:
     
     @staticmethod
     def get_log_widget_sizes():
-        """로그 위젯 크기 (비율 기반으로 일관성 유지)"""
-        screen_width, _ = ResponsiveUI.get_screen_size()
-        
-        # 화면 너비의 비율로 계산 (최소/최대 제한)
-        min_width = max(180, int(screen_width * 0.12))  # 화면의 12%
-        max_width = min(350, int(screen_width * 0.20))  # 화면의 20%
-        
-        return min_width, max_width
+        """로그 위젯 크기 (사이드바와 동일한 고정 크기)"""
+        # 사이드바와 동일하게 scale(220) 사용
+        log_width = ResponsiveUI.scale(220)
+        return log_width, log_width
 
 
 class LayoutConfig:
@@ -179,41 +175,41 @@ class LayoutConfig:
     @staticmethod
     def get_default_margin():
         """기본 여백"""
-        margin = ResponsiveUI.get_spacing('normal')
+        margin = ResponsiveUI.scale(10)
         return (margin, margin, margin, margin)
     
     @staticmethod
     def get_default_spacing():
         """기본 간격"""
-        return ResponsiveUI.get_spacing('small')
+        return ResponsiveUI.scale(6)
     
     @staticmethod
     def get_section_spacing():
         """섹션 간격"""
-        return ResponsiveUI.get_spacing('normal')
+        return ResponsiveUI.scale(10)
     
     @staticmethod
     def get_component_margin():
         """컴포넌트 여백 - 반응형"""
-        margin = ResponsiveUI.get_spacing('normal')
+        margin = ResponsiveUI.scale(10)
         return (margin, margin, margin, margin)
     
     @staticmethod
     def get_button_spacing():
         """버튼 간격 - 반응형"""
-        return ResponsiveUI.get_spacing('small')
+        return ResponsiveUI.scale(6)
     
     # 입력 필드 높이 - 반응형으로 개선 가능
     @staticmethod
     def get_input_max_height():
         """입력 필드 최대 높이"""
-        return ResponsiveUI.height_percent(25)  # 화면 높이의 25%
+        return ResponsiveUI.scale(200)  # 화면 높이의 25%
     
     # 컬럼 너비 (트리 위젯) - 반응형으로 개선 가능
     @staticmethod
     def get_tree_column_widths():
         """트리 위젯 컬럼 너비 - 반응형"""
-        base_width = ResponsiveUI.width_percent(8)  # 화면 너비의 8%
+        base_width = ResponsiveUI.scale(120)  # 화면 너비의 8%
         return {
             'keyword': max(150, base_width),
             'category': max(200, int(base_width * 1.3)),
