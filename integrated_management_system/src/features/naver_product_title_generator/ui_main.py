@@ -712,6 +712,11 @@ class NaverProductTitleGeneratorWidget(QWidget):
             elif self.current_step == 2:
                 # 프롬프트가 선택되지 않았으면 자동으로 기본 프롬프트 선택
                 self.right_panel.step2_widget.ensure_prompt_selected()
+                
+                # 현재 선택된 프롬프트 정보를 로그로 표시
+                prompt_type = self.right_panel.step3_widget.selected_prompt_type
+                prompt_display = "기본 프롬프트" if prompt_type == "default" else "사용자 정의 프롬프트"
+                log_manager.add_log(f"📝 3단계 진입: {prompt_display} 사용", "info")
             
             self.go_to_step(self.current_step + 1)
         

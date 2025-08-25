@@ -62,20 +62,24 @@ def get_keyword_search_volume(keyword: str) -> int:
     """
     try:
         from src.vendors.naver.client_factory import NaverClientFactory
+        from .engine_local import normalize_keyword_for_api
         
-        logger.debug(f"월검색량 조회 시작: '{keyword}'")
+        # API 호출용 키워드 정규화 (공백/특수문자 제거)
+        normalized_keyword = normalize_keyword_for_api(keyword)
+        
+        logger.debug(f"월검색량 조회 시작: '{keyword}' → '{normalized_keyword}'")
         
         # 검색광고 API 클라이언트
         keyword_client = NaverClientFactory.get_keyword_tool_client()
-        searchad_response = keyword_client.get_keyword_ideas([keyword])
+        searchad_response = keyword_client.get_keyword_ideas([normalized_keyword])
         
         if not searchad_response or 'keywordList' not in searchad_response:
             logger.warning(f"검색광고 API 응답이 비어있음: '{keyword}'")
             return 0
         
-        # 정확히 일치하는 키워드 찾기
+        # 정확히 일치하는 키워드 찾기 (정규화된 키워드로 비교)
         for kw_item in searchad_response['keywordList']:
-            if kw_item.get('relKeyword', '').upper() == keyword.upper():
+            if kw_item.get('relKeyword', '').upper() == normalized_keyword.upper():
                 pc_count = kw_item.get('monthlyPcQcCnt', 0)
                 mobile_count = kw_item.get('monthlyMobileQcCnt', 0)
                 
@@ -115,12 +119,16 @@ def get_keyword_category(keyword: str) -> str:
     """
     try:
         from src.vendors.naver.client_factory import NaverClientFactory
+        from .engine_local import normalize_keyword_for_api
         
-        logger.debug(f"카테고리 조회 시작: '{keyword}'")
+        # API 호출용 키워드 정규화 (공백/특수문자 제거)
+        normalized_keyword = normalize_keyword_for_api(keyword)
+        
+        logger.debug(f"카테고리 조회 시작: '{keyword}' → '{normalized_keyword}'")
         
         # 쇼핑 API 클라이언트
         shopping_client = NaverClientFactory.get_shopping_client()
-        shopping_response = shopping_client.search_products(query=keyword, display=20, sort="sim")
+        shopping_response = shopping_client.search_products(query=normalized_keyword, display=20, sort="sim")
         
         # 응답 구조 로그 (디버깅용)
         logger.debug(f"쇼핑 API 응답 구조 확인: '{keyword}' -> {type(shopping_response)}")
