@@ -37,16 +37,21 @@ class ProjectListWidget(QWidget):
     def setup_ui(self):
         """UI 구성 - 반응형"""
         layout = QVBoxLayout()
-        margin = ResponsiveUI.get_spacing('small')
-        spacing = ResponsiveUI.get_spacing('small')
+        margin = ResponsiveUI.scale(6)
+        spacing = ResponsiveUI.scale(6)
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
         # 헤더 (제목만) - 반응형
         title_label = QLabel("📋 프로젝트 목록")
         title_font_size = ResponsiveUI.get_font_size_pt('header')
-        title_label.setFont(QFont("맑은 고딕", title_font_size, QFont.Bold))
-        title_label.setStyleSheet(f"color: {ModernStyle.COLORS['text_primary']};")
+        title_label.setStyleSheet(f"""
+            QLabel {{
+                font-size: {title_font_size}pt;
+                font-weight: 600;
+                color: {ModernStyle.COLORS['text_primary']};
+            }}
+        """)
         layout.addWidget(title_label)
         
         # 프로젝트 트리 (기존 스타일 정확히 복사)
@@ -82,7 +87,7 @@ class ProjectListWidget(QWidget):
     
     def apply_styles(self):
         """스타일 적용 - 반응형"""
-        border_radius = ResponsiveUI.get_spacing('small')
+        border_radius = ResponsiveUI.scale(6)
         self.setStyleSheet(f"""
             QWidget {{
                 background-color: {ModernStyle.COLORS['bg_card']};
@@ -91,21 +96,19 @@ class ProjectListWidget(QWidget):
             QTreeWidget {{
                 background-color: {ModernStyle.COLORS['bg_primary']};
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.get_spacing('normal')}px;
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                border-radius: {ResponsiveUI.scale(10)}px;
                 selection-background-color: transparent;
                 outline: none;
-                padding: {ResponsiveUI.get_spacing('small')}px;
+                padding: {ResponsiveUI.scale(6)}px;
             }}
             QTreeWidget::item {{
-                height: {ResponsiveUI.get_button_height() * 2}px;
-                padding: {ResponsiveUI.get_spacing('small')}px {ResponsiveUI.get_spacing('normal')}px;
-                margin: {ResponsiveUI.get_spacing('tiny')}px {ResponsiveUI.get_spacing('tiny')}px;
+                height: {ResponsiveUI.scale(35)}px;
+                padding: {ResponsiveUI.scale(6)}px {ResponsiveUI.scale(10)}px;
+                margin: {ResponsiveUI.scale(2)}px {ResponsiveUI.scale(4)}px;
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.get_spacing('small')}px;
+                border-radius: {ResponsiveUI.scale(4)}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
                 font-weight: 500;
-                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
             }}
             QTreeWidget::item:selected {{
                 background-color: {ModernStyle.COLORS['primary']}15;
@@ -124,8 +127,8 @@ class ProjectListWidget(QWidget):
                 background-color: {ModernStyle.COLORS['primary']};
                 color: white;
                 border: none;
-                padding: {ResponsiveUI.get_spacing('normal')}px;
-                border-radius: {ResponsiveUI.get_spacing('small')}px;
+                padding: {ResponsiveUI.scale(10)}px;
+                border-radius: {ResponsiveUI.scale(6)}px;
                 font-weight: 600;
                 font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
             }}
@@ -304,30 +307,31 @@ class ProjectListWidget(QWidget):
             projects = rank_tracking_service.get_all_projects(active_only=True)
             
             if projects:
+                # 반응형 폰트 설정
+                font = QFont("맑은 고딕")
+                font.setPointSize(ResponsiveUI.get_font_size_pt('large'))
+                
                 for project in projects:
                     item = QTreeWidgetItem([f"🏷️ {project.current_name}"])
                     item.setData(0, Qt.UserRole, project)  # 프로젝트 객체 전체 저장
-                    
-                    # 프로젝트 항목 폰트 크기 설정 (더 크게)
-                    item_font = QFont("맑은 고딕", ResponsiveUI.get_font_size_pt('header'))
-                    item_font.setWeight(QFont.Medium)
-                    item.setFont(0, item_font)
-                    
+                    item.setFont(0, font)  # 폰트 직접 설정
                     self.project_tree.addTopLevelItem(item)
                 log_manager.add_log(f"📋 프로젝트 목록 로드됨: {len(projects)}개", "info")
             else:
                 # 프로젝트가 없을 때 안내 메시지 표시
+                font = QFont("맑은 고딕")
+                font.setPointSize(ResponsiveUI.get_font_size_pt('large'))
+                
                 empty_item = QTreeWidgetItem(["📝 새 프로젝트를 추가하세요"])
                 empty_item.setDisabled(True)
                 empty_item.setData(0, Qt.UserRole, None)
-                
-                # 빈 프로젝트 메시지 폰트 크기 설정
-                empty_font = QFont("맑은 고딕", ResponsiveUI.get_font_size_pt('header'))
-                empty_font.setWeight(QFont.Normal)
-                empty_item.setFont(0, empty_font)
-                
+                empty_item.setFont(0, font)  # 폰트 직접 설정
                 self.project_tree.addTopLevelItem(empty_item)
                 log_manager.add_log("프로젝트가 없습니다 - 안내 메시지 표시", "info")
+            
+            # 스타일 강제 재적용
+            self.apply_styles()
+            
         except Exception as e:
             log_manager.add_log(f"❌ 프로젝트 목록 로드 실패: {e}", "error")
 

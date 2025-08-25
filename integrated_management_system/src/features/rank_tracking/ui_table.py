@@ -38,22 +38,22 @@ class AddKeywordsDialog(QDialog):
         self.setModal(True)
         
         # 반응형 크기 설정
-        dialog_size = ResponsiveUI.get_dialog_size(560, 520, 25, 25)
+        dialog_size = (ResponsiveUI.scale(560), ResponsiveUI.scale(520))
         self.setMinimumSize(dialog_size)
         self.resize(dialog_size)
         
         # 메인 레이아웃 - 반응형
         main_layout = QVBoxLayout()
-        margin_h = ResponsiveUI.get_spacing('large')
-        margin_v = ResponsiveUI.get_spacing('normal')
-        spacing = ResponsiveUI.get_spacing('normal')
+        margin_h = ResponsiveUI.scale(16)
+        margin_v = ResponsiveUI.scale(10)
+        spacing = ResponsiveUI.scale(10)
         main_layout.setContentsMargins(margin_h, margin_v, margin_h, margin_h)
         main_layout.setSpacing(spacing)
         
         # 헤더 - 반응형
         header_label = QLabel("📝 키워드 추가")
         header_font_size = ResponsiveUI.get_font_size_pt('title')
-        header_padding = ResponsiveUI.get_spacing('tiny')
+        header_padding = ResponsiveUI.scale(4)
         header_label.setStyleSheet(f"""
             QLabel {{
                 color: #2563eb;
@@ -68,7 +68,7 @@ class AddKeywordsDialog(QDialog):
         # 설명 - 반응형
         self.description_label = QLabel("추적할 키워드를 입력하세요")
         desc_font_size = ResponsiveUI.get_font_size_pt('header')
-        desc_margin = ResponsiveUI.get_spacing('normal')
+        desc_margin = ResponsiveUI.scale(10)
         self.description_label.setStyleSheet(f"""
             QLabel {{
                 color: #64748b;
@@ -94,7 +94,7 @@ class AddKeywordsDialog(QDialog):
         # 입력 라벨 - 반응형
         input_label = QLabel("키워드 목록")
         label_font_size = ResponsiveUI.get_font_size_pt('normal')
-        label_margin = ResponsiveUI.get_spacing('tiny')
+        label_margin = ResponsiveUI.scale(4)
         input_label.setStyleSheet(f"""
             QLabel {{
                 color: #1e293b;
@@ -109,9 +109,9 @@ class AddKeywordsDialog(QDialog):
         self.keywords_input = QTextEdit()
         self.keywords_input.setPlaceholderText("예:\n강아지 사료\n고양이 간식\n반려동물 장난감\n\n또는 쉼표로 구분: 강아지 사료, 고양이 간식, 반려동물 장난감")
         input_font_size = ResponsiveUI.get_font_size_pt('normal')
-        input_padding = ResponsiveUI.get_spacing('normal')
-        input_border_radius = ResponsiveUI.get_spacing('small')
-        input_height = ResponsiveUI.height_percent(8) # 화면 높이의 8%
+        input_padding = ResponsiveUI.scale(10)
+        input_border_radius = ResponsiveUI.scale(6)
+        input_height = ResponsiveUI.scale(65) # 화면 높이의 8%
         input_height = max(120, min(180, input_height))  # 최소 120px, 최대 180px
         self.keywords_input.setStyleSheet(f"""
             QTextEdit {{
@@ -137,11 +137,11 @@ class AddKeywordsDialog(QDialog):
         help_label = QLabel("ℹ️ 각 줄에 하나씩 입력하거나 쉼표(,)로 구분해서 입력하세요")
         help_label.setWordWrap(True)
         help_font_size = ResponsiveUI.get_font_size_pt('small')
-        help_padding_v = ResponsiveUI.get_spacing('small')
-        help_padding_h = ResponsiveUI.get_spacing('normal')
-        help_border_radius = ResponsiveUI.get_spacing('small')
-        help_margin_v = ResponsiveUI.get_spacing('tiny')
-        help_margin_bottom = ResponsiveUI.get_spacing('normal')
+        help_padding_v = ResponsiveUI.scale(6)
+        help_padding_h = ResponsiveUI.scale(10)
+        help_border_radius = ResponsiveUI.scale(6)
+        help_margin_v = ResponsiveUI.scale(4)
+        help_margin_bottom = ResponsiveUI.scale(10)
         help_label.setStyleSheet(f"""
             QLabel {{
                 color: #64748b;
@@ -161,7 +161,7 @@ class AddKeywordsDialog(QDialog):
         button_layout.addStretch()
         
         # 버튼들 - 반응형
-        button_width = ResponsiveUI.get_button_min_width()
+        button_width = ResponsiveUI.scale(120)
         
         self.cancel_button = ModernCancelButton("취소")
         self.cancel_button.clicked.connect(self.reject)
@@ -249,8 +249,8 @@ class RankingTableWidget(QWidget):
     def setup_ui(self):
         """UI 구성 - 반응형"""
         layout = QVBoxLayout()
-        margin = ResponsiveUI.get_spacing('normal')
-        spacing = ResponsiveUI.get_spacing('normal')
+        margin = ResponsiveUI.scale(10)
+        spacing = ResponsiveUI.scale(10)
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
@@ -268,8 +268,8 @@ class RankingTableWidget(QWidget):
         self.progress_frame = QFrame()
         self.progress_frame.setVisible(False)
         progress_layout = QHBoxLayout()  # 가로 배치로 변경
-        progress_margin = ResponsiveUI.get_spacing('tiny')
-        progress_spacing = ResponsiveUI.get_spacing('small')
+        progress_margin = ResponsiveUI.scale(4)
+        progress_spacing = ResponsiveUI.scale(6)
         progress_layout.setContentsMargins(progress_margin, progress_margin, progress_margin, progress_margin)
         progress_layout.setSpacing(progress_spacing)
         
@@ -277,7 +277,7 @@ class RankingTableWidget(QWidget):
         
         # 진행률 라벨 - 반응형
         self.progress_label = QLabel("작업 진행 중...")
-        progress_font_size = ResponsiveUI.get_font_size_pt('small')
+        progress_font_size = ResponsiveUI.get_font_size_pt('normal')
         self.progress_label.setFont(QFont("맑은 고딕", progress_font_size))
         self.progress_label.setStyleSheet("color: #007ACC; font-weight: 500;")
         self.progress_label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -286,8 +286,8 @@ class RankingTableWidget(QWidget):
         # 진행률 바 - 반응형
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
-        progress_bar_height = ResponsiveUI.get_spacing('large')  # 높이도 살짝 늘림
-        progress_bar_width = ResponsiveUI.width_percent(10)  # 화면 너비의 10%로 증가
+        progress_bar_height = ResponsiveUI.scale(16)  # 높이도 살짝 늘림
+        progress_bar_width = ResponsiveUI.scale(150)  # 화면 너비의 10%로 증가
         progress_bar_width = max(150, min(250, progress_bar_width))  # 최소 150px, 최대 250px로 증가
         self.progress_bar.setFixedHeight(progress_bar_height)
         self.progress_bar.setFixedWidth(progress_bar_width)
@@ -1253,13 +1253,13 @@ class RankingTableWidget(QWidget):
         """하단 버튼들 설정"""
         # 하단 버튼 영역 - 반응형
         button_layout = QHBoxLayout()
-        button_margin = ResponsiveUI.get_spacing('normal')
-        button_spacing = ResponsiveUI.get_spacing('normal')
+        button_margin = ResponsiveUI.scale(10)
+        button_spacing = ResponsiveUI.scale(10)
         button_layout.setContentsMargins(0, button_margin, 0, 0)
         button_layout.setSpacing(button_spacing)
         
         # 키워드 추가 버튼 - 반응형
-        button_width_add = ResponsiveUI.get_button_min_width() + 20
+        button_width_add = ResponsiveUI.scale(120) + 20
         self.add_keyword_button = ModernPrimaryButton("➕ 키워드추가")
         self.add_keyword_button.clicked.connect(self.add_keyword)
         self.add_keyword_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화
@@ -1268,7 +1268,7 @@ class RankingTableWidget(QWidget):
         button_layout.addWidget(self.add_keyword_button)
         
         # 순위 확인 버튼 - 반응형
-        button_width = ResponsiveUI.get_button_min_width()
+        button_width = ResponsiveUI.scale(120)
         self.check_button = ModernSuccessButton("🔍 순위 확인")
         self.check_button.clicked.connect(self.check_rankings)
         self.check_button.setEnabled(False)  # 프로젝트 선택 시에만 활성화
