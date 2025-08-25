@@ -45,9 +45,6 @@ class NaverCafeWidget(QWidget):
         
         # 좌측 패널 (컨트롤 위젯)
         self.control_widget = NaverCafeControlWidget()
-        # 400px 기준으로 반응형 조정하되 최소 300px 보장 (기존 2배 크기)
-        control_width = max(300, ResponsiveUI.scale(400))
-        self.control_widget.setFixedWidth(control_width)
         
         # 우측 패널 (결과 위젯)
         self.results_widget = NaverCafeResultsWidget()
@@ -55,8 +52,9 @@ class NaverCafeWidget(QWidget):
         # control_widget에 results_widget 참조 설정 (테이블 사용자 확인용)
         self.control_widget.results_widget = self.results_widget
         
-        content_layout.addWidget(self.control_widget)
-        content_layout.addWidget(self.results_widget, 1)
+        # 1:1 비율로 좌우 패널 배치
+        content_layout.addWidget(self.control_widget, 1)  # 50%
+        content_layout.addWidget(self.results_widget, 1)  # 50%
         
         main_layout.addLayout(content_layout)
         
