@@ -2264,6 +2264,15 @@ class PowerLinkResultsWidget(QWidget):
             self.update_delete_button_state()
             self.update_save_button_state()
             
+            # 🔧 히스토리 로드 플래그 해제 (키워드 삭제로 인한 데이터 변경이 발생했으므로)
+            logger.error("🔧 키워드 삭제로 인한 히스토리 플래그 해제")
+            print("🔧 키워드 삭제로 인한 히스토리 플래그 해제")
+            self.is_loaded_from_history = False
+            if hasattr(self, 'loaded_session_id'):
+                delattr(self, 'loaded_session_id')
+                logger.error("🔧 loaded_session_id 속성 제거 완료")
+                print("🔧 loaded_session_id 속성 제거 완료")
+            
             logger.error(f"🎉 === {len(keywords_to_delete)}개 키워드 삭제 및 순위 재계산 완료 ===")
             print(f"🎉 === {len(keywords_to_delete)}개 키워드 삭제 및 순위 재계산 완료 ===")
             

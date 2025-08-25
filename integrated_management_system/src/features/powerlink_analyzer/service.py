@@ -289,13 +289,39 @@ class PowerLinkAnalysisService:
                 return False, 0, "", False
 
             is_duplicate = self.repository.check_duplicate_session_24h(keyword_database.keywords)
-            session_name = f"PowerLink분석_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            
+            # 추천순위 1위 키워드 기반으로 세션명 생성
+            keywords_list = list(keyword_database.keywords.values())
+            
+            if keywords_list:
+                try:
+                    # 모바일 기준으로 가장 높은 순위를 가진 키워드를 찾기
+                    def get_best_rank(result):
+                        """모바일 순위 반환 (작을수록 좋음, -1은 순위 없음으로 최악)"""
+                        return result.mobile_recommendation_rank if result.mobile_recommendation_rank > 0 else 999
+                    
+                    # 모바일 추천순위가 가장 좋은 키워드를 대표로 선택
+                    best_keyword_result = min(keywords_list, key=get_best_rank)
+                    representative_keyword = best_keyword_result.keyword
+                    
+                    if len(keywords_list) == 1:
+                        session_name = representative_keyword
+                    else:
+                        remaining_count = len(keywords_list) - 1
+                        session_name = f"{representative_keyword} 외 {remaining_count}개"
+                    
+                except Exception as e:
+                    # 오류 시 첫 번째 키워드로 폴백
+                    first_keyword = keywords_list[0].keyword if keywords_list else "알수없음"
+                    session_name = f"{first_keyword} 외 {len(keywords_list)-1}개" if len(keywords_list) > 1 else first_keyword
+            else:
+                session_name = f"PowerLink분석_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
             if is_duplicate:
                 log_manager.add_log("24시간 내 동일한 분석 결과가 존재하여 저장하지 않습니다.", "info")
                 return True, 0, session_name, True
 
-            session_id = self.repository.save_analysis_session(keyword_database.keywords)
+            session_id = self.repository.save_analysis_session(keyword_database.keywords, session_name)
             log_manager.add_log(f"PowerLink 분석 세션 저장 완료: {session_name} ({len(keyword_database.keywords)}개 키워드)", "success")
             logger.info(f"분석 세션 DB 저장 완료: {session_name}")
             return True, session_id, session_name, False
@@ -547,50 +573,6 @@ class PowerLinkAnalysisService:
             current_analysis_export_adapter.show_current_export_error_dialog(str(e), parent_widget)
             return False
 
-    def save_current_analysis_with_dialog(self, keywords_data: dict, parent_widget=None) -> Tuple[bool, Optional[dict]]:
-        """현재 분석 결과를 데이터베이스에 저장 (다이얼로그 포함)"""
-        try:
-            if not keywords_data:
-                return False, None
-
-            # 키워드 기반으로 기본 세션명 생성
-            keywords_list = list(keywords_data.keys())
-            if keywords_list:
-                first_keyword = keywords_list[0]
-                if len(keywords_list) == 1:
-                    default_name = first_keyword
-                else:
-                    remaining_count = len(keywords_list) - 1
-                    default_name = f"{first_keyword} 외 {remaining_count}개"
-            else:
-                default_name = f"PowerLink 분석 {datetime.now().strftime('%Y%m%d_%H%M')}"
-
-            from src.toolbox.ui_kit.modern_dialog import ModernInputDialog
-            session_name, ok = ModernInputDialog.get_text(
-                parent_widget, "분석 결과 저장", "저장할 세션명을 입력하세요:",
-                default_name
-            )
-            if not ok or not session_name.strip():
-                return False, None
-            session_name = session_name.strip()
-
-            success = self.save_analysis_to_database(keywords_data, session_name)
-            if not success:
-                return False, None
-
-            try:
-                repo = PowerLinkRepository()
-                sessions = repo.get_analysis_sessions()
-                for session in sessions:
-                    if session['session_name'] == session_name:
-                        return True, {'session_id': session['session_id'], 'session_name': session_name, 'keyword_count': len(keywords_data)}
-                return True, {'session_id': -1, 'session_name': session_name, 'keyword_count': len(keywords_data)}
-            except Exception as e:
-                logger.warning(f"저장된 세션 정보 조회 실패: {e}")
-                return True, {'session_id': -1, 'session_name': session_name, 'keyword_count': len(keywords_data)}
-        except Exception as e:
-            logger.error(f"분석 결과 저장 다이얼로그 처리 실패: {e}")
-            return False, None
 
     def get_analysis_sessions(self) -> List[Dict]:
         """저장된 분석 세션 목록 조회 (UI에서 사용)"""

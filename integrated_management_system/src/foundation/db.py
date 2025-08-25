@@ -1112,13 +1112,14 @@ class CommonDB:
     
     # ========== 파워링크 분석 관련 메서드 ==========
     
-    def save_powerlink_analysis_session(self, keywords_data: Dict[str, Any]) -> int:
+    def save_powerlink_analysis_session(self, keywords_data: Dict[str, Any], session_name: str = None) -> int:
         """파워링크 분석 세션 저장"""
         if not keywords_data:
             raise ValueError("저장할 키워드 데이터가 없습니다.")
         
-        # 세션명 생성 (가장 검색량이 많은 키워드 기준)
-        session_name = self._generate_powerlink_session_name(keywords_data)
+        # 세션명이 제공되지 않으면 기존 로직으로 생성
+        if not session_name:
+            session_name = self._generate_powerlink_session_name(keywords_data)
         keyword_count = len(keywords_data)
         
         with self.get_connection() as conn:

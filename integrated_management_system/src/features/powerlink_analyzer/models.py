@@ -118,9 +118,9 @@ class PowerLinkRepository:
         """세션 삭제"""
         return self.db.delete_powerlink_sessions(session_ids)
     
-    def save_analysis_session(self, keywords_data: dict) -> int:
+    def save_analysis_session(self, keywords_data: dict, session_name: str = None) -> int:
         """분석 세션 저장"""
-        return self.db.save_powerlink_analysis_session(keywords_data)
+        return self.db.save_powerlink_analysis_session(keywords_data, session_name)
     
     def check_duplicate_session_24h(self, keywords_data: dict) -> bool:
         """24시간 내 중복 세션 체크"""
