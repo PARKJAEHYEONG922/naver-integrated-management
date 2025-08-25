@@ -12,6 +12,7 @@ from PySide6.QtCore import Qt, Signal
 
 from src.toolbox.ui_kit import ModernStyle, ModernTableWidget
 from src.toolbox.ui_kit.components import ModernButton
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 from src.toolbox.formatters import format_int, format_float, format_price_krw
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
@@ -37,12 +38,17 @@ class PowerLinkSaveDialog(QDialog):
         """UI 초기화 (글씨 잘림 방지 및 크기 조정)"""
         self.setWindowTitle("저장 완료")
         self.setModal(True)
-        self.setFixedSize(420, 220)  # 크기 증가로 글씨 잘림 방지
+        dialog_width = ResponsiveUI.scale(420)
+        dialog_height = ResponsiveUI.scale(220)
+        self.setFixedSize(dialog_width, dialog_height)  # 크기 증가로 글씨 잘림 방지
         
         # 메인 레이아웃
         layout = QVBoxLayout(self)
-        layout.setSpacing(15)
-        layout.setContentsMargins(30, 25, 30, 25)
+        layout.setSpacing(ResponsiveUI.scale(15))
+        layout.setContentsMargins(
+            ResponsiveUI.scale(30), ResponsiveUI.scale(25), 
+            ResponsiveUI.scale(30), ResponsiveUI.scale(25)
+        )
         
         # 체크 아이콘과 제목
         title_layout = QHBoxLayout()
@@ -50,22 +56,25 @@ class PowerLinkSaveDialog(QDialog):
         
         # 체크 아이콘
         icon_label = QLabel("✅")
-        icon_label.setStyleSheet("""
-            QLabel {
-                font-size: 24px;
+        icon_font_size = ResponsiveUI.get_font_size_pt('large')
+        icon_label.setStyleSheet(f"""
+            QLabel {{
+                font-size: {icon_font_size}pt;
                 color: #10b981;
-            }
+            }}
         """)
         title_layout.addWidget(icon_label)
         
         # 제목 텍스트
         title_label = QLabel("저장 완료")
+        title_font_size = ResponsiveUI.get_font_size_pt('header')
+        title_margin = ResponsiveUI.scale(8)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 18px;
+                font-size: {title_font_size}pt;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
-                margin-left: 8px;
+                margin-left: {title_margin}px;
             }}
         """)
         title_layout.addWidget(title_label)
@@ -79,12 +88,14 @@ class PowerLinkSaveDialog(QDialog):
             message_text = "프로그램 데이터베이스에 기록이 저장되었습니다."
             
         message_label = QLabel(message_text)
+        message_font_size = ResponsiveUI.get_font_size_pt('normal')
+        message_padding = ResponsiveUI.scale(5)
         message_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 14px;
+                font-size: {message_font_size}pt;
                 color: {ModernStyle.COLORS['text_primary']};
                 text-align: center;
-                padding: 5px;
+                padding: {message_padding}px;
             }}
         """)
         message_label.setAlignment(Qt.AlignCenter)
@@ -93,13 +104,15 @@ class PowerLinkSaveDialog(QDialog):
         
         # 안내 메시지
         guide_label = QLabel("엑셀로 내보내기도 원하시면 내보내기 버튼을\n눌러주세요.")
+        guide_font_size = ResponsiveUI.get_font_size_pt('normal')
+        guide_padding = ResponsiveUI.scale(5)
         guide_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 12px;
+                font-size: {guide_font_size}pt;
                 color: {ModernStyle.COLORS['text_secondary']};
                 text-align: center;
                 line-height: 1.5;
-                padding: 5px;
+                padding: {guide_padding}px;
             }}
         """)
         guide_label.setAlignment(Qt.AlignCenter)
@@ -110,18 +123,20 @@ class PowerLinkSaveDialog(QDialog):
         
         # 버튼들
         button_layout = QHBoxLayout()
-        button_layout.setSpacing(10)
+        button_layout.setSpacing(ResponsiveUI.scale(10))
         
         # 엑셀 내보내기 버튼 (파란색)
+        button_height = ResponsiveUI.scale(40)
+        button_width = ResponsiveUI.scale(130)
         self.export_button = ModernButton("📊 엑셀 내보내기", "primary")
-        self.export_button.setMinimumHeight(40)
-        self.export_button.setMinimumWidth(130)
+        self.export_button.setMinimumHeight(button_height)
+        self.export_button.setMinimumWidth(button_width)
         button_layout.addWidget(self.export_button)
         
         # 완료 버튼 (회색)
         self.complete_button = ModernButton("✅ 완료", "secondary")
-        self.complete_button.setMinimumHeight(40)
-        self.complete_button.setMinimumWidth(130)
+        self.complete_button.setMinimumHeight(button_height)
+        self.complete_button.setMinimumWidth(button_width)
         button_layout.addWidget(self.complete_button)
         
         layout.addLayout(button_layout)
@@ -181,26 +196,32 @@ class PowerLinkResultsWidget(QWidget):
     def setup_ui(self):
         """UI 초기화"""
         layout = QVBoxLayout(self)
-        layout.setSpacing(15)
+        layout.setSpacing(ResponsiveUI.scale(15))
         
         # 탭 위젯 생성
         self.tab_widget = QTabWidget()
+        tab_radius = ResponsiveUI.scale(8)
+        tab_padding = ResponsiveUI.scale(10)
+        tab_button_padding_v = ResponsiveUI.scale(12)
+        tab_button_padding_h = ResponsiveUI.scale(20)
+        tab_margin = ResponsiveUI.scale(2)
+        tab_font_size = ResponsiveUI.get_font_size_pt('normal')
         self.tab_widget.setStyleSheet(f"""
             QTabWidget::pane {{
                 border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border-radius: {tab_radius}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
-                padding: 10px;
+                padding: {tab_padding}px;
             }}
             QTabBar::tab {{
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 color: {ModernStyle.COLORS['text_secondary']};
-                padding: 12px 20px;
-                margin-right: 2px;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
+                padding: {tab_button_padding_v}px {tab_button_padding_h}px;
+                margin-right: {tab_margin}px;
+                border-top-left-radius: {tab_radius}px;
+                border-top-right-radius: {tab_radius}px;
                 font-weight: 600;
-                font-size: 13px;
+                font-size: {tab_font_size}pt;
             }}
             QTabBar::tab:selected {{
                 background-color: {ModernStyle.COLORS['primary']};
@@ -347,7 +368,7 @@ class PowerLinkResultsWidget(QWidget):
         # 체크박스 컬럼은 ModernTableWidget에서 자동으로 80px 고정 처리됨
         
         # 컬럼 너비 설정
-        header.resizeSection(1, 180)  # 키워드
+        header.resizeSection(1, 170)  # 키워드
         header.resizeSection(2, 80)   # 월검색량
         header.resizeSection(3, 70)   # 클릭수
         header.resizeSection(4, 70)   # 클릭률
@@ -355,7 +376,7 @@ class PowerLinkResultsWidget(QWidget):
         header.resizeSection(6, 90)   # 1등광고비
         header.resizeSection(7, 110)  # 최소노출가격
         header.resizeSection(8, 80)   # 추천순위
-        header.resizeSection(9, 100)  # 상세
+        header.resizeSection(9, 90)   # 상세
         
         # ModernTableWidget에서 정렬 자동 활성화
         
@@ -432,23 +453,24 @@ class PowerLinkResultsWidget(QWidget):
             
             # 상세 버튼 (원본과 동일한 초록색 스타일)
             detail_button = QPushButton("상세")
-            detail_button.setStyleSheet("""
-                QPushButton {
+            detail_font_size = ResponsiveUI.get_font_size_pt('normal')
+            detail_button.setStyleSheet(f"""
+                QPushButton {{
                     background-color: #10b981;
                     color: white;
                     border: none;
                     border-radius: 0px;
                     font-weight: 600;
-                    font-size: 13px;
+                    font-size: {detail_font_size}pt;
                     margin: 0px;
                     padding: 0px;
-                }
-                QPushButton:hover {
+                }}
+                QPushButton:hover {{
                     background-color: #059669;
-                }
-                QPushButton:pressed {
+                }}
+                QPushButton:pressed {{
                     background-color: #047857;
-                }
+                }}
             """)
             detail_button.clicked.connect(self._create_detail_handler(keyword, result, 'mobile'))
             self.mobile_table.setCellWidget(row, 9, detail_button)
@@ -494,23 +516,24 @@ class PowerLinkResultsWidget(QWidget):
             
             # 상세 버튼 (원본과 동일한 초록색 스타일)
             detail_button = QPushButton("상세")
-            detail_button.setStyleSheet("""
-                QPushButton {
+            detail_font_size = ResponsiveUI.get_font_size_pt('normal')
+            detail_button.setStyleSheet(f"""
+                QPushButton {{
                     background-color: #10b981;
                     color: white;
                     border: none;
                     border-radius: 0px;
                     font-weight: 600;
-                    font-size: 13px;
+                    font-size: {detail_font_size}pt;
                     margin: 0px;
                     padding: 0px;
-                }
-                QPushButton:hover {
+                }}
+                QPushButton:hover {{
                     background-color: #059669;
-                }
-                QPushButton:pressed {
+                }}
+                QPushButton:pressed {{
                     background-color: #047857;
-                }
+                }}
             """)
             detail_button.clicked.connect(self._create_detail_handler(keyword, result, 'pc'))
             self.pc_table.setCellWidget(row, 9, detail_button)
@@ -628,23 +651,24 @@ class PowerLinkResultsWidget(QWidget):
             
             # 상세 버튼 추가 (9번 컬럼)
             detail_button = QPushButton("상세")
-            detail_button.setStyleSheet("""
-                QPushButton {
+            detail_button_font_size = ResponsiveUI.get_font_size_pt('normal')
+            detail_button.setStyleSheet(f"""
+                QPushButton {{
                     background-color: #10b981;
                     color: white;
                     border: none;
                     border-radius: 0px;
                     font-weight: 600;
-                    font-size: 13px;
+                    font-size: {detail_button_font_size}pt;
                     margin: 0px;
                     padding: 0px;
-                }
-                QPushButton:hover {
+                }}
+                QPushButton:hover {{
                     background-color: #059669;
-                }
-                QPushButton:pressed {
+                }}
+                QPushButton:pressed {{
                     background-color: #047857;
-                }
+                }}
             """)
             detail_button.clicked.connect(self._create_detail_handler(result.keyword, result, device_type))
             table.setCellWidget(row, 9, detail_button)
@@ -1248,23 +1272,24 @@ class PowerLinkResultsWidget(QWidget):
                 
                 # 모바일 상세 버튼 추가
                 mobile_detail_button = QPushButton("상세")
-                mobile_detail_button.setStyleSheet("""
-                    QPushButton {
+                mobile_detail_font_size = ResponsiveUI.get_font_size_pt('normal')
+                mobile_detail_button.setStyleSheet(f"""
+                    QPushButton {{
                         background-color: #10b981;
                         color: white;
                         border: none;
                         border-radius: 0px;
                         font-weight: 600;
-                        font-size: 13px;
+                        font-size: {mobile_detail_font_size}pt;
                         margin: 0px;
                         padding: 0px;
-                    }
-                    QPushButton:hover {
+                    }}
+                    QPushButton:hover {{
                         background-color: #059669;
-                    }
-                    QPushButton:pressed {
+                    }}
+                    QPushButton:pressed {{
                         background-color: #047857;
-                    }
+                    }}
                 """)
                 mobile_detail_button.clicked.connect(self._create_detail_handler(result.keyword, result, 'mobile'))
                 self.mobile_table.setCellWidget(mobile_row, 9, mobile_detail_button)
@@ -1300,23 +1325,24 @@ class PowerLinkResultsWidget(QWidget):
                 
                 # PC 상세 버튼 추가
                 pc_detail_button = QPushButton("상세")
-                pc_detail_button.setStyleSheet("""
-                    QPushButton {
+                pc_detail_font_size = ResponsiveUI.get_font_size_pt('normal')
+                pc_detail_button.setStyleSheet(f"""
+                    QPushButton {{
                         background-color: #10b981;
                         color: white;
                         border: none;
                         border-radius: 0px;
                         font-weight: 600;
-                        font-size: 13px;
+                        font-size: {pc_detail_font_size}pt;
                         margin: 0px;
                         padding: 0px;
-                    }
-                    QPushButton:hover {
+                    }}
+                    QPushButton:hover {{
                         background-color: #059669;
-                    }
-                    QPushButton:pressed {
+                    }}
+                    QPushButton:pressed {{
                         background-color: #047857;
-                    }
+                    }}
                 """)
                 pc_detail_button.clicked.connect(self._create_detail_handler(result.keyword, result, 'pc'))
                 self.pc_table.setCellWidget(pc_row, 9, pc_detail_button)
@@ -1498,9 +1524,10 @@ class PowerLinkResultsWidget(QWidget):
             
             # 키워드 이름 (심플하게)
             keyword_label = QLabel(keyword)
+            keyword_font_size = ResponsiveUI.get_font_size_pt('header')
             keyword_label.setStyleSheet(f"""
                 QLabel {{
-                    font-size: 16px;
+                    font-size: {keyword_font_size}pt;
                     font-weight: 600;
                     color: {ModernStyle.COLORS['text_primary']};
                     margin: 0;
@@ -1509,9 +1536,10 @@ class PowerLinkResultsWidget(QWidget):
             
             # 디바이스 타입 (이모지 제거)
             device_label = QLabel(f"{device_type.upper()} 순위별 입찰가")
+            device_label_font_size = ResponsiveUI.get_font_size_pt('normal')
             device_label.setStyleSheet(f"""
                 QLabel {{
-                    font-size: 13px;
+                    font-size: {device_label_font_size}pt;
                     font-weight: 400;
                     color: {ModernStyle.COLORS['text_secondary']};
                     margin: 0;
@@ -1529,13 +1557,15 @@ class PowerLinkResultsWidget(QWidget):
             table.setHorizontalHeaderLabels(["순위", "입찰가"])
             
             # 미니멀한 테이블 스타일 (아이템 색상 우선순위 허용)
+            table_font_size = ResponsiveUI.get_font_size_pt('normal')
+            header_font_size = ResponsiveUI.get_font_size_pt('normal')
             table.setStyleSheet(f"""
                 QTableWidget {{
                     gridline-color: {ModernStyle.COLORS['border']};
                     background-color: {ModernStyle.COLORS['bg_card']};
                     border: 1px solid {ModernStyle.COLORS['border']};
                     border-radius: 6px;
-                    font-size: 14px;
+                    font-size: {table_font_size}pt;
                 }}
                 QTableWidget::item {{
                     padding: 12px 10px;
@@ -1549,7 +1579,7 @@ class PowerLinkResultsWidget(QWidget):
                     border: none;
                     border-bottom: 1px solid {ModernStyle.COLORS['border']};
                     font-weight: 500;
-                    font-size: 13px;
+                    font-size: {header_font_size}pt;
                 }}
             """)
             
@@ -1616,6 +1646,7 @@ class PowerLinkResultsWidget(QWidget):
                 info_layout.setContentsMargins(0, 8, 0, 0)
                 
                 info_label = QLabel(f"💡 최소노출가격: {format_price_krw(min_exposure_bid)} ({min_exposure_position}위)")
+                info_font_size = ResponsiveUI.get_font_size_pt('normal')
                 info_label.setStyleSheet(f"""
                     QLabel {{
                         background-color: #f0f9ff;
@@ -1623,7 +1654,7 @@ class PowerLinkResultsWidget(QWidget):
                         padding: 8px 12px;
                         border-radius: 6px;
                         border: 1px solid #bae6fd;
-                        font-size: 13px;
+                        font-size: {info_font_size}pt;
                         font-weight: 500;
                     }}
                 """)

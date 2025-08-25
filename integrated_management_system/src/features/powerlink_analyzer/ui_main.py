@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
 from src.toolbox.ui_kit import ModernStyle
 from src.toolbox.ui_kit.components import ModernHelpButton
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 from .ui_list import PowerLinkControlWidget
 from .ui_table import PowerLinkResultsWidget
 
@@ -34,19 +35,24 @@ class PowerLinkAnalyzerWidget(QWidget):
     def setup_ui(self):
         """UI 초기화"""
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(
+            ResponsiveUI.scale(20), ResponsiveUI.scale(20), 
+            ResponsiveUI.scale(20), ResponsiveUI.scale(20)
+        )
+        main_layout.setSpacing(ResponsiveUI.scale(20))
         
         # 헤더 섹션 (제목 + 사용법)
         self.setup_header(main_layout)
         
         # 컨텐츠 레이아웃 (좌측 패널 + 우측 패널)
         content_layout = QHBoxLayout()
-        content_layout.setSpacing(20)
+        content_layout.setSpacing(ResponsiveUI.scale(20))
         
         # 좌측 패널 (컨트롤 위젯)
         self.control_widget = PowerLinkControlWidget()
-        self.control_widget.setFixedWidth(350)
+        # 200px 기준으로 반응형 조정하되 최소 150px 보장
+        control_width = max(150, ResponsiveUI.scale(200))
+        self.control_widget.setFixedWidth(control_width)
         
         # 우측 패널 (결과 위젯)
         self.results_widget = PowerLinkResultsWidget()
@@ -65,9 +71,10 @@ class PowerLinkAnalyzerWidget(QWidget):
         
         # 제목
         title_label = QLabel("💰 파워링크 광고비")
+        title_font_size = ResponsiveUI.get_font_size_pt('title')
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 24px;
+                font-size: {title_font_size}pt;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
