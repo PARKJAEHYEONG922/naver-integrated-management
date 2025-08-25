@@ -6,7 +6,7 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel
 )
 
-from src.toolbox.ui_kit import ModernStyle, ModernHelpButton
+from src.toolbox.ui_kit import ModernStyle, ModernHelpButton, ResponsiveUI
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
 from .ui_list import NaverCafeControlWidget
 from .ui_table import NaverCafeResultsWidget
@@ -30,25 +30,33 @@ class NaverCafeWidget(QWidget):
     def setup_ui(self):
         """UI 초기화"""
         main_layout = QVBoxLayout(self)
-        main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.setSpacing(20)
+        main_layout.setContentsMargins(
+            ResponsiveUI.scale(20), ResponsiveUI.scale(20), 
+            ResponsiveUI.scale(20), ResponsiveUI.scale(20)
+        )
+        main_layout.setSpacing(ResponsiveUI.scale(20))
         
         # 헤더 섹션 (제목 + 사용법)
         self.setup_header(main_layout)
         
         # 컨텐츠 레이아웃 (좌측 패널 + 우측 패널)
         content_layout = QHBoxLayout()
-        content_layout.setSpacing(20)
+        content_layout.setSpacing(ResponsiveUI.scale(20))
         
-        # 좌측 패널 (컨트롤 위젯) - 원본처럼 더 넓게
+        # 좌측 패널 (컨트롤 위젯)
         self.control_widget = NaverCafeControlWidget()
+        # 200px 기준으로 반응형 조정하되 최소 150px 보장
+        control_width = max(150, ResponsiveUI.scale(200))
+        self.control_widget.setFixedWidth(control_width)
         
         # 우측 패널 (결과 위젯)
         self.results_widget = NaverCafeResultsWidget()
         
-        # 50:50 비율로 조정
-        content_layout.addWidget(self.control_widget, 1)  # 50%
-        content_layout.addWidget(self.results_widget, 1)  # 50%
+        # control_widget에 results_widget 참조 설정 (테이블 사용자 확인용)
+        self.control_widget.results_widget = self.results_widget
+        
+        content_layout.addWidget(self.control_widget)
+        content_layout.addWidget(self.results_widget, 1)
         
         main_layout.addLayout(content_layout)
         
@@ -58,9 +66,10 @@ class NaverCafeWidget(QWidget):
         
         # 제목
         title_label = QLabel("🌐 네이버카페 DB추출")
+        title_font_size = ResponsiveUI.get_font_size_pt('title')
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: 24px;
+                font-size: {title_font_size}pt;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
