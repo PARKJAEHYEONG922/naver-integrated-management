@@ -35,22 +35,22 @@ class PowerLinkAnalyzerWidget(QWidget):
         """UI 초기화"""
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(
-            ResponsiveUI.scale(20), ResponsiveUI.scale(20), 
-            ResponsiveUI.scale(20), ResponsiveUI.scale(20)
+            tokens.GAP_20, tokens.GAP_20, 
+            tokens.GAP_20, tokens.GAP_20
         )
-        main_layout.setSpacing(ResponsiveUI.scale(20))
+        main_layout.setSpacing(tokens.GAP_20)
         
         # 헤더 섹션 (제목 + 사용법)
         self.setup_header(main_layout)
         
         # 컨텐츠 레이아웃 (좌측 패널 + 우측 패널)
         content_layout = QHBoxLayout()
-        content_layout.setSpacing(ResponsiveUI.scale(20))
+        content_layout.setSpacing(tokens.GAP_20)
         
         # 좌측 패널 (컨트롤 위젯)
         self.control_widget = PowerLinkControlWidget()
         # 200px 기준으로 반응형 조정하되 최소 150px 보장
-        control_width = max(150, ResponsiveUI.scale(200))
+        control_width = max(200, 280)  # 넓이 증가 (200 → 280)
         self.control_widget.setFixedWidth(control_width)
         
         # 우측 패널 (결과 위젯)
@@ -70,10 +70,10 @@ class PowerLinkAnalyzerWidget(QWidget):
         
         # 제목
         title_label = QLabel("💰 파워링크 광고비")
-        title_font_size = ResponsiveUI.get_font_size_pt('title')
+        title_font_size = tokens.get_font_size('title')
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {title_font_size}pt;
+                font-size: {title_font_size}px;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
             }}

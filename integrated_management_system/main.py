@@ -36,6 +36,11 @@ def load_features(app):
         register_rank_tracking(app)
         logger.info("순위추적 모듈 로드 완료")
         
+        # PowerLink 분석기 기능 로드 및 등록 (토큰 변환 완료)
+        logger.info("PowerLink 분석기 모듈 로드 시작")
+        from src.features.powerlink_analyzer import register as register_powerlink
+        register_powerlink(app)
+        logger.info("PowerLink 분석기 모듈 로드 완료")
         
         try:
             # 네이버 상품명 생성기 기능 (토큰 변환 확인 필요)

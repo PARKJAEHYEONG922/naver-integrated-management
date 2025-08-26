@@ -78,7 +78,7 @@ class PowerLinkControlWidget(QWidget):
     def setup_ui(self):
         """UI 초기화"""
         layout = QVBoxLayout(self)
-        layout.setSpacing(ResponsiveUI.scale(15))
+        layout.setSpacing(tokens.GAP_15)
         
         # 1. 진행 상황 카드
         progress_card = self.create_progress_card()
@@ -99,13 +99,13 @@ class PowerLinkControlWidget(QWidget):
         """진행 상황 카드"""
         card = ModernCard("📊 진행 상황")
         layout = QVBoxLayout(card)
-        layout.setSpacing(ResponsiveUI.scale(10))
+        layout.setSpacing(tokens.GAP_10)
         
         # 진행률 표시
         self.progress_bar = QProgressBar()
-        progress_height = ResponsiveUI.scale(25)
-        border_radius = ResponsiveUI.scale(8)
-        chunk_radius = ResponsiveUI.scale(6)
+        progress_height = tokens.GAP_24
+        border_radius = tokens.GAP_8
+        chunk_radius = tokens.GAP_6
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
                 border: 2px solid {ModernStyle.COLORS['border']};
@@ -124,12 +124,12 @@ class PowerLinkControlWidget(QWidget):
         
         # 상태 메시지
         self.status_label = QLabel("분석 대기 중...")
-        status_font_size = ResponsiveUI.get_font_size_pt('normal')
-        status_padding = ResponsiveUI.scale(5)
+        status_font_size = tokens.get_font_size('normal')
+        status_padding = tokens.GAP_5
         self.status_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
-                font-size: {status_font_size}pt;
+                font-size: {status_font_size}px;
                 font-weight: 500;
                 padding: {status_padding}px;
             }}
@@ -137,15 +137,15 @@ class PowerLinkControlWidget(QWidget):
         
         # 키워드 개수 표시 레이블
         self.keyword_count_label = QLabel("등록된 키워드: 0개")
-        count_font_size = ResponsiveUI.get_font_size_pt('normal')
-        count_padding_v = ResponsiveUI.scale(3)
-        count_padding_h = ResponsiveUI.scale(8)
-        count_radius = ResponsiveUI.scale(6)
-        count_margin = ResponsiveUI.scale(5)
+        count_font_size = tokens.get_font_size('normal')
+        count_padding_v = tokens.GAP_3
+        count_padding_h = tokens.GAP_8
+        count_radius = tokens.GAP_6
+        count_margin = tokens.GAP_5
         self.keyword_count_label.setStyleSheet(f"""
             QLabel {{
                 color: #10b981;
-                font-size: {count_font_size}pt;
+                font-size: {count_font_size}px;
                 font-weight: 600;
                 padding: {count_padding_v}px {count_padding_h}px;
                 background-color: rgba(16, 185, 129, 0.1);
@@ -167,15 +167,15 @@ class PowerLinkControlWidget(QWidget):
         card = ModernCard("📝 키워드 입력")
         
         # 컴팩트한 스타일
-        card_font_size = ResponsiveUI.get_font_size_pt('normal')
-        card_radius = ResponsiveUI.scale(12)
-        card_margin = ResponsiveUI.scale(5)
-        card_padding = ResponsiveUI.scale(5)
-        card_left = ResponsiveUI.scale(15)
-        card_title_padding = ResponsiveUI.scale(8)
+        card_font_size = tokens.get_font_size('normal')
+        card_radius = tokens.GAP_12
+        card_margin = tokens.GAP_5
+        card_padding = tokens.GAP_5
+        card_left = tokens.GAP_15
+        card_title_padding = tokens.GAP_8
         card.setStyleSheet(f"""
             QGroupBox {{
-                font-size: {card_font_size}pt;
+                font-size: {card_font_size}px;
                 font-weight: 600;
                 border: 2px solid {ModernStyle.COLORS['border']};
                 border-radius: {card_radius}px;
@@ -193,10 +193,10 @@ class PowerLinkControlWidget(QWidget):
         """)
         
         layout = QVBoxLayout(card)
-        layout.setSpacing(ResponsiveUI.scale(3))
+        layout.setSpacing(tokens.GAP_3)
         layout.setContentsMargins(
-            ResponsiveUI.scale(12), ResponsiveUI.scale(3), 
-            ResponsiveUI.scale(12), ResponsiveUI.scale(8)
+            tokens.GAP_12, tokens.GAP_3, 
+            tokens.GAP_12, tokens.GAP_8
         )
         
         # 키워드 입력 텍스트박스
@@ -208,17 +208,17 @@ class PowerLinkControlWidget(QWidget):
         self.keyword_input.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.keyword_input.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         
-        input_radius = ResponsiveUI.scale(8)
-        input_padding = ResponsiveUI.scale(16)
-        input_font_size = ResponsiveUI.get_font_size_pt('normal')
-        input_height = ResponsiveUI.scale(200)
+        input_radius = tokens.GAP_8
+        input_padding = tokens.GAP_16
+        input_font_size = tokens.get_font_size('normal')
+        input_height = 200
         self.keyword_input.setStyleSheet(f"""
             QTextEdit {{
                 background-color: {ModernStyle.COLORS['bg_input']};
                 border: 2px solid {ModernStyle.COLORS['border']};
                 border-radius: {input_radius}px;
                 padding: {input_padding}px;
-                font-size: {input_font_size}pt;
+                font-size: {input_font_size}px;
                 color: {ModernStyle.COLORS['text_primary']};
                 font-family: 'Segoe UI', sans-serif;
             }}
@@ -240,12 +240,12 @@ class PowerLinkControlWidget(QWidget):
         """분석 제어 버튼들"""
         button_container = QWidget()
         button_layout = QHBoxLayout(button_container)
-        button_layout.setSpacing(ResponsiveUI.scale(12))
-        button_layout.setContentsMargins(0, ResponsiveUI.scale(8), 0, 0)  # 좌우 여백 제거
+        button_layout.setSpacing(tokens.GAP_12)
+        button_layout.setContentsMargins(0, tokens.GAP_8, 0, 0)  # 좌우 여백 제거
         
         # 분석 시작 버튼
-        button_height = ResponsiveUI.scale(45)
-        button_width = ResponsiveUI.scale(150)
+        button_height = tokens.GAP_48
+        button_width = tokens.GAP_150
         self.analyze_button = ModernPrimaryButton("🚀 분석 시작")
         self.analyze_button.setFixedHeight(button_height)
         self.analyze_button.setFixedWidth(button_width)  # 너비 조정 (300 → 150)
