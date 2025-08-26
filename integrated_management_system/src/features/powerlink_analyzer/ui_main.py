@@ -6,10 +6,9 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel
 )
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import ModernStyle, tokens
 from src.toolbox.ui_kit.components import ModernHelpButton
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-from src.toolbox.ui_kit.responsive import ResponsiveUI
 from .ui_list import PowerLinkControlWidget
 from .ui_table import PowerLinkResultsWidget
 

@@ -8,10 +8,9 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QTimer, Signal
 
-from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import ModernStyle, tokens
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDialog
 from src.toolbox.ui_kit.components import ModernCard, ModernPrimaryButton, ModernDangerButton
-from src.toolbox.ui_kit.responsive import ResponsiveUI
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 from src.toolbox.progress import throttle_ms

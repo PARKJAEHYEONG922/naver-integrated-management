@@ -71,7 +71,7 @@ class ModernCancelButton(QPushButton):
                 padding: {tokens.GAP_6}px {tokens.GAP_12}px;
                 border-radius: {tokens.RADIUS_MD}px;
                 font-size: {tokens.get_font_size('normal')}px;
-                font-weight: 600;
+                font-weight: 580;
                 min-width: {tokens.BTN_H_MD * 2}px;
                 min-height: {tokens.BTN_H_SM}px;
             }}

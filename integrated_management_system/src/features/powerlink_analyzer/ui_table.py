@@ -10,9 +10,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 
-from src.toolbox.ui_kit import ModernStyle, ModernTableWidget
+from src.toolbox.ui_kit import ModernStyle, ModernTableWidget, tokens
 from src.toolbox.ui_kit.components import ModernButton
-from src.toolbox.ui_kit.responsive import ResponsiveUI
 from src.toolbox.formatters import format_int, format_float, format_price_krw
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger

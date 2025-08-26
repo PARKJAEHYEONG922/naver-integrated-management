@@ -35,19 +35,19 @@ class ProjectListWidget(QWidget):
         self.load_projects()
     
     def setup_ui(self):
-        """UI 구성 - 반응형"""
+        """UI 구성"""
         layout = QVBoxLayout()
-        margin = ResponsiveUI.scale(6)
-        spacing = ResponsiveUI.scale(6)
+        margin = tokens.GAP_6
+        spacing = tokens.GAP_6
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
-        # 헤더 (제목만) - 반응형
+        # 헤더 (제목만)
         title_label = QLabel("📋 프로젝트 목록")
-        title_font_size = ResponsiveUI.get_font_size_pt('header')
+        title_font_size = tokens.get_font_size('header')
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {title_font_size}pt;
+                font-size: {title_font_size}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -86,8 +86,8 @@ class ProjectListWidget(QWidget):
     
     
     def apply_styles(self):
-        """스타일 적용 - 반응형"""
-        border_radius = ResponsiveUI.scale(6)
+        """스타일 적용"""
+        border_radius = tokens.GAP_6
         self.setStyleSheet(f"""
             QWidget {{
                 background-color: {ModernStyle.COLORS['bg_card']};
@@ -96,17 +96,17 @@ class ProjectListWidget(QWidget):
             QTreeWidget {{
                 background-color: {ModernStyle.COLORS['bg_primary']};
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.scale(10)}px;
+                border-radius: {tokens.GAP_10}px;
                 selection-background-color: transparent;
                 outline: none;
-                padding: {ResponsiveUI.scale(6)}px;
+                padding: {tokens.GAP_6}px;
             }}
             QTreeWidget::item {{
-                height: {ResponsiveUI.scale(35)}px;
-                padding: {ResponsiveUI.scale(6)}px {ResponsiveUI.scale(10)}px;
-                margin: {ResponsiveUI.scale(2)}px {ResponsiveUI.scale(4)}px;
+                height: {tokens.GAP_36}px;
+                padding: {tokens.GAP_6}px {tokens.GAP_10}px;
+                margin: {tokens.GAP_2}px {tokens.GAP_4}px;
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.scale(4)}px;
+                border-radius: {tokens.GAP_4}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
                 font-weight: 500;
             }}
@@ -127,10 +127,10 @@ class ProjectListWidget(QWidget):
                 background-color: {ModernStyle.COLORS['primary']};
                 color: white;
                 border: none;
-                padding: {ResponsiveUI.scale(10)}px;
-                border-radius: {ResponsiveUI.scale(6)}px;
+                padding: {tokens.GAP_10}px;
+                border-radius: {tokens.GAP_6}px;
                 font-weight: 600;
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                font-size: {tokens.get_font_size('normal')}px;
             }}
             QPushButton:hover {{
                 background-color: {ModernStyle.COLORS['primary_hover']};
@@ -307,9 +307,9 @@ class ProjectListWidget(QWidget):
             projects = rank_tracking_service.get_all_projects(active_only=True)
             
             if projects:
-                # 반응형 폰트 설정
+                # 폰트 설정
                 font = QFont("맑은 고딕")
-                font.setPointSize(ResponsiveUI.get_font_size_pt('large'))
+                font.setPixelSize(tokens.get_font_size('normal'))
                 
                 for project in projects:
                     item = QTreeWidgetItem([f"🏷️ {project.current_name}"])
@@ -320,7 +320,7 @@ class ProjectListWidget(QWidget):
             else:
                 # 프로젝트가 없을 때 안내 메시지 표시
                 font = QFont("맑은 고딕")
-                font.setPointSize(ResponsiveUI.get_font_size_pt('large'))
+                font.setPixelSize(tokens.get_font_size('normal'))
                 
                 empty_item = QTreeWidgetItem(["📝 새 프로젝트를 추가하세요"])
                 empty_item.setDisabled(True)

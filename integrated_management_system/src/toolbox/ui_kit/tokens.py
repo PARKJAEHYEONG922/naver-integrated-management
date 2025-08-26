@@ -11,6 +11,10 @@ FONT_NORMAL = 14
 FONT_SMALL  = 12
 FONT_TINY   = 11
 
+# ---- Font Family ------------------------------------------------------------
+FONT_FAMILY_PRIMARY = "'Segoe UI', 'Noto Sans KR', 'Malgun Gothic', sans-serif"
+FONT_FAMILY_MONO = "'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace"
+
 # 선택: 접근성용 가변 배율 (원하면 1.0 고정)
 USER_TEXT_SCALE = 1.0
 def fpx(v: int) -> int:
@@ -45,6 +49,7 @@ GAP_64 = 64
 GAP_72 = 72
 GAP_80 = 80
 GAP_96 = 96
+GAP_100 = 100
 GAP_110 = 110
 GAP_120 = 120
 GAP_130 = 130

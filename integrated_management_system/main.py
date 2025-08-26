@@ -30,24 +30,12 @@ def load_features(app):
         register_naver_cafe(app)
         logger.info("네이버 카페 모듈 로드 완료")
         
-        # 토큰 변환이 완료된 모듈들만 로드
-        try:
-            # 네이버상품 순위추적 기능 (토큰 변환 확인 필요)
-            logger.info("순위추적 모듈 로드 시도")
-            from src.features.rank_tracking import register as register_rank_tracking
-            register_rank_tracking(app)
-            logger.info("순위추적 모듈 로드 완료")
-        except Exception as e:
-            logger.warning(f"순위추적 모듈 로드 실패 (토큰 변환 필요할 수 있음): {e}")
+        # 순위추적 기능 로드 및 등록 (토큰 변환 완료)
+        logger.info("순위추적 모듈 로드 시작")
+        from src.features.rank_tracking import register as register_rank_tracking
+        register_rank_tracking(app)
+        logger.info("순위추적 모듈 로드 완료")
         
-        try:
-            # PowerLink 분석기 기능 (토큰 변환 확인 필요)
-            logger.info("PowerLink 분석기 모듈 로드 시도")
-            from src.features.powerlink_analyzer import register as register_powerlink
-            register_powerlink(app)
-            logger.info("PowerLink 분석기 모듈 로드 완료")
-        except Exception as e:
-            logger.warning(f"PowerLink 분석기 모듈 로드 실패 (토큰 변환 필요할 수 있음): {e}")
         
         try:
             # 네이버 상품명 생성기 기능 (토큰 변환 확인 필요)

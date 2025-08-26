@@ -12,8 +12,9 @@ class ModernStyle:
     # 컬러 팔레트 - tokens에서 가져오기
     COLORS = tokens.COLORS
     
-    # 기본 폰트 (호환성 유지)
-    DEFAULT_FONT = "맑은 고딕"
+    # 기본 폰트 - tokens에서 가져오기
+    DEFAULT_FONT = tokens.FONT_FAMILY_PRIMARY
+    MONO_FONT = tokens.FONT_FAMILY_MONO
     
     # 토큰 기반 값들
     @classmethod
@@ -199,7 +200,7 @@ class ModernStyle:
                 border: none;
                 border-radius: {border_radius}px;
                 padding: {padding_v}px {padding_h}px;
-                font-weight: 600;
+                font-weight: 580;
                 font-size: {font_size}px;
                 font-family: '{cls.DEFAULT_FONT}';
                 min-width: {min_width}px;
