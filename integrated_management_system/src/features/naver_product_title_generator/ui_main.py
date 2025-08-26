@@ -2,6 +2,7 @@
 네이버 상품명 생성기 메인 UI
 스텝 네비게이션 + 사이드바 + 메인 영역 구조
 """
+import re
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QTextEdit,
     QFrame, QStackedWidget, QSizePolicy
@@ -367,6 +368,9 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 현재 AI 모델 정보 로드
         self.load_current_ai_model()
         
+        # API 설정 상태 확인
+        self.check_api_status()
+        
     def setup_header(self, layout):
         """헤더 섹션 (제목 + 사용법) - 파워링크와 동일"""
         header_layout = QHBoxLayout()
@@ -537,6 +541,38 @@ class NaverProductTitleGeneratorWidget(QWidget):
                 }}
             """)
             print(f"AI 모델 로드 오류: {e}")
+    
+    def check_api_status(self):
+        """API 설정 상태 확인 - Foundation Config 사용"""
+        try:
+            from src.foundation.config import config_manager
+            api_config = config_manager.load_api_config()
+            
+            missing_apis = []
+            
+            # 네이버 쇼핑 API 확인 (Step 2에서 상품명 수집용)
+            if not api_config.is_shopping_valid():
+                missing_apis.append("네이버 쇼핑 API")
+            
+            # AI API 확인 (Step 3, 4에서 AI 분석/생성용)  
+            if not api_config.current_ai_model or api_config.current_ai_model == "AI 제공자를 선택하세요":
+                missing_apis.append("AI API")
+            elif api_config.current_ai_model and not any([
+                api_config.openai_api_key,
+                api_config.claude_api_key, 
+                api_config.gemini_api_key
+            ]):
+                missing_apis.append("AI API 키")
+            
+            if missing_apis:
+                log_manager.add_log(f"⚠️ API 설정 필요: {', '.join(missing_apis)}", "warning")
+                log_manager.add_log("💡 상단의 API 설정 버튼을 클릭하여 설정하세요", "info")
+            else:
+                log_manager.add_log("✅ 모든 API 설정 완료", "success")
+                
+        except Exception as e:
+            log_manager.add_log(f"❌ API 상태 확인 실패: {str(e)}", "error")
+            print(f"API 상태 확인 오류: {e}")
         
     def setup_connections(self):
         """시그널 연결 - 새로운 레이아웃"""
@@ -556,6 +592,9 @@ class NaverProductTitleGeneratorWidget(QWidget):
         self.right_panel.step3_widget.ai_analysis_started.connect(self.start_ai_analysis)
         self.right_panel.step3_widget.analysis_stopped.connect(lambda: self.stop_ai_analysis())
         
+        # 4단계 AI 상품명 생성 시그널
+        self.right_panel.step4_widget.ai_generation_started.connect(self.start_ai_product_generation)
+        
         # API 설정 변경 시그널 연결 (부모 윈도우에서 받기)
         self.connect_to_api_dialog()
     
@@ -572,6 +611,7 @@ class NaverProductTitleGeneratorWidget(QWidget):
     def on_api_settings_changed(self):
         """API 설정이 변경되었을 때 AI 모델 표시 업데이트"""
         self.load_current_ai_model()
+        self.check_api_status()  # API 상태도 다시 확인
         
     def on_analysis_started(self, product_name: str):
         """분석 시작 처리"""
@@ -933,6 +973,115 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 진행상황 초기화
         self.left_panel.update_progress(3, "분석 중지됨", 0)
     
+    def start_ai_product_generation(self, selected_keyword_dict: dict, product_info: dict):
+        """Step 4에서 AI 상품명 생성 시작"""
+        keyword = selected_keyword_dict.get('keyword', 'Unknown')
+        log_manager.add_log(f"🤖 AI 상품명 생성 시작: {keyword}", "info")
+        
+        # 진행상황 업데이트
+        self.left_panel.update_progress(4, "AI 상품명 생성 중...", 20)
+        
+        # engine_local에서 프롬프트 생성
+        from .engine_local import generate_product_name_prompt, PRODUCT_NAME_GENERATION_SYSTEM_PROMPT
+        
+        # Step 3에서 선택된 키워드들 가져오기
+        selected_keywords = []
+        if hasattr(self.right_panel.step3_widget, 'selected_keywords'):
+            selected_keywords = [kw.keyword for kw in self.right_panel.step3_widget.get_selected_keywords()]
+        
+        # Step 2에서 상품명 길이 통계 가져오기 (있다면)
+        length_stats = "통계 정보 없음"
+        if hasattr(self.right_panel.step2_widget, 'product_name_stats'):
+            stats = self.right_panel.step2_widget.product_name_stats
+            if stats:
+                avg_length = stats.get('average_length', 0)
+                min_length = stats.get('min_length', 0)
+                max_length = stats.get('max_length', 0)
+                length_stats = f"평균 {avg_length:.0f}자, 최소 {min_length}자, 최대 {max_length}자"
+        
+        prompt_content = generate_product_name_prompt(
+            selected_keywords=selected_keywords,
+            core_keyword=keyword,
+            brand=product_info.get('brand'),
+            material=product_info.get('material'),
+            quantity=product_info.get('quantity'),
+            length_stats=length_stats
+        )
+        
+        # Step 3와 동일한 AI 워커 사용 (상품명 생성용)
+        from .worker import AIAnalysisWorker, worker_manager
+        
+        self.current_ai_generation_worker = AIAnalysisWorker(
+            product_names=[],  # 상품명 생성에서는 빈 리스트
+            prompt_type="product_generation",  # 상품명 생성 타입
+            prompt_content=prompt_content,
+            system_prompt=PRODUCT_NAME_GENERATION_SYSTEM_PROMPT
+        )
+        
+        # 시그널 연결
+        self.current_ai_generation_worker.progress_updated.connect(
+            lambda progress, message: self.left_panel.update_progress(4, f"AI 상품명 생성: {message}", progress)
+        )
+        self.current_ai_generation_worker.analysis_completed.connect(self.on_ai_product_generation_completed)
+        self.current_ai_generation_worker.error_occurred.connect(self.on_ai_product_generation_error)
+        
+        # 워커 시작
+        worker_manager.start_worker(self.current_ai_generation_worker)
+    
+    def on_ai_product_generation_completed(self, ai_response: str):
+        """AI 상품명 생성 완료 처리"""
+        log_manager.add_log("✅ AI 상품명 생성 완료", "success")
+        
+        # AI 응답에서 상품명들 추출 ("최적화된 상품명:" 라인만 추출)
+        product_names = []
+        if ai_response and ai_response.strip():
+            lines = ai_response.strip().split('\n')
+            for line in lines:
+                cleaned_line = line.strip()
+                # "최적화된 상품명:" 으로 시작하는 라인 찾기
+                if cleaned_line.startswith("최적화된 상품명:") or cleaned_line.startswith("1. 최적화된 상품명:"):
+                    # "최적화된 상품명:" 부분 제거
+                    product_name = re.sub(r'^\d*\.\s*최적화된\s*상품명\s*:\s*', '', cleaned_line)
+                    product_name = product_name.strip()
+                    if product_name and len(product_name) >= 10:  # 최소 길이 체크
+                        product_names.append(product_name)
+                # 혹시 다른 패턴의 상품명이 있을 경우를 대비한 백업 로직
+                elif not any(x in cleaned_line.lower() for x in ['설명:', '원칙', '최적화', '키워드']) and len(cleaned_line) >= 15:
+                    # 번호나 불필요한 문자 제거
+                    cleaned_line = re.sub(r'^\d+[\.\)\-\s]*', '', cleaned_line)
+                    cleaned_line = re.sub(r'^[\-\*\•\s]*', '', cleaned_line)
+                    if cleaned_line and len(cleaned_line) >= 10:
+                        product_names.append(cleaned_line)
+        
+        # 최대 10개까지만 사용
+        final_product_names = product_names[:10]
+        
+        if final_product_names:
+            count = len(final_product_names)
+            log_manager.add_log(f"✅ AI 상품명 생성 완료: {count}개 생성", "success")
+            
+            # 진행상황 업데이트
+            self.left_panel.update_progress(4, f"AI 상품명 생성 완료 {count}개", 100)
+            
+            # Step 4에 결과 전달
+            self.right_panel.step4_widget.on_generation_completed(final_product_names)
+        else:
+            # 결과가 없으면 에러 처리
+            self.on_ai_product_generation_error("AI가 유효한 상품명을 생성하지 못했습니다.")
+    
+    def on_ai_product_generation_error(self, error_message: str):
+        """AI 상품명 생성 에러 처리"""
+        log_manager.add_log(f"❌ AI 상품명 생성 실패: {error_message}", "error")
+        
+        # 진행상황 초기화
+        self.left_panel.update_progress(4, "상품명 생성 실패", 0)
+        
+        # Step 4의 생성 버튼 상태 복원
+        if hasattr(self.right_panel, 'step4_widget'):
+            step4_widget = self.right_panel.step4_widget
+            if hasattr(step4_widget, 'generate_button'):
+                step4_widget.generate_button.setEnabled(True)
+                step4_widget.generate_button.setText("🚀 AI 상품명 생성하기")
         
     def apply_styles(self):
         self.setStyleSheet(f"""

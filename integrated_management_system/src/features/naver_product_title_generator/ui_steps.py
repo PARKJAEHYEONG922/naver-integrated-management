@@ -5,7 +5,8 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QFrame, QScrollArea, QCheckBox, QPushButton, QDialog,
-    QLineEdit, QRadioButton, QButtonGroup, QTextEdit, QGroupBox
+    QLineEdit, QRadioButton, QButtonGroup, QTextEdit, QGroupBox,
+    QSizePolicy
 )
 from PySide6.QtCore import Qt, Signal
 
@@ -958,14 +959,14 @@ class Step3AdvancedAnalysisWidget(QWidget):
         header_layout.addWidget(title)
         
         # 안내 메시지 추가
-        guide_label = QLabel("→ 사용가능한 모든 키워드를 선택해주세요")
+        guide_label = QLabel("사용가능한 모든 키워드를 선택해주세요")
         guide_label.setObjectName("guide_text")
         guide_label.setStyleSheet(f"""
             QLabel {{
-                color: {ModernStyle.COLORS['text_secondary']};
-                font-size: 13px;
-                font-weight: 500;
-                margin-left: 10px;
+                color: {ModernStyle.COLORS['text_primary']};
+                font-size: {tokens.get_font_size('large')}px;
+                font-weight: 700;
+                margin-left: 15px;
             }}
         """)
         guide_label.setVisible(False)  # 초기에는 숨김
@@ -1353,6 +1354,7 @@ class Step4ResultWidget(QWidget):
     
     # 시그널
     export_requested = Signal()
+    ai_generation_started = Signal(dict, dict)  # (selected_keyword, product_info) AI 상품명 생성 시작
     
     def __init__(self):
         super().__init__()
@@ -1419,18 +1421,18 @@ class Step4ResultWidget(QWidget):
         info_label.setObjectName("info_text")
         layout.addWidget(info_label)
         
-        # 스크롤 영역
+        # 스크롤 영역 - Step 3과 동일하게 설정
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setMaximumHeight(400)
+        scroll_area.setMaximumHeight(500)  # 다시 500으로 복원
         
         self.keyword_cards_container = QWidget()
+        self.keyword_cards_container.setMinimumHeight(480)  # 스크롤 영역을 제대로 활용하도록 최소 높이 설정
         self.keyword_cards_layout = QVBoxLayout(self.keyword_cards_container)
         self.keyword_cards_layout.setSpacing(tokens.GAP_8)
         self.keyword_cards_layout.setContentsMargins(0, 0, 0, 0)
-        
-        # 4단계는 이제 체크박스를 사용하므로 라디오 버튼 그룹 불필요
+        self.keyword_cards_layout.setAlignment(Qt.AlignTop)
         
         # 초기 상태 메시지
         self.no_keywords_label = QLabel("먼저 3단계에서 키워드를 선택해주세요.")
@@ -1561,7 +1563,7 @@ class Step4ResultWidget(QWidget):
         self.check_generate_button_state()
     
     def update_core_keyword_options(self):
-        """키워드 표시 업데이트 (단일 선택 체크박스)"""
+        """키워드 표시 업데이트 (단일 선택 체크박스) - Step 3과 동일한 세로 배치"""
         # 기존 카드들 제거
         for i in reversed(range(self.keyword_cards_layout.count())):
             item = self.keyword_cards_layout.takeAt(i)
@@ -1572,27 +1574,41 @@ class Step4ResultWidget(QWidget):
         
         if self.selected_keywords:
             for keyword in self.selected_keywords:
-                # 공용 키워드 카드 생성 (체크박스 사용)
+                # Step 3와 동일한 체크박스 카드 생성 (AI 키워드는 모두 초록색)
+                ai_category_colors = {keyword.category: "#10b981", "default": "#10b981"}  # 초록색
+                
                 keyword_card = create_keyword_card(
                     keyword_data=keyword,
-                    selection_type='checkbox',  # 체크박스 사용
-                    color_mode='green'  # 4단계에서는 모두 초록색
+                    category_colors=ai_category_colors,
+                    use_radio=False,
+                    use_checkbox=True
                 )
                 
-                # 체크박스 상태 변경 시 이벤트 연결 (단일 선택 로직 추가)
-                if hasattr(keyword_card, 'selection_button'):
+                # 체크박스 상태 변경 시 이벤트 연결 (단일 선택 로직)
+                if hasattr(keyword_card, 'selection_button') and keyword_card.selection_button:
                     keyword_card.selection_button.stateChanged.connect(
                         lambda state, checkbox=keyword_card.selection_button: self.on_checkbox_changed(checkbox, state)
                     )
                     self.keyword_checkboxes.append(keyword_card.selection_button)
                 
+                # Step 3처럼 세로로 배치
                 self.keyword_cards_layout.addWidget(keyword_card)
                 
             # 첫 번째 키워드 기본 선택
             if self.keyword_checkboxes:
                 self.keyword_checkboxes[0].setChecked(True)
         else:
-            self.keyword_cards_layout.addWidget(self.no_keywords_label)
+            # 새로운 라벨 생성 (기존 라벨이 삭제되었을 수 있음)
+            no_keywords_label = QLabel("먼저 3단계에서 키워드를 선택해주세요.")
+            no_keywords_label.setStyleSheet(f"""
+                QLabel {{
+                    color: {ModernStyle.COLORS['text_secondary']};
+                    font-style: italic;
+                    text-align: center;
+                    padding: {tokens.GAP_20}px;
+                }}
+            """)
+            self.keyword_cards_layout.addWidget(no_keywords_label)
     
     def on_checkbox_changed(self, clicked_checkbox, state):
         """체크박스 변경 시 단일 선택 로직"""
@@ -1643,15 +1659,8 @@ class Step4ResultWidget(QWidget):
         self.generate_button.setEnabled(False)
         self.generate_button.setText("🔄 생성 중...")
         
-        # 임시 결과 생성 (실제로는 AI 서비스 호출)
-        from PySide6.QtCore import QTimer
-        QTimer.singleShot(2000, lambda: self.on_generation_completed([
-            f"프리미엄 {selected_keywords[0].keyword} 특가상품",
-            f"고품질 {selected_keywords[0].keyword} 베스트셀러", 
-            f"{selected_keywords[0].keyword} 인기상품 추천",
-            f"신상 {selected_keywords[0].keyword} 할인특가",
-            f"럭셔리 {selected_keywords[0].keyword} 컬렉션"
-        ]))
+        # AI 상품명 생성 시그널 발송 (ui_main.py에서 처리)
+        self.ai_generation_started.emit(selected_keyword.__dict__, product_info)
     
     def on_generation_completed(self, results):
         """생성 완료 처리"""
@@ -1736,98 +1745,3 @@ class Step4ResultWidget(QWidget):
             }}
         """
         self.setStyleSheet(common_styles + step4_specific)
-    
-    def set_selected_keywords(self, keywords: list):
-        """선택된 키워드 설정 (3단계에서 호출)"""
-        self.selected_keywords = keywords
-        self.update_core_keyword_options()
-        self.check_generate_button_state()
-    
-    def update_core_keyword_options(self):
-        """핵심 키워드 선택 옵션 업데이트 - 3단계와 동일한 카드 형태로 표시"""
-        # 기존 위젯들 제거
-        for i in reversed(range(self.keyword_cards_layout.count())):
-            child = self.keyword_cards_layout.itemAt(i).widget()
-            if child:
-                child.deleteLater()
-                
-        if not self.selected_keywords:
-            self.no_keywords_label = QLabel("먼저 3단계에서 키워드를 선택해주세요.")
-            self.no_keywords_label.setStyleSheet(f"""
-                QLabel {{
-                    color: {ModernStyle.COLORS['text_secondary']};
-                    font-style: italic;
-                    text-align: center;
-                    padding: {tokens.GAP_20}px;
-                }}
-            """)
-            self.keyword_cards_layout.addWidget(self.no_keywords_label)
-            return
-            
-        # 핵심 키워드는 단일 선택이므로 라디오 버튼 그룹 사용
-        from PySide6.QtWidgets import QButtonGroup
-        self.core_keyword_button_group = QButtonGroup()
-        
-        # 각 키워드에 대해 카드 형태로 생성 (라디오 버튼 + 초록색)
-        for keyword_data in self.selected_keywords:
-            # 초록색 설정
-            green_category_colors = {keyword_data.category: "#10b981", "default": "#10b981"}
-            
-            # 공용 키워드 카드 사용 (라디오 버튼 모드로 단일 선택)
-            card = create_keyword_card(
-                keyword_data=keyword_data,
-                category_colors=green_category_colors,
-                use_radio=True,
-                button_group=self.core_keyword_button_group,
-                use_checkbox=False
-            )
-            
-            # 라디오 버튼 선택 변경 시 버튼 상태 체크
-            if hasattr(card, 'selection_button') and card.selection_button:
-                card.selection_button.toggled.connect(self.check_generate_button_state)
-            
-            self.keyword_cards_layout.addWidget(card)
-        
-        # 첫 번째 키워드 기본 선택
-        if self.core_keyword_button_group.buttons():
-            self.core_keyword_button_group.buttons()[0].setChecked(True)
-    
-    def check_generate_button_state(self):
-        """다음 버튼 활성화 상태 체크 - 라디오 버튼 방식"""
-        has_selected_core_keyword = False
-        
-        # 라디오 버튼 그룹에서 선택된 것이 있는지 확인
-        if hasattr(self, 'core_keyword_button_group') and self.core_keyword_button_group:
-            has_selected_core_keyword = self.core_keyword_button_group.checkedButton() is not None
-        
-        if hasattr(self, 'next_button'):
-            self.next_button.setEnabled(has_selected_core_keyword)
-    
-    def on_next_clicked(self):
-        """다음 버튼 클릭 이벤트 - 5단계로 이동"""
-        # 선택된 핵심 키워드 찾기
-        selected_core_keyword = None
-        if hasattr(self, 'core_keyword_button_group') and self.core_keyword_button_group:
-            checked_button = self.core_keyword_button_group.checkedButton()
-            if checked_button:
-                # 체크된 라디오버튼에 해당하는 키워드 데이터 찾기
-                for i in range(self.keyword_cards_layout.count()):
-                    widget = self.keyword_cards_layout.itemAt(i).widget()
-                    if (widget and hasattr(widget, 'selection_button') and 
-                        widget.selection_button == checked_button):
-                        selected_core_keyword = widget.keyword_data
-                        break
-        
-        # 필수 입력 정보 수집
-        brand = self.brand_input.text().strip()
-        material = self.material_input.text().strip()
-        quantity = self.quantity_input.text().strip()
-        
-        # 5단계로 전달할 데이터 준비
-        step5_data = {
-            'core_keyword': selected_core_keyword,
-            'brand': brand or None,
-            'material': material or None,
-            'quantity': quantity or None
-        }
-        
