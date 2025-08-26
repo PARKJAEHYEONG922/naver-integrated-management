@@ -4,7 +4,8 @@
 """
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QFrame, QScrollArea, QCheckBox, QPushButton, QDialog
+    QFrame, QScrollArea, QCheckBox, QPushButton, QDialog,
+    QLineEdit, QRadioButton, QButtonGroup, QTextEdit, QGroupBox
 )
 from PySide6.QtCore import Qt, Signal
 
@@ -59,118 +60,173 @@ def get_common_step_styles() -> str:
     """
 
 
+def create_keyword_card(keyword_data, category_colors=None, use_radio=False, button_group=None, use_checkbox=True):
+    """공용 키워드 카드 생성 함수 - 기존 KeywordCard와 동일한 구조 및 스타일 사용
+    
+    Args:
+        keyword_data: 키워드 데이터
+        category_colors: 카테고리 색상 매핑 (1단계용)
+        use_radio: True면 라디오 버튼, False면 체크박스
+        button_group: 라디오 버튼 그룹 (라디오 사용시 필수)
+        use_checkbox: 체크박스 사용 여부
+    """
+    from PySide6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QCheckBox, QRadioButton, QLabel
+    from src.toolbox.ui_kit.modern_style import ModernStyle
+    from src.toolbox.ui_kit import tokens
+    from src.toolbox.formatters import format_int
+    
+    # QFrame 생성 (기존 KeywordCard와 동일)
+    card = QFrame()
+    card.setObjectName("keyword_card")
+    
+    # 기존 KeywordCard와 동일한 레이아웃
+    layout = QHBoxLayout()
+    margin_h = tokens.GAP_15
+    margin_v = tokens.GAP_12
+    spacing = tokens.GAP_15
+    layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
+    layout.setSpacing(spacing)
+    
+    # 선택 버튼 (체크박스 또는 라디오버튼)
+    if use_checkbox:
+        selection_button = QCheckBox()
+    elif use_radio:
+        selection_button = QRadioButton()
+        if button_group:
+            button_group.addButton(selection_button)
+    else:
+        selection_button = None
+    
+    if selection_button:
+        layout.addWidget(selection_button)
+    
+    # 키워드 정보 레이아웃 (기존과 동일)
+    info_layout = QVBoxLayout()
+    info_spacing = tokens.GAP_4
+    info_layout.setSpacing(info_spacing)
+    
+    # 키워드명
+    keyword_label = QLabel(keyword_data.keyword)
+    keyword_label.setObjectName("keyword_name")
+    info_layout.addWidget(keyword_label)
+    
+    # 상세 정보
+    details = f"월검색량: {format_int(keyword_data.search_volume)} | 카테고리: {keyword_data.category}"
+    details_label = QLabel(details)
+    details_label.setObjectName("keyword_details")
+    info_layout.addWidget(details_label)
+    
+    layout.addLayout(info_layout, 1)
+    card.setLayout(layout)
+    
+    # 기존 KeywordCard와 동일한 스타일 적용
+    apply_original_keyword_card_style(card, keyword_data, category_colors)
+    
+    # 호환성을 위한 속성 추가
+    card.keyword_data = keyword_data
+    card.selection_button = selection_button
+    
+    # 메서드 추가
+    def is_checked():
+        return selection_button.isChecked() if selection_button else False
+    
+    def set_checked(checked):
+        if selection_button:
+            selection_button.setChecked(checked)
+    
+    card.is_checked = is_checked
+    card.set_checked = set_checked
+    
+    return card
 
-class KeywordCard(QFrame):
-    """키워드 정보를 표시하는 카드 위젯"""
+
+def apply_original_keyword_card_style(card, keyword_data, category_colors):
+    """기존 KeywordCard와 동일한 스타일 적용"""
+    from src.toolbox.ui_kit.modern_style import ModernStyle
+    from src.toolbox.ui_kit import tokens
     
-    selection_changed = Signal(bool)  # 체크 상태 변경
+    # 카테고리별 색상 결정 (기존 KeywordCard의 get_category_color 로직)
+    category = keyword_data.category
     
-    def __init__(self, keyword_data, category_colors=None):
-        super().__init__()
-        self.keyword_data = keyword_data
-        self.category_colors = category_colors or {}
-        self.setup_ui()
-        
-    def setup_ui(self):
-        self.setObjectName("keyword_card")
-        layout = QHBoxLayout()
-        margin_h = tokens.GAP_15
-        margin_v = tokens.GAP_12
-        spacing = tokens.GAP_15
-        layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
-        layout.setSpacing(spacing)
-        
-        # 체크박스
-        self.checkbox = QCheckBox()
-        self.checkbox.stateChanged.connect(self._on_check_changed)
-        layout.addWidget(self.checkbox)
-        
-        # 키워드 정보
-        info_layout = QVBoxLayout()
-        info_spacing = tokens.GAP_4
-        info_layout.setSpacing(info_spacing)
-        
-        # 키워드명 (크게)
-        keyword_label = QLabel(self.keyword_data.keyword)
-        keyword_label.setObjectName("keyword_name")
-        info_layout.addWidget(keyword_label)
-        
-        # 상세 정보 (작게)
-        details = f"월검색량: {format_int(self.keyword_data.search_volume)} | 카테고리: {self.keyword_data.category}"
-        details_label = QLabel(details)
-        details_label.setObjectName("keyword_details")
-        info_layout.addWidget(details_label)
-        
-        layout.addLayout(info_layout, 1)
-        
-        self.setLayout(layout)
-        self.apply_styles()
-        
-    def _on_check_changed(self):
-        self.selection_changed.emit(self.checkbox.isChecked())
-        
-    def is_checked(self) -> bool:
-        return self.checkbox.isChecked()
-        
-    def set_checked(self, checked: bool):
-        self.checkbox.setChecked(checked)
-        
-    def apply_styles(self):
-        # 카테고리별 색상 결정
-        category_color = self.get_category_color()
-        
-        border_radius = tokens.GAP_8
-        margin = 2
-        name_font_size = tokens.get_font_size('large')
-        details_font_size = tokens.get_font_size('normal')
-        checkbox_size = 18
-        checkbox_border_radius = tokens.GAP_4
-        
-        self.setStyleSheet(f"""
-            QFrame[objectName="keyword_card"] {{
-                background-color: {ModernStyle.COLORS['bg_card']};
-                border: 2px solid {category_color};
-                border-radius: {border_radius}px;
-                margin: {margin}px 0;
-            }}
-            QFrame[objectName="keyword_card"]:hover {{
-                background-color: {ModernStyle.COLORS['bg_secondary']};
-                border-color: {category_color};
-            }}
-            QLabel[objectName="keyword_name"] {{
-                font-size: {name_font_size}px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-            }}
-            QLabel[objectName="keyword_details"] {{
-                font-size: {details_font_size}px;
-                color: {ModernStyle.COLORS['text_secondary']};
-            }}
-            QCheckBox::indicator {{
-                width: {checkbox_size}px;
-                height: {checkbox_size}px;
-                border: 2px solid {category_color};
-                border-radius: {checkbox_border_radius}px;
-                background-color: white;
-            }}
-            QCheckBox::indicator:checked {{
-                background-color: {category_color};
-                border-color: {category_color};
-                image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
-            }}
-        """)
-    
-    def get_category_color(self):
-        """카테고리별 색상 반환"""
-        category = self.keyword_data.category
-        
-        if not category or category in ["카테고리 없음", "분석 실패"]:
-            return self.category_colors.get("default", "#6b7280")
-        
+    if not category or category in ["카테고리 없음", "분석 실패"]:
+        category_color = category_colors.get("default", "#6b7280") if category_colors else "#6b7280"
+    else:
         # 전체 카테고리 경로 사용 (% 부분만 제거)
         clean_category = category.split(" (")[0] if " (" in category else category
-        
-        return self.category_colors.get(clean_category, self.category_colors.get("default", "#6b7280"))
+        category_color = category_colors.get(clean_category, category_colors.get("default", "#6b7280")) if category_colors else "#6b7280"
+    
+    # 기존 KeywordCard와 동일한 스타일
+    border_radius = tokens.GAP_8
+    margin = 2
+    name_font_size = tokens.get_font_size('large')
+    details_font_size = tokens.get_font_size('normal')
+    checkbox_size = 18
+    checkbox_border_radius = tokens.GAP_4
+    
+    card.setStyleSheet(f"""
+        QFrame[objectName="keyword_card"] {{
+            background-color: {ModernStyle.COLORS['bg_card']};
+            border: 2px solid {category_color};
+            border-radius: {border_radius}px;
+            margin: {margin}px 0;
+        }}
+        QFrame[objectName="keyword_card"]:hover {{
+            background-color: {ModernStyle.COLORS['bg_secondary']};
+            border-color: {category_color};
+        }}
+        QLabel[objectName="keyword_name"] {{
+            font-size: {name_font_size}px;
+            font-weight: 600;
+            color: {ModernStyle.COLORS['text_primary']};
+        }}
+        QLabel[objectName="keyword_details"] {{
+            font-size: {details_font_size}px;
+            color: {ModernStyle.COLORS['text_secondary']};
+        }}
+        QCheckBox::indicator {{
+            width: {checkbox_size}px;
+            height: {checkbox_size}px;
+            border: 2px solid {category_color};
+            border-radius: {checkbox_border_radius}px;
+            background-color: white;
+        }}
+        QCheckBox::indicator:checked {{
+            background-color: {category_color};
+            border-color: {category_color};
+            image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
+        }}
+        QRadioButton::indicator {{
+            width: {checkbox_size}px;
+            height: {checkbox_size}px;
+            border: 2px solid {category_color};
+            border-radius: {checkbox_size//2}px;
+            background-color: white;
+        }}
+        QRadioButton::indicator:checked {{
+            background-color: {category_color};
+            border-color: {category_color};
+        }}
+    """)
+
+
+def apply_keyword_card_styles(card_widget, card_color):
+    """키워드 카드에 스타일 적용"""
+    card_widget.setStyleSheet(f"""
+        QWidget {{
+            background-color: {card_color};
+            border: 2px solid {ModernStyle.BORDER_COLOR};
+            border-radius: 8px;
+            margin: 2px;
+        }}
+        QWidget:hover {{
+            border-color: {ModernStyle.PRIMARY_COLOR};
+            background-color: {card_color}CC;
+        }}
+    """)
+
+
+
+# KeywordCard 클래스는 create_keyword_card() 공용 함수로 대체되었습니다.
 
 
 class Step1ResultWidget(QWidget):
@@ -198,9 +254,8 @@ class Step1ResultWidget(QWidget):
         )
         layout.addLayout(header_layout)
         
-        # 전체선택 버튼
+        # 전체선택 버튼 (왼쪽으로 이동)
         button_layout = QHBoxLayout()
-        button_layout.addStretch()
         
         self.select_all_button = QPushButton("전체선택")
         self.select_all_button.setObjectName("select_all_btn")
@@ -208,6 +263,7 @@ class Step1ResultWidget(QWidget):
         self.select_all_button.setMaximumWidth(80)
         button_layout.addWidget(self.select_all_button)
         
+        button_layout.addStretch()
         layout.addLayout(button_layout)
         
         # 스크롤 가능한 키워드 카드 리스트
@@ -237,8 +293,17 @@ class Step1ResultWidget(QWidget):
         
         self.keyword_cards = []
         for keyword_data in results:
-            card = KeywordCard(keyword_data, category_colors)
-            card.selection_changed.connect(self.on_selection_changed)
+            # 공용 키워드 카드 사용 (체크박스 모드, 카테고리 색상 적용)
+            card = create_keyword_card(
+                keyword_data=keyword_data,
+                category_colors=category_colors,
+                use_radio=False,
+                use_checkbox=True
+            )
+            
+            # 이벤트 연결
+            if hasattr(card, 'selection_button') and card.selection_button:
+                card.selection_button.stateChanged.connect(self.on_selection_changed)
             
             self.keyword_cards.append(card)
             self.cards_layout.insertWidget(self.cards_layout.count() - 1, card)
@@ -299,13 +364,15 @@ class Step1ResultWidget(QWidget):
         if not hasattr(self, 'keyword_cards'):
             return
             
-        selected_count = sum(1 for card in self.keyword_cards if card.is_checked())
+        selected_count = sum(1 for card in self.keyword_cards 
+                           if hasattr(card, 'selection_button') and card.selection_button and card.selection_button.isChecked())
         total_count = len(self.keyword_cards)
         
         new_state = selected_count < total_count
         
         for card in self.keyword_cards:
-            card.set_checked(new_state)
+            if hasattr(card, 'selection_button') and card.selection_button:
+                card.selection_button.setChecked(new_state)
             
         self.select_all_button.setText("전체해제" if new_state else "전체선택")
         self.on_selection_changed()
@@ -313,7 +380,8 @@ class Step1ResultWidget(QWidget):
     def on_selection_changed(self):
         """선택 상태 변경"""
         if hasattr(self, 'keyword_cards'):
-            selected_count = sum(1 for card in self.keyword_cards if card.is_checked())
+            selected_count = sum(1 for card in self.keyword_cards 
+                               if hasattr(card, 'selection_button') and card.selection_button and card.selection_button.isChecked())
             total_count = len(self.keyword_cards)
             
             if selected_count == total_count and total_count > 0:
@@ -332,7 +400,7 @@ class Step1ResultWidget(QWidget):
         
         selected = []
         for card in self.keyword_cards:
-            if card.is_checked():
+            if hasattr(card, 'selection_button') and card.selection_button and card.selection_button.isChecked():
                 selected.append(card.keyword_data)
         return selected
     
@@ -770,6 +838,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
     # 시그널  
     ai_analysis_started = Signal(str, str)  # (prompt_type, prompt_content) AI 분석 시작
     analysis_stopped = Signal()             # 분석 중단
+    keywords_selected_for_step4 = Signal(list)  # 선택된 키워드를 4단계로 전달
     
     def __init__(self):
         super().__init__()
@@ -888,6 +957,21 @@ class Step3AdvancedAnalysisWidget(QWidget):
         title.setObjectName("result_title")
         header_layout.addWidget(title)
         
+        # 안내 메시지 추가
+        guide_label = QLabel("→ 사용가능한 모든 키워드를 선택해주세요")
+        guide_label.setObjectName("guide_text")
+        guide_label.setStyleSheet(f"""
+            QLabel {{
+                color: {ModernStyle.COLORS['text_secondary']};
+                font-size: 13px;
+                font-weight: 500;
+                margin-left: 10px;
+            }}
+        """)
+        guide_label.setVisible(False)  # 초기에는 숨김
+        self.guide_label = guide_label
+        header_layout.addWidget(guide_label)
+        
         header_layout.addStretch()
         
         # 실시간 분석내용 버튼을 결과 카드 오른쪽 위에 배치
@@ -901,9 +985,8 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         layout.addLayout(header_layout)
         
-        # 전체선택 버튼 (실시간 분석내용 버튼 아래)
+        # 전체선택 버튼 (왼쪽으로 이동)
         select_layout = QHBoxLayout()
-        select_layout.addStretch()
         
         self.select_all_button = QPushButton("전체선택")
         self.select_all_button.setObjectName("select_all_btn")
@@ -911,6 +994,8 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.select_all_button.setMaximumWidth(80)
         self.select_all_button.setEnabled(False)  # 분석 완료 후 활성화
         select_layout.addWidget(self.select_all_button)
+        
+        select_layout.addStretch()
         
         layout.addLayout(select_layout)
         
@@ -959,13 +1044,23 @@ class Step3AdvancedAnalysisWidget(QWidget):
         # 기존 카드들 정리
         self.clear_keyword_checkboxes()
         
-        # 새로운 KeywordCard들 생성
+        # 새로운 키워드 카드들 생성 (공용 함수 사용)
         for keyword_data in keyword_results:
             # AI 키워드는 모두 초록색으로 표시 (카테고리와 상관없이)
             ai_category_colors = {keyword_data.category: "#10b981", "default": "#10b981"}  # 초록색
-            keyword_card = KeywordCard(keyword_data, ai_category_colors)
-            keyword_card.set_checked(False)  # 사용자가 직접 선택하도록 해제 상태
-            keyword_card.selection_changed.connect(self.on_selection_changed)  # 선택 변경 시그널 연결
+            
+            # 공용 키워드 카드 사용 (체크박스 모드)
+            keyword_card = create_keyword_card(
+                keyword_data=keyword_data,
+                category_colors=ai_category_colors,
+                use_radio=False,
+                use_checkbox=True
+            )
+            
+            # 초기 상태는 체크 해제
+            if hasattr(keyword_card, 'selection_button') and keyword_card.selection_button:
+                keyword_card.selection_button.setChecked(False)
+                keyword_card.selection_button.stateChanged.connect(self.on_selection_changed)
             
             # 레이아웃에 추가
             self.keyword_selection_layout.addWidget(keyword_card)
@@ -980,6 +1075,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.keyword_selection_scroll.show()
         self.analysis_status_label.hide()
         
+        # 안내 메시지 표시
+        if hasattr(self, 'guide_label'):
+            self.guide_label.setVisible(True)
+        
         # 전체선택 버튼 활성화
         self.select_all_button.setEnabled(True)
     
@@ -987,8 +1086,8 @@ class Step3AdvancedAnalysisWidget(QWidget):
     def get_selected_keywords(self):
         """선택된 키워드 리스트 반환"""
         selected = []
-        for card in self.keyword_checkboxes:  # keyword_cards -> keyword_checkboxes로 수정
-            if card.is_checked():
+        for card in self.keyword_checkboxes:
+            if hasattr(card, 'selection_button') and card.selection_button and card.selection_button.isChecked():
                 selected.append(card.keyword_data)
         return selected
     
@@ -997,26 +1096,37 @@ class Step3AdvancedAnalysisWidget(QWidget):
         if not hasattr(self, 'keyword_checkboxes') or not self.keyword_checkboxes:
             return
             
-        selected_count = sum(1 for card in self.keyword_checkboxes if card.is_checked())
+        selected_count = sum(1 for card in self.keyword_checkboxes 
+                           if hasattr(card, 'selection_button') and card.selection_button and card.selection_button.isChecked())
         total_count = len(self.keyword_checkboxes)
         
         new_state = selected_count < total_count
         
         for card in self.keyword_checkboxes:
-            card.set_checked(new_state)
+            if hasattr(card, 'selection_button') and card.selection_button:
+                card.selection_button.setChecked(new_state)
             
         self.select_all_button.setText("전체해제" if new_state else "전체선택")
+        
+        # 선택된 키워드를 4단계로 전달
+        selected_keywords = self.get_selected_keywords()
+        self.keywords_selected_for_step4.emit(selected_keywords)
     
     def on_selection_changed(self):
-        """선택 상태 변경 시 버튼 텍스트 업데이트"""
+        """선택 상태 변경 시 버튼 텍스트 업데이트 및 4단계로 키워드 전달"""
         if hasattr(self, 'keyword_checkboxes') and self.keyword_checkboxes:
-            selected_count = sum(1 for card in self.keyword_checkboxes if card.is_checked())
+            selected_count = sum(1 for card in self.keyword_checkboxes 
+                               if hasattr(card, 'selection_button') and card.selection_button and card.selection_button.isChecked())
             total_count = len(self.keyword_checkboxes)
             
             if selected_count == total_count and total_count > 0:
                 self.select_all_button.setText("전체해제")
             else:
                 self.select_all_button.setText("전체선택")
+                
+            # 선택된 키워드를 4단계로 전달
+            selected_keywords = self.get_selected_keywords()
+            self.keywords_selected_for_step4.emit(selected_keywords)
     
     def get_selected_category(self):
         """선택된 키워드들의 주요 카테고리 반환"""
@@ -1113,6 +1223,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.analysis_status_label.setText("⏹️ 분석이 중단되었습니다.")
         self.keyword_selection_scroll.hide()
         
+        # 안내 메시지 숨기기
+        if hasattr(self, 'guide_label'):
+            self.guide_label.setVisible(False)
+        
         # 분석 중단 시그널 발송
         self.analysis_stopped.emit()
         
@@ -1141,6 +1255,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         
         self.analysis_status_label.setText(f"❌ 분석 실패:\n{error_msg}")
         self.keyword_selection_scroll.hide()
+        
+        # 안내 메시지 숨기기
+        if hasattr(self, 'guide_label'):
+            self.guide_label.setVisible(False)
         
         # 전체선택 버튼 비활성화
         self.select_all_button.setEnabled(False)
@@ -1181,6 +1299,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         # 키워드 선택 영역만 초기화 (헤더 레이아웃은 유지)
         self.clear_keyword_checkboxes()
         self.keyword_selection_scroll.hide()
+        
+        # 안내 메시지 숨기기
+        if hasattr(self, 'guide_label'):
+            self.guide_label.setVisible(False)
         
         # 전체선택 버튼 비활성화
         self.select_all_button.setEnabled(False)
@@ -1227,157 +1349,485 @@ class Step3AdvancedAnalysisWidget(QWidget):
 
 
 class Step4ResultWidget(QWidget):
-    """4단계: 최종 상품명 생성 결과"""
+    """4단계: SEO 최적화 상품명 생성"""
     
     # 시그널
     export_requested = Signal()
     
     def __init__(self):
         super().__init__()
-        self.generated_titles = []
+        self.selected_keywords = []  # 3단계에서 선택된 키워드들
+        self.product_name_stats = {}  # 2단계 상품명 통계
+        self.generated_results = []  # AI가 생성한 결과들
+        self.keyword_checkboxes = []  # 키워드 체크박스들
         self.setup_ui()
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(30, 30, 30, 30)
-        layout.setSpacing(25)
+        margin = tokens.GAP_20
+        spacing = tokens.GAP_20
+        layout.setContentsMargins(margin, margin, margin, margin)
+        layout.setSpacing(spacing)
         
         # 헤더
         header_layout = create_step_header(
-            "4️⃣ 상품명 생성 결과",
-            "점수가 높은 순으로 정렬된 상품명들입니다"
+            "4️⃣ SEO 최적화 상품명 생성",
+            "추출된 키워드와 필수 정보를 조합하여 최적화된 상품명을 생성합니다"
         )
         layout.addLayout(header_layout)
         
-        # 결과 영역 (임시 플레이스홀더)
-        placeholder_label = QLabel("4단계 생성된 상품명 결과가 여기에 표시됩니다.")
-        placeholder_label.setStyleSheet(f"""
-            QLabel {{
-                background-color: {ModernStyle.COLORS['bg_card']};
-                border: 2px dashed {ModernStyle.COLORS['border']};
-                border-radius: 8px;
-                padding: 40px;
-                text-align: center;
-                color: {ModernStyle.COLORS['text_secondary']};
-                font-size: 14px;
-            }}
-        """)
-        placeholder_label.setAlignment(Qt.AlignCenter)
-        placeholder_label.setMinimumHeight(400)
-        layout.addWidget(placeholder_label)
+        # 스크롤 영역
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         
-        # 요약 통계
-        self.summary_card = self.create_summary_card()
-        layout.addWidget(self.summary_card)
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout(scroll_content)
+        scroll_layout.setSpacing(tokens.GAP_20)
         
-        # 액션 버튼
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
+        # 1. 핵심 키워드 선택 영역
+        self.core_keyword_card = self.create_core_keyword_selection_card()
+        scroll_layout.addWidget(self.core_keyword_card)
         
-        self.copy_button = ModernCancelButton("📋 상품명 복사")
-        self.copy_button.clicked.connect(self.copy_titles)
-        button_layout.addWidget(self.copy_button)
+        # 2. 필수 입력 키워드 영역
+        self.required_inputs_card = self.create_required_inputs_card()
+        scroll_layout.addWidget(self.required_inputs_card)
         
-        self.export_button = ModernPrimaryButton("📊 엑셀 저장")
-        self.export_button.setMinimumHeight(45)
-        self.export_button.setMinimumWidth(120)
-        self.export_button.clicked.connect(self.export_requested.emit)
-        button_layout.addWidget(self.export_button)
+        # 3. AI 생성 버튼
+        self.generate_button_card = self.create_generate_button_card()
+        scroll_layout.addWidget(self.generate_button_card)
         
-        layout.addLayout(button_layout)
+        # 4. 결과 표시 영역
+        self.results_card = self.create_results_card()
+        scroll_layout.addWidget(self.results_card)
+        
+        scroll_area.setWidget(scroll_content)
+        layout.addWidget(scroll_area)
         
         self.setLayout(layout)
         self.apply_styles()
         
+    
+    def create_core_keyword_selection_card(self):
+        """핵심 키워드 선택 카드"""
+        card = ModernCard("⭐ 핵심 키워드 선택")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(tokens.GAP_20, tokens.GAP_15, tokens.GAP_20, tokens.GAP_15)
+        layout.setSpacing(tokens.GAP_15)
         
-    def create_summary_card(self):
-        """요약 통계 카드"""
-        card = QFrame()
-        card.setObjectName("summary_card")
+        info_label = QLabel("상품명 생성의 중심이 될 핵심 키워드를 하나 선택해주세요.")
+        info_label.setObjectName("info_text")
+        layout.addWidget(info_label)
         
-        layout = QVBoxLayout()
-        layout.setContentsMargins(20, 15, 20, 15)
+        # 스크롤 영역
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setMaximumHeight(400)
         
-        title = QLabel("📈 생성 결과 요약")
-        title.setObjectName("summary_title")
-        layout.addWidget(title)
+        self.keyword_cards_container = QWidget()
+        self.keyword_cards_layout = QVBoxLayout(self.keyword_cards_container)
+        self.keyword_cards_layout.setSpacing(tokens.GAP_8)
+        self.keyword_cards_layout.setContentsMargins(0, 0, 0, 0)
         
-        stats_layout = QHBoxLayout()
-        self.total_generated_label = QLabel("생성된 상품명: 0개")
-        self.avg_score_label = QLabel("평균 점수: 0점")
-        self.avg_length_label = QLabel("평균 길이: 0자")
+        # 4단계는 이제 체크박스를 사용하므로 라디오 버튼 그룹 불필요
         
-        for label in [self.total_generated_label, self.avg_score_label, self.avg_length_label]:
-            label.setObjectName("summary_stat")
-            stats_layout.addWidget(label)
-            
-        stats_layout.addStretch()
-        layout.addLayout(stats_layout)
-        card.setLayout(layout)
+        # 초기 상태 메시지
+        self.no_keywords_label = QLabel("먼저 3단계에서 키워드를 선택해주세요.")
+        self.no_keywords_label.setStyleSheet(f"""
+            QLabel {{
+                color: {ModernStyle.COLORS['text_secondary']};
+                font-style: italic;
+                text-align: center;
+                padding: {tokens.GAP_20}px;
+            }}
+        """)
+        self.keyword_cards_layout.addWidget(self.no_keywords_label)
+        
+        scroll_area.setWidget(self.keyword_cards_container)
+        layout.addWidget(scroll_area)
+        
         return card
+    
+    def create_required_inputs_card(self):
+        """필수 입력 키워드 카드"""
+        card = ModernCard("📝 필수 정보 입력 (선택사항)")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(tokens.GAP_20, tokens.GAP_15, tokens.GAP_20, tokens.GAP_15)
+        layout.setSpacing(tokens.GAP_15)
         
-    def display_results(self, generated_titles: list):
-        """생성된 상품명 결과 표시 (임시 구현)"""
-        self.generated_titles = generated_titles
-        # TODO: 실제 구현 필요
+        info_label = QLabel("상품명에 포함될 필수 정보를 입력하세요. 비워두면 해당 정보는 포함되지 않습니다.")
+        info_label.setObjectName("info_text")
+        layout.addWidget(info_label)
         
-        # 요약 통계 업데이트
-        self.update_summary()
+        # 입력 필드들
+        inputs_layout = QVBoxLayout()
+        inputs_layout.setSpacing(tokens.GAP_12)
         
-    def update_summary(self):
-        """요약 통계 업데이트"""
-        if not self.generated_titles:
+        # 브랜드명
+        brand_layout = QVBoxLayout()
+        brand_label = QLabel("브랜드명:")
+        brand_label.setObjectName("input_label")
+        self.brand_input = QLineEdit()
+        self.brand_input.setPlaceholderText("예: 슈퍼츄, 오리젠 등")
+        brand_layout.addWidget(brand_label)
+        brand_layout.addWidget(self.brand_input)
+        inputs_layout.addLayout(brand_layout)
+        
+        # 재료(형태)
+        material_layout = QVBoxLayout()
+        material_label = QLabel("재료(형태):")
+        material_label.setObjectName("input_label")
+        self.material_input = QLineEdit()
+        self.material_input.setPlaceholderText("예: 비프, 연어, 닭고기 등")
+        material_layout.addWidget(material_label)
+        material_layout.addWidget(self.material_input)
+        inputs_layout.addLayout(material_layout)
+        
+        # 수량(무게)
+        quantity_layout = QVBoxLayout()
+        quantity_label = QLabel("수량(무게):")
+        quantity_label.setObjectName("input_label")
+        self.quantity_input = QLineEdit()
+        self.quantity_input.setPlaceholderText("예: 1.3kg, 20개, 500g 등")
+        quantity_layout.addWidget(quantity_label)
+        quantity_layout.addWidget(self.quantity_input)
+        inputs_layout.addLayout(quantity_layout)
+        
+        layout.addLayout(inputs_layout)
+        return card
+    
+    def create_generate_button_card(self):
+        """AI 생성 버튼 카드"""
+        card = ModernCard()
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(tokens.GAP_20, tokens.GAP_15, tokens.GAP_20, tokens.GAP_15)
+        
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+        
+        self.generate_button = ModernPrimaryButton("🚀 AI 상품명 생성하기")
+        self.generate_button.setMinimumHeight(50)
+        self.generate_button.setMinimumWidth(200)
+        self.generate_button.clicked.connect(self.generate_product_names)
+        self.generate_button.setEnabled(False)  # 초기에는 비활성화
+        button_layout.addWidget(self.generate_button)
+        
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
+        
+        return card
+    
+    def create_results_card(self):
+        """생성된 결과 표시 카드"""
+        card = ModernCard("✨ AI 생성 결과")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(tokens.GAP_20, tokens.GAP_15, tokens.GAP_20, tokens.GAP_15)
+        layout.setSpacing(tokens.GAP_15)
+        
+        self.results_area = QTextEdit()
+        self.results_area.setPlaceholderText("AI가 생성한 최적화된 상품명과 설명이 여기에 표시됩니다.")
+        self.results_area.setMinimumHeight(300)
+        self.results_area.setReadOnly(True)
+        layout.addWidget(self.results_area)
+        
+        # 액션 버튼들
+        action_layout = QHBoxLayout()
+        action_layout.addStretch()
+        
+        self.copy_button = ModernCancelButton("📋 결과 복사")
+        self.copy_button.clicked.connect(self.copy_results)
+        self.copy_button.setEnabled(False)
+        action_layout.addWidget(self.copy_button)
+        
+        self.export_button = ModernPrimaryButton("📊 엑셀 저장")
+        self.export_button.setMinimumHeight(40)
+        self.export_button.setMinimumWidth(120)
+        self.export_button.clicked.connect(self.export_requested.emit)
+        self.export_button.setEnabled(False)
+        action_layout.addWidget(self.export_button)
+        
+        layout.addLayout(action_layout)
+        return card
+    
+    def set_selected_keywords(self, keywords: list):
+        """선택된 키워드 설정 (3단계에서 호출)"""
+        self.selected_keywords = keywords
+        
+        # 핵심 키워드 선택 옵션 업데이트 (선택된 키워드 표시 제거됨)
+        self.update_core_keyword_options()
+        
+        # 생성 버튼 활성화 체크
+        self.check_generate_button_state()
+    
+    def update_core_keyword_options(self):
+        """키워드 표시 업데이트 (단일 선택 체크박스)"""
+        # 기존 카드들 제거
+        for i in reversed(range(self.keyword_cards_layout.count())):
+            item = self.keyword_cards_layout.takeAt(i)
+            if item.widget():
+                item.widget().deleteLater()
+        
+        self.keyword_checkboxes = []
+        
+        if self.selected_keywords:
+            for keyword in self.selected_keywords:
+                # 공용 키워드 카드 생성 (체크박스 사용)
+                keyword_card = create_keyword_card(
+                    keyword_data=keyword,
+                    selection_type='checkbox',  # 체크박스 사용
+                    color_mode='green'  # 4단계에서는 모두 초록색
+                )
+                
+                # 체크박스 상태 변경 시 이벤트 연결 (단일 선택 로직 추가)
+                if hasattr(keyword_card, 'selection_button'):
+                    keyword_card.selection_button.stateChanged.connect(
+                        lambda state, checkbox=keyword_card.selection_button: self.on_checkbox_changed(checkbox, state)
+                    )
+                    self.keyword_checkboxes.append(keyword_card.selection_button)
+                
+                self.keyword_cards_layout.addWidget(keyword_card)
+                
+            # 첫 번째 키워드 기본 선택
+            if self.keyword_checkboxes:
+                self.keyword_checkboxes[0].setChecked(True)
+        else:
+            self.keyword_cards_layout.addWidget(self.no_keywords_label)
+    
+    def on_checkbox_changed(self, clicked_checkbox, state):
+        """체크박스 변경 시 단일 선택 로직"""
+        if state == 2:  # 체크된 상태 (Qt.Checked)
+            # 다른 모든 체크박스 해제
+            for checkbox in self.keyword_checkboxes:
+                if checkbox != clicked_checkbox:
+                    checkbox.setChecked(False)
+        
+        # 생성 버튼 상태 업데이트
+        self.check_generate_button_state()
+    
+    def set_product_name_stats(self, stats: dict):
+        """상품명 통계 정보 설정 (2단계에서 호출)"""
+        self.product_name_stats = stats
+    
+    def check_generate_button_state(self):
+        """생성 버튼 활성화 상태 체크 - 단일 선택 체크박스"""
+        has_selected_keyword = False
+        
+        # 체크된 키워드가 있는지 확인 (단일 선택이므로 하나만 체크됨)
+        if hasattr(self, 'keyword_checkboxes'):
+            has_selected_keyword = any(checkbox.isChecked() for checkbox in self.keyword_checkboxes)
+        
+        if hasattr(self, 'generate_button'):
+            self.generate_button.setEnabled(has_selected_keyword)
+    
+    def generate_product_names(self):
+        """AI 상품명 생성"""
+        # 선택된 키워드 찾기 (단일 선택)
+        selected_keyword = None
+        for i, checkbox in enumerate(self.keyword_checkboxes):
+            if checkbox.isChecked() and i < len(self.selected_keywords):
+                selected_keyword = self.selected_keywords[i]
+                break
+        
+        if not selected_keyword:
             return
-            
-        total = len(self.generated_titles)
-        avg_score = sum(t.get('seo_score', 0) for t in self.generated_titles) / total
-        avg_length = sum(len(t.get('title', '')) for t in self.generated_titles) / total
         
-        self.total_generated_label.setText(f"생성된 상품명: {total}개")
-        self.avg_score_label.setText(f"평균 점수: {avg_score:.1f}점")
-        self.avg_length_label.setText(f"평균 길이: {avg_length:.1f}자")
+        # 상품정보 수집
+        product_info = {
+            'brand': self.brand_input.text().strip() or None,
+            'material': self.material_input.text().strip() or None,  
+            'quantity': self.quantity_input.text().strip() or None
+        }
         
-    def copy_titles(self):
-        """상품명들을 클립보드에 복사"""
-        if not self.generated_titles:
-            return
-            
-        titles_text = "\n".join([
-            f"{i}. {title.get('title', '')}" 
-            for i, title in enumerate(self.generated_titles, 1)
-        ])
+        # 생성 시작 UI 업데이트
+        self.generate_button.setEnabled(False)
+        self.generate_button.setText("🔄 생성 중...")
         
-        from PySide6.QtWidgets import QApplication
-        QApplication.clipboard().setText(titles_text)
+        # 임시 결과 생성 (실제로는 AI 서비스 호출)
+        from PySide6.QtCore import QTimer
+        QTimer.singleShot(2000, lambda: self.on_generation_completed([
+            f"프리미엄 {selected_keywords[0].keyword} 특가상품",
+            f"고품질 {selected_keywords[0].keyword} 베스트셀러", 
+            f"{selected_keywords[0].keyword} 인기상품 추천",
+            f"신상 {selected_keywords[0].keyword} 할인특가",
+            f"럭셔리 {selected_keywords[0].keyword} 컬렉션"
+        ]))
+    
+    def on_generation_completed(self, results):
+        """생성 완료 처리"""
+        self.generated_results = results
         
-        # 성공 메시지 표시 (추후 구현)
+        # UI 상태 복원
+        self.generate_button.setEnabled(True)
+        self.generate_button.setText("🔄 다시 생성하기")
+        
+        # 결과 표시
+        result_text = "\n".join([f"{i+1}. {result}" for i, result in enumerate(results)])
+        if hasattr(self, 'results_area'):
+            self.results_area.setPlainText(result_text)
+            if hasattr(self, 'copy_button'):
+                self.copy_button.setEnabled(True)
+            if hasattr(self, 'export_button'):
+                self.export_button.setEnabled(True)
+    
+    def display_ai_results(self, results: str):
+        """AI 생성 결과 표시"""
+        self.results_area.setPlainText(results)
+        self.copy_button.setEnabled(True)
+        self.export_button.setEnabled(True)
+        
+        # 결과 저장
+        self.generated_results.append({
+            'timestamp': __import__('datetime').datetime.now(),
+            'content': results
+        })
+    
+    def copy_results(self):
+        """결과를 클립보드에 복사"""
+        content = self.results_area.toPlainText()
+        if content:
+            from PySide6.QtWidgets import QApplication
+            QApplication.clipboard().setText(content)
+            # TODO: 성공 메시지 표시
         
     def apply_styles(self):
         common_styles = get_common_step_styles()
-        # 4단계는 성공 상태 제목 색상 오버라이드
         step4_specific = f"""
-            QLabel[objectName="step_title"] {{
-                color: {ModernStyle.COLORS['success']} !important;
+            QLabel[objectName="info_text"] {{
+                font-size: {tokens.get_font_size('normal')}px;
+                color: {ModernStyle.COLORS['text_secondary']};
+                margin-bottom: {tokens.GAP_10}px;
             }}
-            QFrame[objectName="summary_card"] {{
+            QLabel[objectName="input_label"] {{
+                font-size: {tokens.get_font_size('normal')}px;
+                font-weight: 500;
+                color: {ModernStyle.COLORS['text_primary']};
+                margin-bottom: {tokens.GAP_4}px;
+            }}
+            QLineEdit {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                border: 2px solid {ModernStyle.COLORS['border']};
+                border-radius: {tokens.GAP_6}px;
+                padding: {tokens.GAP_8}px {tokens.GAP_12}px;
+                font-size: {tokens.get_font_size('normal')}px;
+                color: {ModernStyle.COLORS['text_primary']};
+            }}
+            QLineEdit:focus {{
+                border-color: {ModernStyle.COLORS['primary']};
                 background-color: {ModernStyle.COLORS['bg_card']};
-                border: 2px solid {ModernStyle.COLORS['success']};
-                border-radius: 10px;
-                margin: 15px 0;
             }}
-            QLabel[objectName="summary_title"] {{
-                font-size: 16px;
-                font-weight: 600;
+            QRadioButton[objectName="core_keyword_radio"] {{
+                font-size: {tokens.get_font_size('normal')}px;
                 color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 10px;
+                padding: {tokens.GAP_6}px;
             }}
-            QLabel[objectName="summary_stat"] {{
-                font-size: 14px;
+            QTextEdit {{
+                background-color: {ModernStyle.COLORS['bg_input']};
+                border: 2px solid {ModernStyle.COLORS['border']};
+                border-radius: {tokens.GAP_8}px;
+                padding: {tokens.GAP_12}px;
+                font-size: {tokens.get_font_size('normal')}px;
                 color: {ModernStyle.COLORS['text_primary']};
-                background-color: {ModernStyle.COLORS['bg_secondary']};
-                padding: 8px 12px;
-                border-radius: 6px;
-                margin-right: 10px;
+                font-family: 'Segoe UI', monospace;
+            }}
+            QTextEdit:focus {{
+                border-color: {ModernStyle.COLORS['primary']};
+                background-color: {ModernStyle.COLORS['bg_card']};
             }}
         """
         self.setStyleSheet(common_styles + step4_specific)
+    
+    def set_selected_keywords(self, keywords: list):
+        """선택된 키워드 설정 (3단계에서 호출)"""
+        self.selected_keywords = keywords
+        self.update_core_keyword_options()
+        self.check_generate_button_state()
+    
+    def update_core_keyword_options(self):
+        """핵심 키워드 선택 옵션 업데이트 - 3단계와 동일한 카드 형태로 표시"""
+        # 기존 위젯들 제거
+        for i in reversed(range(self.keyword_cards_layout.count())):
+            child = self.keyword_cards_layout.itemAt(i).widget()
+            if child:
+                child.deleteLater()
+                
+        if not self.selected_keywords:
+            self.no_keywords_label = QLabel("먼저 3단계에서 키워드를 선택해주세요.")
+            self.no_keywords_label.setStyleSheet(f"""
+                QLabel {{
+                    color: {ModernStyle.COLORS['text_secondary']};
+                    font-style: italic;
+                    text-align: center;
+                    padding: {tokens.GAP_20}px;
+                }}
+            """)
+            self.keyword_cards_layout.addWidget(self.no_keywords_label)
+            return
+            
+        # 핵심 키워드는 단일 선택이므로 라디오 버튼 그룹 사용
+        from PySide6.QtWidgets import QButtonGroup
+        self.core_keyword_button_group = QButtonGroup()
+        
+        # 각 키워드에 대해 카드 형태로 생성 (라디오 버튼 + 초록색)
+        for keyword_data in self.selected_keywords:
+            # 초록색 설정
+            green_category_colors = {keyword_data.category: "#10b981", "default": "#10b981"}
+            
+            # 공용 키워드 카드 사용 (라디오 버튼 모드로 단일 선택)
+            card = create_keyword_card(
+                keyword_data=keyword_data,
+                category_colors=green_category_colors,
+                use_radio=True,
+                button_group=self.core_keyword_button_group,
+                use_checkbox=False
+            )
+            
+            # 라디오 버튼 선택 변경 시 버튼 상태 체크
+            if hasattr(card, 'selection_button') and card.selection_button:
+                card.selection_button.toggled.connect(self.check_generate_button_state)
+            
+            self.keyword_cards_layout.addWidget(card)
+        
+        # 첫 번째 키워드 기본 선택
+        if self.core_keyword_button_group.buttons():
+            self.core_keyword_button_group.buttons()[0].setChecked(True)
+    
+    def check_generate_button_state(self):
+        """다음 버튼 활성화 상태 체크 - 라디오 버튼 방식"""
+        has_selected_core_keyword = False
+        
+        # 라디오 버튼 그룹에서 선택된 것이 있는지 확인
+        if hasattr(self, 'core_keyword_button_group') and self.core_keyword_button_group:
+            has_selected_core_keyword = self.core_keyword_button_group.checkedButton() is not None
+        
+        if hasattr(self, 'next_button'):
+            self.next_button.setEnabled(has_selected_core_keyword)
+    
+    def on_next_clicked(self):
+        """다음 버튼 클릭 이벤트 - 5단계로 이동"""
+        # 선택된 핵심 키워드 찾기
+        selected_core_keyword = None
+        if hasattr(self, 'core_keyword_button_group') and self.core_keyword_button_group:
+            checked_button = self.core_keyword_button_group.checkedButton()
+            if checked_button:
+                # 체크된 라디오버튼에 해당하는 키워드 데이터 찾기
+                for i in range(self.keyword_cards_layout.count()):
+                    widget = self.keyword_cards_layout.itemAt(i).widget()
+                    if (widget and hasattr(widget, 'selection_button') and 
+                        widget.selection_button == checked_button):
+                        selected_core_keyword = widget.keyword_data
+                        break
+        
+        # 필수 입력 정보 수집
+        brand = self.brand_input.text().strip()
+        material = self.material_input.text().strip()
+        quantity = self.quantity_input.text().strip()
+        
+        # 5단계로 전달할 데이터 준비
+        step5_data = {
+            'core_keyword': selected_core_keyword,
+            'brand': brand or None,
+            'material': material or None,
+            'quantity': quantity or None
+        }
+        

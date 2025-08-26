@@ -278,6 +278,26 @@ class RightPanel(QWidget):
         self.step4_widget = Step4ResultWidget()
         self.content_stack.addWidget(self.step4_widget)
         
+        # 단계간 시그널 연결
+        self.setup_step_connections()
+        
+    def setup_step_connections(self):
+        """단계간 시그널 연결 설정"""
+        # 3단계 → 4단계: 선택된 키워드 전달
+        self.step3_widget.keywords_selected_for_step4.connect(
+            self.step4_widget.set_selected_keywords
+        )
+        
+        # 2단계 → 4단계: 상품명 통계 전달 (추후 구현)
+        # self.step2_widget.product_stats_updated.connect(
+        #     self.step4_widget.set_product_name_stats
+        # )
+        
+        # 4단계: AI 상품명 생성 요청 (추후 구현)
+        # self.step4_widget.generate_product_names.connect(
+        #     self.handle_ai_generation_request
+        # )
+        
     def go_to_step(self, step: int):
         """특정 단계로 이동"""
         if 1 <= step <= 4:
@@ -763,8 +783,32 @@ class NaverProductTitleGeneratorWidget(QWidget):
                 prompt_type = self.right_panel.step3_widget.selected_prompt_type
                 prompt_display = "기본 프롬프트" if prompt_type == "default" else "사용자 정의 프롬프트"
                 log_manager.add_log(f"📝 3단계 진입: {prompt_display} 사용", "info")
+                
+            # Step 3에서 Step 4로 넘어갈 때
+            elif self.current_step == 3:
+                # 선택된 키워드 확인
+                selected_keywords = self.right_panel.step3_widget.get_selected_keywords()
+                if not selected_keywords:
+                    # 키워드가 선택되지 않았으면 다이얼로그 표시
+                    self.show_keyword_selection_warning()
+                    return  # 다음 단계로 이동하지 않음
             
             self.go_to_step(self.current_step + 1)
+    
+    def show_keyword_selection_warning(self):
+        """키워드 선택 경고 다이얼로그 표시"""
+        from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
+        
+        dialog = ModernConfirmDialog(
+            self,
+            "키워드 선택 필요",
+            "4단계로 이동하려면 3단계에서 키워드를 최소 1개 이상 선택해주세요.\n\n"
+            "키워드를 선택하시면 4단계에서 최적화된 상품명을 생성할 수 있습니다.",
+            confirm_text="확인",
+            cancel_text=None,
+            icon="⚠️"
+        )
+        dialog.exec()
         
     def reset_all_steps(self):
         """모든 단계 초기화"""
