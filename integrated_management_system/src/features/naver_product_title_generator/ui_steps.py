@@ -716,6 +716,16 @@ class Step2BasicAnalysisWidget(QWidget):
         self.avg_length_label.setText(f"평균 길이(공백포함): {avg_length:.1f}자")
         self.min_length_label.setText(f"최소 길이(공백포함): {min_length}자")
         self.max_length_label.setText(f"최대 길이(공백포함): {max_length}자")
+        
+        # 4단계에서 사용할 수 있도록 통계를 속성으로 저장
+        self.product_name_stats = {
+            'average_length': avg_length,
+            'min_length': min_length,
+            'max_length': max_length,
+            'keyword_count': keyword_count,
+            'total_count': total_count,
+            'duplicate_removed': duplicate_removed
+        }
     
     def clear_content(self):
         """콘텐츠 영역 정리"""

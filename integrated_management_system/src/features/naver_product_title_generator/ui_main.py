@@ -1013,9 +1013,9 @@ class NaverProductTitleGeneratorWidget(QWidget):
         
         self.current_ai_generation_worker = AIAnalysisWorker(
             product_names=[],  # 상품명 생성에서는 빈 리스트
-            prompt_type="product_generation",  # 상품명 생성 타입
-            prompt_content=prompt_content,
-            system_prompt=PRODUCT_NAME_GENERATION_SYSTEM_PROMPT
+            prompt=prompt_content,  # 생성된 프롬프트 전달
+            selected_keywords=selected_keywords,  # 선택된 키워드들
+            selected_category=""  # 상품명 생성에서는 카테고리 불필요
         )
         
         # 시그널 연결
