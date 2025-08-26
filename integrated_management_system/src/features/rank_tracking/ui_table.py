@@ -12,7 +12,7 @@ from PySide6.QtGui import QFont, QColor
 
 from src.toolbox.ui_kit.modern_table import ModernTableWidget
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton, ModernSuccessButton, ModernCancelButton
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit import tokens
 from src.desktop.common_log import log_manager
 from src.foundation.logging import get_logger
 

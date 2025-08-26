@@ -11,7 +11,7 @@ from PySide6.QtGui import QFont
 
 from src.toolbox.ui_kit import ModernStyle, ModernConfirmDialog, ModernInfoDialog
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernDangerButton
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit import tokens
 from src.desktop.common_log import log_manager
 # Import removed to avoid circular import - will import locally when needed
 from src.foundation.logging import get_logger

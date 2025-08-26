@@ -17,6 +17,7 @@ from PySide6.QtGui import QFont
 
 from .modern_style import ModernStyle
 from .sortable_items import SortableTableWidgetItem
+from . import tokens
 
 
 class ModernTableWidget(QTableWidget):
@@ -71,8 +72,8 @@ class ModernTableWidget(QTableWidget):
         header.setDefaultSectionSize(100)  # 원본과 동일한 기본 크기
         header.setStretchLastSection(False)  # 🔧 FIX: 마지막 컬럼 늘어나지 않게 설정 (원본과 동일)
         header.setMinimumSectionSize(50)   # 원본과 동일한 최소 크기
-        header.setMinimumHeight(40)  # 헤더 높이 40px로 고정
-        header.setMaximumHeight(40)  # 헤더 높이 40px로 고정
+        header.setMinimumHeight(40)  # 헤더 높이 40px
+        header.setMaximumHeight(40)  # 헤더 높이 40px
         
         # 🔧 FIX: 모든 컬럼 너비 고정 (원본과 동일하게 설정)
         # 원본은 모든 컬럼이 고정된 너비를 가지고 있음
@@ -87,25 +88,28 @@ class ModernTableWidget(QTableWidget):
         self.verticalHeader().setVisible(False)
         self.setAlternatingRowColors(True)
         self.setSelectionBehavior(QTableWidget.SelectRows)
-        self.setSortingEnabled(True)
+        self.setSortingEnabled(False)  # 정렬 비활성화 - 최신이 맨 위에 오도록
         
         # 편집 비활성화 (공용 설정)
         self.setEditTriggers(QTableWidget.NoEditTriggers)  # 편집 비활성화
         
-        # 포커스 설정 (체크박스가 없으면 완전 비활성화)
+        # 포커스 정책 설정 - 모든 경우에 포커스 표시 제거
+        self.setFocusPolicy(Qt.NoFocus)  # 포커스 비활성화 (점선 테두리 제거)
+        
+        # 체크박스가 없는 경우 선택도 비활성화
         if not self.has_checkboxes:
-            self.setFocusPolicy(Qt.NoFocus)  # 포커스 비활성화 (점선 테두리 제거)
             self.setSelectionMode(QTableWidget.NoSelection)  # 선택도 비활성화
         
-        # 행 높이 35px로 설정
+        # 행 높이 35px
         self.verticalHeader().setDefaultSectionSize(35)
         
         # 헤더 체크박스 설정
         if self.has_checkboxes and self.has_header_checkbox:
             self.setup_header_checkbox()
-            # 첫 번째 컬럼(체크박스 컬럼) 정렬 비활성화
-            self.horizontalHeader().setSortIndicatorShown(False)
-            self.horizontalHeader().setSectionsClickable(True)  # 클릭은 가능하게 (체크박스용)
+            
+        # 모든 정렬 기능 완전 비활성화
+        self.horizontalHeader().setSortIndicatorShown(False)
+        self.horizontalHeader().setSectionsClickable(self.has_checkboxes and self.has_header_checkbox)  # 체크박스가 있을 때만 클릭 가능
     
     def setup_styling(self):
         """파워링크 이전기록 테이블 스타일 기준으로 완전 통일"""
@@ -114,8 +118,8 @@ class ModernTableWidget(QTableWidget):
             first_header_style = f"""
             /* 첫 번째 컬럼 (체크박스 컬럼) - 체크박스가 있는 경우 */
             QHeaderView::section:first {{
-                font-size: 16px;
-                color: {ModernStyle.COLORS['text_secondary']};
+                font-size: {tokens.get_font_size('large')}px;
+                color: {tokens.COLOR_TEXT_SECONDARY};
                 font-weight: bold;
                 text-align: center;
             }}
@@ -153,6 +157,11 @@ class ModernTableWidget(QTableWidget):
             QTableWidget::item:selected {{
                 background-color: {ModernStyle.COLORS['primary']};
                 color: white;
+            }}
+            
+            QTableWidget::item:focus {{
+                outline: none;
+                border: none;
             }}
             
             /* 체크박스 스타일 - 파워링크 이전기록과 동일 */
@@ -231,6 +240,7 @@ class ModernTableWidget(QTableWidget):
             
         # 실제 체크박스 위젯 생성 (개별 체크박스와 동일한 스타일)
         self.header_checkbox = QCheckBox()
+        self.header_checkbox.setFocusPolicy(Qt.NoFocus)  # 포커스 표시 제거
         self.header_checkbox.setStyleSheet(f"""
             QCheckBox::indicator {{
                 width: 16px;
@@ -296,7 +306,10 @@ class ModernTableWidget(QTableWidget):
         Returns:
             추가된 행 번호
         """
-        row = self.rowCount()
+        # 정렬 기능이 비활성화되어 있으므로 별도 처리 불필요
+            
+        # 새 행을 맨 위에 추가 (최신이 위에 오도록)
+        row = 0
         self.insertRow(row)
         
         # 체크박스 컬럼 (첫 번째 컬럼)
@@ -359,6 +372,18 @@ class ModernTableWidget(QTableWidget):
                     item = SortableTableWidgetItem(str_value)
             
             self.setItem(row, col + data_start_col, item)
+            
+            # 데이터 설정 직후 검증
+            set_item = self.item(row, col + data_start_col)
+            if not set_item or set_item.text() != str_value:
+                # 재시도
+                self.setItem(row, col + data_start_col, SortableTableWidgetItem(str_value))
+        
+        # 맨 위 행으로 스크롤 (새로 추가된 행이 보이도록)
+        self.scrollToTop()
+            
+        # 테이블 강제 업데이트
+        self.viewport().update()
         
         return row
     

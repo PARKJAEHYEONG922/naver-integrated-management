@@ -9,6 +9,7 @@ from src.toolbox.text_utils import clean_keyword
 from src.foundation.exceptions import KeywordAnalysisError
 from src.foundation.logging import get_logger
 
+from src.foundation.config import config_manager
 from src.features.keyword_analysis.models import (
     KeywordData,
     AnalysisPolicy,
@@ -73,6 +74,72 @@ class KeywordAnalysisService:
             logger.error(f"단일 키워드 분석 실패 - {keyword}: {e}")
             raise KeywordAnalysisError(f"키워드 '{keyword}' 분석 실패: {e}")
     
+    def analyze_keywords_parallel(self, keywords: List[str], 
+                                progress_callback=None, 
+                                result_callback=None, 
+                                stop_check=None) -> AnalysisResult:
+        """
+        키워드 배치 병렬 분석 (Foundation HTTP Client 사용)
+        
+        Args:
+            keywords: 분석할 키워드 리스트
+            progress_callback: 진행률 콜백 (current, total, message)
+            result_callback: 개별 결과 콜백 (실시간 UI 업데이트용)
+            stop_check: 중단 확인 함수
+            
+        Returns:
+            AnalysisResult: 전체 분석 결과
+        """
+        from datetime import datetime
+        from src.foundation.http_client import ParallelAPIProcessor
+        
+        start_time = datetime.now()
+        logger.info(f"병렬 키워드 분석 시작: {len(keywords)}개")
+        
+        # 병렬 API 프로세서 생성 (최대 3개 동시 처리)
+        processor = ParallelAPIProcessor(max_workers=3)
+        
+        # 단일 키워드 분석 함수 (에러 처리 포함)
+        def analyze_single_keyword_safe(keyword):
+            try:
+                data = self.analyze_single_keyword(keyword)
+                # 실시간으로 UI에 결과 표시
+                if result_callback:
+                    result_callback(data)
+                return data
+            except Exception as e:
+                logger.warning(f"키워드 분석 실패: {keyword} - {e}")
+                error_data = KeywordData(keyword=keyword)
+                if result_callback:
+                    result_callback(error_data)
+                return error_data
+        
+        # 병렬 처리 실행
+        batch_results = processor.process_batch(
+            func=analyze_single_keyword_safe,
+            items=keywords,
+            stop_check=stop_check,
+            progress_callback=progress_callback
+        )
+        
+        # 결과 정리
+        results = []
+        for item, result, error in batch_results:
+            if result is not None:
+                results.append(result)
+            else:
+                results.append(KeywordData(keyword=item))
+        
+        end_time = datetime.now()
+        logger.info(f"병렬 키워드 분석 완료: {len(results)}개")
+        
+        return AnalysisResult(
+            keywords=results,
+            policy=self.policy,
+            start_time=start_time,
+            end_time=end_time,
+        )
+
     def stop_analysis(self) -> None:
         """서비스는 상태/스레드를 갖지 않으므로 취소는 worker에서 처리."""
         logger.info("stop_analysis: service는 취소 동작 없음(취소는 worker에서 처리).")

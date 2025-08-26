@@ -14,7 +14,7 @@ from src.desktop.sidebar import Sidebar
 from src.desktop.common_log import CommonLogWidget
 from .components import PlaceholderWidget, ErrorWidget
 from .styles import AppStyles, WindowConfig, apply_global_styles
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit import tokens
 
 logger = get_logger("desktop.app")
 
@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         default_size = WindowConfig.get_default_window_size()
         
         self.setMinimumSize(min_width, min_height)
-        self.resize(default_size)
+        self.resize(*default_size)
         
         # 화면 중앙에 배치
         screen = QApplication.primaryScreen()
@@ -66,39 +66,37 @@ class MainWindow(QMainWindow):
         
         # 헤더 제거 - API 설정 버튼을 로그 영역으로 이동
         
-        # 메인 레이아웃 (수평) - 반응형 여백
+        # 메인 레이아웃 (수평) - 토큰 기반 여백
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(*margins)
-        main_layout.setSpacing(ResponsiveUI.scale(6))
+        main_layout.setSpacing(tokens.GAP_6)
         
         # 사이드바 (모듈별 네비게이션)
         self.sidebar = Sidebar()
         self.sidebar.page_changed.connect(self.switch_page)
         
-        # 메인 스플리터 (컨텐츠 + 로그 분할)
-        main_splitter = QSplitter(Qt.Horizontal)
-        
         # 메인 컨텐츠 영역
         self.content_stack = QStackedWidget()
         self.content_stack.setStyleSheet(AppStyles.get_content_stack_style())
         
-        # 공통 로그 위젯 - 반응형 크기 및 API 설정 연결
+        # 공통 로그 위젯 - 간단하게 고정 크기 (270px)
         self.common_log = CommonLogWidget()
         self.common_log.api_settings_requested.connect(self.open_api_settings)
-        log_min_width, log_max_width = WindowConfig.get_log_widget_sizes()
-        self.common_log.setMinimumWidth(log_min_width)
-        self.common_log.setMaximumWidth(log_max_width)
+        self.common_log.setFixedWidth(270)
         
-        # 스플리터에 추가
-        main_splitter.addWidget(self.content_stack)
-        main_splitter.addWidget(self.common_log)
+        # 스플리터 대신 간단한 레이아웃
+        content_widget = QWidget()
+        content_layout = QHBoxLayout()
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(tokens.GAP_6)
         
-        # 비율 설정 (컨텐츠 70%, 로그 30%) - 반응형
-        main_splitter.setSizes(WindowConfig.get_content_log_ratio())
+        content_layout.addWidget(self.content_stack, 1)  # 확장 가능
+        content_layout.addWidget(self.common_log, 0)     # 고정 크기
+        content_widget.setLayout(content_layout)
         
         # 메인 레이아웃에 추가
         main_layout.addWidget(self.sidebar)
-        main_layout.addWidget(main_splitter, 1)  # 확장 가능
+        main_layout.addWidget(content_widget, 1)  # 확장 가능
         
         # 메인 영역을 위젯으로 만들어서 컨테이너에 추가
         main_widget = QWidget()
@@ -266,6 +264,12 @@ class MainWindow(QMainWindow):
 def run_app(load_features_func=None):
     """애플리케이션 실행"""
     try:
+        # Qt6 HiDPI 권장 설정 (QApplication 생성 전)
+        from PySide6.QtGui import QGuiApplication
+        QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
+            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+        )
+        
         app = QApplication(sys.argv)
         
         # 전역 스타일 적용

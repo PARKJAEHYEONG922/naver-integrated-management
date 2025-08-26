@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel,
                                QPushButton, QFrame, QApplication, QLineEdit, QTextEdit)
 from PySide6.QtCore import Qt, QPoint
 from .modern_style import ModernStyle
+from . import tokens
 
 class ModernConfirmDialog(QDialog):
     """모던한 확인 다이얼로그 - 단순화"""

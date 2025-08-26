@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
-from src.toolbox.ui_kit import ModernStyle, ModernTableWidget, ResponsiveUI
+from src.toolbox.ui_kit import ModernStyle, ModernTableWidget, tokens
 from src.toolbox.ui_kit.components import ModernButton
 from src.toolbox.ui_kit.modern_dialog import ModernSaveCompletionDialog
 from src.desktop.common_log import log_manager
@@ -38,12 +38,12 @@ class NaverCafeResultsWidget(QWidget):
     def setup_ui(self):
         """UI 초기화"""
         layout = QVBoxLayout(self)
-        layout.setSpacing(ResponsiveUI.scale(15))
+        layout.setSpacing(tokens.GAP_16)
         
         # 탭 위젯
         self.tabs = QTabWidget()
-        tab_radius = ResponsiveUI.scale(8)
-        tab_padding = ResponsiveUI.scale(10)
+        tab_radius = tokens.RADIUS_SM
+        tab_padding = tokens.GAP_10
         self.tabs.setStyleSheet(f"""
             QTabWidget::pane {{
                 border: 2px solid {ModernStyle.COLORS['border']};
@@ -54,12 +54,12 @@ class NaverCafeResultsWidget(QWidget):
             QTabBar::tab {{
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 color: {ModernStyle.COLORS['text_secondary']};
-                padding: {ResponsiveUI.scale(12)}px {ResponsiveUI.scale(20)}px;
-                margin-right: {ResponsiveUI.scale(2)}px;
+                padding: {tokens.GAP_12}px {tokens.GAP_20}px;
+                margin-right: {tokens.GAP_2}px;
                 border-top-left-radius: {tab_radius}px;
                 border-top-right-radius: {tab_radius}px;
                 font-weight: 600;
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                font-size: {tokens.get_font_size('normal')}px;
             }}
             QTabBar::tab:selected {{
                 background-color: {ModernStyle.COLORS['primary']};
@@ -98,7 +98,7 @@ class NaverCafeResultsWidget(QWidget):
         """추출된 사용자 탭"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        layout.setSpacing(ResponsiveUI.scale(15))
+        layout.setSpacing(tokens.GAP_16)
         
         # 사용자 테이블 (ModernTableWidget 사용 - 체크박스 없음)
         self.users_table = ModernTableWidget(
@@ -109,10 +109,10 @@ class NaverCafeResultsWidget(QWidget):
         
         # 컬럼 너비 설정 (체크박스가 없으므로 자유롭게 설정 가능)
         header = self.users_table.horizontalHeader()
-        header.resizeSection(0, ResponsiveUI.scale(50))   # 번호 
-        header.resizeSection(1, ResponsiveUI.scale(150))  # 사용자 ID
-        header.resizeSection(2, ResponsiveUI.scale(150))  # 닉네임
-        header.resizeSection(3, ResponsiveUI.scale(150))  # 추출 시간
+        header.resizeSection(0, tokens.GAP_50)   # 번호 
+        header.resizeSection(1, 150)  # 사용자 ID
+        header.resizeSection(2, 150)  # 닉네임
+        header.resizeSection(3, 150)  # 추출 시간
         
         layout.addWidget(self.users_table)
         
@@ -153,16 +153,16 @@ class NaverCafeResultsWidget(QWidget):
         """추출 기록 탭"""
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        layout.setSpacing(ResponsiveUI.scale(15))
+        layout.setSpacing(tokens.GAP_16)
         
         # 상단 정보
         top_layout = QHBoxLayout()
         
         self.history_count_label = QLabel("총 기록: 0개")
-        history_font_size = ResponsiveUI.get_font_size_pt('normal')
+        history_font_size = tokens.get_font_size('normal')
         self.history_count_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {history_font_size}pt;
+                font-size: {history_font_size}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -188,11 +188,11 @@ class NaverCafeResultsWidget(QWidget):
         # 컬럼 너비 설정 (체크박스 컬럼 제외하고 나머지만 설정)
         history_header = self.history_table.horizontalHeader()
         # history_header.resizeSection(0, 80)   # 선택 체크박스 - ModernTableWidget에서 자동 처리
-        history_header.resizeSection(1, ResponsiveUI.scale(110))  # 날짜 + 시간
-        history_header.resizeSection(2, ResponsiveUI.scale(140))  # 카페명
-        history_header.resizeSection(3, ResponsiveUI.scale(130))  # 게시판명 
-        history_header.resizeSection(4, ResponsiveUI.scale(80))   # 추출수
-        history_header.resizeSection(5, ResponsiveUI.scale(100))  # 페이지
+        history_header.resizeSection(1, 110)  # 날짜 + 시간
+        history_header.resizeSection(2, 140)  # 카페명
+        history_header.resizeSection(3, 130)  # 게시판명 
+        history_header.resizeSection(4, 80)   # 추출수
+        history_header.resizeSection(5, 100)  # 페이지
         
         # 행 높이는 ModernTableWidget 기본값(35px) 사용
         

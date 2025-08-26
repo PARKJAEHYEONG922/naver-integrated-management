@@ -12,7 +12,7 @@ from PySide6.QtGui import QFont, QPalette, QColor
 
 from src.foundation.logging import get_logger
 from .modern_style import ModernStyle
-from .responsive import ResponsiveUI
+from . import tokens
 
 
 logger = get_logger("toolbox.ui_kit")
@@ -62,42 +62,34 @@ class ModernCancelButton(QPushButton):
         self._setup_style()
     
     def _setup_style(self):
-        """키워드 분석기의 정지 버튼 스타일 - 반응형"""
-        # 반응형 값들 계산 - 버튼 사이즈 조정
-        padding_v = ResponsiveUI.scale(3)
-        padding_h = ResponsiveUI.scale(5)
-        font_size = ResponsiveUI.get_font_size_pt('normal')
-        border_radius = ResponsiveUI.scale(4)
-        min_width = ResponsiveUI.scale(70)
-        min_height = ResponsiveUI.scale(25)
-        
+        """토큰 기반 스타일 - 디스코드 방식으로 고정 px 사용"""
         self.setStyleSheet(f"""
             QPushButton {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
                 border: none;
-                padding: {padding_v}px {padding_h}px;
-                border-radius: {border_radius}px;
-                font-size: {font_size}pt;
+                padding: {tokens.GAP_6}px {tokens.GAP_12}px;
+                border-radius: {tokens.RADIUS_MD}px;
+                font-size: {tokens.get_font_size('normal')}px;
                 font-weight: 600;
-                min-width: {min_width}px;
-                min-height: {min_height}px;
+                min-width: {tokens.BTN_H_MD * 2}px;
+                min-height: {tokens.BTN_H_SM}px;
             }}
             QPushButton:enabled {{
-                background-color: #ef4444;
+                background-color: {tokens.COLOR_DANGER};
                 color: white;
             }}
             QPushButton:enabled:hover {{
-                background-color: #dc2626;
+                background-color: {tokens.COLOR_DANGER_HOVER};
                 color: white;
             }}
             QPushButton:enabled:pressed {{
-                background-color: #b91c1c;
+                background-color: {tokens.COLOR_DANGER_PRESSED};
                 color: white;
             }}
             QPushButton:disabled {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                color: {ModernStyle.COLORS['text_secondary']};
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
             }}
         """)
 
@@ -162,23 +154,20 @@ class ModernTextEdit(QTextEdit):
         self._setup_style()
     
     def _setup_style(self):
-        """스타일 설정"""
+        """토큰 기반 스타일 설정"""
         self.setStyleSheet(f"""
             QTextEdit {{
-                border: 2px solid {ModernStyle.BORDER_COLOR};
-                border-radius: {ModernStyle.BUTTON_BORDER_RADIUS}px;
-                padding: 8px;
-                font-family: {ModernStyle.DEFAULT_FONT};
-                font-size: {ModernStyle.FONT_SIZE_NORMAL}px;
-                background-color: white;
+                border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
+                border-radius: {tokens.RADIUS_MD}px;
+                padding: {tokens.GAP_8}px;
+                font-size: {tokens.get_font_size('normal')}px;
+                background-color: {tokens.COLOR_BG_PRIMARY};
             }}
             QTextEdit:focus {{
-                border-color: {ModernStyle.PRIMARY_COLOR};
+                border-color: {tokens.COLOR_PRIMARY};
                 outline: none;
             }}
         """)
-        
-        self.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_NORMAL))
 
 
 class ModernCard(QGroupBox):
@@ -189,23 +178,23 @@ class ModernCard(QGroupBox):
         self._setup_style()
     
     def _setup_style(self):
-        """스타일 설정 - 네이버카페 버전 스타일 (공용 표준)"""
+        """토큰 기반 스타일 설정 - 디스코드 방식"""
         self.setStyleSheet(f"""
             QGroupBox {{
-                font-size: 13px;
+                font-size: {tokens.get_font_size('small')}px;
                 font-weight: 600;
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 12px;
-                margin: 10px 0;
-                padding-top: 15px;
-                background-color: {ModernStyle.COLORS['bg_card']};
+                border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
+                border-radius: {tokens.RADIUS_LG}px;
+                margin: {tokens.GAP_10}px 0;
+                padding-top: {tokens.GAP_16}px;
+                background-color: {tokens.COLOR_BG_CARD};
             }}
             QGroupBox::title {{
                 subcontrol-origin: margin;
-                left: 15px;
-                padding: 0 10px;
-                color: {ModernStyle.COLORS['text_primary']};
-                background-color: {ModernStyle.COLORS['bg_card']};
+                left: {tokens.GAP_16}px;
+                padding: 0 {tokens.GAP_10}px;
+                color: {tokens.COLOR_TEXT_PRIMARY};
+                background-color: {tokens.COLOR_BG_CARD};
             }}
         """)
 
@@ -218,24 +207,23 @@ class ModernProgressBar(QProgressBar):
         self._setup_style()
     
     def _setup_style(self):
-        """스타일 설정"""
+        """토큰 기반 스타일 설정"""
         self.setStyleSheet(f"""
             QProgressBar {{
-                border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: 8px;
+                border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
+                border-radius: {tokens.RADIUS_MD}px;
                 text-align: center;
-                font-family: {ModernStyle.DEFAULT_FONT};
-                font-size: {ModernStyle.FONT_SIZE_NORMAL}px;
-                background-color: {ModernStyle.COLORS['bg_input']};
-                height: 25px;
+                font-size: {tokens.get_font_size('normal')}px;
+                background-color: {tokens.COLOR_BG_INPUT};
+                height: {tokens.BTN_H_SM - tokens.GAP_6}px;
             }}
             QProgressBar::chunk {{
-                background-color: {ModernStyle.COLORS['primary']};
-                border-radius: 6px;
+                background-color: {tokens.COLOR_PRIMARY};
+                border-radius: {tokens.RADIUS_SM}px;
             }}
         """)
         
-        self.setMinimumHeight(24)
+        self.setMinimumHeight(tokens.BTN_H_SM)
 
 
 class StatusWidget(QWidget):
@@ -251,21 +239,23 @@ class StatusWidget(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         
         self.status_label = QLabel("준비됨")
-        self.status_label.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_NORMAL))
+        font = QFont()
+        font.setPixelSize(tokens.get_font_size('normal'))
+        self.status_label.setFont(font)
         
         layout.addWidget(self.status_label)
         layout.addStretch()
     
     def set_status(self, text: str, status_type: str = "info"):
-        """상태 설정"""
+        """토큰 기반 상태 설정"""
         colors = {
-            "success": ModernStyle.SUCCESS_COLOR,
-            "warning": ModernStyle.WARNING_COLOR,
-            "error": ModernStyle.DANGER_COLOR,
-            "info": ModernStyle.INFO_COLOR
+            "success": tokens.COLOR_SUCCESS,
+            "warning": tokens.COLOR_WARNING,
+            "error": tokens.COLOR_DANGER,
+            "info": tokens.COLOR_INFO
         }
         
-        color = colors.get(status_type, ModernStyle.INFO_COLOR)
+        color = colors.get(status_type, tokens.COLOR_INFO)
         
         self.status_label.setText(text)
         self.status_label.setStyleSheet(f"color: {color}; font-weight: bold;")
@@ -286,8 +276,10 @@ class FormGroup(QWidget):
         
         # 라벨
         label = QLabel(label_text)
-        label.setFont(QFont(ModernStyle.DEFAULT_FONT, ModernStyle.FONT_SIZE_NORMAL))
-        label.setStyleSheet(f"color: {ModernStyle.TEXT_COLOR}; font-weight: bold;")
+        font = QFont()
+        font.setPixelSize(tokens.get_font_size('normal'))
+        label.setFont(font)
+        label.setStyleSheet(f"color: {tokens.COLOR_TEXT_PRIMARY}; font-weight: bold;")
         
         layout.addWidget(label)
         layout.addWidget(widget)

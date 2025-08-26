@@ -11,6 +11,7 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 
 from src.foundation.logging import get_logger
 from src.foundation.exceptions import FileError
+from src.foundation.http_client import default_http_client, api_error_handler
 from src.features.keyword_analysis.models import KeywordData, AnalysisResult
 from src.features.keyword_analysis.engine_local import calculate_competition_strength
 
@@ -389,26 +390,28 @@ def export_keywords_to_excel(keywords: List[KeywordData], file_path: str) -> boo
 
 
 # TODO[adapters]: service.py에서 요청한 함수들 추가 필요
+@api_error_handler("네이버 검색광고 API")
 def fetch_searchad_raw(keyword: str) -> Optional[Dict[str, Any]]:
-    """검색광고 API Raw 데이터 수집"""
+    """검색광고 API Raw 데이터 수집 - Foundation HTTP Client 사용"""
     try:
         from src.vendors.naver.client_factory import get_keyword_client
         client = get_keyword_client()
         if client:
-            # vendors/naver/searchad/keyword_client.py 표준
+            # vendors/naver/searchad/keyword_client.py 표준 (내부적으로 foundation HTTP 사용하도록 수정 예정)
             return client.get_keyword_ideas([keyword])
         return None
     except Exception as e:
         logger.warning(f"검색광고 데이터 수집 실패 - {keyword}: {e}")
         return None
 
+@api_error_handler("네이버 쇼핑 API")
 def fetch_shopping_normalized(keyword: str) -> Optional[Dict[str, Any]]:
-    """쇼핑 API 정규화 데이터 수집"""
+    """쇼핑 API 정규화 데이터 수집 - Foundation HTTP Client 사용"""
     try:
         from src.vendors.naver.client_factory import get_shopping_client
         client = get_shopping_client()
         if client:
-            # vendors/naver/developer/shopping_client.py 표준
+            # vendors/naver/developer/shopping_client.py 표준 (내부적으로 foundation HTTP 사용하도록 수정 예정)
             raw = client.search_products(query=keyword, display=40, sort="sim")
             from src.vendors.naver.normalizers import normalize_shopping_response
             return normalize_shopping_response(raw)

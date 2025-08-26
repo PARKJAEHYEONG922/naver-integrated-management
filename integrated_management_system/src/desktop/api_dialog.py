@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, Signal
 from src.toolbox.ui_kit import ModernStyle
+from src.toolbox.ui_kit import tokens
 from src.foundation.logging import get_logger
 
 logger = get_logger("desktop.api_dialog")
@@ -71,7 +72,7 @@ class APISettingsDialog(QDialog):
         desc.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 margin-bottom: 15px;
                 line-height: 1.4;
             }}
@@ -120,10 +121,10 @@ class APISettingsDialog(QDialog):
                 background-color: {ModernStyle.COLORS['danger']};
                 color: white;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
+                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
+                border-radius: {tokens.RADIUS_SM}px;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 min-width: 80px;
             }}
             QPushButton:hover {{
@@ -143,10 +144,10 @@ class APISettingsDialog(QDialog):
                 background-color: {ModernStyle.COLORS['success']};
                 color: white;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
+                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
+                border-radius: {tokens.RADIUS_SM}px;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 min-width: 80px;
             }}
             QPushButton:hover {{
@@ -219,10 +220,10 @@ class APISettingsDialog(QDialog):
                 background-color: {ModernStyle.COLORS['danger']};
                 color: white;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
+                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
+                border-radius: {tokens.RADIUS_SM}px;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 min-width: 80px;
             }}
             QPushButton:hover {{
@@ -242,10 +243,10 @@ class APISettingsDialog(QDialog):
                 background-color: {ModernStyle.COLORS['success']};
                 color: white;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
+                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
+                border-radius: {tokens.RADIUS_SM}px;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 min-width: 80px;
             }}
             QPushButton:hover {{
@@ -283,7 +284,7 @@ class APISettingsDialog(QDialog):
         desc.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 margin-bottom: 15px;
                 line-height: 1.4;
             }}
@@ -353,10 +354,10 @@ class APISettingsDialog(QDialog):
                 background-color: {ModernStyle.COLORS['danger']};
                 color: white;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
+                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
+                border-radius: {tokens.RADIUS_SM}px;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 min-width: 80px;
             }}
             QPushButton:hover {{
@@ -376,10 +377,10 @@ class APISettingsDialog(QDialog):
                 background-color: {ModernStyle.COLORS['success']};
                 color: white;
                 border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
+                padding: {tokens.GAP_8}px {tokens.GAP_16}px;
+                border-radius: {tokens.RADIUS_SM}px;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 min-width: 80px;
             }}
             QPushButton:hover {{
@@ -921,7 +922,7 @@ API 키 발급 방법:
                 border: 1px solid {ModernStyle.COLORS['border']};
                 border-radius: 8px;
                 padding: 15px;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 line-height: 1.6;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -942,9 +943,9 @@ API 키 발급 방법:
                 background-color: {ModernStyle.COLORS['danger']};
                 color: white;
                 border: none;
-                padding: 10px 20px;
-                border-radius: 6px;
-                font-size: 14px;
+                padding: {tokens.GAP_10}px {tokens.GAP_20}px;
+                border-radius: {tokens.RADIUS_SM}px;
+                font-size: {tokens.get_font_size('normal')}px;
                 font-weight: 600;
                 min-width: 120px;
             }}
@@ -970,9 +971,9 @@ API 키 발급 방법:
                 background-color: {ModernStyle.COLORS['success']};
                 color: white;
                 border: none;
-                padding: 10px 20px;
-                border-radius: 6px;
-                font-size: 14px;
+                padding: {tokens.GAP_10}px {tokens.GAP_20}px;
+                border-radius: {tokens.RADIUS_SM}px;
+                font-size: {tokens.get_font_size('normal')}px;
                 font-weight: 600;
                 min-width: 100px;
             }}
@@ -1011,7 +1012,7 @@ API 키 발급 방법:
                 font-weight: 600;
             }}
             QGroupBox {{
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 font-weight: 600;
                 border: 2px solid {ModernStyle.COLORS['border']};
                 border-radius: 8px;
@@ -1028,7 +1029,7 @@ API 키 발급 방법:
                 padding: 8px 12px;
                 border: 2px solid {ModernStyle.COLORS['border']};
                 border-radius: 6px;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 background-color: {ModernStyle.COLORS['bg_primary']};
             }}
             QLineEdit:focus {{
@@ -1038,9 +1039,9 @@ API 키 발급 방법:
                 background-color: {ModernStyle.COLORS['primary']};
                 color: white;
                 border: none;
-                padding: 10px 20px;
-                border-radius: 6px;
-                font-size: 14px;
+                padding: {tokens.GAP_10}px {tokens.GAP_20}px;
+                border-radius: {tokens.RADIUS_SM}px;
+                font-size: {tokens.get_font_size('normal')}px;
                 font-weight: 600;
                 min-width: 100px;
             }}

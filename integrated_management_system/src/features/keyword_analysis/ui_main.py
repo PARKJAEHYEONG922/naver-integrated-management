@@ -5,17 +5,18 @@
 from datetime import datetime
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QLabel,
-    QTreeWidget, QProgressBar, QMessageBox, QFileDialog,
-    QFrame, QSizePolicy, QAbstractItemView
+    QProgressBar, QMessageBox, QFileDialog,
+    QFrame, QSizePolicy, QHeaderView
 )
 from PySide6.QtCore import Qt, QMetaObject, Q_ARG, Slot, Signal
 
 from src.toolbox.ui_kit import (
-    ModernStyle, SortableTreeWidgetItem,
+    ModernStyle,
     ModernPrimaryButton, ModernSuccessButton, ModernDangerButton, 
     ModernCancelButton, ModernHelpButton
 )
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit.modern_table import ModernTableWidget
+from src.toolbox.ui_kit import tokens
 from src.desktop.common_log import log_manager
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog, ModernInfoDialog, ModernSaveCompletionDialog
 from .worker import BackgroundWorker
@@ -55,9 +56,9 @@ class KeywordAnalysisWidget(QWidget):
     def setup_ui(self):
         """원본 키워드 검색기 UI 레이아웃 - 반응형 적용"""
         main_layout = QVBoxLayout()
-        # 반응형 마진과 간격
-        margin = ResponsiveUI.scale(16)
-        spacing = ResponsiveUI.scale(10)
+        # 토큰 기반 마진과 간격
+        margin = tokens.GAP_16
+        spacing = tokens.GAP_10
         main_layout.setContentsMargins(margin, margin, margin, margin)
         main_layout.setSpacing(spacing)
         
@@ -82,12 +83,12 @@ class KeywordAnalysisWidget(QWidget):
         """헤더 섹션 (제목 + 사용법 툴팁)"""
         header_layout = QHBoxLayout()
         
-        # 제목 - 반응형 폰트
+        # 제목 - 토큰 기반 폰트
         title_label = QLabel("🔍 키워드 검색기")
-        title_font_size = ResponsiveUI.get_font_size_pt('title')
+        title_font_size = tokens.get_font_size('title')
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {title_font_size}pt;
+                font-size: {title_font_size}px;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -135,14 +136,13 @@ class KeywordAnalysisWidget(QWidget):
     def setup_input_section(self, layout):
         """키워드 입력 + 검색/정지 버튼 섹션 - 반응형"""
         input_frame = QFrame()
-        # 반응형 높이 (화면 높이의 약 15%)
-        frame_height = ResponsiveUI.scale(120)
-        frame_height = max(140, min(180, frame_height))  # 최소 140px, 최대 180px
+        # 고정 높이
+        frame_height = 160
         input_frame.setFixedHeight(frame_height)
         
-        # 반응형 패딩과 테두리
-        frame_padding = ResponsiveUI.scale(6)
-        border_radius = ResponsiveUI.scale(10)
+        # 토큰 기반 패딩과 테두리
+        frame_padding = tokens.GAP_6
+        border_radius = tokens.RADIUS_MD
         input_frame.setStyleSheet(f"""
             QFrame {{
                 background-color: {ModernStyle.COLORS['bg_card']};
@@ -157,7 +157,7 @@ class KeywordAnalysisWidget(QWidget):
         # 키워드 입력 + 버튼 가로 배치
         input_row = QHBoxLayout()
         input_row_widget = QWidget()
-        # 반응형 내부 높이
+        # 고정 내부 높이
         inner_height = frame_height - (frame_padding * 2) - 10  # 여유 공간
         input_row_widget.setFixedHeight(inner_height)
         
@@ -165,17 +165,16 @@ class KeywordAnalysisWidget(QWidget):
         self.keyword_input = QTextEdit()
         self.keyword_input.setPlaceholderText("예: 아이폰 케이스, 갤럭시 충전기, 블루투스 이어폰")
         
-        # 반응형 텍스트 입력창 높이 및 스타일
-        text_height = ResponsiveUI.scale(60)  # 화면 높이의 7.5%
-        text_height = max(60, min(100, text_height))  # 최소 60px, 최대 100px
-        text_padding = ResponsiveUI.scale(6)
-        text_border_radius = ResponsiveUI.scale(6)
-        text_font_size = ResponsiveUI.get_font_size_pt('normal')
+        # 토큰 기반 텍스트 입력창 높이 및 스타일
+        text_height = 80
+        text_padding = tokens.GAP_6
+        text_border_radius = tokens.RADIUS_SM
+        text_font_size = tokens.get_font_size('normal')
         
         self.keyword_input.setMaximumHeight(text_height)
         self.keyword_input.setStyleSheet(f"""
             QTextEdit {{
-                font-size: {text_font_size}pt;
+                font-size: {text_font_size}px;
                 padding: {text_padding}px;
                 border: 2px solid {ModernStyle.COLORS['border']};
                 border-radius: {text_border_radius}px;
@@ -188,9 +187,9 @@ class KeywordAnalysisWidget(QWidget):
         """)
         input_row.addWidget(self.keyword_input, 3)  # 비율 3 (더 넓게)
         
-        # 버튼 컨테이너 - 반응형
+        # 버튼 컨테이너 - 토큰 기반
         button_container = QVBoxLayout()
-        button_spacing = ResponsiveUI.scale(4)
+        button_spacing = tokens.GAP_4
         button_container.setSpacing(button_spacing)
         
         # 검색 시작 버튼
@@ -215,23 +214,20 @@ class KeywordAnalysisWidget(QWidget):
         """진행 상태 섹션 - 반응형"""
         progress_layout = QHBoxLayout()
         
-        # 진행 라벨 - 반응형 폰트
-        self.progress_label = QLabel("대기 중...")
-        label_font_size = ResponsiveUI.get_font_size_pt('normal')
-        self.progress_label.setStyleSheet(f"""
-            QLabel {{
-                font-size: {label_font_size}pt;
-                color: {ModernStyle.COLORS['text_secondary']};
-            }}
-        """)
-        progress_layout.addWidget(self.progress_label)
+        # 선택삭제 버튼
+        self.delete_selected_button = ModernDangerButton("🗑 선택삭제")
+        self.delete_selected_button.clicked.connect(self.delete_selected_results)
+        self.delete_selected_button.setEnabled(False)  # 초기에는 비활성화
+        progress_layout.addWidget(self.delete_selected_button)
         
-        # 진행률 바 - 반응형
+        progress_layout.addStretch()  # 공간 확보
+        
+        # 진행률 바 - 토큰 기반
         self.progress_bar = QProgressBar()
-        progress_height = ResponsiveUI.scale(20)  # 높이 20으로 변경
-        progress_border_radius = ResponsiveUI.scale(6)
-        progress_font_size = ResponsiveUI.get_font_size_pt('small')
-        progress_max_width = ResponsiveUI.scale(200)  # 너비 200으로 변경
+        progress_height = 24
+        progress_border_radius = tokens.RADIUS_SM
+        progress_font_size = tokens.get_font_size('small')
+        progress_max_width = 200
         
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
@@ -239,7 +235,7 @@ class KeywordAnalysisWidget(QWidget):
                 border-radius: {progress_border_radius}px;
                 text-align: center;
                 font-weight: 500;
-                font-size: {progress_font_size}pt;
+                font-size: {progress_font_size}px;
                 background-color: {ModernStyle.COLORS['bg_card']};
             }}
             QProgressBar::chunk {{
@@ -255,80 +251,57 @@ class KeywordAnalysisWidget(QWidget):
     
     def setup_results_section(self, layout):
         """결과 테이블 섹션 - 반응형"""
-        self.results_tree = QTreeWidget()
-        self.results_tree.setHeaderLabels([
-            "키워드", "카테고리", "월검색량", "전체상품수", "경쟁강도"
-        ])
+        results_container = QVBoxLayout()
         
-        # 정렬 기능 활성화
-        self.results_tree.setSortingEnabled(True)
         
-        # 다중 선택 모드 활성화
-        self.results_tree.setSelectionMode(QAbstractItemView.MultiSelection)
+        # 테이블
+        self.results_table = ModernTableWidget(
+            columns=["", "키워드", "카테고리", "월검색량", "전체상품수", "경쟁강도"],
+            has_checkboxes=True,
+            has_header_checkbox=True
+        )
         
-        # 반응형 컬럼 너비 설정 (더 작게)
-        screen_width, _ = ResponsiveUI.get_screen_size()
-        # 앱은 화면의 85% 사용, 사이드바 제외, 마진 고려
-        app_width = screen_width * 0.85  # 앱 윈도우 크기
-        sidebar_width = ResponsiveUI.scale(220)
-        margin = ResponsiveUI.scale(16) * 2  # 양쪽 마진
-        available_width = (app_width - sidebar_width - margin - 100) * 0.6  # 60%만 사용
+        # 정렬 기능은 ModernTableWidget에서 기본 제공됨
         
-        # 기존 비율 유지하여 반응형 적용 (더 작게)
-        total_original = 220 + 525 + 100 + 100 + 80  # 1025
-        self.results_tree.setColumnWidth(0, int(available_width * 220 / total_original))  # 키워드 ~21%
-        self.results_tree.setColumnWidth(1, int(available_width * 525 / total_original))  # 카테고리 ~51% 
-        self.results_tree.setColumnWidth(2, int(available_width * 100 / total_original))  # 월검색량 ~10%
-        self.results_tree.setColumnWidth(3, int(available_width * 100 / total_original))  # 전체상품수 ~10%
-        self.results_tree.setColumnWidth(4, int(available_width * 80 / total_original))   # 경쟁강도 ~8%
+        # 컬럼 너비 설정 (체크박스 포함 6개 컬럼)
+        self.results_table.setColumnWidth(0, 50)   # 체크박스 (빈 헤더)
+        self.results_table.setColumnWidth(1, 200)  # 키워드
+        self.results_table.setColumnWidth(2, 450)  # 카테고리 
+        self.results_table.setColumnWidth(3, 150)  # 월검색량
+        self.results_table.setColumnWidth(4, 150)  # 전체상품수
         
-        # 테이블이 사용 가능한 공간을 모두 차지하도록 설정
-        self.results_tree.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # 마지막 컬럼(경쟁강도)이 남은 공간을 채우도록 설정
+        self.results_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
         
-        # 반응형 테이블 스타일
-        table_border_radius = ResponsiveUI.scale(6)
-        table_font_size = ResponsiveUI.get_font_size_pt('normal')
-        item_padding_v = ResponsiveUI.scale(4)
-        item_padding_h = ResponsiveUI.scale(4)
-        header_padding = ResponsiveUI.scale(6)
+        # 선택 상태 변경 시그널 연결
+        self.results_table.selection_changed.connect(self.on_selection_changed)
         
-        self.results_tree.setStyleSheet(f"""
-            QTreeWidget {{
-                border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {table_border_radius}px;
-                background-color: {ModernStyle.COLORS['bg_card']};
-                alternate-background-color: {ModernStyle.COLORS['bg_primary']};
-                font-size: {table_font_size}pt;
-                gridline-color: {ModernStyle.COLORS['border']};
-            }}
-            QTreeWidget::item {{
-                padding: {item_padding_v}px {item_padding_h}px;
-                border-bottom: 1px solid {ModernStyle.COLORS['border']};
-            }}
-            QTreeWidget::item:selected {{
-                background-color: {ModernStyle.COLORS['primary']};
-                color: white;
-            }}
-            QHeaderView::section {{
-                background-color: {ModernStyle.COLORS['bg_input']};
-                border: none;
-                border-right: 1px solid {ModernStyle.COLORS['border']};
-                border-bottom: 2px solid {ModernStyle.COLORS['border']};
-                padding: {header_padding}px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                font-size: {table_font_size}pt;
-            }}
-        """)
+        # 행 높이 자동 조정 (내용에 맞게)
+        self.results_table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         
-        # 헤더 중앙 정렬 설정
-        header = self.results_tree.header()
-        for i in range(self.results_tree.columnCount()):
-            header.setSectionResizeMode(i, header.ResizeMode.Interactive)
-            # Qt 방식으로 헤더 텍스트 중앙 정렬
-            self.results_tree.headerItem().setTextAlignment(i, Qt.AlignCenter)
+        # 텍스트 줄바꿈 활성화
+        self.results_table.setWordWrap(True)
         
-        layout.addWidget(self.results_tree)
+        results_container.addWidget(self.results_table)
+        
+        layout.addLayout(results_container)
+    
+    def on_selection_changed(self):
+        """테이블 선택 상태 변경 시 호출"""
+        # 선택된 행이 있으면 버튼들 활성화
+        selected_count = len(self.results_table.get_checked_rows())
+        total_count = self.results_table.rowCount()
+        
+        # 버튼 활성화 상태 업데이트
+        self.clear_button.setEnabled(total_count > 0)
+        self.delete_selected_button.setEnabled(selected_count > 0)
+        self.save_all_button.setEnabled(total_count > 0)
+        
+        # 선택삭제 버튼 텍스트 업데이트 (선택된 개수 표시)
+        if selected_count > 0:
+            self.delete_selected_button.setText(f"🗑 선택삭제 ({selected_count})")
+        else:
+            self.delete_selected_button.setText("🗑 선택삭제")
     
     def setup_bottom_buttons(self, layout):
         """하단 버튼 섹션 (Clear, Excel 저장 등)"""
@@ -342,17 +315,68 @@ class KeywordAnalysisWidget(QWidget):
         
         button_layout.addStretch()
         
-        # Excel 저장 버튼들
-        self.save_all_button = ModernSuccessButton("📊 모두 저장")
+        # Excel 저장 버튼
+        self.save_all_button = ModernSuccessButton("💾 저장")
         self.save_all_button.clicked.connect(self.save_all_results)
+        self.save_all_button.setEnabled(False)  # 초기에는 비활성화
         button_layout.addWidget(self.save_all_button)
-        
-        self.save_selected_button = ModernSuccessButton("📋 선택 저장")
-        self.save_selected_button.clicked.connect(self.save_selected_results)
-        button_layout.addWidget(self.save_selected_button)
         
         layout.addLayout(button_layout)
     
+    def delete_selected_results(self):
+        """선택된 결과 삭제"""
+        checked_row_indices = self.results_table.get_checked_rows()
+        if not checked_row_indices:
+            try:
+                ModernInfoDialog.warning(self, "항목 선택 필요", "삭제할 검색 결과를 먼저 선택해주세요.")
+            except:
+                QMessageBox.information(self, "항목 선택 필요", "삭제할 검색 결과를 먼저 선택해주세요.")
+            return
+        
+        # 확인 다이얼로그
+        try:
+            confirmed = ModernConfirmDialog.warning(
+                self,
+                "선택된 결과 삭제",
+                f"선택된 {len(checked_row_indices)}개의 검색 결과를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.",
+                "삭제",
+                "취소"
+            )
+        except:
+            reply = QMessageBox.question(
+                self, "선택된 결과 삭제",
+                f"선택된 {len(checked_row_indices)}개의 검색 결과를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.",
+                QMessageBox.Yes | QMessageBox.No
+            )
+            confirmed = reply == QMessageBox.Yes
+        
+        if not confirmed:
+            return
+        
+        # 선택된 키워드들 수집 (행 삭제 전에 미리 수집)
+        keywords_to_delete = []
+        for row_index in checked_row_indices:
+            if row_index < self.results_table.rowCount():
+                keyword_item = self.results_table.item(row_index, 1)  # 키워드는 1번 컬럼
+                if keyword_item:
+                    keywords_to_delete.append(keyword_item.text())
+        
+        # 역순으로 행 삭제 (인덱스 변경 방지)
+        for row_index in sorted(checked_row_indices, reverse=True):
+            if row_index < self.results_table.rowCount():
+                self.results_table.removeRow(row_index)
+        
+        # search_results에서도 해당 키워드들 제거
+        self.search_results = [
+            data for data in self.search_results 
+            if data.keyword not in keywords_to_delete
+        ]
+        
+        # 상태 업데이트
+        self.on_selection_changed()
+        
+        # 로그 메시지
+        self.add_log(f"🗑 선택된 {len(keywords_to_delete)}개 결과가 삭제되었습니다.", "info")
     
     def cancel_search(self):
         """검색 취소"""
@@ -422,22 +446,26 @@ class KeywordAnalysisWidget(QWidget):
     
     def save_selected_results(self):
         """선택된 결과 저장"""
-        selected_items = self.results_tree.selectedItems()
-        if not selected_items:
+        # ModernTableWidget에서 체크된 행 인덱스들 가져오기
+        checked_row_indices = self.results_table.get_checked_rows()
+        if not checked_row_indices:
             try:
                 ModernInfoDialog.warning(self, "항목 선택 필요", "저장할 검색 결과를 먼저 선택해주세요.")
             except:
                 QMessageBox.information(self, "항목 선택 필요", "저장할 검색 결과를 먼저 선택해주세요.")
             return
         
-        # 선택된 결과 필터링
+        # 선택된 결과 필터링 - 행 인덱스로 키워드 찾기
         selected_data = []
-        for item in selected_items:
-            keyword = item.text(0)
-            for data in self.search_results:
-                if data.keyword == keyword:
-                    selected_data.append(data)
-                    break
+        for row_index in checked_row_indices:
+            if row_index < self.results_table.rowCount():
+                keyword_item = self.results_table.item(row_index, 1)  # 키워드는 1번 컬럼
+                if keyword_item:
+                    keyword = keyword_item.text()
+                    for data in self.search_results:
+                        if data.keyword == keyword:
+                            selected_data.append(data)
+                            break
         
         if not selected_data:
             try:
@@ -508,13 +536,16 @@ class KeywordAnalysisWidget(QWidget):
         
         if confirmed:
             # UI 및 데이터 클리어
-            self.results_tree.clear()
+            self.results_table.clearContents()
+            self.results_table.setRowCount(0)
             self.search_results.clear()
             self.progress_bar.setValue(0)
-            self.progress_label.setText("대기 중...")
             
-            # 검색 결과가 없으므로 전체 클리어 버튼 비활성화
+            # 검색 결과가 없으므로 버튼들 비활성화
             self.clear_button.setEnabled(False)
+            self.save_all_button.setEnabled(False)
+            self.delete_selected_button.setEnabled(False)
+            self.delete_selected_button.setText("🗑 선택삭제")
             
             self.add_log("🗑 모든 검색 결과가 삭제되었습니다.", "info")
     
@@ -554,11 +585,12 @@ class KeywordAnalysisWidget(QWidget):
                 QMessageBox.information(self, "키워드 오류", "입력한 텍스트에서 유효한 키워드를 찾을 수 없습니다.")
             return
         
-        # 기존 키워드 확인
-        existing_keywords = {
-            self.results_tree.topLevelItem(i).text(0) 
-            for i in range(self.results_tree.topLevelItemCount())
-        }
+        # 기존 키워드 확인 (ModernTableWidget에서)
+        existing_keywords = set()
+        for row in range(self.results_table.rowCount()):
+            keyword_item = self.results_table.item(row, 1)  # 키워드는 1번 컬럼
+            if keyword_item:
+                existing_keywords.add(keyword_item.text())
         
         # 중복 제거 및 건너뛴 키워드 추적
         unique_keywords, skipped_keywords = filter_unique_keywords_with_skipped(keywords, existing_keywords)
@@ -585,7 +617,6 @@ class KeywordAnalysisWidget(QWidget):
         self.cancel_button.setEnabled(True)
         self.progress_bar.setValue(0)
         self.progress_bar.setMaximum(len(unique_keywords))
-        self.progress_label.setText(f"검색 준비 중... (0/{len(unique_keywords)})")
         
         # 백그라운드 워커로 키워드 분석 실행
         self.worker = BackgroundWorker(self)
@@ -611,37 +642,17 @@ class KeywordAnalysisWidget(QWidget):
             self.add_log(f"🔍 키워드 검색 시작: {len(unique_keywords)}개 (입력: {len(keywords)}개, 중복 제거: {len(skipped_keywords)}개)", "info")
     
     def _analyze_keywords_task(self, keywords, progress_callback=None, result_callback=None, cancel_event=None):
-        """워커에서 실행할 실제 작업: analyze_single_keyword 반복 + 진행률 콜백"""
-        from datetime import datetime
-        start_time = datetime.now()
-        results = []
-        total = len(keywords)
-
-        for idx, kw in enumerate(keywords, start=1):
-            # 협조적 취소 (있으면)
-            if cancel_event is not None and getattr(cancel_event, "is_set", lambda: False)():
-                break
-            try:
-                data = self.service.analyze_single_keyword(kw)
-            except Exception:
-                data = KeywordData(keyword=kw)
-
-            results.append(data)
-            
-            # 실시간으로 결과 콜백 호출 (UI에 즉시 표시)
-            if result_callback:
-                result_callback(data)
-
-            if progress_callback:
-                progress_callback(idx, total, f"분석 중: {kw}")
-
-        end_time = datetime.now()
-        from src.features.keyword_analysis.models import AnalysisResult
-        return AnalysisResult(
-            keywords=results,
-            policy=self.service.get_analysis_policy(),
-            start_time=start_time,
-            end_time=end_time,
+        """워커에서 실행할 실제 작업: service의 병렬 분석 메소드 호출"""
+        # 취소 확인 함수
+        def stop_check():
+            return cancel_event is not None and getattr(cancel_event, "is_set", lambda: False)()
+        
+        # service의 병렬 분석 메소드 호출 (CLAUDE.md 구조 준수)
+        return self.service.analyze_keywords_parallel(
+            keywords=list(keywords),
+            progress_callback=progress_callback,
+            result_callback=result_callback,
+            stop_check=stop_check
         )
     
     def _create_progress_callback(self):
@@ -668,7 +679,6 @@ class KeywordAnalysisWidget(QWidget):
             
         self.progress_bar.setMaximum(total)
         self.progress_bar.setValue(current)
-        self.progress_label.setText(f"{message} ({current}/{total})")
     
     def _on_worker_progress(self, current: int, total: int, message: str):
         """워커 진행률 업데이트"""
@@ -710,31 +720,36 @@ class KeywordAnalysisWidget(QWidget):
     
     def _safe_add_keyword_result(self, keyword_data: KeywordData):
         """메인 스레드에서 실행되는 안전한 키워드 결과 추가"""
-        item = SortableTreeWidgetItem([
-            keyword_data.keyword,
-            (keyword_data.category or "-"),
-            formatters.format_int(keyword_data.search_volume),
-            formatters.format_int(keyword_data.total_products),
-            formatters.format_competition(keyword_data.competition_strength),
-        ])
-
-        # 정렬용 원시값 저장
-        item.setData(2, Qt.UserRole, 0 if keyword_data.search_volume is None else keyword_data.search_volume)
-        item.setData(3, Qt.UserRole, 0 if keyword_data.total_products is None else keyword_data.total_products)
-        item.setData(4, Qt.UserRole, keyword_data.competition_strength)
-
-        # 각 컬럼별 텍스트 정렬 설정
-        item.setTextAlignment(0, Qt.AlignLeft | Qt.AlignVCenter)      # 키워드: 왼쪽 정렬
-        item.setTextAlignment(1, Qt.AlignLeft | Qt.AlignVCenter)      # 카테고리: 왼쪽 정렬
-        item.setTextAlignment(2, Qt.AlignCenter | Qt.AlignVCenter)    # 월검색량: 중앙 정렬
-        item.setTextAlignment(3, Qt.AlignCenter | Qt.AlignVCenter)    # 전체상품수: 중앙 정렬
-        item.setTextAlignment(4, Qt.AlignCenter | Qt.AlignVCenter)    # 경쟁강도: 중앙 정렬
-
-        self.results_tree.addTopLevelItem(item)
+        # ModernTableWidget에 행 추가 (체크박스는 자동 처리되므로 실제 데이터만 전달)
+        # 카테고리를 줄바꿈으로 처리 (기존 방식과 동일)
+        category_text = keyword_data.category or "-"
+        if keyword_data.category and "," in keyword_data.category:
+            # 콤마로 구분된 카테고리들을 줄바꿈으로 변경
+            categories = [cat.strip() for cat in keyword_data.category.split(",")]
+            category_text = "\n".join(categories)
+        
+        # 안전한 데이터 처리
+        keyword_text = keyword_data.keyword or ""
+        search_volume_text = formatters.format_int(keyword_data.search_volume) if keyword_data.search_volume is not None else "0"
+        total_products_text = formatters.format_int(keyword_data.total_products) if keyword_data.total_products is not None else "0"
+        competition_text = formatters.format_competition(keyword_data.competition_strength) if keyword_data.competition_strength is not None else "-"
+        
+        row_data = [
+            keyword_text,
+            category_text,
+            search_volume_text,
+            total_products_text,
+            competition_text,
+        ]
+        
+        # 테이블에 행 추가 (체크박스는 자동으로 추가됨)
+        self.results_table.add_row_with_data(row_data)
         self.search_results.append(keyword_data)
 
+        # 첫 번째 결과가 추가되면 버튼들 활성화
         if len(self.search_results) == 1:
             self.clear_button.setEnabled(True)
+            self.save_all_button.setEnabled(True)
     
     def on_search_finished(self, canceled=False):
         """검색 완료 또는 취소"""
@@ -745,11 +760,6 @@ class KeywordAnalysisWidget(QWidget):
         # 진행률바 초기화
         self.progress_bar.setValue(0)
         
-        # 상태에 따른 메시지 설정
-        if canceled:
-            self.progress_label.setText("취소됨 - 대기 중...")
-        else:
-            self.progress_label.setText(f"완료! 총 {len(self.search_results)}개 키워드")
         
         self.keyword_input.clear()
     
@@ -762,16 +772,25 @@ class KeywordAnalysisWidget(QWidget):
             QMessageBox.critical(self, "오류 발생", f"다음 오류가 발생했습니다:\n\n{message}")
     
     def load_api_config(self):
-        """API 설정 로드"""
+        """API 설정 로드 - Foundation Config 사용"""
         try:
-            # 앱 전역 진단 결과만 신뢰
-            from src.desktop.api_checker import APIChecker
-            if APIChecker.get_last_overall_ready():
+            from src.foundation.config import config_manager
+            config = config_manager.load_api_config()
+            
+            if config.is_complete():
+                # Foundation config를 통해 서비스 생성
                 self.service = analysis_manager.create_service()
-                logger.debug("서비스 준비 완료.")
+                logger.debug("서비스 준비 완료 (Foundation Config 사용).")
+                self.add_log("🔧 API 설정 로드 완료", "info")
             else:
                 self.service = None
                 logger.debug("API 미설정으로 서비스 생성하지 않음.")
+                missing_apis = []
+                if not config.is_searchad_valid():
+                    missing_apis.append("검색광고")
+                if not config.is_shopping_valid():
+                    missing_apis.append("쇼핑")
+                self.add_log(f"⚠️ API 설정 필요: {', '.join(missing_apis)}", "warning")
                 
         except Exception as e:
             self.add_log(f"❌ API 설정 로드 실패: {str(e)}", "error")

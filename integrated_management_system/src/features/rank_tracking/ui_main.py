@@ -16,7 +16,7 @@ from src.toolbox.ui_kit.modern_style import ModernStyle
 from src.toolbox.ui_kit.modern_dialog import ModernHelpDialog, ModernInfoDialog
 from src.toolbox.ui_kit.sortable_items import SortableTableWidgetItem
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernHelpButton, ModernCancelButton
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit import tokens
 from src.toolbox.formatters import format_price_krw, format_datetime, format_datetime_full, format_datetime_short
 from src.foundation.logging import get_logger
 from src.desktop.common_log import log_manager
@@ -49,20 +49,20 @@ class NewProjectDialog(QDialog):
         self.setWindowFlags(Qt.Dialog)
         self.setWindowTitle("새 프로젝트 생성")
         
-        # 메인 레이아웃 - 반응형
+        # 메인 레이아웃 - 토큰 기반
         main_layout = QVBoxLayout()
-        margin = ResponsiveUI.scale(16)
-        spacing = ResponsiveUI.scale(10)
+        margin = tokens.GAP_16
+        spacing = tokens.GAP_10
         main_layout.setContentsMargins(margin, margin, margin, margin)
         main_layout.setSpacing(spacing)
         
         # 헤더
         header_label = QLabel("🚀 새 프로젝트 생성")
-        font_size = ResponsiveUI.get_font_size_pt('title')
-        margin_bottom = ResponsiveUI.scale(6)
+        font_size = tokens.get_font_size('title')
+        margin_bottom = tokens.GAP_6
         header_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {font_size}pt;
+                font-size: {font_size}px;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
                 margin-bottom: {margin_bottom}px;
@@ -72,8 +72,8 @@ class NewProjectDialog(QDialog):
         
         # 설명
         desc_label = QLabel("네이버 쇼핑 상품 URL을 입력하여 새 프로젝트를 생성하세요.")
-        desc_font_size = ResponsiveUI.get_font_size_pt('header')
-        desc_margin = ResponsiveUI.scale(4)
+        desc_font_size = tokens.get_font_size('header')
+        desc_margin = tokens.GAP_4)
         desc_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {desc_font_size}pt;
@@ -86,8 +86,8 @@ class NewProjectDialog(QDialog):
         
         # URL 입력 라벨
         url_label = QLabel("상품 URL:")
-        label_font_size = ResponsiveUI.get_font_size_pt('normal')
-        label_margin = ResponsiveUI.scale(4)
+        label_font_size = tokens.get_font_size('normal')
+        label_margin = tokens.GAP_4)
         url_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {label_font_size}pt;
@@ -102,11 +102,11 @@ class NewProjectDialog(QDialog):
         self.url_input = QLineEdit()
         self.url_input.setPlaceholderText("https://shopping.naver.com/catalog/...")
         self.url_input.textChanged.connect(self._clear_validation_error)  # 입력시 오류 메시지 제거
-        padding_v = ResponsiveUI.scale(6)
-        padding_h = ResponsiveUI.scale(10)
-        border_radius = ResponsiveUI.scale(6)
-        input_font_size = ResponsiveUI.get_font_size_pt('normal')
-        min_height = ResponsiveUI.scale(35)
+        padding_v = tokens.GAP_6)
+        padding_h = tokens.GAP_10)
+        border_radius = tokens.GAP_6)
+        input_font_size = tokens.get_font_size('normal')
+        min_height = tokens.GAP_35)
         self.url_input.setStyleSheet(f"""
             QLineEdit {{
                 padding: {padding_v}px {padding_h}px;
@@ -129,9 +129,9 @@ class NewProjectDialog(QDialog):
         
         # 상품명 입력 라벨
         product_name_label = QLabel("상품명:")
-        label_font_size = ResponsiveUI.get_font_size_pt('normal')
-        label_margin_v = ResponsiveUI.scale(4)
-        label_margin_top = ResponsiveUI.scale(10)
+        label_font_size = tokens.get_font_size('normal')
+        label_margin_v = tokens.GAP_4)
+        label_margin_top = tokens.GAP_10)
         product_name_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {label_font_size}pt;
@@ -169,10 +169,10 @@ class NewProjectDialog(QDialog):
         
         # 도움말
         help_label = QLabel("💡 팁: 네이버 쇼핑에서 상품 페이지 URL을 복사해서 붙여넣으세요.\n상품명은 키워드 생성을 위해 사용됩니다.")
-        help_font_size = ResponsiveUI.get_font_size_pt('normal')
-        help_padding = ResponsiveUI.scale(6)
-        help_border_radius = ResponsiveUI.scale(4)
-        help_margin = ResponsiveUI.scale(6)
+        help_font_size = tokens.get_font_size('normal')
+        help_padding = tokens.GAP_6)
+        help_border_radius = tokens.GAP_4)
+        help_margin = tokens.GAP_6)
         help_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {help_font_size}pt;
@@ -205,15 +205,15 @@ class NewProjectDialog(QDialog):
         self.setLayout(main_layout)
         
         # 반응형 크기 설정
-        dialog_width = ResponsiveUI.scale(500)
-        dialog_height = ResponsiveUI.scale(480)
+        dialog_width = tokens.GAP_500)
+        dialog_height = tokens.GAP_480)
         self.adjustSize()
         self.setMinimumWidth(dialog_width)
         self.setMaximumWidth(int(dialog_width * 1.2))
         self.setMinimumHeight(dialog_height)
         
         # 실제 필요한 높이 계산하여 설정
-        required_height = main_layout.sizeHint().height() + ResponsiveUI.scale(16) * 5
+        required_height = main_layout.sizeHint().height() + tokens.GAP_16) * 5
         if required_height > dialog_height:
             self.resize(dialog_width, required_height)
         else:
@@ -227,11 +227,11 @@ class NewProjectDialog(QDialog):
             screen_rect = screen.availableGeometry()
             
             # 다이얼로그 반응형 크기
-            dialog_width = max(self.width(), ResponsiveUI.scale(300))
-            dialog_height = max(self.height(), ResponsiveUI.scale(200))
+            dialog_width = max(self.width(), tokens.GAP_300))
+            dialog_height = max(self.height(), tokens.GAP_200))
             
             # 버튼 위쪽에 다이얼로그 배치 - 반응형 간격
-            gap = ResponsiveUI.scale(16) * 8
+            gap = tokens.GAP_16) * 8
             x = self.button_pos.x() - dialog_width // 2
             y = self.button_pos.y() - dialog_height - gap
             
@@ -309,11 +309,11 @@ class NewProjectDialog(QDialog):
         
         # 오류 라벨 생성
         self.error_label = QLabel(message)
-        error_font_size = ResponsiveUI.get_font_size_pt('normal')
-        error_padding_v = ResponsiveUI.scale(6)
-        error_padding_h = ResponsiveUI.scale(10)
-        error_border_radius = ResponsiveUI.scale(6)
-        error_margin = ResponsiveUI.scale(4)
+        error_font_size = tokens.get_font_size('normal')
+        error_padding_v = tokens.GAP_6)
+        error_padding_h = tokens.GAP_10)
+        error_border_radius = tokens.GAP_6)
+        error_margin = tokens.GAP_4)
         self.error_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['danger']};
@@ -391,10 +391,10 @@ class ProjectHistoryDialog(QDialog):
         # 헤더
         header_label = QLabel(f"📊 {self.project_name} - 변경 이력")
         header_font = QFont("맑은 고딕")
-        header_font.setPointSize(ResponsiveUI.get_font_size_pt('title'))
+        header_font.setPointSize(tokens.get_font_size('title'))
         header_font.setWeight(QFont.Bold)
         header_label.setFont(header_font)
-        header_label.setStyleSheet(f"color: {ModernStyle.COLORS['text_primary']}; margin-bottom: {ResponsiveUI.scale(10)}px;")
+        header_label.setStyleSheet(f"color: {ModernStyle.COLORS['text_primary']}; margin-bottom: {tokens.GAP_10)}px;")
         layout.addWidget(header_label)
         
         # 탭 위젯
@@ -402,16 +402,16 @@ class ProjectHistoryDialog(QDialog):
         self.tab_widget.setStyleSheet(f"""
             QTabWidget::pane {{
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.scale(6)}px;
+                border-radius: {tokens.GAP_6)}px;
                 background-color: {ModernStyle.COLORS['bg_primary']};
             }}
             QTabBar::tab {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 color: {ModernStyle.COLORS['text_primary']};
-                padding: {ResponsiveUI.scale(10)}px {ResponsiveUI.scale(20)}px;
-                margin-right: {ResponsiveUI.scale(2)}px;
-                border-top-left-radius: {ResponsiveUI.scale(8)}px;
-                border-top-right-radius: {ResponsiveUI.scale(8)}px;
+                padding: {tokens.GAP_10)}px {tokens.GAP_20)}px;
+                margin-right: {tokens.GAP_2)}px;
+                border-top-left-radius: {tokens.GAP_8)}px;
+                border-top-right-radius: {tokens.GAP_8)}px;
                 font-weight: 600;
             }}
             QTabBar::tab:selected {{
@@ -457,8 +457,8 @@ class ProjectHistoryDialog(QDialog):
         header.setSectionResizeMode(2, QHeaderView.Stretch)  # 변경 전
         header.setSectionResizeMode(3, QHeaderView.Stretch)  # 변경 후
         
-        self.basic_info_table.setColumnWidth(0, ResponsiveUI.scale(150))  # 변경 일시
-        self.basic_info_table.setColumnWidth(1, ResponsiveUI.scale(100))  # 변경 필드
+        self.basic_info_table.setColumnWidth(0, tokens.GAP_150))  # 변경 일시
+        self.basic_info_table.setColumnWidth(1, tokens.GAP_100))  # 변경 필드
         
         self.tab_widget.addTab(self.basic_info_table, "📝 기본정보 변경")
     
@@ -483,9 +483,9 @@ class ProjectHistoryDialog(QDialog):
         
         # 왼쪽 제목
         left_title = QLabel("📋 키워드 관리 이력")
-        title_font_size = ResponsiveUI.get_font_size_pt('large')
-        title_padding = ResponsiveUI.scale(5)
-        title_border_radius = ResponsiveUI.scale(4)
+        title_font_size = tokens.get_font_size('large')
+        title_padding = tokens.GAP_5)
+        title_border_radius = tokens.GAP_4)
         left_title.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}pt;
@@ -500,8 +500,8 @@ class ProjectHistoryDialog(QDialog):
         
         # 통계 레이블
         self.keyword_stats_label = QLabel("총 0건의 키워드이력 (추가 0건, 삭제 0건)")
-        stats_font_size = ResponsiveUI.get_font_size_pt('normal')
-        stats_padding = ResponsiveUI.scale(2)
+        stats_font_size = tokens.get_font_size('normal')
+        stats_padding = tokens.GAP_2)
         self.keyword_stats_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {stats_font_size}pt;
@@ -525,9 +525,9 @@ class ProjectHistoryDialog(QDialog):
         left_header.setSectionResizeMode(1, QHeaderView.Interactive)  # 가로 스크롤 가능하게 변경
         left_header.setSectionResizeMode(2, QHeaderView.Fixed)
         
-        self.keyword_history_table.setColumnWidth(0, ResponsiveUI.scale(80))  # 날짜
-        self.keyword_history_table.setColumnWidth(1, ResponsiveUI.scale(120))  # 키워드
-        self.keyword_history_table.setColumnWidth(2, ResponsiveUI.scale(60))   # 작업
+        self.keyword_history_table.setColumnWidth(0, tokens.GAP_80))  # 날짜
+        self.keyword_history_table.setColumnWidth(1, tokens.GAP_120))  # 키워드
+        self.keyword_history_table.setColumnWidth(2, tokens.GAP_60))   # 작업
         
         left_layout.addWidget(self.keyword_history_table)
         left_widget.setLayout(left_layout)
@@ -540,9 +540,9 @@ class ProjectHistoryDialog(QDialog):
         
         # 오른쪽 제목
         right_title = QLabel("🔍 현재 관리 키워드")
-        right_title_font_size = ResponsiveUI.get_font_size_pt('large')
-        right_title_padding = ResponsiveUI.scale(5)
-        right_title_border_radius = ResponsiveUI.scale(4)
+        right_title_font_size = tokens.get_font_size('large')
+        right_title_padding = tokens.GAP_5)
+        right_title_border_radius = tokens.GAP_4)
         right_title.setStyleSheet(f"""
             QLabel {{
                 font-size: {right_title_font_size}pt;
@@ -557,8 +557,8 @@ class ProjectHistoryDialog(QDialog):
         
         # 키워드 개수 레이블
         self.current_keywords_count_label = QLabel("총 0개의 키워드 관리 중")
-        count_font_size = ResponsiveUI.get_font_size_pt('normal')
-        count_padding = ResponsiveUI.scale(2)
+        count_font_size = tokens.get_font_size('normal')
+        count_padding = tokens.GAP_2)
         self.current_keywords_count_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {count_font_size}pt;
@@ -583,10 +583,10 @@ class ProjectHistoryDialog(QDialog):
         right_header.setSectionResizeMode(2, QHeaderView.Interactive)  # 카테고리 열 가로 스크롤 가능
         right_header.setSectionResizeMode(3, QHeaderView.Fixed)
         
-        self.current_keywords_table.setColumnWidth(0, ResponsiveUI.scale(80))  # 날짜
-        self.current_keywords_table.setColumnWidth(1, ResponsiveUI.scale(150))  # 키워드 (더 넓게)
-        self.current_keywords_table.setColumnWidth(2, ResponsiveUI.scale(150))  # 카테고리 (줄임: 200 → 150)
-        self.current_keywords_table.setColumnWidth(3, ResponsiveUI.scale(80))   # 월검색량
+        self.current_keywords_table.setColumnWidth(0, tokens.GAP_80))  # 날짜
+        self.current_keywords_table.setColumnWidth(1, tokens.GAP_150))  # 키워드 (더 넓게)
+        self.current_keywords_table.setColumnWidth(2, tokens.GAP_150))  # 카테고리 (줄임: 200 → 150)
+        self.current_keywords_table.setColumnWidth(3, tokens.GAP_80))   # 월검색량
         
         right_layout.addWidget(self.current_keywords_table)
         right_widget.setLayout(right_layout)
@@ -612,9 +612,9 @@ class ProjectHistoryDialog(QDialog):
         title_layout = QHBoxLayout()
         
         title_label = QLabel("📈 순위 변동 현황")
-        title_font_size = ResponsiveUI.get_font_size_pt('large')
-        title_padding = ResponsiveUI.scale(5)
-        title_border_radius = ResponsiveUI.scale(4)
+        title_font_size = tokens.get_font_size('large')
+        title_padding = tokens.GAP_5)
+        title_border_radius = tokens.GAP_4)
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}pt;
@@ -649,12 +649,12 @@ class ProjectHistoryDialog(QDialog):
             QTableWidget {{
                 background-color: {ModernStyle.COLORS['bg_primary']};
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.scale(6)}px;
+                border-radius: {tokens.GAP_6)}px;
                 gridline-color: {ModernStyle.COLORS['border']};
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                font-size: {tokens.get_font_size('normal')}pt;
             }}
             QTableWidget::item {{
-                padding: {ResponsiveUI.scale(6)}px;
+                padding: {tokens.GAP_6)}px;
                 border: none;
                 text-align: center;
             }}
@@ -665,12 +665,12 @@ class ProjectHistoryDialog(QDialog):
             QHeaderView::section {{
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 color: {ModernStyle.COLORS['text_primary']};
-                padding: {ResponsiveUI.scale(10)}px;
+                padding: {tokens.GAP_10)}px;
                 border: none;
                 border-right: 1px solid {ModernStyle.COLORS['border']};
                 border-bottom: 1px solid {ModernStyle.COLORS['border']};
                 font-weight: 600;
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                font-size: {tokens.get_font_size('normal')}pt;
             }}
             QHeaderView::section:last {{
                 border-right: none;
@@ -708,19 +708,19 @@ class ProjectHistoryDialog(QDialog):
         # 헤더 스타일
         header = table.horizontalHeader()
         header.setStretchLastSection(True)
-        header.setDefaultSectionSize(ResponsiveUI.scale(150))
+        header.setDefaultSectionSize(tokens.GAP_150))
         
         # 테이블 스타일
         table.setStyleSheet(f"""
             QTableWidget {{
                 background-color: white;
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.scale(6)}px;
+                border-radius: {tokens.GAP_6)}px;
                 gridline-color: {ModernStyle.COLORS['border']};
                 selection-background-color: {ModernStyle.COLORS['primary']}20;
             }}
             QTableWidget::item {{
-                padding: {ResponsiveUI.scale(8)}px;
+                padding: {tokens.GAP_8)}px;
                 border-bottom: 1px solid {ModernStyle.COLORS['border']};
             }}
             QTableWidget::item:selected {{
@@ -729,7 +729,7 @@ class ProjectHistoryDialog(QDialog):
             }}
             QHeaderView::section {{
                 background-color: {ModernStyle.COLORS['bg_card']};
-                padding: {ResponsiveUI.scale(10)}px;
+                padding: {tokens.GAP_10)}px;
                 border: none;
                 border-right: 1px solid {ModernStyle.COLORS['border']};
                 border-bottom: 1px solid {ModernStyle.COLORS['border']};
@@ -1136,8 +1136,8 @@ class RankTrackingWidget(QWidget):
     def setup_ui(self):
         """UI 설정 - 반응형"""
         main_layout = QVBoxLayout()
-        margin = ResponsiveUI.scale(16)
-        spacing = ResponsiveUI.scale(10)
+        margin = tokens.GAP_16)
+        spacing = tokens.GAP_10)
         main_layout.setContentsMargins(margin, margin, margin, margin)
         main_layout.setSpacing(spacing)
         
@@ -1153,7 +1153,7 @@ class RankTrackingWidget(QWidget):
         splitter = QSplitter(Qt.Horizontal)
         
         # 좌측: 프로젝트 목록 - 반응형 너비
-        sidebar_width = ResponsiveUI.scale(220)
+        sidebar_width = tokens.GAP_220)
         self.project_list = ProjectListWidget()
         self.project_list.setMinimumWidth(sidebar_width)
         self.project_list.setMaximumWidth(int(sidebar_width * 1.3))
@@ -1165,8 +1165,8 @@ class RankTrackingWidget(QWidget):
         # 우측: 수직 레이아웃 (기본정보 + 키워드 테이블) - 반응형
         right_widget = QWidget()
         right_layout = QVBoxLayout()
-        right_margin = ResponsiveUI.scale(6)
-        right_spacing = ResponsiveUI.scale(10)
+        right_margin = tokens.GAP_6)
+        right_spacing = tokens.GAP_10)
         right_layout.setContentsMargins(right_margin, right_margin, right_margin, right_margin)
         right_layout.setSpacing(right_spacing)
         
@@ -1205,7 +1205,7 @@ class RankTrackingWidget(QWidget):
         
         # 제목
         title_label = QLabel("📈 상품 순위추적")
-        title_font_size = ResponsiveUI.get_font_size_pt('title')
+        title_font_size = tokens.get_font_size('title')
         title_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {title_font_size}pt;
@@ -1226,8 +1226,8 @@ class RankTrackingWidget(QWidget):
     def create_product_info_widget(self):
         """기본정보 위젯 생성 - 원본과 동일한 레이아웃"""
         widget = QFrame()
-        frame_padding = ResponsiveUI.scale(10)
-        frame_border_radius = ResponsiveUI.scale(6)
+        frame_padding = tokens.GAP_10)
+        frame_border_radius = tokens.GAP_6)
         widget.setStyleSheet(f"""
             QFrame {{
                 background-color: #F8F9FA;
@@ -1238,16 +1238,16 @@ class RankTrackingWidget(QWidget):
         """)
         
         layout = QGridLayout()
-        grid_spacing = ResponsiveUI.scale(6)
-        grid_v_spacing = ResponsiveUI.scale(6)
+        grid_spacing = tokens.GAP_6)
+        grid_v_spacing = tokens.GAP_6)
         layout.setSpacing(grid_spacing)
         layout.setVerticalSpacing(grid_v_spacing)
         
         # 헤더 스타일 설정 - 반응형
-        header_padding = ResponsiveUI.scale(2)
-        value_padding_v = ResponsiveUI.scale(4)
-        value_padding_h = ResponsiveUI.scale(8)
-        value_border_radius = ResponsiveUI.scale(4)
+        header_padding = tokens.GAP_2)
+        value_padding_v = tokens.GAP_4)
+        value_padding_h = tokens.GAP_8)
+        value_border_radius = tokens.GAP_4)
         
         header_style = f"""
             QLabel {{
@@ -1274,7 +1274,7 @@ class RankTrackingWidget(QWidget):
         
         # Row 0: 상품ID (새로고침 버튼 포함) - 반응형
         product_id_header = QLabel("상품ID")
-        header_font_size = ResponsiveUI.get_font_size_pt('normal')
+        header_font_size = tokens.get_font_size('normal')
         product_id_header.setStyleSheet(f"""
             QLabel {{
                 font-size: {header_font_size}pt;
@@ -1307,12 +1307,12 @@ class RankTrackingWidget(QWidget):
         product_id_layout.addWidget(self.product_id_label)
         
         # 새로고침 버튼 (반응형)
-        btn_size = ResponsiveUI.scale(20)
+        btn_size = tokens.GAP_20)
         self.refresh_product_button = QPushButton("⟲")
         self.refresh_product_button.setToolTip("상품 정보 새로고침")
         self.refresh_product_button.setFixedSize(btn_size + 2, btn_size + 2)
-        border_radius = ResponsiveUI.scale(4)
-        btn_font_size = ResponsiveUI.get_font_size_pt('normal')
+        border_radius = tokens.GAP_4)
+        btn_font_size = tokens.get_font_size('normal')
         self.refresh_product_button.setStyleSheet(f"""
             QPushButton {{
                 background-color: #F3F4F6;
@@ -1516,8 +1516,8 @@ class RankTrackingWidget(QWidget):
         
         # 마지막 확인 시간 (카드 외부에 별도 표시) - 반응형
         self.last_check_label = QLabel("마지막 확인: -")
-        last_check_font_size = ResponsiveUI.get_font_size_pt('normal')
-        margin_top = ResponsiveUI.scale(6)
+        last_check_font_size = tokens.get_font_size('normal')
+        margin_top = tokens.GAP_6)
         self.last_check_label.setStyleSheet(f"""
             QLabel {{
                 font-size: {last_check_font_size}pt;

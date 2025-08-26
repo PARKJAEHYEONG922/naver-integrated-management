@@ -1,186 +1,198 @@
 """
 모던한 Qt 스타일 정의
 기존 블로그 자동화에서 사용하던 스타일을 재사용
-반응형 UI 지원 추가
+토큰 기반 고정 px 스타일 시스템
 """
-from .responsive import ResponsiveUI
+from . import tokens
+
 
 class ModernStyle:
     """모던한 Qt 스타일 정의"""
     
-    # 컬러 팔레트
-    COLORS = {
-        'primary': '#2563eb',
-        'primary_hover': '#1d4ed8',
-        'secondary': '#10b981',
-        'secondary_hover': '#059669',
-        'accent': '#8b5cf6',
-        'warning': '#f59e0b',
-        'danger': '#ef4444',
-        'success': '#10b981',
-        'info': '#3b82f6',
-        
-        'bg_primary': '#ffffff',
-        'bg_secondary': '#f8fafc',
-        'bg_tertiary': '#e2e8f0',
-        'bg_card': '#ffffff',
-        'bg_input': '#f1f5f9',
-        'bg_muted': '#e2e8f0',
-        
-        'text_primary': '#1e293b',
-        'text_secondary': '#64748b',
-        'text_tertiary': '#94a3b8',
-        'text_muted': '#94a3b8',
-        
-        'border': '#e2e8f0',
-        'shadow': 'rgba(15, 23, 42, 0.1)',
-    }
+    # 컬러 팔레트 - tokens에서 가져오기
+    COLORS = tokens.COLORS
     
     # 기본 폰트 (호환성 유지)
     DEFAULT_FONT = "맑은 고딕"
     
-    # 반응형 값들 (동적 계산)
+    # 토큰 기반 값들
     @classmethod
     def get_font_size_header(cls):
-        return ResponsiveUI.get_font_size_pt('header')
+        return tokens.get_font_size('header')
     
     @classmethod 
     def get_font_size_normal(cls):
-        return ResponsiveUI.get_font_size_pt('normal')
+        return tokens.get_font_size('normal')
     
     @classmethod
     def get_button_height(cls):
-        return ResponsiveUI.scale(35)
+        return tokens.BTN_H_MD
     
-    # 호환성을 위한 기본값 (가능하면 위의 메서드 사용 권장)
-    FONT_SIZE_HEADER = 14
-    FONT_SIZE_NORMAL = 12
-    BUTTON_HEIGHT = 36
+    # 호환성을 위한 기본값
+    FONT_SIZE_HEADER = tokens.FONT_HEADER
+    FONT_SIZE_NORMAL = tokens.FONT_NORMAL
+    BUTTON_HEIGHT = tokens.BTN_H_MD
     
-    # 텍스트 스타일 상수들 (키워드 분석기 UI 호환) - 반응형으로 개선
+    # 레거시 필드들 (호환성)
+    PRIMARY_COLOR = tokens.COLOR_PRIMARY
+    SECONDARY_COLOR = tokens.COLOR_SUCCESS
+    SUCCESS_COLOR = tokens.COLOR_SUCCESS
+    WARNING_COLOR = tokens.COLOR_WARNING
+    DANGER_COLOR = tokens.COLOR_DANGER
+    INFO_COLOR = tokens.COLOR_INFO
+    TEXT_COLOR = tokens.COLOR_TEXT_PRIMARY
+    BORDER_COLOR = tokens.COLOR_BORDER
+    BUTTON_BORDER_RADIUS = tokens.RADIUS_SM
+    
+    # 텍스트 스타일 상수들 (키워드 분석기 UI 호환) - 토큰 기반
     @classmethod
     def get_title_style(cls):
-        """제목 스타일 - 반응형"""
-        font_size = ResponsiveUI.get_font_size_pt('title')
-        margin = ResponsiveUI.scale(6)
+        """제목 스타일 - 토큰 기반"""
+        font_size = tokens.get_font_size('title')
+        margin = tokens.GAP_6
         return f"""
             QLabel {{
-                font-size: {font_size}pt;
+                font-size: {font_size}px;
                 font-weight: bold;
-                color: {cls.COLORS['text_primary']};
+                color: {tokens.COLOR_TEXT_PRIMARY};
                 font-family: '{cls.DEFAULT_FONT}';
                 margin-bottom: {margin}px;
             }}
         """
     
-    # 호환성을 위한 기존 상수 (가능하면 get_title_style() 사용 권장)
-    TITLE = f"""
+    # 호환성을 위한 기존 상수들 - 토큰 기반으로 업데이트
+    @classmethod
+    def get_title(cls):
+        return f"""
         QLabel {{
-            font-size: 18px;
+            font-size: {tokens.get_font_size('header')}px;
             font-weight: bold;
-            color: {COLORS['text_primary']};
-            font-family: '{DEFAULT_FONT}';
-            margin-bottom: 8px;
+            color: {tokens.COLOR_TEXT_PRIMARY};
+            font-family: '{cls.DEFAULT_FONT}';
+            margin-bottom: {tokens.GAP_8}px;
         }}
-    """
+        """
     
-    SUBTITLE = f"""
+    @classmethod 
+    def get_subtitle(cls):
+        return f"""
         QLabel {{
-            font-size: 14px;
+            font-size: {tokens.get_font_size('normal')}px;
             font-weight: 600;
-            color: {COLORS['text_secondary']};
-            font-family: '{DEFAULT_FONT}';
-            margin-bottom: 4px;
+            color: {tokens.COLOR_TEXT_SECONDARY};
+            font-family: '{cls.DEFAULT_FONT}';
+            margin-bottom: {tokens.GAP_4}px;
         }}
-    """
+        """
     
-    STATUS_LABEL = f"""
+    @classmethod
+    def get_status_label(cls):
+        return f"""
         QLabel {{
-            font-size: 12px;
-            color: {COLORS['text_secondary']};
-            font-family: '{DEFAULT_FONT}';
-            padding: 4px 8px;
+            font-size: {tokens.get_font_size('small')}px;
+            color: {tokens.COLOR_TEXT_SECONDARY};
+            font-family: '{cls.DEFAULT_FONT}';
+            padding: {tokens.GAP_4}px {tokens.GAP_8}px;
         }}
-    """
+        """
     
-    PROGRESS_BAR = f"""
+    @classmethod
+    def get_progress_bar(cls):
+        return f"""
         QProgressBar {{
-            background-color: {COLORS['bg_input']};
-            border: 1px solid {COLORS['border']};
-            border-radius: 4px;
+            background-color: {tokens.COLOR_BG_INPUT};
+            border: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
+            border-radius: {tokens.RADIUS_SM}px;
             text-align: center;
-            font-family: '{DEFAULT_FONT}';
-            font-size: 11px;
-            height: 20px;
+            font-family: '{cls.DEFAULT_FONT}';
+            font-size: {tokens.get_font_size('tiny')}px;
+            height: {tokens.GAP_20}px;
         }}
         QProgressBar::chunk {{
-            background-color: {COLORS['primary']};
-            border-radius: 3px;
+            background-color: {tokens.COLOR_PRIMARY};
+            border-radius: {tokens.RADIUS_SM - 1}px;
         }}
-    """
+        """
+    
+    # 레거시 상수들 (property로 처리)
+    @property
+    def TITLE(self):
+        return self.get_title()
+    
+    @property 
+    def SUBTITLE(self):
+        return self.get_subtitle()
+    
+    @property
+    def STATUS_LABEL(self):
+        return self.get_status_label()
+    
+    @property
+    def PROGRESS_BAR(self):
+        return self.get_progress_bar()
     
     TEXT_EDIT = f"""
         QTextEdit {{
-            background-color: white;
-            border: 2px solid {COLORS['border']};
-            border-radius: 6px;
-            padding: 8px;
-            font-size: 13px;
+            background-color: {tokens.COLOR_BG_PRIMARY};
+            border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
+            border-radius: {tokens.RADIUS_SM}px;
+            padding: {tokens.GAP_8}px;
+            font-size: {tokens.get_font_size('small')}px;
             font-family: '{DEFAULT_FONT}';
-            color: {COLORS['text_primary']};
+            color: {tokens.COLOR_TEXT_PRIMARY};
         }}
         QTextEdit:focus {{
-            border-color: {COLORS['primary']};
+            border-color: {tokens.COLOR_PRIMARY};
         }}
     """
     
     TREE_WIDGET = f"""
         QTreeWidget {{
-            background-color: white;
-            border: 1px solid {COLORS['border']};
-            border-radius: 6px;
+            background-color: {tokens.COLOR_BG_PRIMARY};
+            border: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
+            border-radius: {tokens.RADIUS_SM}px;
             font-family: '{DEFAULT_FONT}';
-            font-size: 12px;
-            selection-background-color: {COLORS['primary']};
-            alternate-background-color: {COLORS['bg_secondary']};
+            font-size: {tokens.get_font_size('small')}px;
+            selection-background-color: {tokens.COLOR_PRIMARY};
+            alternate-background-color: {tokens.COLOR_BG_SECONDARY};
         }}
         QTreeWidget::item {{
-            padding: 4px;
-            border-bottom: 1px solid {COLORS['border']};
+            padding: {tokens.GAP_4}px;
+            border-bottom: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
         }}
         QTreeWidget::item:selected {{
-            background-color: {COLORS['primary']};
+            background-color: {tokens.COLOR_PRIMARY};
             color: white;
         }}
         QHeaderView::section {{
-            background-color: {COLORS['bg_tertiary']};
-            color: {COLORS['text_primary']};
-            padding: 8px;
-            border: 1px solid {COLORS['border']};
+            background-color: {tokens.COLOR_BG_TERTIARY};
+            color: {tokens.COLOR_TEXT_PRIMARY};
+            padding: {tokens.GAP_8}px;
+            border: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
             font-weight: 600;
         }}
     """
     
     CARD = f"""
         QFrame {{
-            background-color: {COLORS['bg_card']};
-            border: 1px solid {COLORS['border']};
-            border-radius: 8px;
-            padding: 16px;
-            margin: 4px;
+            background-color: {tokens.COLOR_BG_CARD};
+            border: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
+            border-radius: {tokens.RADIUS_MD}px;
+            padding: {tokens.GAP_16}px;
+            margin: {tokens.GAP_4}px;
         }}
     """
     
     @classmethod
     def get_button_style(cls, button_type='primary'):
-        """버튼 스타일 반환 - 반응형 지원"""
-        # 반응형 값들 계산 - 버튼 사이즈 조정
-        padding_v = ResponsiveUI.scale(3)
-        padding_h = ResponsiveUI.scale(5)
-        font_size = ResponsiveUI.get_font_size_pt('normal')
-        border_radius = ResponsiveUI.scale(4)
-        min_width = ResponsiveUI.scale(70)
-        min_height = ResponsiveUI.scale(25)
+        """버튼 스타일 반환 - 토큰 기반"""
+        # 토큰 기반 값들 사용
+        padding_v = tokens.GAP_6
+        padding_h = tokens.GAP_12
+        font_size = tokens.get_font_size('normal')
+        border_radius = tokens.RADIUS_SM
+        min_width = 70
+        min_height = tokens.BTN_H_SM
         
         base_style = f"""
             QPushButton {{
@@ -188,7 +200,7 @@ class ModernStyle:
                 border-radius: {border_radius}px;
                 padding: {padding_v}px {padding_h}px;
                 font-weight: 600;
-                font-size: {font_size}pt;
+                font-size: {font_size}px;
                 font-family: '{cls.DEFAULT_FONT}';
                 min-width: {min_width}px;
                 min-height: {min_height}px;
@@ -197,113 +209,113 @@ class ModernStyle:
                 margin-top: 1px;
             }}
             QPushButton:disabled {{
-                background-color: {cls.COLORS['bg_input']};
-                color: {cls.COLORS['text_secondary']};
+                background-color: {tokens.COLOR_BG_INPUT};
+                color: {tokens.COLOR_TEXT_SECONDARY};
             }}
         """
         
         if button_type == 'primary':
             return base_style + f"""
                 QPushButton {{
-                    background-color: {cls.COLORS['primary']};
+                    background-color: {tokens.COLOR_PRIMARY};
                     color: white;
                 }}
                 QPushButton:hover {{
-                    background-color: #1d4ed8;
+                    background-color: {tokens.COLOR_PRIMARY_HOVER};
                 }}
                 QPushButton:pressed {{
-                    background-color: #1e40af;
+                    background-color: {tokens.COLOR_PRIMARY_PRESSED};
                 }}
             """
         elif button_type == 'secondary':
             return base_style + f"""
                 QPushButton {{
-                    background-color: {cls.COLORS['secondary']};
+                    background-color: {tokens.COLOR_SUCCESS};
                     color: white;
                 }}
                 QPushButton:hover {{
-                    background-color: #059669;
+                    background-color: {tokens.COLOR_SUCCESS_HOVER};
                 }}
                 QPushButton:pressed {{
-                    background-color: #047857;
+                    background-color: {tokens.COLOR_SUCCESS_PRESSED};
                 }}
             """
         elif button_type == 'outline':
             return base_style + f"""
                 QPushButton {{
-                    background-color: {cls.COLORS['bg_input']};
-                    color: {cls.COLORS['text_primary']};
-                    border: 1px solid {cls.COLORS['border']};
+                    background-color: {tokens.COLOR_BG_INPUT};
+                    color: {tokens.COLOR_TEXT_PRIMARY};
+                    border: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
                 }}
                 QPushButton:hover {{
-                    background-color: {cls.COLORS['bg_secondary']};
-                    border-color: {cls.COLORS['primary']};
+                    background-color: {tokens.COLOR_BG_SECONDARY};
+                    border-color: {tokens.COLOR_PRIMARY};
                 }}
                 QPushButton:pressed {{
-                    background-color: {cls.COLORS['primary']};
+                    background-color: {tokens.COLOR_PRIMARY};
                     color: white;
-                    border-color: {cls.COLORS['primary']};
+                    border-color: {tokens.COLOR_PRIMARY};
                 }}
             """
         elif button_type == 'danger':
             return base_style + f"""
                 QPushButton {{
-                    background-color: {cls.COLORS['danger']};
+                    background-color: {tokens.COLOR_DANGER};
                     color: white;
                 }}
                 QPushButton:hover {{
-                    background-color: #dc2626;
+                    background-color: {tokens.COLOR_DANGER_HOVER};
                 }}
                 QPushButton:pressed {{
-                    background-color: #b91c1c;
+                    background-color: {tokens.COLOR_DANGER_PRESSED};
                 }}
             """
     
     @classmethod
     def get_input_style(cls):
-        """입력 필드 스타일 - 키워드 분석기 스타일 기반으로 개선"""
+        """입력 필드 스타일 - 토큰 기반"""
         return f"""
             QLineEdit, QTextEdit {{
-                background-color: white;
-                border: 2px solid {cls.COLORS['border']};
-                border-radius: 6px;
-                padding: 8px 12px;
-                font-size: 13px;
+                background-color: {tokens.COLOR_BG_PRIMARY};
+                border: {tokens.BORDER_2}px solid {tokens.COLOR_BORDER};
+                border-radius: {tokens.RADIUS_SM}px;
+                padding: {tokens.GAP_8}px {tokens.GAP_12}px;
+                font-size: {tokens.get_font_size('small')}px;
                 font-family: '{cls.DEFAULT_FONT}';
-                color: {cls.COLORS['text_primary']};
+                color: {tokens.COLOR_TEXT_PRIMARY};
             }}
             QLineEdit:focus, QTextEdit:focus {{
-                border-color: {cls.COLORS['primary']};
+                border-color: {tokens.COLOR_PRIMARY};
                 outline: none;
             }}
         """
     
     @classmethod
     def get_card_style(cls):
-        """카드 스타일 - 키워드 분석기 스타일 기반으로 개선"""
+        """카드 스타일 - 토큰 기반"""
         return f"""
             QFrame {{
-                background-color: {cls.COLORS['bg_card']};
-                border: 1px solid {cls.COLORS['border']};
-                border-radius: 8px;
-                padding: 16px;
-                margin: 4px;
+                background-color: {tokens.COLOR_BG_CARD};
+                border: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
+                border-radius: {tokens.RADIUS_MD}px;
+                padding: {tokens.GAP_16}px;
+                margin: {tokens.GAP_4}px;
             }}
             QGroupBox {{
-                background-color: {cls.COLORS['bg_card']};
-                border: 1px solid {cls.COLORS['border']};
-                border-radius: 8px;
-                padding: 16px;
-                margin-top: 8px;
+                background-color: {tokens.COLOR_BG_CARD};
+                border: {tokens.BORDER_1}px solid {tokens.COLOR_BORDER};
+                border-radius: {tokens.RADIUS_MD}px;
+                padding: {tokens.GAP_16}px;
+                margin-top: {tokens.GAP_8}px;
                 font-weight: 600;
-                font-size: 14px;
+                font-size: {tokens.get_font_size('normal')}px;
                 font-family: '{cls.DEFAULT_FONT}';
-                color: {cls.COLORS['text_primary']};
+                color: {tokens.COLOR_TEXT_PRIMARY};
             }}
             QGroupBox::title {{
                 subcontrol-origin: margin;
-                left: 12px;
-                padding: 0 8px;
-                background-color: {cls.COLORS['bg_card']};
+                left: {tokens.GAP_12}px;
+                padding: 0 {tokens.GAP_8}px;
+                background-color: {tokens.COLOR_BG_CARD};
             }}
         """

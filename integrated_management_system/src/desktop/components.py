@@ -10,7 +10,7 @@ from PySide6.QtGui import QFont
 
 from .styles import AppStyles, IconConfig, LayoutConfig, WindowConfig
 from src.toolbox.ui_kit import ModernStyle
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit import tokens
 from src.foundation.logging import get_logger
 
 logger = get_logger("desktop.components")
@@ -62,14 +62,14 @@ class StatusWidget(QWidget):
     
     def setup_ui(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(ResponsiveUI.get_spacing('small'), ResponsiveUI.get_spacing('tiny'), 
-                                  ResponsiveUI.get_spacing('small'), ResponsiveUI.get_spacing('tiny'))
+        layout.setContentsMargins(tokens.GAP_8, tokens.GAP_4, 
+                                  tokens.GAP_8, tokens.GAP_4)
         
         self.status_label = QLabel("준비")
         self.status_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_secondary']};
-                font-size: {ResponsiveUI.get_font_size_pt('small')}pt;
+                font-size: {tokens.get_font_size('small')}px;
             }}
         """)
         
@@ -95,7 +95,7 @@ class StatusWidget(QWidget):
         self.status_label.setStyleSheet(f"""
             QLabel {{
                 color: {color};
-                font-size: {ResponsiveUI.get_font_size_pt('small')}pt;
+                font-size: {tokens.get_font_size('small')}px;
             }}
         """)
 
@@ -137,7 +137,7 @@ class LoadingWidget(QWidget):
         loading_label.setStyleSheet(f"""
             QLabel {{
                 color: {ModernStyle.COLORS['text_primary']};
-                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
+                font-size: {tokens.get_font_size('header')}px;
                 font-weight: 500;
             }}
         """)
@@ -179,16 +179,16 @@ class FeatureCardWidget(QWidget):
     
     def setup_ui(self):
         layout = QVBoxLayout()
-        margin = ResponsiveUI.get_spacing('normal')
+        margin = tokens.GAP_12
         layout.setContentsMargins(margin, margin, margin, margin)
-        layout.setSpacing(ResponsiveUI.get_spacing('small'))
+        layout.setSpacing(tokens.GAP_8)
         
         # 카드 스타일 - 반응형
         self.setStyleSheet(f"""
             QWidget {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
+                border-radius: {tokens.RADIUS_SM}px;
             }}
             QWidget:hover {{
                 border-color: {ModernStyle.COLORS['primary']};
@@ -200,13 +200,13 @@ class FeatureCardWidget(QWidget):
         header_layout = QHBoxLayout()
         
         icon_label = QLabel(self.icon)
-        icon_label.setStyleSheet(f"font-size: {ResponsiveUI.get_font_size_pt('title')}pt;")
+        icon_label.setStyleSheet(f"font-size: {tokens.get_font_size('title')}px;")
         header_layout.addWidget(icon_label)
         
         title_label = QLabel(self.title)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
+                font-size: {tokens.get_font_size('header')}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -219,7 +219,7 @@ class FeatureCardWidget(QWidget):
         desc_label = QLabel(self.description)
         desc_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                font-size: {tokens.get_font_size('normal')}px;
                 color: {ModernStyle.COLORS['text_secondary']};
                 line-height: 1.4;
             }}
@@ -250,18 +250,18 @@ class ModernButton(QPushButton):
     
     def setup_style(self):
         """버튼 스타일 설정 - 반응형"""
-        padding_v = ResponsiveUI.get_spacing('small')
-        padding_h = ResponsiveUI.get_spacing('normal')
+        padding_v = tokens.GAP_8
+        padding_h = tokens.GAP_12
         
         base_style = f"""
             QPushButton {{
                 border: none;
                 padding: {padding_v}px {padding_h}px;
-                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                border-radius: {tokens.RADIUS_SM}px;
+                font-size: {tokens.get_font_size('normal')}px;
                 font-weight: 600;
-                min-width: {ResponsiveUI.get_button_min_width()}px;
-                min-height: {ResponsiveUI.get_button_height()}px;
+                min-width: {tokens.BTN_W_MD}px;
+                min-height: {tokens.BTN_H_MD}px;
             }}
         """
         
@@ -339,22 +339,22 @@ class InfoPanel(QFrame):
             QFrame {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 border: 1px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.get_spacing('tiny')}px;
-                padding: {ResponsiveUI.get_spacing('normal')}px;
+                border-radius: {tokens.RADIUS_SM}px;
+                padding: {tokens.GAP_12}px;
             }}
         """)
         
         layout = QVBoxLayout()
-        layout.setSpacing(ResponsiveUI.get_spacing('small'))
+        layout.setSpacing(tokens.GAP_8)
         
         # 제목
         title_label = QLabel(self.title)
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {ResponsiveUI.get_font_size_pt('header')}pt;
+                font-size: {tokens.get_font_size('header')}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: {ResponsiveUI.get_spacing('small')}px;
+                margin-bottom: {tokens.GAP_8}px;
             }}
         """)
         layout.addWidget(title_label)
@@ -364,7 +364,7 @@ class InfoPanel(QFrame):
             content_label = QLabel(self.content)
             content_label.setStyleSheet(f"""
                 QLabel {{
-                    font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                    font-size: {tokens.get_font_size('normal')}px;
                     color: {ModernStyle.COLORS['text_secondary']};
                     line-height: 1.4;
                 }}

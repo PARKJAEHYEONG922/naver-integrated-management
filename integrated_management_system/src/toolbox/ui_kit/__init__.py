@@ -47,8 +47,8 @@ from .modern_table import (
     ModernTableContainer
 )
 
-# 반응형 UI 시스템
-from .responsive import ResponsiveUI
+# 디자인 토큰 시스템
+from . import tokens
 
 
 # 전체 export 목록
@@ -79,5 +79,5 @@ __all__ = [
     "set_rank_sort_data",
     "ModernTableWidget",
     "ModernTableContainer",
-    "ResponsiveUI"
+    "tokens"
 ]
