@@ -43,20 +43,19 @@ def get_common_step_styles() -> str:
     모든 step 위젯에서 동일한 헤더 스타일 사용
     """
     return f"""
-        QWidget {{
+        QWidget#step_root {{
             background-color: {ModernStyle.COLORS['bg_primary']};
         }}
-        QLabel[objectName="step_title"] {{
+        QWidget#step_root QLabel[objectName="step_title"] {{
             font-size: {tokens.get_font_size('title')}px;
             font-weight: 600;
             color: {ModernStyle.COLORS['text_primary']};
             margin-bottom: {tokens.GAP_8}px;
         }}
-        QLabel[objectName="step_subtitle"] {{
+        QWidget#step_root QLabel[objectName="step_subtitle"] {{
             font-size: {tokens.get_font_size('normal')}px;
             color: {ModernStyle.COLORS['text_secondary']};
             margin-bottom: {tokens.GAP_15}px;
-            line-height: 1.4;
         }}
     """
 
@@ -210,23 +209,6 @@ def apply_original_keyword_card_style(card, keyword_data, category_colors):
     """)
 
 
-def apply_keyword_card_styles(card_widget, card_color):
-    """키워드 카드에 스타일 적용"""
-    card_widget.setStyleSheet(f"""
-        QWidget {{
-            background-color: {card_color};
-            border: 2px solid {ModernStyle.BORDER_COLOR};
-            border-radius: 8px;
-            margin: 2px;
-        }}
-        QWidget:hover {{
-            border-color: {ModernStyle.PRIMARY_COLOR};
-            background-color: {card_color}CC;
-        }}
-    """)
-
-
-
 # KeywordCard 클래스는 create_keyword_card() 공용 함수로 대체되었습니다.
 
 
@@ -238,6 +220,7 @@ class Step1ResultWidget(QWidget):
     
     def __init__(self):
         super().__init__()
+        self.setObjectName("step_root")
         self.keyword_cards = []
         self.setup_ui()
         
@@ -509,6 +492,7 @@ class Step2BasicAnalysisWidget(QWidget):
     
     def __init__(self):
         super().__init__()
+        self.setObjectName("step_root")
         self.product_names = []
         self.current_prompt_type = "default"  # "default" or "custom"  
         self.current_prompt_content = ""      # 선택된 프롬프트 내용
@@ -843,6 +827,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
     
     def __init__(self):
         super().__init__()
+        self.setObjectName("step_root")
         self.product_names = []       # 2단계에서 받은 상품명들
         self.selected_prompt_type = "default"    # 2단계에서 선택된 프롬프트 타입
         self.selected_prompt_content = ""        # 2단계에서 선택된 프롬프트 내용
@@ -1358,10 +1343,12 @@ class Step4ResultWidget(QWidget):
     
     def __init__(self):
         super().__init__()
+        self.setObjectName("step_root")
         self.selected_keywords = []  # 3단계에서 선택된 키워드들
         self.product_name_stats = {}  # 2단계 상품명 통계
         self.generated_results = []  # AI가 생성한 결과들
         self.keyword_checkboxes = []  # 키워드 체크박스들
+        self.keyword_cards = []  # 키워드 카드들 추가
         self.setup_ui()
         
     def setup_ui(self):
@@ -1421,14 +1408,14 @@ class Step4ResultWidget(QWidget):
         info_label.setObjectName("info_text")
         layout.addWidget(info_label)
         
-        # 스크롤 영역 - Step 3과 동일하게 설정
+        # 스크롤 영역 - 너비와 높이 확장
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setMaximumHeight(500)  # 다시 500으로 복원
+        scroll_area.setMinimumHeight(400)  # 최소 2개 카드가 보이도록 높이 조정
         
         self.keyword_cards_container = QWidget()
-        self.keyword_cards_container.setMinimumHeight(480)  # 스크롤 영역을 제대로 활용하도록 최소 높이 설정
+        self.keyword_cards_container.setMinimumHeight(400)  # 키워드 카드 컨테이너 높이 조정
         self.keyword_cards_layout = QVBoxLayout(self.keyword_cards_container)
         self.keyword_cards_layout.setSpacing(tokens.GAP_8)
         self.keyword_cards_layout.setContentsMargins(0, 0, 0, 0)
@@ -1571,6 +1558,7 @@ class Step4ResultWidget(QWidget):
                 item.widget().deleteLater()
         
         self.keyword_checkboxes = []
+        self.keyword_cards = []  # 카드 목록 초기화
         
         if self.selected_keywords:
             for keyword in self.selected_keywords:
@@ -1593,6 +1581,9 @@ class Step4ResultWidget(QWidget):
                 
                 # Step 3처럼 세로로 배치
                 self.keyword_cards_layout.addWidget(keyword_card)
+                
+                # 카드 목록에 추가
+                self.keyword_cards.append(keyword_card)
                 
             # 첫 번째 키워드 기본 선택
             if self.keyword_checkboxes:
@@ -1638,15 +1629,14 @@ class Step4ResultWidget(QWidget):
     
     def generate_product_names(self):
         """AI 상품명 생성"""
-        # 선택된 키워드 찾기 (단일 선택)
-        selected_keyword = None
-        for i, checkbox in enumerate(self.keyword_checkboxes):
-            if checkbox.isChecked() and i < len(self.selected_keywords):
-                selected_keyword = self.selected_keywords[i]
-                break
-        
-        if not selected_keyword:
+        # 선택된 키워드 찾기 (단일 선택) - 인덱스 취약성 해결
+        selected_card = next((c for c in self.keyword_cards
+                              if hasattr(c, 'selection_button') and c.selection_button and c.selection_button.isChecked()),
+                             None)
+        if not selected_card:
             return
+        
+        selected_keyword = selected_card.keyword_data
         
         # 상품정보 수집
         product_info = {
@@ -1724,11 +1714,6 @@ class Step4ResultWidget(QWidget):
             QLineEdit:focus {{
                 border-color: {ModernStyle.COLORS['primary']};
                 background-color: {ModernStyle.COLORS['bg_card']};
-            }}
-            QRadioButton[objectName="core_keyword_radio"] {{
-                font-size: {tokens.get_font_size('normal')}px;
-                color: {ModernStyle.COLORS['text_primary']};
-                padding: {tokens.GAP_6}px;
             }}
             QTextEdit {{
                 background-color: {ModernStyle.COLORS['bg_input']};
