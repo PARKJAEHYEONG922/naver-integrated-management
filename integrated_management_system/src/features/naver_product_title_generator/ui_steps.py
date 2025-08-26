@@ -10,8 +10,53 @@ from PySide6.QtCore import Qt, Signal
 
 from src.toolbox.ui_kit.modern_style import ModernStyle
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernCancelButton, ModernCard
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit import tokens
 from src.toolbox.formatters import format_int
+
+
+def create_step_header(title: str, subtitle: str = None) -> QVBoxLayout:
+    """공용 단계 헤더 생성 메서드
+    모든 단계가 동일한 레이아웃과 스타일을 사용
+    """
+    header_layout = QVBoxLayout()
+    header_layout.setSpacing(tokens.GAP_8)
+    header_layout.setContentsMargins(0, 0, 0, tokens.GAP_15)
+    
+    # 메인 제목
+    title_label = QLabel(title)
+    title_label.setObjectName("step_title")
+    header_layout.addWidget(title_label)
+    
+    # 부제목 (선택적)
+    if subtitle:
+        subtitle_label = QLabel(subtitle)
+        subtitle_label.setObjectName("step_subtitle")
+        header_layout.addWidget(subtitle_label)
+    
+    return header_layout
+
+
+def get_common_step_styles() -> str:
+    """공용 단계 스타일 반환
+    모든 step 위젯에서 동일한 헤더 스타일 사용
+    """
+    return f"""
+        QWidget {{
+            background-color: {ModernStyle.COLORS['bg_primary']};
+        }}
+        QLabel[objectName="step_title"] {{
+            font-size: {tokens.get_font_size('title')}px;
+            font-weight: 600;
+            color: {ModernStyle.COLORS['text_primary']};
+            margin-bottom: {tokens.GAP_8}px;
+        }}
+        QLabel[objectName="step_subtitle"] {{
+            font-size: {tokens.get_font_size('normal')}px;
+            color: {ModernStyle.COLORS['text_secondary']};
+            margin-bottom: {tokens.GAP_15}px;
+            line-height: 1.4;
+        }}
+    """
 
 
 
@@ -29,9 +74,9 @@ class KeywordCard(QFrame):
     def setup_ui(self):
         self.setObjectName("keyword_card")
         layout = QHBoxLayout()
-        margin_h = ResponsiveUI.scale(15)
-        margin_v = ResponsiveUI.scale(12)
-        spacing = ResponsiveUI.scale(15)
+        margin_h = tokens.GAP_15
+        margin_v = tokens.GAP_12
+        spacing = tokens.GAP_15
         layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
         layout.setSpacing(spacing)
         
@@ -42,7 +87,7 @@ class KeywordCard(QFrame):
         
         # 키워드 정보
         info_layout = QVBoxLayout()
-        info_spacing = ResponsiveUI.scale(4)
+        info_spacing = tokens.GAP_4
         info_layout.setSpacing(info_spacing)
         
         # 키워드명 (크게)
@@ -74,12 +119,12 @@ class KeywordCard(QFrame):
         # 카테고리별 색상 결정
         category_color = self.get_category_color()
         
-        border_radius = ResponsiveUI.scale(8)
-        margin = ResponsiveUI.scale(2)
-        name_font_size = ResponsiveUI.get_font_size_pt('large')
-        details_font_size = ResponsiveUI.get_font_size_pt('normal')
-        checkbox_size = ResponsiveUI.scale(18)
-        checkbox_border_radius = ResponsiveUI.scale(4)
+        border_radius = tokens.GAP_8
+        margin = 2
+        name_font_size = tokens.get_font_size('large')
+        details_font_size = tokens.get_font_size('normal')
+        checkbox_size = 18
+        checkbox_border_radius = tokens.GAP_4
         
         self.setStyleSheet(f"""
             QFrame[objectName="keyword_card"] {{
@@ -93,12 +138,12 @@ class KeywordCard(QFrame):
                 border-color: {category_color};
             }}
             QLabel[objectName="keyword_name"] {{
-                font-size: {name_font_size}pt;
+                font-size: {name_font_size}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
             QLabel[objectName="keyword_details"] {{
-                font-size: {details_font_size}pt;
+                font-size: {details_font_size}px;
                 color: {ModernStyle.COLORS['text_secondary']};
             }}
             QCheckBox::indicator {{
@@ -141,30 +186,29 @@ class Step1ResultWidget(QWidget):
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        margin = ResponsiveUI.scale(20)
-        spacing = ResponsiveUI.scale(15)
+        margin = tokens.GAP_20
+        spacing = tokens.GAP_15
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
         # 헤더
-        header_label = QLabel("1️⃣ 키워드 분석 결과")
-        header_label.setObjectName("step_title")
-        layout.addWidget(header_label)
+        header_layout = create_step_header(
+            "1️⃣ 키워드 분석 결과",
+            "판매하려는 상품과 같은 카테고리의 키워드를 선택해주세요. (중복가능)"
+        )
+        layout.addLayout(header_layout)
         
-        # 안내 텍스트 + 전체선택 버튼
-        header_layout = QHBoxLayout()
-        guide_text = QLabel("판매하려는 상품과 같은 카테고리의 키워드를 선택해주세요. (중복가능)")
-        guide_text.setObjectName("guide_text")
-        header_layout.addWidget(guide_text)
-        header_layout.addStretch()
+        # 전체선택 버튼
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
         
         self.select_all_button = QPushButton("전체선택")
         self.select_all_button.setObjectName("select_all_btn")
         self.select_all_button.clicked.connect(self.toggle_all_selection)
         self.select_all_button.setMaximumWidth(80)
-        header_layout.addWidget(self.select_all_button)
+        button_layout.addWidget(self.select_all_button)
         
-        layout.addLayout(header_layout)
+        layout.addLayout(button_layout)
         
         # 스크롤 가능한 키워드 카드 리스트
         scroll_area = QScrollArea()
@@ -368,21 +412,8 @@ class Step1ResultWidget(QWidget):
         return False
         
     def apply_styles(self):
-        self.setStyleSheet(f"""
-            QWidget {{
-                background-color: {ModernStyle.COLORS['bg_primary']};
-            }}
-            QLabel[objectName="step_title"] {{
-                font-size: 20px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 10px;
-            }}
-            QLabel[objectName="guide_text"] {{
-                font-size: 14px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                margin-bottom: 10px;
-            }}
+        common_styles = get_common_step_styles()
+        step1_specific = f"""
             QPushButton[objectName="select_all_btn"] {{
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 color: {ModernStyle.COLORS['text_primary']};
@@ -397,7 +428,8 @@ class Step1ResultWidget(QWidget):
                 color: white;
                 border-color: {ModernStyle.COLORS['primary']};
             }}
-        """)
+        """
+        self.setStyleSheet(common_styles + step1_specific)
 
 
 class Step2BasicAnalysisWidget(QWidget):
@@ -416,24 +448,16 @@ class Step2BasicAnalysisWidget(QWidget):
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        margin = ResponsiveUI.scale(20)
-        spacing = ResponsiveUI.scale(15)
+        margin = tokens.GAP_20
+        spacing = tokens.GAP_15
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
         # 헤더
-        header_layout = QVBoxLayout()
-        header_spacing = ResponsiveUI.scale(8)
-        header_layout.setSpacing(header_spacing)
-        
-        title = QLabel("2️⃣ 상품명 수집 결과")
-        title.setObjectName("step_title")
-        header_layout.addWidget(title)
-        
-        subtitle = QLabel("상위 상품명들을 수집하였습니다. AI프롬프트 변경을 원하시면 변경하시고 다음으로 넘어가주세요.")
-        subtitle.setObjectName("step_subtitle")
-        header_layout.addWidget(subtitle)
-        
+        header_layout = create_step_header(
+            "2️⃣ 상품명 수집 결과",
+            "상위 상품명들을 수집하였습니다. AI프롬프트 변경을 원하시면 변경하시고 다음으로 넘어가주세요."
+        )
         layout.addLayout(header_layout)
         
         # 통계 정보 카드
@@ -444,13 +468,13 @@ class Step2BasicAnalysisWidget(QWidget):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_min_height = ResponsiveUI.scale(250)
+        scroll_min_height = 250
         scroll_area.setMinimumHeight(scroll_min_height)
         
         self.content_container = QWidget()
         self.content_layout = QVBoxLayout(self.content_container)
-        content_spacing = ResponsiveUI.scale(5)
-        content_margin = ResponsiveUI.scale(10)
+        content_spacing = 5
+        content_margin = tokens.GAP_10
         self.content_layout.setSpacing(content_spacing)
         self.content_layout.setContentsMargins(content_margin, content_margin, content_margin, content_margin)
         
@@ -692,21 +716,8 @@ class Step2BasicAnalysisWidget(QWidget):
         return True
     
     def apply_styles(self):
-        self.setStyleSheet(f"""
-            QWidget {{
-                background-color: {ModernStyle.COLORS['bg_primary']};
-            }}
-            QLabel[objectName="step_title"] {{
-                font-size: 22px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 5px;
-            }}
-            QLabel[objectName="step_subtitle"] {{
-                font-size: 14px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                margin-bottom: 15px;
-            }}
+        common_styles = get_common_step_styles()
+        step2_specific = f"""
             QFrame[objectName="stats_card"] {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 border: 1px solid {ModernStyle.COLORS['border']};
@@ -749,7 +760,8 @@ class Step2BasicAnalysisWidget(QWidget):
                 font-size: 12px;
                 color: {ModernStyle.COLORS['text_secondary']};
             }}
-        """)
+        """
+        self.setStyleSheet(common_styles + step2_specific)
 
 
 class Step3AdvancedAnalysisWidget(QWidget):
@@ -783,17 +795,10 @@ class Step3AdvancedAnalysisWidget(QWidget):
         layout.setSpacing(15)
         
         # 헤더
-        header_layout = QVBoxLayout()
-        header_layout.setSpacing(8)
-        
-        title = QLabel("3️⃣ AI 키워드 분석")
-        title.setObjectName("step_title")
-        header_layout.addWidget(title)
-        
-        subtitle = QLabel("선택된 프롬프트로 상품명을 AI 분석하여 키워드를 추출합니다. AI 분석 시작 버튼을 눌러주세요.")
-        subtitle.setObjectName("step_subtitle")
-        header_layout.addWidget(subtitle)
-        
+        header_layout = create_step_header(
+            "3️⃣ AI 분석 결과",
+            "선택된 프롬프트로 상품명을 AI 분석하여 키워드를 추출합니다. AI 분석 시작 버튼을 눌러주세요."
+        )
         layout.addLayout(header_layout)
         
         # 분석 설정 요약 카드
@@ -808,46 +813,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.setLayout(layout)
         self.apply_styles()
     
-    def apply_styles(self):
-        """3단계 스타일 적용"""
-        self.setStyleSheet(f"""
-            QWidget {{
-                background-color: {ModernStyle.COLORS['bg_primary']};
-            }}
-            QLabel[objectName="step_title"] {{
-                font-size: 22px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 5px;
-            }}
-            QLabel[objectName="step_subtitle"] {{
-                font-size: 14px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                margin-bottom: 15px;
-            }}
-            QLabel[objectName="summary_title"] {{
-                font-size: 20px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 10px;
-            }}
-            QLabel[objectName="result_title"] {{
-                font-size: 20px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 10px;
-            }}
-            QLabel[objectName="summary_stat"] {{
-                font-size: 13px;
-                font-weight: 500;
-                color: {ModernStyle.COLORS['text_primary']};
-                padding: 5px 10px;
-                background-color: {ModernStyle.COLORS['bg_secondary']};
-                border-radius: 4px;
-                margin-right: 10px;
-            }}
-        """)
-        
+    
     def create_summary_card(self):
         """분석 설정 요약 카드"""
         from src.toolbox.ui_kit.components import ModernCard
@@ -1017,13 +983,6 @@ class Step3AdvancedAnalysisWidget(QWidget):
         # 전체선택 버튼 활성화
         self.select_all_button.setEnabled(True)
     
-    def clear_keyword_checkboxes(self):
-        """기존 키워드 카드들 정리"""
-        # 기존 KeywordCard들 제거
-        for keyword_card in self.keyword_checkboxes:
-            keyword_card.setParent(None)
-        
-        self.keyword_checkboxes.clear()
     
     def get_selected_keywords(self):
         """선택된 키워드 리스트 반환"""
@@ -1228,21 +1187,8 @@ class Step3AdvancedAnalysisWidget(QWidget):
         self.select_all_button.setText("전체선택")
         
     def apply_styles(self):
-        self.setStyleSheet(f"""
-            QWidget {{
-                background-color: {ModernStyle.COLORS['bg_primary']};
-            }}
-            QLabel[objectName="step_title"] {{
-                font-size: 22px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['text_primary']};
-                margin-bottom: 5px;
-            }}
-            QLabel[objectName="step_subtitle"] {{
-                font-size: 14px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                margin-bottom: 15px;
-            }}
+        common_styles = get_common_step_styles()
+        step3_specific = f"""
             QFrame[objectName="summary_card"] {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 border: 1px solid {ModernStyle.COLORS['border']};
@@ -1276,7 +1222,8 @@ class Step3AdvancedAnalysisWidget(QWidget):
                 border-radius: 8px;
                 margin: 10px 0;
             }}
-        """)
+        """
+        self.setStyleSheet(common_styles + step3_specific)
 
 
 class Step4ResultWidget(QWidget):
@@ -1296,17 +1243,10 @@ class Step4ResultWidget(QWidget):
         layout.setSpacing(25)
         
         # 헤더
-        header_layout = QVBoxLayout()
-        header_layout.setSpacing(10)
-        
-        title = QLabel("🎉 SEO 최적화 상품명 생성 완료!")
-        title.setObjectName("step_title")
-        header_layout.addWidget(title)
-        
-        subtitle = QLabel("점수가 높은 순으로 정렬된 상품명들입니다")
-        subtitle.setObjectName("step_subtitle")
-        header_layout.addWidget(subtitle)
-        
+        header_layout = create_step_header(
+            "4️⃣ 상품명 생성 결과",
+            "점수가 높은 순으로 정렬된 상품명들입니다"
+        )
         layout.addLayout(header_layout)
         
         # 결과 영역 (임시 플레이스홀더)
@@ -1413,20 +1353,11 @@ class Step4ResultWidget(QWidget):
         # 성공 메시지 표시 (추후 구현)
         
     def apply_styles(self):
-        self.setStyleSheet(f"""
-            QWidget {{
-                background-color: {ModernStyle.COLORS['bg_primary']};
-            }}
+        common_styles = get_common_step_styles()
+        # 4단계는 성공 상태 제목 색상 오버라이드
+        step4_specific = f"""
             QLabel[objectName="step_title"] {{
-                font-size: 24px;
-                font-weight: 600;
-                color: {ModernStyle.COLORS['success']};
-                margin-bottom: 5px;
-            }}
-            QLabel[objectName="step_subtitle"] {{
-                font-size: 16px;
-                color: {ModernStyle.COLORS['text_secondary']};
-                margin-bottom: 20px;
+                color: {ModernStyle.COLORS['success']} !important;
             }}
             QFrame[objectName="summary_card"] {{
                 background-color: {ModernStyle.COLORS['bg_card']};
@@ -1448,4 +1379,5 @@ class Step4ResultWidget(QWidget):
                 border-radius: 6px;
                 margin-right: 10px;
             }}
-        """)
+        """
+        self.setStyleSheet(common_styles + step4_specific)

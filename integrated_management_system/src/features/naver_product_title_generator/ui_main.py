@@ -11,7 +11,7 @@ from PySide6.QtCore import Qt, Signal
 from src.toolbox.ui_kit.modern_style import ModernStyle
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernCancelButton, ModernHelpButton, ModernCard, ModernProgressBar
 from src.toolbox.ui_kit.modern_dialog import ModernConfirmDialog
-from src.toolbox.ui_kit.responsive import ResponsiveUI
+from src.toolbox.ui_kit import tokens
 from src.desktop.common_log import log_manager
 
 from .ui_steps import (
@@ -37,9 +37,9 @@ class LeftPanel(QWidget):
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        margin_h = ResponsiveUI.scale(12)
-        margin_v = ResponsiveUI.scale(16)
-        spacing = ResponsiveUI.scale(16)
+        margin_h = tokens.GAP_12
+        margin_v = tokens.GAP_16
+        spacing = tokens.GAP_16
         layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
         layout.setSpacing(spacing)
         
@@ -59,7 +59,7 @@ class LeftPanel(QWidget):
         """진행상황 표시 카드"""
         card = ModernCard("📊 진행상황")
         layout = QVBoxLayout(card)
-        margin = ResponsiveUI.scale(12)
+        margin = tokens.GAP_12
         layout.setContentsMargins(margin, margin, margin, margin)
         
         # 현재 단계
@@ -86,16 +86,16 @@ class LeftPanel(QWidget):
         
         card = ModernCard("📝 핵심제품명 입력")
         layout = QVBoxLayout(card)
-        margin = ResponsiveUI.scale(12)
-        spacing = ResponsiveUI.scale(10)
+        margin = tokens.GAP_12
+        spacing = tokens.GAP_10
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
         # 입력 필드 (확장된 크기)
         self.product_input = QTextEdit()
         self.product_input.setPlaceholderText("키워드를 입력해주세요 (엔터 또는 , 로 구분)")
-        min_height = ResponsiveUI.scale(120)
-        max_height = ResponsiveUI.scale(150)
+        min_height = 120
+        max_height = 150
         self.product_input.setMinimumHeight(min_height)
         self.product_input.setMaximumHeight(max_height)
         
@@ -107,11 +107,11 @@ class LeftPanel(QWidget):
         
         # 버튼들
         button_layout = QHBoxLayout()
-        button_spacing = ResponsiveUI.scale(8)
+        button_spacing = tokens.GAP_8
         button_layout.setSpacing(button_spacing)
         
         self.start_button = ModernPrimaryButton("🔍 분석시작")
-        button_height = ResponsiveUI.scale(40)
+        button_height = tokens.GAP_40
         self.start_button.setMinimumHeight(button_height)
         self.start_button.clicked.connect(self.on_start_analysis)
         button_layout.addWidget(self.start_button)
@@ -169,22 +169,22 @@ class LeftPanel(QWidget):
                 background-color: {ModernStyle.COLORS['bg_primary']};
             }}
             QLabel[objectName="step_info"] {{
-                font-size: {ResponsiveUI.get_font_size_pt('large')}pt;
+                font-size: {tokens.get_font_size('large')}px;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['primary']};
-                margin: {ResponsiveUI.scale(4)}px 0px;
+                margin: {tokens.GAP_4}px 0px;
             }}
             QLabel[objectName="status_info"] {{
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                font-size: {tokens.get_font_size('normal')}px;
                 color: {ModernStyle.COLORS['text_secondary']};
-                margin: {ResponsiveUI.scale(6)}px 0px;
+                margin: {tokens.GAP_6}px 0px;
             }}
             QTextEdit {{
                 background-color: {ModernStyle.COLORS['bg_input']};
                 border: 2px solid {ModernStyle.COLORS['border']};
-                border-radius: {ResponsiveUI.scale(8)}px;
-                padding: {ResponsiveUI.scale(16)}px;
-                font-size: {ResponsiveUI.get_font_size_pt('normal')}pt;
+                border-radius: {tokens.GAP_8}px;
+                padding: {tokens.GAP_16}px;
+                font-size: {tokens.get_font_size('normal')}px;
                 color: {ModernStyle.COLORS['text_primary']};
                 font-family: 'Segoe UI', sans-serif;
             }}
@@ -210,8 +210,8 @@ class RightPanel(QWidget):
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        margin = ResponsiveUI.scale(20)
-        spacing = ResponsiveUI.scale(15)
+        margin = tokens.GAP_20
+        spacing = tokens.GAP_15
         layout.setContentsMargins(margin, margin, margin, margin)
         layout.setSpacing(spacing)
         
@@ -219,8 +219,8 @@ class RightPanel(QWidget):
         nav_layout = QHBoxLayout()
         
         self.prev_button = ModernCancelButton("◀ 이전")
-        button_height = ResponsiveUI.scale(40)
-        button_width = ResponsiveUI.scale(120)
+        button_height = tokens.GAP_40
+        button_width = 120
         self.prev_button.setFixedHeight(button_height)
         self.prev_button.setFixedWidth(button_width)
         self.prev_button.setEnabled(False)
@@ -245,13 +245,14 @@ class RightPanel(QWidget):
         
         # 하단 초기화 버튼
         reset_layout = QHBoxLayout()
-        reset_layout.addStretch()
         
         self.reset_button = ModernCancelButton("🔄 초기화")
-        reset_button_height = ResponsiveUI.scale(40)
+        reset_button_height = tokens.GAP_40
         self.reset_button.setMinimumHeight(reset_button_height)
         self.reset_button.clicked.connect(self.reset_all.emit)
         reset_layout.addWidget(self.reset_button)
+        
+        reset_layout.addStretch()
         
         layout.addLayout(reset_layout)
         
@@ -314,8 +315,8 @@ class NaverProductTitleGeneratorWidget(QWidget):
     def setup_ui(self):
         """UI 구성 - 새로운 레이아웃"""
         main_layout = QVBoxLayout(self)
-        margin = ResponsiveUI.scale(20)
-        spacing = ResponsiveUI.scale(20)
+        margin = tokens.GAP_20
+        spacing = tokens.GAP_20
         main_layout.setContentsMargins(margin, margin, margin, margin)
         main_layout.setSpacing(spacing)
         
@@ -324,12 +325,12 @@ class NaverProductTitleGeneratorWidget(QWidget):
         
         # 콘텐츠 레이아웃 (왼쪽: 진행상황+입력, 오른쪽: 결과+네비게이션)
         content_layout = QHBoxLayout()
-        content_spacing = ResponsiveUI.scale(20)
+        content_spacing = tokens.GAP_20
         content_layout.setSpacing(content_spacing)
         
         # 왼쪽 패널 (진행상황 + 핵심제품명 입력)
         self.left_panel = LeftPanel()
-        left_panel_width = ResponsiveUI.scale(280)
+        left_panel_width = 320
         self.left_panel.setFixedWidth(left_panel_width)
         content_layout.addWidget(self.left_panel)
         
@@ -352,10 +353,10 @@ class NaverProductTitleGeneratorWidget(QWidget):
         
         # 제목
         title_label = QLabel("🏷️ 네이버 상품명 생성기")
-        title_font_size = ResponsiveUI.get_font_size_pt('title')
+        title_font_size = tokens.get_font_size('title')
         title_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {title_font_size}pt;
+                font-size: {title_font_size}px;
                 font-weight: 700;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
@@ -372,13 +373,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
         
         # 현재 AI 모델 표시 (제일 오른쪽)
         self.ai_model_label = QLabel("AI 모델: 설정 중...")
-        model_font_size = ResponsiveUI.get_font_size_pt('normal')
-        model_padding_v = ResponsiveUI.scale(6)
-        model_padding_h = ResponsiveUI.scale(12)
-        model_border_radius = ResponsiveUI.scale(6)
+        model_font_size = tokens.get_font_size('normal')
+        model_padding_v = tokens.GAP_6
+        model_padding_h = 12
+        model_border_radius = tokens.GAP_6
         self.ai_model_label.setStyleSheet(f"""
             QLabel {{
-                font-size: {model_font_size}pt;
+                font-size: {model_font_size}px;
                 color: {ModernStyle.COLORS['text_secondary']};
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 padding: {model_padding_v}px {model_padding_h}px;
@@ -434,13 +435,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
                 # 모델명 간소화 표시
                 if "무료" in current_model or "최신" in current_model:
                     self.ai_model_label.setText(f"🤖 AI: {current_model}")
-                    success_font_size = ResponsiveUI.get_font_size_pt('normal')
-                    success_padding_v = ResponsiveUI.scale(6)
-                    success_padding_h = ResponsiveUI.scale(12)
-                    success_border_radius = ResponsiveUI.scale(6)
+                    success_font_size = tokens.get_font_size('normal')
+                    success_padding_v = tokens.GAP_6
+                    success_padding_h = 12
+                    success_border_radius = tokens.GAP_6
                     self.ai_model_label.setStyleSheet(f"""
                         QLabel {{
-                            font-size: {success_font_size}pt;
+                            font-size: {success_font_size}px;
                             color: {ModernStyle.COLORS['success']};
                             background-color: {ModernStyle.COLORS['bg_secondary']};
                             padding: {success_padding_v}px {success_padding_h}px;
@@ -451,13 +452,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
                     """)
                 elif "유료" in current_model:
                     self.ai_model_label.setText(f"🤖 AI: {current_model}")
-                    primary_font_size = ResponsiveUI.get_font_size_pt('normal')
-                    primary_padding_v = ResponsiveUI.scale(6)
-                    primary_padding_h = ResponsiveUI.scale(12)
-                    primary_border_radius = ResponsiveUI.scale(6)
+                    primary_font_size = tokens.get_font_size('normal')
+                    primary_padding_v = tokens.GAP_6
+                    primary_padding_h = 12
+                    primary_border_radius = tokens.GAP_6
                     self.ai_model_label.setStyleSheet(f"""
                         QLabel {{
-                            font-size: {primary_font_size}pt;
+                            font-size: {primary_font_size}px;
                             color: {ModernStyle.COLORS['primary']};
                             background-color: {ModernStyle.COLORS['bg_secondary']};
                             padding: {primary_padding_v}px {primary_padding_h}px;
@@ -468,13 +469,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
                     """)
                 else:
                     self.ai_model_label.setText(f"🤖 AI: {current_model}")
-                    default_font_size = ResponsiveUI.get_font_size_pt('normal')
-                    default_padding_v = ResponsiveUI.scale(6)
-                    default_padding_h = ResponsiveUI.scale(12)
-                    default_border_radius = ResponsiveUI.scale(6)
+                    default_font_size = tokens.get_font_size('normal')
+                    default_padding_v = tokens.GAP_6
+                    default_padding_h = 12
+                    default_border_radius = tokens.GAP_6
                     self.ai_model_label.setStyleSheet(f"""
                         QLabel {{
-                            font-size: {default_font_size}pt;
+                            font-size: {default_font_size}px;
                             color: {ModernStyle.COLORS['text_secondary']};
                             background-color: {ModernStyle.COLORS['bg_secondary']};
                             padding: {default_padding_v}px {default_padding_h}px;
@@ -484,13 +485,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
                     """)
             else:
                 self.ai_model_label.setText("⚠️ AI 모델 미설정")
-                warning_font_size = ResponsiveUI.get_font_size_pt('normal')
-                warning_padding_v = ResponsiveUI.scale(6)
-                warning_padding_h = ResponsiveUI.scale(12)
-                warning_border_radius = ResponsiveUI.scale(6)
+                warning_font_size = tokens.get_font_size('normal')
+                warning_padding_v = tokens.GAP_6
+                warning_padding_h = 12
+                warning_border_radius = tokens.GAP_6
                 self.ai_model_label.setStyleSheet(f"""
                     QLabel {{
-                        font-size: {warning_font_size}pt;
+                        font-size: {warning_font_size}px;
                         color: {ModernStyle.COLORS['warning']};
                         background-color: {ModernStyle.COLORS['bg_secondary']};
                         padding: {warning_padding_v}px {warning_padding_h}px;
@@ -501,13 +502,13 @@ class NaverProductTitleGeneratorWidget(QWidget):
                 
         except Exception as e:
             self.ai_model_label.setText("❌ AI 모델 로드 실패")
-            error_font_size = ResponsiveUI.get_font_size_pt('normal')
-            error_padding_v = ResponsiveUI.scale(6)
-            error_padding_h = ResponsiveUI.scale(12)
-            error_border_radius = ResponsiveUI.scale(6)
+            error_font_size = tokens.get_font_size('normal')
+            error_padding_v = tokens.GAP_6
+            error_padding_h = 12
+            error_border_radius = tokens.GAP_6
             self.ai_model_label.setStyleSheet(f"""
                 QLabel {{
-                    font-size: {error_font_size}pt;
+                    font-size: {error_font_size}px;
                     color: {ModernStyle.COLORS['danger']};
                     background-color: {ModernStyle.COLORS['bg_secondary']};
                     padding: {error_padding_v}px {error_padding_h}px;

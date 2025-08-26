@@ -42,15 +42,11 @@ def load_features(app):
         register_powerlink(app)
         logger.info("PowerLink 분석기 모듈 로드 완료")
         
-        try:
-            # 네이버 상품명 생성기 기능 (토큰 변환 확인 필요)
-            logger.info("네이버 상품명 생성기 모듈 로드 시도")
-            from src.features.naver_product_title_generator.ui_main import NaverProductTitleGeneratorWidget
-            naver_product_widget = NaverProductTitleGeneratorWidget()
-            app.add_feature_tab(naver_product_widget, "네이버 상품명 생성기")
-            logger.info("네이버 상품명 생성기 모듈 로드 완료")
-        except Exception as e:
-            logger.warning(f"네이버 상품명 생성기 모듈 로드 실패 (토큰 변환 필요할 수 있음): {e}")
+        # 네이버 상품명 생성기 기능 로드 및 등록 (토큰 변환 완료)
+        logger.info("네이버 상품명 생성기 모듈 로드 시작")
+        from src.features.naver_product_title_generator import register as register_naver_product_title
+        register_naver_product_title(app)
+        logger.info("네이버 상품명 생성기 모듈 로드 완료")
         
         logger.info("기능 모듈 로드 완료 (일부 모듈은 토큰 변환 후 사용 가능)")
         
