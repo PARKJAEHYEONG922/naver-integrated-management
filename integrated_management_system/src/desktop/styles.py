@@ -134,9 +134,9 @@ class WindowConfig:
                 screen = app.primaryScreen()
                 screen_size = screen.availableGeometry()
                 
-                # 화면의 65% 크기로 설정 (적당한 기본 크기)
-                width = int(screen_size.width() * 0.65)
-                height = int(screen_size.height() * 0.7)
+                # 화면의 70% 크기로 설정 (적당한 기본 크기)
+                width = int(screen_size.width() * 0.7)
+                height = int(screen_size.height() * 0.75)
                 
                 # 최소/최대 크기 제한
                 width = max(1200, min(width, 2400))

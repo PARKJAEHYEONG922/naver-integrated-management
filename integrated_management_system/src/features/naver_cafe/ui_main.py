@@ -46,7 +46,7 @@ class NaverCafeWidget(QWidget):
         # 좌측 패널 (컨트롤 위젯)
         self.control_widget = NaverCafeControlWidget()
         # 좌측 패널 최대 너비 제한 (ResponsiveUI 스케일 값들 때문에 너무 커지는 것 방지)
-        self.control_widget.setMaximumWidth(500)
+        self.control_widget.setMaximumWidth(600)
         
         # 우측 패널 (결과 위젯)
         self.results_widget = NaverCafeResultsWidget()
@@ -59,9 +59,9 @@ class NaverCafeWidget(QWidget):
         self.control_widget.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         self.results_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
-        # 1:1 비율로 좌우 패널 배치
-        content_layout.addWidget(self.control_widget, 1)  # 50%
-        content_layout.addWidget(self.results_widget, 1)  # 50%
+        # 좌측 제어 패널을 더 넓게 배치 (3:2 비율)
+        content_layout.addWidget(self.control_widget, 3)  # 60%
+        content_layout.addWidget(self.results_widget, 2)  # 40%
         
         main_layout.addLayout(content_layout)
         

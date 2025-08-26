@@ -47,7 +47,8 @@
       "Bash(done)",
       "Bash(__NEW_LINE__ for file in naver_cafe/ui_list.py naver_cafe/ui_table.py naver_product_title_generator/ui_main.py naver_product_title_generator/ui_steps.py powerlink_analyzer/ui_list.py powerlink_analyzer/ui_main.py powerlink_analyzer/ui_table.py rank_tracking/ui_list.py rank_tracking/ui_main.py rank_tracking/ui_table.py)",
       "Bash(echo:*)",
-      "Bash(__NEW_LINE__ sed -i 's/border-radius: {[0-9]*px;/border-radius: \\1px;/g' naver_cafe/ui_list.py)"
+      "Bash(__NEW_LINE__ sed -i 's/border-radius: {[0-9]*px;/border-radius: \\1px;/g' naver_cafe/ui_list.py)",
+      "Bash(diff:*)"
     ],
     "deny": []
   }

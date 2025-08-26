@@ -269,7 +269,7 @@ class NaverCafeControlWidget(QWidget):
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("카페명 또는 URL을 입력하세요")
         # 입력 필드와 버튼의 높이를 동일하게 설정
-        input_height = tokens.GAP_32  # 패딩 포함한 총 높이
+        input_height = tokens.GAP_36  # 패딩 포함한 총 높이
         self.search_input.setFixedHeight(input_height)
         self.search_input.setStyleSheet(f"""
             QLineEdit {{

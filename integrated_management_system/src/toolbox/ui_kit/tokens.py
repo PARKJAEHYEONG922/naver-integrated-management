@@ -4,12 +4,12 @@
 """
 
 # ---- Typography (px) --------------------------------------------------------
-FONT_TITLE  = 18
-FONT_HEADER = 16
-FONT_LARGE  = 14
-FONT_NORMAL = 12
-FONT_SMALL  = 10
-FONT_TINY   = 9
+FONT_TITLE  = 20
+FONT_HEADER = 18
+FONT_LARGE  = 16
+FONT_NORMAL = 14
+FONT_SMALL  = 12
+FONT_TINY   = 11
 
 # 선택: 접근성용 가변 배율 (원하면 1.0 고정)
 USER_TEXT_SCALE = 1.0
