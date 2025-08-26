@@ -1008,21 +1008,18 @@ class NaverProductTitleGeneratorWidget(QWidget):
             length_stats=length_stats
         )
         
-        # Step 3와 동일한 AI 워커 사용 (상품명 생성용)
-        from .worker import AIAnalysisWorker, worker_manager
+        # 4단계 전용 AI 상품명 생성 워커 사용
+        from .worker import ProductNameGenerationWorker, worker_manager
         
-        self.current_ai_generation_worker = AIAnalysisWorker(
-            product_names=[],  # 상품명 생성에서는 빈 리스트
-            prompt=prompt_content,  # 생성된 프롬프트 전달
-            selected_keywords=selected_keywords,  # 선택된 키워드들
-            selected_category=""  # 상품명 생성에서는 카테고리 불필요
+        self.current_ai_generation_worker = ProductNameGenerationWorker(
+            prompt=prompt_content  # 완성된 프롬프트 전달
         )
         
         # 시그널 연결
         self.current_ai_generation_worker.progress_updated.connect(
             lambda progress, message: self.left_panel.update_progress(4, f"AI 상품명 생성: {message}", progress)
         )
-        self.current_ai_generation_worker.analysis_completed.connect(self.on_ai_product_generation_completed)
+        self.current_ai_generation_worker.generation_completed.connect(self.on_ai_product_generation_completed)
         self.current_ai_generation_worker.error_occurred.connect(self.on_ai_product_generation_error)
         
         # 워커 시작

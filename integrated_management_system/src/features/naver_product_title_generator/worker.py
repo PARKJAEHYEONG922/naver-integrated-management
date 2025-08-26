@@ -774,5 +774,73 @@ class AIAnalysisWorker(QThread):
             raise Exception(f"Claude API 호출 실패: {e}")
 
 
+class ProductNameGenerationWorker(QThread):
+    """4단계: AI 상품명 생성 전용 워커 (월검색량 조회 없음)"""
+    
+    # 시그널 정의
+    progress_updated = Signal(int, str)  # progress%, message
+    generation_completed = Signal(str)   # 생성된 상품명들 텍스트
+    error_occurred = Signal(str)         # error_message
+    
+    def __init__(self, prompt: str):
+        super().__init__()
+        self.prompt = prompt
+        self._stop_requested = False
+        self._mutex = QMutex()
+    
+    def request_stop(self):
+        """작업 중단 요청"""
+        with QMutexLocker(self._mutex):
+            self._stop_requested = True
+            
+    def stop(self):
+        """작업 중단 요청 (하위 호환)"""
+        self.request_stop()
+    
+    def is_stopped(self) -> bool:
+        """중단 요청 확인"""
+        with QMutexLocker(self._mutex):
+            return self._stop_requested
+    
+    def run(self):
+        """워커 실행 - AI 상품명 생성만 수행"""
+        try:
+            logger.info("AI 상품명 생성 시작")
+            
+            self.progress_updated.emit(20, "AI 모델에 상품명 생성 요청 중...")
+            
+            if self.is_stopped():
+                return
+            
+            # AI API 직접 호출 (프롬프트는 이미 완성된 상태)
+            ai_response = self.call_ai_api(self.prompt)
+            
+            if self.is_stopped():
+                return
+            
+            self.progress_updated.emit(80, "AI 응답 처리 중...")
+            
+            if not ai_response or not ai_response.strip():
+                self.error_occurred.emit("AI에서 상품명을 생성하지 못했습니다.")
+                return
+            
+            self.progress_updated.emit(100, "상품명 생성 완료!")
+            
+            # 생성된 상품명 결과 전달
+            self.generation_completed.emit(ai_response.strip())
+            
+            logger.info("AI 상품명 생성 완료")
+            
+        except Exception as e:
+            logger.error(f"AI 상품명 생성 실패: {e}")
+            self.error_occurred.emit(f"AI 상품명 생성 실패: {str(e)}")
+    
+    def call_ai_api(self, prompt: str) -> str:
+        """AI API 호출 - AIAnalysisWorker의 메서드 재사용"""
+        # 임시 AIAnalysisWorker 인스턴스 생성하여 API 호출 메서드 재사용
+        temp_worker = AIAnalysisWorker([], prompt)
+        return temp_worker.call_ai_api(prompt)
+
+
 # 전역 워커 매니저
 worker_manager = WorkerManager()
