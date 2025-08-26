@@ -10,6 +10,7 @@ from PySide6.QtCore import Qt, Signal
 
 from src.toolbox.ui_kit.modern_style import ModernStyle
 from src.toolbox.ui_kit.components import ModernPrimaryButton, ModernCancelButton, ModernCard
+from src.toolbox.ui_kit.responsive import ResponsiveUI
 from src.toolbox.formatters import format_int
 
 
@@ -28,8 +29,11 @@ class KeywordCard(QFrame):
     def setup_ui(self):
         self.setObjectName("keyword_card")
         layout = QHBoxLayout()
-        layout.setContentsMargins(15, 12, 15, 12)
-        layout.setSpacing(15)
+        margin_h = ResponsiveUI.scale(15)
+        margin_v = ResponsiveUI.scale(12)
+        spacing = ResponsiveUI.scale(15)
+        layout.setContentsMargins(margin_h, margin_v, margin_h, margin_v)
+        layout.setSpacing(spacing)
         
         # 체크박스
         self.checkbox = QCheckBox()
@@ -38,7 +42,8 @@ class KeywordCard(QFrame):
         
         # 키워드 정보
         info_layout = QVBoxLayout()
-        info_layout.setSpacing(4)
+        info_spacing = ResponsiveUI.scale(4)
+        info_layout.setSpacing(info_spacing)
         
         # 키워드명 (크게)
         keyword_label = QLabel(self.keyword_data.keyword)
@@ -69,31 +74,38 @@ class KeywordCard(QFrame):
         # 카테고리별 색상 결정
         category_color = self.get_category_color()
         
+        border_radius = ResponsiveUI.scale(8)
+        margin = ResponsiveUI.scale(2)
+        name_font_size = ResponsiveUI.get_font_size_pt('large')
+        details_font_size = ResponsiveUI.get_font_size_pt('normal')
+        checkbox_size = ResponsiveUI.scale(18)
+        checkbox_border_radius = ResponsiveUI.scale(4)
+        
         self.setStyleSheet(f"""
             QFrame[objectName="keyword_card"] {{
                 background-color: {ModernStyle.COLORS['bg_card']};
                 border: 2px solid {category_color};
-                border-radius: 8px;
-                margin: 2px 0;
+                border-radius: {border_radius}px;
+                margin: {margin}px 0;
             }}
             QFrame[objectName="keyword_card"]:hover {{
                 background-color: {ModernStyle.COLORS['bg_secondary']};
                 border-color: {category_color};
             }}
             QLabel[objectName="keyword_name"] {{
-                font-size: 16px;
+                font-size: {name_font_size}pt;
                 font-weight: 600;
                 color: {ModernStyle.COLORS['text_primary']};
             }}
             QLabel[objectName="keyword_details"] {{
-                font-size: 14px;
+                font-size: {details_font_size}pt;
                 color: {ModernStyle.COLORS['text_secondary']};
             }}
             QCheckBox::indicator {{
-                width: 18px;
-                height: 18px;
+                width: {checkbox_size}px;
+                height: {checkbox_size}px;
                 border: 2px solid {category_color};
-                border-radius: 4px;
+                border-radius: {checkbox_border_radius}px;
                 background-color: white;
             }}
             QCheckBox::indicator:checked {{
@@ -129,8 +141,10 @@ class Step1ResultWidget(QWidget):
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
+        margin = ResponsiveUI.scale(20)
+        spacing = ResponsiveUI.scale(15)
+        layout.setContentsMargins(margin, margin, margin, margin)
+        layout.setSpacing(spacing)
         
         # 헤더
         header_label = QLabel("1️⃣ 키워드 분석 결과")
@@ -139,7 +153,7 @@ class Step1ResultWidget(QWidget):
         
         # 안내 텍스트 + 전체선택 버튼
         header_layout = QHBoxLayout()
-        guide_text = QLabel("판매하려는 상품과 같은 카테고리의 키워드를 선택해주세요")
+        guide_text = QLabel("판매하려는 상품과 같은 카테고리의 키워드를 선택해주세요. (중복가능)")
         guide_text.setObjectName("guide_text")
         header_layout.addWidget(guide_text)
         header_layout.addStretch()
@@ -402,18 +416,21 @@ class Step2BasicAnalysisWidget(QWidget):
         
     def setup_ui(self):
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
+        margin = ResponsiveUI.scale(20)
+        spacing = ResponsiveUI.scale(15)
+        layout.setContentsMargins(margin, margin, margin, margin)
+        layout.setSpacing(spacing)
         
         # 헤더
         header_layout = QVBoxLayout()
-        header_layout.setSpacing(8)
+        header_spacing = ResponsiveUI.scale(8)
+        header_layout.setSpacing(header_spacing)
         
         title = QLabel("2️⃣ 상품명 수집 결과")
         title.setObjectName("step_title")
         header_layout.addWidget(title)
         
-        subtitle = QLabel("상위 상품명들을 수집했습니다. AI 분석을 시작하세요.")
+        subtitle = QLabel("상위 상품명들을 수집하였습니다. AI프롬프트 변경을 원하시면 변경하시고 다음으로 넘어가주세요.")
         subtitle.setObjectName("step_subtitle")
         header_layout.addWidget(subtitle)
         
@@ -427,12 +444,15 @@ class Step2BasicAnalysisWidget(QWidget):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setMinimumHeight(250)
+        scroll_min_height = ResponsiveUI.scale(250)
+        scroll_area.setMinimumHeight(scroll_min_height)
         
         self.content_container = QWidget()
         self.content_layout = QVBoxLayout(self.content_container)
-        self.content_layout.setSpacing(5)
-        self.content_layout.setContentsMargins(10, 10, 10, 10)
+        content_spacing = ResponsiveUI.scale(5)
+        content_margin = ResponsiveUI.scale(10)
+        self.content_layout.setSpacing(content_spacing)
+        self.content_layout.setContentsMargins(content_margin, content_margin, content_margin, content_margin)
         
         # 초기 플레이스홀더
         self.placeholder_label = QLabel("수집된 상품명이 여기에 표시됩니다.")
@@ -770,7 +790,7 @@ class Step3AdvancedAnalysisWidget(QWidget):
         title.setObjectName("step_title")
         header_layout.addWidget(title)
         
-        subtitle = QLabel("선택된 프롬프트로 상품명을 AI 분석하여 키워드를 추출합니다.")
+        subtitle = QLabel("선택된 프롬프트로 상품명을 AI 분석하여 키워드를 추출합니다. AI 분석 시작 버튼을 눌러주세요.")
         subtitle.setObjectName("step_subtitle")
         header_layout.addWidget(subtitle)
         
