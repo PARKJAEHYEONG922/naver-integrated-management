@@ -1693,8 +1693,23 @@ class Step4ResultWidget(QWidget):
         self.generate_button.setEnabled(False)
         self.generate_button.setText("🔄 생성 중...")
         
-        # AI 상품명 생성 시그널 발송 (ui_main.py에서 처리)
-        self.ai_generation_started.emit(selected_keyword.__dict__, product_info)
+        # 모든 선택된 키워드 데이터 수집 (3단계에서 선택된 모든 키워드들)
+        all_keywords_data = []
+        if hasattr(self, 'selected_keywords') and self.selected_keywords:
+            for kw in self.selected_keywords:
+                if hasattr(kw, '__dict__'):
+                    all_keywords_data.append(kw.__dict__)
+                else:
+                    # 만약 딕셔너리인 경우
+                    all_keywords_data.append(kw)
+        
+        # AI 상품명 생성 시그널 발송 (핵심 키워드 + 모든 키워드 정보)
+        generation_data = {
+            'core_keyword': selected_keyword.__dict__,  # 핵심 키워드 (단일 선택)
+            'all_keywords': all_keywords_data,          # 3단계에서 선택된 모든 키워드들
+            'product_info': product_info
+        }
+        self.ai_generation_started.emit(generation_data, {})
     
     def on_generation_completed(self, results):
         """생성 완료 처리"""
