@@ -973,10 +973,22 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # 진행상황 초기화
         self.left_panel.update_progress(3, "분석 중지됨", 0)
     
-    def start_ai_product_generation(self, selected_keyword_dict: dict, product_info: dict):
+    def start_ai_product_generation(self, generation_data: dict, product_info: dict):
         """Step 4에서 AI 상품명 생성 시작"""
-        keyword = selected_keyword_dict.get('keyword', 'Unknown')
-        log_manager.add_log(f"🤖 AI 상품명 생성 시작: {keyword}", "info")
+        # 새로운 데이터 구조에서 핵심 키워드와 모든 키워드 추출
+        core_keyword_dict = generation_data.get('core_keyword', {})
+        all_keywords_data = generation_data.get('all_keywords', [])
+        
+        # 핵심 키워드를 KeywordBasicData로 변환
+        from .models import KeywordBasicData
+        core_keyword = KeywordBasicData(
+            keyword=core_keyword_dict.get('keyword', 'Unknown'),
+            search_volume=core_keyword_dict.get('search_volume', 0),
+            total_products=core_keyword_dict.get('total_products', 0),
+            category=core_keyword_dict.get('category', '')
+        )
+        
+        log_manager.add_log(f"🤖 AI 상품명 생성 시작: {core_keyword.keyword}", "info")
         
         # 진행상황 업데이트
         self.left_panel.update_progress(4, "AI 상품명 생성 중...", 20)
@@ -984,10 +996,16 @@ class NaverProductTitleGeneratorWidget(QWidget):
         # engine_local에서 프롬프트 생성
         from .engine_local import generate_product_name_prompt, PRODUCT_NAME_GENERATION_SYSTEM_PROMPT
         
-        # Step 3에서 선택된 키워드들 가져오기
+        # 모든 키워드를 KeywordBasicData 객체로 변환
         selected_keywords = []
-        if hasattr(self.right_panel.step3_widget, 'selected_keywords'):
-            selected_keywords = [kw.keyword for kw in self.right_panel.step3_widget.get_selected_keywords()]
+        for kw_data in all_keywords_data:
+            if isinstance(kw_data, dict):
+                selected_keywords.append(KeywordBasicData(
+                    keyword=kw_data.get('keyword', ''),
+                    search_volume=kw_data.get('search_volume', 0),
+                    total_products=kw_data.get('total_products', 0),
+                    category=kw_data.get('category', '')
+                ))
         
         # Step 2에서 상품명 길이 통계 가져오기 (있다면)
         length_stats = "통계 정보 없음"
@@ -999,12 +1017,15 @@ class NaverProductTitleGeneratorWidget(QWidget):
                 max_length = stats.get('max_length', 0)
                 length_stats = f"평균 {avg_length:.0f}자, 최소 {min_length}자, 최대 {max_length}자"
         
+        # 실제 product_info에서 데이터 가져오기 (Step4에서 입력한 값들)
+        actual_product_info = generation_data.get('product_info', {})
+        
         prompt_content = generate_product_name_prompt(
             selected_keywords=selected_keywords,
-            core_keyword=keyword,
-            brand=product_info.get('brand'),
-            material=product_info.get('material'),
-            quantity=product_info.get('quantity'),
+            core_keyword_data=core_keyword,
+            brand=actual_product_info.get('brand'),
+            material=actual_product_info.get('material'),
+            quantity=actual_product_info.get('quantity'),
             length_stats=length_stats
         )
         

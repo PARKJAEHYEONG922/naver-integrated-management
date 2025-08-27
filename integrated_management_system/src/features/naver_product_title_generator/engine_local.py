@@ -440,15 +440,20 @@ def calculate_keyword_score(keyword_data: KeywordBasicData) -> float:
 
 
 # Step 4 상품명 생성용 프롬프트 (고정 프롬프트)
-PRODUCT_NAME_GENERATION_SYSTEM_PROMPT = """당신은 네이버 스마트스토어 상품명 SEO 최적화 전문가입니다. 사용자가 제공하는 사용할 키워드 리스트와 그 중 핵심이 되는 핵심키워드 그리고 선택 입력 키워드(브랜드명,재료,수량), 상위 상품명의 길이 통계 정보를 바탕으로, 아래 가이드라인에 따라 네이버 쇼핑 검색 알고리즘에 최적화된 상품명을 생성하고, 해당 상품명이 어떻게 최적화되었는지 그 방안을 상세히 설명해주세요."""
+PRODUCT_NAME_GENERATION_SYSTEM_PROMPT = """당신의 임무는 완성된 상품명 1개를 만드는 것입니다.
+
+첫 번째 줄에 반드시 이렇게 써주세요:
+완성된 상품명: [여기에 실제 상품명을 써주세요]
+
+그 다음에 설명을 해주세요. 절대 설명만 하지 마세요."""
 
 DEFAULT_PRODUCT_NAME_GENERATION_PROMPT = """[사용자 입력 정보]
 1. 사용할 키워드 리스트 (키워드명, 월검색량, 전체상품수): {selected_keywords}
 2. 핵심 키워드 (키워드명, 월검색량, 전체상품수): {core_keyword}
 3. 선택 입력 키워드: 
-   - 브랜드명: {brand}
-   - 재료(형태): {material}
-   - 수량(무게): {quantity}
+   - {brand}
+   - {material}
+   - {quantity}
 4. 상위 상품명 길이 통계 (공백 포함): {length_stats}
 
 [키워드 데이터 해석 가이드]
@@ -477,9 +482,17 @@ DEFAULT_PRODUCT_NAME_GENERATION_PROMPT = """[사용자 입력 정보]
 5. 관련 키워드의 효과적인 통합:
 제공된 키워드들을 자연스럽게 조합하되, 의미가 중복되는 키워드는 하나만 선택하여 사용
 
-[출력 형식]
-1. 최적화된 상품명: [생성된 상품명]
-2. 최적화 설명: 위에 제시된 네이버 SEO 최적화 원칙에 따라 이 상품명이 어떻게 최적화되었는지 (예: 키워드 배치, 길이, 중복 제거, 띄어쓰기 전략 등) 상세히 설명해주세요. 각 원칙별로 적용된 부분을 명시하면 좋습니다."""
+[절대적 출력 규칙]
+
+다른 것은 하지 말고 반드시 첫 번째 줄에 이렇게 써주세요:
+
+완성된 상품명: 와이즈테일 강아지 오븐베이크 프리미엄 사료 2kg
+
+위처럼 "완성된 상품명:" 다음에 실제 판매할 상품명을 반드시 써주세요.
+
+그 다음 줄부터 설명을 하세요.
+
+중요: 첫 번째 줄은 반드시 "완성된 상품명: [실제 상품명]" 형태여야 합니다."""
 
 
 def generate_product_name_prompt(selected_keywords: list, core_keyword_data: KeywordBasicData, brand: str = None, material: str = None, quantity: str = None, length_stats: str = None) -> str:
@@ -502,11 +515,16 @@ def generate_product_name_prompt(selected_keywords: list, core_keyword_data: Key
     else:
         core_keyword_str = str(core_keyword_data)
     
+    # 브랜드명, 재료, 수량 정보 처리 (없는 경우 명확히 표시)
+    brand_info = f"브랜드명: {brand}" if brand else "브랜드명: 지정되지 않음 (생략)"
+    material_info = f"재료(형태): {material}" if material else "재료(형태): 지정되지 않음 (생략)"
+    quantity_info = f"수량(무게): {quantity}" if quantity else "수량(무게): 지정되지 않음 (생략)"
+    
     return DEFAULT_PRODUCT_NAME_GENERATION_PROMPT.format(
         selected_keywords=keywords_str,
         core_keyword=core_keyword_str,
-        brand=brand or "지정 없음",
-        material=material or "지정 없음", 
-        quantity=quantity or "지정 없음",
+        brand=brand_info,
+        material=material_info, 
+        quantity=quantity_info,
         length_stats=length_stats or "통계 정보 없음"
     )

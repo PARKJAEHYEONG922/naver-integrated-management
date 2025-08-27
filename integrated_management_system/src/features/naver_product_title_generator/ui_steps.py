@@ -1456,10 +1456,11 @@ class Step4ResultWidget(QWidget):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setMinimumHeight(400)  # 최소 2개 카드가 보이도록 높이 조정
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)  # 필요시에만 스크롤바 표시
+        scroll_area.setMinimumHeight(350)  # 기본 높이 (스크롤 여유 공간)
+        scroll_area.setMaximumHeight(450)  # 최대 높이 제한
         
         self.keyword_cards_container = QWidget()
-        self.keyword_cards_container.setMinimumHeight(400)  # 키워드 카드 컨테이너 높이 조정
         self.keyword_cards_layout = QVBoxLayout(self.keyword_cards_container)
         self.keyword_cards_layout.setSpacing(tokens.GAP_8)
         self.keyword_cards_layout.setContentsMargins(0, 0, 0, 0)
@@ -1603,6 +1604,8 @@ class Step4ResultWidget(QWidget):
         
         self.keyword_checkboxes = []
         self.keyword_cards = []  # 카드 목록 초기화
+        
+        # 동적 높이 조정 제거 - 고정 높이로 스크롤 보장
         
         if self.selected_keywords:
             for keyword in self.selected_keywords:

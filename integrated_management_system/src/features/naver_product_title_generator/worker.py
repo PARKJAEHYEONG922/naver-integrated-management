@@ -86,12 +86,12 @@ class BasicAnalysisWorker(QThread):
                     return
                     
                 progress = 30 + int((current / total) * 60)  # 30% ~ 90%
-                self.progress_updated.emit(progress, f"키워드 분석: {message}")
+                self.progress_updated.emit(progress, f"키워드 분석 {current}/{total}: {message}")
             
-            # 간단한 순차 분석 실행
+            # 병렬 처리로 키워드 분석 실행
             analyzed_keywords = analyze_keywords_with_volume_and_category(
                 keywords=keywords,
-                max_workers=2,  # 순차 처리이므로 max_workers는 의미없음
+                max_workers=3,  # 3개씩 병렬 처리
                 stop_check=self.is_stopped,
                 progress_callback=progress_callback
             )
@@ -427,9 +427,8 @@ class AIAnalysisWorker(QThread):
             # 4단계: 월검색량만 먼저 조회 (vendors 직접 호출)
             logger.info(f"📊 1단계 월검색량 조회할 키워드들: {unique_keywords[:10]}...")  # 처음 10개만 로그
             
-            # 월검색량만 조회 (간단한 순차 처리)
-            from .adapters import get_keyword_search_volume
-            from .models import KeywordBasicData
+            # 월검색량 병렬 조회
+            from .adapters import analyze_keywords_with_volume_and_category
             
             # 월검색량 조회 진행률 콜백 정의
             def volume_progress_callback(current: int, total: int, message: str):
@@ -438,33 +437,15 @@ class AIAnalysisWorker(QThread):
                     
                 # 70% ~ 80% 구간에서 월검색량 조회 진행률 표시
                 progress = 70 + int((current / total) * 10)
-                self.progress_updated.emit(progress, f"1단계: {message}")
+                self.progress_updated.emit(progress, f"1단계 {current}/{total}: {message}")
             
-            # 간단한 월검색량 조회 실행
-            volume_analyzed = []
-            for i, keyword in enumerate(unique_keywords):
-                if self.is_stopped():
-                    break
-                    
-                try:
-                    search_volume = get_keyword_search_volume(keyword)
-                    volume_analyzed.append(KeywordBasicData(
-                        keyword=keyword,
-                        search_volume=search_volume,
-                        total_products=0,
-                        category=""
-                    ))
-                except Exception as e:
-                    logger.error(f"월검색량 조회 실패 '{keyword}': {e}")
-                    volume_analyzed.append(KeywordBasicData(
-                        keyword=keyword,
-                        search_volume=0,
-                        total_products=0,
-                        category=""
-                    ))
-                
-                # 진행률 업데이트
-                volume_progress_callback(i + 1, len(unique_keywords), f"월검색량 조회 중: '{keyword}'")
+            # 병렬 처리로 월검색량 조회 (전체상품수는 0으로 설정됨)
+            volume_analyzed = analyze_keywords_with_volume_and_category(
+                keywords=unique_keywords,
+                max_workers=3,  # 3개씩 병렬 처리
+                stop_check=self.is_stopped,
+                progress_callback=volume_progress_callback
+            )
             
             # 결과 정렬 (원래 순서 유지)
             keyword_order = {kw: i for i, kw in enumerate(unique_keywords)}
@@ -525,13 +506,13 @@ class AIAnalysisWorker(QThread):
                     
                 # 85% ~ 95% 구간에서 카테고리 조회 진행률 표시
                 progress = 85 + int((current / total) * 10)
-                self.progress_updated.emit(progress, f"2단계: {message}")
+                self.progress_updated.emit(progress, f"2단계 {current}/{total}: {message}")
             
             # 카테고리 추가 조회 실행
             try:
                 final_keywords = analyze_keywords_with_category_only(
                     keyword_data_list=volume_filtered,
-                    max_workers=2,
+                    max_workers=3,  # 3개씩 병렬 처리
                     stop_check=self.is_stopped,
                     progress_callback=category_progress_callback
                 )
