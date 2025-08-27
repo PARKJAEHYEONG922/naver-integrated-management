@@ -443,13 +443,18 @@ def calculate_keyword_score(keyword_data: KeywordBasicData) -> float:
 PRODUCT_NAME_GENERATION_SYSTEM_PROMPT = """당신은 네이버 스마트스토어 상품명 SEO 최적화 전문가입니다. 사용자가 제공하는 사용할 키워드 리스트와 그 중 핵심이 되는 핵심키워드 그리고 선택 입력 키워드(브랜드명,재료,수량), 상위 상품명의 길이 통계 정보를 바탕으로, 아래 가이드라인에 따라 네이버 쇼핑 검색 알고리즘에 최적화된 상품명을 생성하고, 해당 상품명이 어떻게 최적화되었는지 그 방안을 상세히 설명해주세요."""
 
 DEFAULT_PRODUCT_NAME_GENERATION_PROMPT = """[사용자 입력 정보]
-1. 사용할 키워드 리스트: {selected_keywords}
-2. 핵심 키워드: {core_keyword}
+1. 사용할 키워드 리스트 (키워드명, 월검색량, 전체상품수): {selected_keywords}
+2. 핵심 키워드 (키워드명, 월검색량, 전체상품수): {core_keyword}
 3. 선택 입력 키워드: 
    - 브랜드명: {brand}
    - 재료(형태): {material}
    - 수량(무게): {quantity}
 4. 상위 상품명 길이 통계 (공백 포함): {length_stats}
+
+[키워드 데이터 해석 가이드]
+- 월검색량: 해당 키워드로 네이버에서 월간 검색되는 횟수 (높을수록 검색 수요 높음)
+- 전체상품수: 해당 키워드로 검색했을 때 나오는 전체 상품 개수 (높을수록 경쟁 치열)
+- 키워드별 검색량/경쟁도 비율을 고려하여 상품명에 포함할 키워드의 우선순위를 결정하세요
 
 [상품명 조합 가이드라인 - 네이버 SEO 최적화 원칙] 
 아래의 네이버 SEO 최적화 원칙들을 핵심 키워드 조합에 중점을 두어 철저히 준수하며 상품명을 생성해주세요.
@@ -463,22 +468,43 @@ DEFAULT_PRODUCT_NAME_GENERATION_PROMPT = """[사용자 입력 정보]
 3. 키워드 중복 최소화:
 반복되는 단어는 상품명 내에서 한 번만 사용하는 것이 좋습니다. 네이버 알고리즘은 상품명 내의 단어들을 다양하게 조합하여 키워드를 생성하므로, 같은 단어를 여러 번 사용하지 않아도 여러 검색어에 노출될 수 있습니다
 
-4. 관련 키워드의 효과적인 통합:
-(추후 추가 예정)
+4. 키워드 우선순위 전략:
+- 높은 검색량 + 낮은 경쟁도 키워드 최우선 (검색량/전체상품수 비율이 높은 키워드)
+- 핵심 키워드는 반드시 포함하되, 다른 키워드들과의 조합 시 중복 방지
+- 검색량이 높은 키워드일수록 상품명 앞쪽에 배치하여 검색 가중치 확보
+- 전체상품수가 매우 높은 키워드는 롱테일 키워드와 조합하여 경쟁 회피
+
+5. 관련 키워드의 효과적인 통합:
+제공된 키워드들을 자연스럽게 조합하되, 의미가 중복되는 키워드는 하나만 선택하여 사용
 
 [출력 형식]
 1. 최적화된 상품명: [생성된 상품명]
 2. 최적화 설명: 위에 제시된 네이버 SEO 최적화 원칙에 따라 이 상품명이 어떻게 최적화되었는지 (예: 키워드 배치, 길이, 중복 제거, 띄어쓰기 전략 등) 상세히 설명해주세요. 각 원칙별로 적용된 부분을 명시하면 좋습니다."""
 
 
-def generate_product_name_prompt(selected_keywords: list, core_keyword: str, brand: str = None, material: str = None, quantity: str = None, length_stats: str = None) -> str:
+def generate_product_name_prompt(selected_keywords: list, core_keyword_data: KeywordBasicData, brand: str = None, material: str = None, quantity: str = None, length_stats: str = None) -> str:
     """Step 4 상품명 생성용 프롬프트 생성"""
-    # 선택된 키워드들을 콤마로 구분
-    keywords_str = ", ".join(selected_keywords) if selected_keywords else "키워드 없음"
+    from src.toolbox.formatters import format_int
+    
+    # 선택된 키워드들을 상세 정보와 함께 포맷
+    if selected_keywords and len(selected_keywords) > 0 and hasattr(selected_keywords[0], 'keyword'):
+        # KeywordBasicData 객체들인 경우
+        keywords_str = ""
+        for i, kw_data in enumerate(selected_keywords, 1):
+            keywords_str += f"\n   {i}. {kw_data.keyword} (월검색량: {format_int(kw_data.search_volume)}, 전체상품수: {format_int(kw_data.total_products)})"
+    else:
+        # 문자열 리스트인 경우 (기존 방식)
+        keywords_str = ", ".join(selected_keywords) if selected_keywords else "키워드 없음"
+    
+    # 핵심 키워드 정보
+    if hasattr(core_keyword_data, 'keyword'):
+        core_keyword_str = f"{core_keyword_data.keyword} (월검색량: {format_int(core_keyword_data.search_volume)}, 전체상품수: {format_int(core_keyword_data.total_products)})"
+    else:
+        core_keyword_str = str(core_keyword_data)
     
     return DEFAULT_PRODUCT_NAME_GENERATION_PROMPT.format(
         selected_keywords=keywords_str,
-        core_keyword=core_keyword,
+        core_keyword=core_keyword_str,
         brand=brand or "지정 없음",
         material=material or "지정 없음", 
         quantity=quantity or "지정 없음",
