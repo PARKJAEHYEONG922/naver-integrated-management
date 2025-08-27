@@ -66,7 +66,8 @@ class ParallelAPIProcessor:
                      func: Callable, 
                      items: List[Any], 
                      stop_check: Optional[Callable[[], bool]] = None,
-                     progress_callback: Optional[Callable[[int, int, str], None]] = None) -> List[Tuple[Any, Any, Optional[Exception]]]:
+                     progress_callback: Optional[Callable[[int, int, str], None]] = None,
+                     preserve_order: bool = True) -> List[Tuple[Any, Any, Optional[Exception]]]:
         """
         배치 아이템들을 병렬로 처리
         
@@ -75,10 +76,14 @@ class ParallelAPIProcessor:
             items: 처리할 아이템 리스트
             stop_check: 중단 확인 함수
             progress_callback: 진행률 콜백 (current, total, message)
+            preserve_order: 원본 순서 보장 여부 (기본 True)
         
         Returns:
             List[Tuple[item, result, error]]: (원본 아이템, 결과, 에러) 튜플 리스트
         """
+        if not items:
+            return []
+            
         results = []
         completed_count = 0
         total_count = len(items)
@@ -86,10 +91,10 @@ class ParallelAPIProcessor:
         logger.info(f"🔄 병렬 처리 시작: {total_count}개 아이템, {self.max_workers}개 워커")
         
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            # 모든 작업 제출
-            future_to_item = {}
+            # 모든 작업 제출 (인덱스와 함께 저장)
+            future_to_item_index = {}
             
-            for item in items:
+            for index, item in enumerate(items):
                 if stop_check and stop_check():
                     break
                 
@@ -99,17 +104,22 @@ class ParallelAPIProcessor:
                 else:
                     future = executor.submit(func, item)
                 
-                future_to_item[future] = item
+                future_to_item_index[future] = (item, index)
+            
+            # 결과를 순서 보장용 리스트로 초기화 (preserve_order=True인 경우)
+            if preserve_order:
+                ordered_results = [None] * len(future_to_item_index)
             
             # 완료된 작업들 처리
-            for future in as_completed(future_to_item):
+            for future in as_completed(future_to_item_index):
                 if stop_check and stop_check():
                     # 나머지 작업들 취소
-                    for f in future_to_item:
-                        f.cancel()
+                    for f in future_to_item_index:
+                        if not f.done():
+                            f.cancel()
                     break
                 
-                item = future_to_item[future]
+                item, index = future_to_item_index[future]
                 error = None
                 result = None
                 
@@ -119,15 +129,33 @@ class ParallelAPIProcessor:
                     error = e
                     logger.warning(f"⚠️ 아이템 처리 실패: {item} -> {e}")
                 
-                results.append((item, result, error))
+                result_tuple = (item, result, error)
+                
+                if preserve_order:
+                    ordered_results[index] = result_tuple
+                else:
+                    results.append(result_tuple)
+                
                 completed_count += 1
                 
                 # 진행률 콜백 호출
                 if progress_callback:
                     try:
-                        progress_callback(completed_count, total_count, f"{completed_count}/{total_count} 완료")
+                        # 더 구체적인 진행률 메시지
+                        item_str = self._get_item_display_name(item)
+                        
+                        if error:
+                            message = f"실패: {item_str}"
+                        else:
+                            message = f"완료: {item_str}"
+                        
+                        progress_callback(completed_count, total_count, message)
                     except Exception as e:
                         logger.warning(f"진행률 콜백 오류: {e}")
+            
+            # 순서 보장이 필요한 경우 정렬된 결과 반환
+            if preserve_order:
+                results = [r for r in ordered_results if r is not None]
         
         success_count = len([r for r in results if r[2] is None])
         logger.info(f"✅ 병렬 처리 완료: {success_count}/{total_count} 성공")
@@ -141,6 +169,38 @@ class ParallelAPIProcessor:
                 return func(item)
         else:
             return func(item)
+    
+    def _get_item_display_name(self, item: Any) -> str:
+        """아이템의 표시 이름을 가져오기 (진행률 표시용)"""
+        try:
+            # KeywordBasicData 객체인 경우 키워드명 반환
+            if hasattr(item, 'keyword'):
+                return str(item.keyword)[:50]
+            
+            # 다른 dataclass 객체들에 대한 일반적인 처리
+            elif hasattr(item, '__dataclass_fields__'):
+                # dataclass의 첫 번째 필드 값 사용
+                fields = getattr(item, '__dataclass_fields__', {})
+                if fields:
+                    first_field = next(iter(fields.keys()))
+                    value = getattr(item, first_field, '')
+                    return str(value)[:50]
+            
+            # 일반 문자열인 경우
+            elif isinstance(item, str):
+                return item[:50]
+            
+            # 기타 객체의 경우 기본 문자열 변환 (50자 제한)
+            else:
+                item_str = str(item)[:50]
+                # 객체 주소 형태면 타입명만 사용
+                if '<' in item_str and 'object at 0x' in item_str:
+                    return type(item).__name__
+                return item_str
+                
+        except Exception:
+            # 예외 발생 시 타입명 반환
+            return type(item).__name__
 
 
 class HTTPClient:

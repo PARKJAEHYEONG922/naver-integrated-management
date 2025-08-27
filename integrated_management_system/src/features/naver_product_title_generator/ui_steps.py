@@ -100,21 +100,51 @@ def create_keyword_card(keyword_data, category_colors=None, use_radio=False, but
     if selection_button:
         layout.addWidget(selection_button)
     
-    # 키워드 정보 레이아웃 (기존과 동일)
+    # 키워드 정보 레이아웃 
     info_layout = QVBoxLayout()
     info_spacing = tokens.GAP_4
     info_layout.setSpacing(info_spacing)
     
-    # 키워드명
-    keyword_label = QLabel(keyword_data.keyword)
-    keyword_label.setObjectName("keyword_name")
-    info_layout.addWidget(keyword_label)
+    # 상세 정보 (전체상품수는 3단계에서만 표시)
+    has_total_products = hasattr(keyword_data, 'total_products') and keyword_data.total_products > 0
+    has_category_info = hasattr(keyword_data, 'category') and keyword_data.category and keyword_data.category != ""
     
-    # 상세 정보
-    details = f"월검색량: {format_int(keyword_data.search_volume)} | 카테고리: {keyword_data.category}"
-    details_label = QLabel(details)
-    details_label.setObjectName("keyword_details")
-    info_layout.addWidget(details_label)
+    if has_total_products and has_category_info:
+        # 3단계: 키워드명과 통계를 같은 줄에 배치
+        first_line_layout = QHBoxLayout()
+        first_line_layout.setSpacing(tokens.GAP_10)
+        
+        # 키워드명
+        keyword_label = QLabel(keyword_data.keyword)
+        keyword_label.setObjectName("keyword_name")
+        first_line_layout.addWidget(keyword_label)
+        
+        # 월검색량 + 전체상품수
+        stats_text = f"월검색량: {format_int(keyword_data.search_volume)} | 전체상품수: {format_int(keyword_data.total_products)}"
+        stats_label = QLabel(stats_text)
+        stats_label.setObjectName("keyword_details")
+        first_line_layout.addWidget(stats_label)
+        
+        first_line_layout.addStretch()  # 오른쪽 여백
+        info_layout.addLayout(first_line_layout)
+        
+        # 카테고리 (두 번째 줄)
+        category_label = QLabel(keyword_data.category)
+        category_label.setObjectName("keyword_category")
+        info_layout.addWidget(category_label)
+    else:
+        # 1-2단계: 기존 방식 (세로 배치)
+        keyword_label = QLabel(keyword_data.keyword)
+        keyword_label.setObjectName("keyword_name")
+        info_layout.addWidget(keyword_label)
+        
+        if has_category_info:
+            details = f"월검색량: {format_int(keyword_data.search_volume)} | 카테고리: {keyword_data.category}"
+        else:
+            details = f"월검색량: {format_int(keyword_data.search_volume)}"
+        details_label = QLabel(details)
+        details_label.setObjectName("keyword_details")
+        info_layout.addWidget(details_label)
     
     layout.addLayout(info_layout, 1)
     card.setLayout(layout)
@@ -180,6 +210,10 @@ def apply_original_keyword_card_style(card, keyword_data, category_colors):
             color: {ModernStyle.COLORS['text_primary']};
         }}
         QLabel[objectName="keyword_details"] {{
+            font-size: {details_font_size}px;
+            color: {ModernStyle.COLORS['text_secondary']};
+        }}
+        QLabel[objectName="keyword_category"] {{
             font-size: {details_font_size}px;
             color: {ModernStyle.COLORS['text_secondary']};
         }}

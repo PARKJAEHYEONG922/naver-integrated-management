@@ -568,14 +568,14 @@ class AIAnalysisDialog(QDialog):
         layout.setContentsMargins(15, 15, 15, 15)
         
         # 설명
-        desc_label = QLabel("2단계: 월검색량 100 이상 키워드들의 카테고리 조회 결과입니다.")
+        desc_label = QLabel("2단계: 월검색량 100 이상 키워드들의 카테고리와 전체상품수 조회 결과입니다.")
         desc_label.setObjectName("tab_desc")
         layout.addWidget(desc_label)
         
         # 테이블
         self.step2_category_table = QTableWidget()
-        self.step2_category_table.setColumnCount(3)
-        self.step2_category_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
+        self.step2_category_table.setColumnCount(4)
+        self.step2_category_table.setHorizontalHeaderLabels(["키워드", "월검색량", "전체상품수", "카테고리"])
         layout.addWidget(self.step2_category_table)
         
         self.tab_widget.addTab(tab, "🏷️ 2단계: 카테고리")
@@ -593,8 +593,8 @@ class AIAnalysisDialog(QDialog):
         
         # 테이블
         self.final_table = QTableWidget()
-        self.final_table.setColumnCount(3)
-        self.final_table.setHorizontalHeaderLabels(["키워드", "월검색량", "카테고리"])
+        self.final_table.setColumnCount(4)
+        self.final_table.setHorizontalHeaderLabels(["키워드", "월검색량", "전체상품수", "카테고리"])
         layout.addWidget(self.final_table)
         
         self.tab_widget.addTab(tab, "🎯 최종 키워드")
@@ -652,25 +652,29 @@ class AIAnalysisDialog(QDialog):
         table.resizeColumnsToContents()
     
     def populate_keyword_table(self, table, keywords):
-        """키워드 테이블 채우기"""
+        """키워드 테이블 채우기 (전체상품수 포함)"""
         table.setRowCount(len(keywords))
         
         for row, keyword_data in enumerate(keywords):
             if hasattr(keyword_data, 'keyword'):
                 # KeywordBasicData 객체인 경우
+                from src.toolbox.formatters import format_int
                 table.setItem(row, 0, QTableWidgetItem(keyword_data.keyword))
-                table.setItem(row, 1, QTableWidgetItem(str(keyword_data.search_volume)))
-                table.setItem(row, 2, QTableWidgetItem(keyword_data.category or ""))
+                table.setItem(row, 1, QTableWidgetItem(format_int(keyword_data.search_volume)))
+                table.setItem(row, 2, QTableWidgetItem(format_int(keyword_data.total_products) if hasattr(keyword_data, 'total_products') and keyword_data.total_products > 0 else "0"))
+                table.setItem(row, 3, QTableWidgetItem(keyword_data.category or ""))
             elif isinstance(keyword_data, dict):
                 # dict인 경우
                 table.setItem(row, 0, QTableWidgetItem(keyword_data.get('keyword', '')))
                 table.setItem(row, 1, QTableWidgetItem(str(keyword_data.get('search_volume', 0))))
-                table.setItem(row, 2, QTableWidgetItem(keyword_data.get('category', '')))
+                table.setItem(row, 2, QTableWidgetItem(str(keyword_data.get('total_products', 0))))
+                table.setItem(row, 3, QTableWidgetItem(keyword_data.get('category', '')))
             else:
                 # 문자열인 경우
                 table.setItem(row, 0, QTableWidgetItem(str(keyword_data)))
                 table.setItem(row, 1, QTableWidgetItem("조회 중"))
                 table.setItem(row, 2, QTableWidgetItem("조회 중"))
+                table.setItem(row, 3, QTableWidgetItem("조회 중"))
         
         # 테이블 크기 조정
         table.resizeColumnsToContents()
